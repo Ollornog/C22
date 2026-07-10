@@ -1,5 +1,9 @@
 # Vereinbarung über Verhaltenskodex für Mitwirkende
 
+<p align="left"><a href="../CODE_OF_CONDUCT.md">English</a> · <b>Deutsch</b></p>
+
+<p align="right"><img src="../docs/logo.png" alt="C22" width="60" height="60"></p>
+
 ## Unsere Verpflichtung
 
 Wir als Mitglieder, Teilnehmende und Verantwortliche unserer Gemeinschaft verpflichten uns, allen Teilnehmenden an dem Projekt und unserer Gemeinschaft eine belästigungsfreie Beteiligung, unabhängig von Alter, Körpergröße, Behinderung, ethnischer Zuordnung, Geschlechtermerkmalen, -identität und -ausdruck, Grad der Erfahrung, Bildung, sozialem Status, Nationalität, persönlicher Erscheinung, Rasse, Kaste, Hautfarbe, Religion oder sexueller Identität und Orientierung zu ermöglichen.

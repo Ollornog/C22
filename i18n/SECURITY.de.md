@@ -1,5 +1,9 @@
 # Sicherheitsrichtlinie
 
+<p align="left"><a href="../SECURITY.md">English</a> · <b>Deutsch</b></p>
+
+<p align="right"><img src="../docs/logo.png" alt="C22" width="60" height="60"></p>
+
 ## Schwachstellen melden
 
 Bitte vertraulich über GitHubs
@@ -21,10 +25,3 @@ Bitte vertraulich über GitHubs
 
 Wie eine konsumierende Anwendung sich anmeldet, Daten speichert oder Anfragen weiterleitet
 — das gehört zur App, nicht zu dieser Darstellungsschicht.
-
----
-
-<p align="right">
-<a href="../SECURITY.md">English</a> · <b>Deutsch</b><br>
-<img src="../docs/logo.png" alt="C22" width="60">
-</p>
