@@ -13,5 +13,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the `static_path()` and `macros_path()` helpers, a `Report`-based test harness,
   the shared hygiene kit via `repokit`, and a hardened CI workflow.
 - Bilingual community files (README, CONTRIBUTING, SECURITY, CODE_OF_CONDUCT).
+- Project logo (`docs/logo.png`) in both README versions, with Flaticon attribution.
 
 No design assets are included yet; they follow once the layout foundation is settled.

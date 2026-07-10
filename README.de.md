@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/logo.png" alt="" width="120">
+</p>
+
 # C22
 
 *[English version](README.md)*
@@ -51,3 +55,7 @@ Die Suite ist bewusst wiederholbar: zweimal laufen, beide grün. Siehe
 ## Lizenz
 
 MIT — siehe [LICENSE](LICENSE).
+
+---
+
+<sub>Logo: <a href="https://www.flaticon.com/free-icons/cultures" title="cultures icons">Cultures icons created by Iconjam - Flaticon</a></sub>

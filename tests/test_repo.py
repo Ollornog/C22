@@ -46,8 +46,9 @@ treffer = hygiene.pruefe_private_infrastruktur(str(ROOT), DATEIEN, POLICY, PROJE
 r.check(f"keine private Infrastruktur ({n_muster} Muster + {n_namen} Namen)",
         not treffer, " | ".join(sorted(set(treffer))[:4]))
 
-# ---- Nur neutrale Beispieladressen
-adressen = hygiene.pruefe_adressen(str(ROOT), DATEIEN, POLICY)
+# ---- Nur neutrale Beispieladressen (+ flaticon.com für die Pflicht-Attribution des README-Logos)
+adressen = hygiene.pruefe_adressen(str(ROOT), DATEIEN, POLICY,
+                                   zusaetzliche_hosts=[r"(www\.)?flaticon\.com"])
 r.check("nur neutrale Beispieladressen", not adressen, " | ".join(sorted(set(adressen))[:4]))
 
 # ---- Version steht überall gleich
