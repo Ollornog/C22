@@ -1,14 +1,23 @@
-<p align="center">
-  <img src="docs/logo.png" alt="" width="120">
-</p>
-<h1 align="center">C22</h1>
-<p align="center"><em><a href="README.de.md">Deutsche Fassung</a></em></p>
+<p align="center"><img src="docs/logo.png" alt="C22" width="120"></p>
 
-C22 is a reusable, framework-agnostic layout and design system. Its core is plain CSS
-(design tokens, layout primitives, page shells, native popovers) and a small amount of
-JavaScript — usable from any stack. On top sits an **optional** Jinja macro layer for
-Python/Jinja applications. The goal is to build a page or a dashboard once and stop
-re-solving the same layout problems — overflow, spacing, contrast, responsive breakage.
+<h1 align="center">C22</h1>
+
+<p align="center"><b>English</b> · <a href="README.de.md">Deutsch</a></p>
+
+<p align="right">
+<a href="https://github.com/Ollornog/C22/actions/workflows/ci.yml"><img src="https://github.com/Ollornog/C22/actions/workflows/ci.yml/badge.svg" alt="tests"></a>
+<a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-informational.svg" alt="License: MIT"></a>
+<img src="https://img.shields.io/badge/python-3.10%2B-blue.svg" alt="Python">
+</p>
+
+### A reusable, framework-agnostic layout & design system.
+
+Its core is plain CSS (design tokens, layout primitives, page shells, native popovers) and a small
+amount of JavaScript — usable from any stack. On top sits an **optional** Jinja macro layer for
+Python/Jinja applications. The goal is to build a page or a dashboard once and stop re-solving the
+same layout problems — overflow, spacing, contrast, responsive breakage.
+
+---
 
 ## What it is
 
@@ -54,6 +63,6 @@ The suite is repeatable by design: run it twice, both green. See
 
 MIT — see [LICENSE](LICENSE).
 
----
+## Credits
 
-<sub>Logo: <a href="https://www.flaticon.com/free-icons/cultures" title="cultures icons">Cultures icons created by Iconjam - Flaticon</a></sub>
+Logo: <a href="https://www.flaticon.com/free-icons/cultures" title="cultures icons">Cultures icons created by Iconjam - Flaticon</a>

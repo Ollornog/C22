@@ -1,4 +1,8 @@
-# Contributor Covenant Code of Conduct
+<p align="center"><img src="docs/logo.png" alt="C22" width="60"></p>
+
+<h1 align="center">Contributor Covenant Code of Conduct</h1>
+
+<p align="center"><b>English</b> · <a href="CODE_OF_CONDUCT.de.md">Deutsch</a></p>
 
 ## Our Pledge
 

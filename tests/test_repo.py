@@ -48,7 +48,7 @@ r.check(f"keine private Infrastruktur ({n_muster} Muster + {n_namen} Namen)",
 
 # ---- Nur neutrale Beispieladressen (+ flaticon.com für die Pflicht-Attribution des README-Logos)
 adressen = hygiene.pruefe_adressen(str(ROOT), DATEIEN, POLICY,
-                                   zusaetzliche_hosts=[r"(www\.)?flaticon\.com"])
+                                   zusaetzliche_hosts=[r"(www\.)?flaticon\.com", r"img\.shields\.io"])
 r.check("nur neutrale Beispieladressen", not adressen, " | ".join(sorted(set(adressen))[:4]))
 
 # ---- Version steht überall gleich

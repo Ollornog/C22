@@ -1,15 +1,23 @@
-<p align="center">
-  <img src="docs/logo.png" alt="" width="120">
-</p>
-<h1 align="center">C22</h1>
-<p align="center"><em><a href="README.md">English version</a></em></p>
+<p align="center"><img src="docs/logo.png" alt="C22" width="120"></p>
 
-C22 ist eine wiederverwendbare, framework-neutrale Layout- und Design-Bibliothek. Ihr Kern
-ist reines CSS (Design-Tokens, Layout-Primitives, Seitengerüste, native Popover) und etwas
-JavaScript — aus jedem Stack nutzbar. Darüber liegt eine **optionale** Jinja-Makro-Schicht
-für Python/Jinja-Anwendungen. Ziel ist, eine Seite oder ein Dashboard einmal zu bauen und
-nicht immer wieder dieselben Layout-Probleme zu lösen — Overflow, Abstände, Kontrast,
-Responsive-Brüche.
+<h1 align="center">C22</h1>
+
+<p align="center"><a href="README.md">English</a> · <b>Deutsch</b></p>
+
+<p align="right">
+<a href="https://github.com/Ollornog/C22/actions/workflows/ci.yml"><img src="https://github.com/Ollornog/C22/actions/workflows/ci.yml/badge.svg" alt="tests"></a>
+<a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-informational.svg" alt="License: MIT"></a>
+<img src="https://img.shields.io/badge/python-3.10%2B-blue.svg" alt="Python">
+</p>
+
+### Eine wiederverwendbare, framework-neutrale Layout- und Design-Bibliothek.
+
+Ihr Kern ist reines CSS (Design-Tokens, Layout-Primitives, Seitengerüste, native Popover) und etwas
+JavaScript — aus jedem Stack nutzbar. Darüber liegt eine **optionale** Jinja-Makro-Schicht für
+Python/Jinja-Anwendungen. Ziel ist, eine Seite oder ein Dashboard einmal zu bauen und nicht immer
+wieder dieselben Layout-Probleme zu lösen — Overflow, Abstände, Kontrast, Responsive-Brüche.
+
+---
 
 ## Was es ist
 
@@ -54,6 +62,6 @@ Die Suite ist bewusst wiederholbar: zweimal laufen, beide grün. Siehe
 
 MIT — siehe [LICENSE](LICENSE).
 
----
+## Credits
 
-<sub>Logo: <a href="https://www.flaticon.com/free-icons/cultures" title="cultures icons">Cultures icons created by Iconjam - Flaticon</a></sub>
+Logo: <a href="https://www.flaticon.com/free-icons/cultures" title="cultures icons">Cultures icons created by Iconjam - Flaticon</a>
