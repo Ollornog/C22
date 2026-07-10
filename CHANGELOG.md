@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed — unified layout of the documentation subpages
+
+`CONTRIBUTING`, `SECURITY` and the German `i18n/` versions now carry the language switcher directly
+below the heading and the logo bottom-right — the same pattern across all own repos. The English
+`CODE_OF_CONDUCT.md` stays untouched and **pure** so GitHub recognises it as Contributor Covenant
+rather than "Other".
+
 ## [0.1.0] - 2026-07-10
 
 ### Added

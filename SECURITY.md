@@ -1,8 +1,7 @@
 # Security Policy
 
-<p align="left"><b>English</b> · <a href="i18n/SECURITY.de.md">Deutsch</a></p>
-
-<p align="right"><img src="docs/logo.png" alt="C22" width="60" height="60"></p>
+<b>English</b> · <a href="i18n/SECURITY.de.md">Deutsch</a>
+<br /><br />
 
 ## Reporting a vulnerability
 
@@ -25,3 +24,6 @@ rather than opening a public issue. Expect a first reply within a week.
 
 How a consuming application authenticates, stores data or proxies requests — that belongs
 to the app, not to this presentation layer.
+
+<br /><br />
+<p align="right"><img src="docs/logo.png" alt="C22" width="60" height="60"></p>
