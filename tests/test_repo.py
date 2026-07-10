@@ -27,9 +27,9 @@ DATEIEN = hygiene.getrackte_dateien(str(ROOT))
 
 # ---- Pflichtdateien (zweisprachig, wo es den Leser betrifft)
 PFLICHT = [
-    "README.md", "README.de.md", "LICENSE", "CHANGELOG.md",
-    "CONTRIBUTING.md", "CONTRIBUTING.de.md", "SECURITY.md", "SECURITY.de.md",
-    "CODE_OF_CONDUCT.md", "CODE_OF_CONDUCT.de.md",
+    "README.md", "i18n/README.de.md", "LICENSE", "CHANGELOG.md",
+    "CONTRIBUTING.md", "i18n/CONTRIBUTING.de.md", "SECURITY.md", "i18n/SECURITY.de.md",
+    "CODE_OF_CONDUCT.md", "i18n/CODE_OF_CONDUCT.de.md",
     "pyproject.toml", ".ci-image",
     "scripts/check.sh", "scripts/_residue_check.sh", ".githooks/pre-push",
     ".github/workflows/ci.yml", ".github/dependabot.yml",
@@ -77,7 +77,7 @@ kategorien = hygiene.pruefe_changelog_kategorien(str(ROOT), POLICY)
 r.check("CHANGELOG nutzt gültige Kategorien", not kategorien, " | ".join(kategorien[:2]))
 
 # GitHub wählt die README nach ORT aus, nicht nach Sprache — eine Übersetzung veraltet still.
-uebersetzung = hygiene.pruefe_uebersetzungs_struktur(str(ROOT), [("README.md", "README.de.md")])
+uebersetzung = hygiene.pruefe_uebersetzungs_struktur(str(ROOT), [("README.md", "i18n/README.de.md")])
 r.check("README.de.md folgt der Struktur von README.md", not uebersetzung, " | ".join(uebersetzung[:2]))
 
 # ---- Sammellauf & Ausführbarkeit
