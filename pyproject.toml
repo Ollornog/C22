@@ -1,0 +1,30 @@
+[project]
+name = "c22"
+version = "0.1.0"
+description = "Reusable, framework-agnostic layout & design system: CSS design tokens, layout primitives, page shells and native popovers — with an optional Jinja macro layer."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+keywords = ["css", "design-system", "design-tokens", "layout", "jinja", "components", "self-hosted"]
+
+# Kein Laufzeit-Abhängigkeit: der Kern ist reines CSS/JS. Die Jinja-Makros nutzen,
+# wer schon Jinja hat — das bringt die konsumierende App mit, nicht diese Bibliothek.
+dependencies = []
+
+[project.optional-dependencies]
+# Nur für die Testsuite: der spätere visuelle Test spricht das DevTools-Protokoll (headless Chrome).
+dev = ["websockets>=12", "httpx>=0.27"]
+
+[project.urls]
+Homepage = "https://github.com/Ollornog/C22"
+Issues = "https://github.com/Ollornog/C22/issues"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["c22"]
+
+[tool.setuptools.package-data]
+c22 = ["static/css/*.css", "static/js/*.js", "macros/*.html"]
