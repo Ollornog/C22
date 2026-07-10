@@ -1,10 +1,8 @@
 <p align="center">
   <img src="docs/logo.png" alt="" width="120">
 </p>
-
-# C22
-
-*[English version](README.md)*
+<h1 align="center">C22</h1>
+<p align="center"><em><a href="README.md">English version</a></em></p>
 
 C22 ist eine wiederverwendbare, framework-neutrale Layout- und Design-Bibliothek. Ihr Kern
 ist reines CSS (Design-Tokens, Layout-Primitives, Seitengerüste, native Popover) und etwas

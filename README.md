@@ -1,10 +1,8 @@
 <p align="center">
   <img src="docs/logo.png" alt="" width="120">
 </p>
-
-# C22
-
-*[Deutsche Fassung](README.de.md)*
+<h1 align="center">C22</h1>
+<p align="center"><em><a href="README.de.md">Deutsche Fassung</a></em></p>
 
 C22 is a reusable, framework-agnostic layout and design system. Its core is plain CSS
 (design tokens, layout primitives, page shells, native popovers) and a small amount of
