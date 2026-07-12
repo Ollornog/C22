@@ -10,6 +10,8 @@
 <img src="https://img.shields.io/badge/python-3.10%2B-blue.svg" alt="Python">
 </p>
 
+> 🚧 **In Arbeit** — wird aktiv entwickelt; Schnittstellen und Struktur können sich vor einem stabilen `1.0`-Release noch ändern.
+
 ### Eine wiederverwendbare, framework-neutrale Layout- und Design-Bibliothek.
 
 Ihr Kern ist reines CSS (Design-Tokens, Layout-Primitives, Seitengerüste, native Popover) und etwas
