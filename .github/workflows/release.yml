@@ -1,0 +1,57 @@
+name: release
+
+# Ein Git-Tag `vX.Y.Z` erzeugt ein GitHub-Release mit Wheel, sdist und Prüfsummen.
+# C22 ist eine reine Asset-/Python-Bibliothek — KEIN Container-Abbild (das braucht nur ein Dienst).
+# Der Verteilweg: C22 aktualisiert sich nicht selbst, es wird per gepinntem Tag, Wheel oder
+# release-Tarball eingebunden — die CSS/JS-Dateien liegen in beiden Artefakten.
+#
+# Vorher prüft der Job, dass der Tag zur Version im Paket passt. Ein Release mit falscher
+# Versionsnummer ist schlimmer als keins: es ist unauffällig falsch.
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write        # nur dieser Job schreibt: Release anlegen und Dateien anhängen
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0  # v7.0.0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5
+        with:
+          python-version: "3.12"
+
+      - name: Tag gegen die Paketversion prüfen
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          pkg="$(python -c 'import tomllib,pathlib;
+          print(tomllib.loads(pathlib.Path("pyproject.toml").read_text())["project"]["version"])')"
+          if [ "$tag" != "$pkg" ]; then
+            echo "Tag $GITHUB_REF_NAME passt nicht zu pyproject-Version $pkg" >&2
+            exit 1
+          fi
+          echo "Tag und Paketversion stimmen überein: $pkg"
+
+      - name: Suite fahren, bevor irgendetwas veröffentlicht wird
+        run: python tests/run_all.py --no-browser
+
+      - name: Pakete bauen
+        run: |
+          pip install build
+          python -m build                       # erzeugt dist/*.whl und dist/*.tar.gz (beide mit den Assets)
+
+      - name: Prüfsummen
+        run: cd dist && sha256sum ./* > SHA256SUMS && cat SHA256SUMS
+
+      # Bewusst `gh` statt einer Dritt-Action: die bräuchte `contents: write` auf dieses Repo,
+      # und ihr Tag ließe sich umhängen. `gh` ist auf den Runnern vorinstalliert.
+      - name: Release anlegen
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release create "$GITHUB_REF_NAME" dist/* --generate-notes --verify-tag

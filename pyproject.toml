@@ -1,6 +1,6 @@
 [project]
 name = "c22"
-version = "0.1.0"
+version = "0.2.0"
 description = "Reusable, framework-agnostic layout & design system: CSS design tokens, layout primitives, page shells and native popovers — with an optional Jinja macro layer."
 readme = "README.md"
 requires-python = ">=3.10"
