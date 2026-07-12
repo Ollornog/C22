@@ -6,6 +6,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — component library and pattern book
+
+The first design release: a framework-free component library (vanilla CSS + minimal vanilla JS,
+no build step, no runtime dependency, single-file friendly) with a live pattern book at
+`examples/musterbuch.html`.
+
+- **Four independent look axes**, switchable without touching behaviour: colour theme
+  (`data-theme`: hell/ambient/dunkel), size/density (`data-size`), corner shape
+  (`--radius-scale`, a free value, plus per-corner `--rc-*`), and icon weight
+  (`data-icon-weight`) over an inlined [Phosphor](https://phosphoricons.com/) subset.
+- **Components**: buttons and segmented switches (including click-anywhere toggle chips and an
+  icon toggle with a split thumb), forms with floating labels and `:user-invalid` validation
+  timing, tabs (sliding underline and a browser-style variant), accordion, cards, navigation,
+  chips, list, table, divider, media, single- and dual-thumb sliders, combobox/autocomplete,
+  an ARIA menu, tooltip and popover, and custom scrollbars.
+- **Notification system** from a single source of truth (the `KIND` registry) feeding banner,
+  toast, centred popup and a notification centre/history — with grouped per-app notifications,
+  a history filter by app, and an ARIA-live announcer for screen readers.
+- Design principles (`docs/prinzipien.md`) and a BeerCSS-parity component checklist
+  (`docs/komponenten-checkliste.md`).
+
+Interaction patterns (combobox, menu, tabs, dual-thumb slider, live announcer) follow the
+[WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/). Brand/app logos come from
+[selfh.st/icons](https://selfh.st/icons/) (CC BY 4.0), bundled and self-hosted — never via CDN.
+
 ### Changed — unified layout of the documentation subpages
 
 `CONTRIBUTING`, `SECURITY` and the German `i18n/` versions now carry the language switcher directly

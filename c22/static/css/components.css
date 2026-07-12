@@ -1,0 +1,1163 @@
+/* ============================================================
+   C22 · components.css — Bausteine.
+   Charge 1 (Steuerelemente): Basis, Buttons, Umschalter,
+   Dropdown/Menü, Toasts. Weitere Bausteine folgen chargenweise.
+
+   PRINZIP (siehe docs/prinzipien.md): Bedeutung nie allein über Farbe.
+   Status/Meldungen tragen immer Icon/Form + Farbe (Farbsehschwäche).
+   ============================================================ */
+
+/* ---------- Basis / Reset ---------- */
+* { box-sizing: border-box; }
+* { min-width: 0; }                       /* Overflow-Krankheit strukturell aus */
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--sans);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+  transition: color .35s ease, background .35s ease;
+}
+body::before {                            /* Glow-Ebene je Theme */
+  content: ""; position: fixed; inset: 0; z-index: -1;
+  background: var(--glow); pointer-events: none;
+}
+img, svg { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+/* Fokus-Ring-Basis (SPOT): ein Ring für alles. Outline folgt dem Element-Radius (kein
+   border-radius-Override mehr — der machte Pillen beim Fokus eckig). :focus-visible = nur
+   Tastatur/Programm, nicht bei Maus-Klick. */
+:focus-visible { outline: var(--focus-w) solid var(--focus-col); outline-offset: var(--focus-offset); }
+::selection { background: color-mix(in oklab, var(--accent) 30%, transparent); }
+
+/* ---------- Buttons ---------- */
+.btn {
+  --_bg: var(--btn); --_fg: var(--btn-ink);
+  position: relative; overflow: hidden;   /* State-Layer clippt am Radius */
+  display: inline-flex; align-items: center; gap: .5ch;
+  padding: .6em 1.15em; border-radius: var(--radius-pill);
+  background: var(--_bg); color: var(--_fg);
+  font: inherit; font-size: var(--step--1); font-weight: 550; line-height: 1;
+  border: 1px solid transparent; cursor: pointer;
+  transition: transform .15s ease, box-shadow .2s ease, border-color .2s ease;
+  box-shadow: var(--shadow-s);
+}
+/* State-Layer (SPOT): EIN wiederverwendbarer Mechanismus für Hover/Press. currentColor =
+   Textfarbe → hellt gefüllte auf, tont Ghost/Danger ab, immer kontrastrichtig. `.c22-state`
+   ist die freie Utility; `.btn`/`.icon-btn` erben sie fest. */
+.c22-state { position: relative; overflow: hidden; }
+.c22-state, .btn, .icon-btn { isolation: isolate; }
+.c22-state::after, .btn::after, .icon-btn::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit;
+  background: currentColor; opacity: 0; pointer-events: none;
+  transition: opacity var(--dur-exit) ease;
+}
+.c22-state:hover::after, .btn:hover::after, .icon-btn:hover::after { opacity: var(--state-hover); }
+.c22-state:active::after, .btn:active::after, .icon-btn:active::after { opacity: var(--state-press); }
+.btn:hover { transform: translateY(-1px); }
+.btn:active { transform: scale(0.97); }   /* Press-Feedback (Geist/Emil-Muster) */
+.btn.accent { --_bg: var(--accent); --_fg: var(--accent-ink); }
+.btn.ghost {
+  --_bg: transparent; --_fg: var(--ink);
+  border-color: var(--line); box-shadow: none;
+}
+.btn.ghost:hover { border-color: color-mix(in oklab, var(--ink) 22%, var(--line)); }
+.btn.danger {
+  --_bg: transparent; --_fg: var(--bad);
+  border-color: color-mix(in oklab, var(--bad) 45%, var(--line)); box-shadow: none;
+}
+.btn.danger:hover { border-color: var(--bad); }
+.btn[disabled] { opacity: .5; pointer-events: none; }
+.btn svg { width: 1.05em; height: 1.05em; }
+
+.icon-btn {
+  position: relative; overflow: hidden;
+  display: inline-grid; place-items: center;
+  width: 2.4rem; height: 2.4rem; border-radius: var(--radius-pill);
+  background: var(--card); border: 1px solid var(--line);
+  color: var(--ink); cursor: pointer; font-size: 1.1rem;
+  box-shadow: var(--shadow-s); transition: transform .15s ease, border-color .2s ease;
+}
+.icon-btn:hover { border-color: color-mix(in oklab, var(--ink) 22%, var(--line)); transform: translateY(-1px); }
+
+/* ---------- Umschalter (segmentierte Pille mit gleitendem Daumen) ---------- */
+.switch {
+  --n: 2; --i: 0;
+  position: relative; display: inline-flex;
+  padding: .25rem;
+  background: var(--chip); border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+}
+.switch .thumb {
+  position: absolute; top: .25rem; bottom: .25rem;
+  left: calc(.25rem + (100% - .5rem) / var(--n) * var(--i));
+  width: calc((100% - .5rem) / var(--n));
+  background: var(--raised); border-radius: var(--radius-pill);
+  border: 1px solid color-mix(in oklab, var(--ink) 8%, transparent);   /* Kante, damit der Daumen auch im Dunkeln steht */
+  box-shadow: var(--shadow-s);
+  transition: left .28s cubic-bezier(.2,.7,.2,1);
+}
+.switch button {
+  position: relative; z-index: 1;
+  flex: 1 1 0; min-width: 2.4rem;
+  display: inline-flex; align-items: center; justify-content: center; gap: .4ch;
+  padding: .4rem .75rem; border: 0; border-radius: var(--radius-pill);
+  background: transparent; color: var(--muted); cursor: pointer;
+  font: inherit; font-size: var(--step--1); font-weight: 550; line-height: 1;
+  transition: color .2s ease;
+}
+.switch button[aria-checked="true"] { color: var(--ink); }
+.switch button svg { width: 1.05em; height: 1.05em; }
+/* Phosphor-Icon-Hosts: SVG füllt den extern dimensionierten Host */
+[data-c22-ico] > svg { width: 100%; height: 100%; display: block; }
+.switch-2 { --n: 2; }
+.switch-3 { --n: 3; }
+
+/* vertikale Variante — Daumen gleitet oben/unten statt links/rechts */
+.switch.vertical { flex-direction: column; border-radius: var(--radius); }
+.switch.vertical .thumb {
+  top: calc(.25rem + (100% - .5rem) / var(--n) * var(--i));
+  left: .25rem; right: .25rem; bottom: auto;
+  width: auto; height: calc((100% - .5rem) / var(--n));
+  border-radius: var(--radius-s);
+  transition: top .28s cubic-bezier(.2,.7,.2,1);
+}
+.switch.vertical button { flex: none; border-radius: var(--radius-s); }
+
+/* Split-Variante — geteiltes Element, aktive Hälfte gefüllt (kein Daumen) */
+.switch.split { padding: 0; overflow: clip; }
+.switch.split .thumb { display: none; }
+.switch.split button { border-radius: 0; padding: .5rem 1.2rem; font-weight: 600; color: var(--muted); transition: color .2s ease, background .2s ease; }
+.switch.split button + button { border-inline-start: 1px solid var(--line); }
+.switch.split button[aria-checked="false"] { box-shadow: inset 0 1px 5px color-mix(in oklab, var(--ink) 16%, transparent); }   /* inaktive Seite eingedrückt */
+.switch.split button[aria-checked="true"] {
+  background: var(--accent); color: var(--accent-ink);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--ink) 15%, transparent),
+              0 2px 9px color-mix(in oklab, var(--accent) 48%, transparent);   /* Glow → aktive Seite „leuchtet" */
+}
+
+/* Cycle: ein Klick irgendwo schaltet zum nächsten Eintrag */
+.switch.cycle { cursor: pointer; }
+.switch.cycle button { pointer-events: none; }
+
+/* Icon-Toggle: je Seite EIN Icon; aktives inkt (sitzt auf dem Daumen), inaktives gedämpft. */
+.switch.icon-toggle button { min-width: 2.6rem; padding: .4rem .7rem; }
+.switch.icon-toggle button svg { width: 1.2em; height: 1.2em; }
+
+/* Split-Toggle: der Daumen liegt ÜBER den Buttons und zeigt BEIDE Icons je zur Hälfte (2 halbe Icons,
+   an der Mitte zusammengesetzt); die vollen Track-Icons darunter sind gedämpft. Daumen gleitet auf die aktive Seite. */
+.switch.split-toggle button { color: var(--faint); min-width: 2.6rem; padding: .4rem .7rem; }
+.switch.split-toggle button svg { width: 1.2em; height: 1.2em; }
+.switch.split-toggle .thumb { z-index: 2; overflow: hidden; }
+.switch.split-toggle .thumb .knob-half { position: absolute; inset: 0; display: grid; place-items: center; color: var(--ink); }
+.switch.split-toggle .thumb .knob-half svg { width: 1.2em; height: 1.2em; }
+.switch.split-toggle .thumb .knob-half.l { clip-path: inset(0 50% 0 0); }   /* linke Hälfte von Icon A */
+.switch.split-toggle .thumb .knob-half.r { clip-path: inset(0 0 0 50%); }   /* rechte Hälfte von Icon B */
+
+/* ---------- Dropdown / Menü (nativ über <details>, kein Framework) ---------- */
+.menu { position: relative; display: inline-block; }
+.menu > summary { list-style: none; user-select: none; }
+.menu > summary::-webkit-details-marker { display: none; }
+/* Trigger hebt sich beim Hover NICHT (sonst wandert der Klickbereich am Rand weg) */
+.menu > summary.btn:hover { transform: none; }
+.menu > summary .caret { transition: transform .2s ease; }
+.menu[open] > summary .caret { transform: rotate(180deg); }
+.menu-panel {
+  position: absolute; top: calc(100% + .45rem); inset-inline-start: 0;
+  z-index: 40; min-width: 13rem;
+  padding: .35rem;
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: var(--radius-s); box-shadow: var(--shadow);
+  backdrop-filter: blur(var(--blur));
+  transform-origin: top center;
+  animation: c22-pop .18s var(--ease-out);
+}
+.menu-panel.align-end { inset-inline-start: auto; inset-inline-end: 0; }
+.menu-item {
+  display: flex; align-items: center; gap: .65ch; width: 100%;
+  padding: .5rem .65rem; border: 0; border-radius: var(--radius-s);
+  background: transparent; color: var(--ink); cursor: pointer;
+  font: inherit; font-size: var(--step--1); text-align: start; text-decoration: none;
+}
+.menu-item:hover, .menu-item:focus-visible { background: var(--hover); }
+.menu-item svg { width: 1.05em; height: 1.05em; color: var(--muted); }
+.menu-item.danger { color: var(--bad); }
+.menu-item.danger svg { color: var(--bad); }
+.menu-sep { height: 1px; margin: .3rem .2rem; background: var(--line); }
+
+@keyframes c22-pop {
+  from { opacity: 0; transform: translateY(-.5rem) scale(.96); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ---------- Toasts / Meldungen ----------
+   Kernkonzept: EIN Toast je Art sammelt mehrere Meldungen als Gruppen-Karte,
+   statt einer Flut einzelner Toasts (Alarm-Bündelung, siehe Recherche).
+   Farbsehschwäche-fest: jede Art trägt IMMER Icon + Farbe. Auto-Dismiss (ok/info)
+   läuft als ablaufende Hintergrund-Füllung; Hover pausiert und blendet sie aus.
+   Ein-/Ausblenden per Höhen-Slide (grid 0fr↔1fr), nie height-Sprung.
+   Default oben mittig; .pos-*. „Alle schließen" sitzt UNTER den Karten. */
+#c22-toasts {
+  position: fixed; z-index: 100;
+  display: flex; flex-direction: column;
+  width: min(94vw, 38rem);
+  inset-block-start: 1.15rem; inset-inline: 0; margin-inline: auto;   /* Default: oben mittig */
+}
+#c22-toasts.pos-top-center    { inset: 1.15rem 0 auto 0;    margin-inline: auto; }
+#c22-toasts.pos-bottom-center { inset: auto 0 1.15rem 0;    margin-inline: auto; }
+#c22-toasts.pos-top-right     { inset: 1.15rem 1.15rem auto auto; margin: 0; }
+#c22-toasts.pos-top-left      { inset: 1.15rem auto auto 1.15rem; margin: 0; }
+#c22-toasts.pos-bottom-right  { inset: auto 1.15rem 1.15rem auto; margin: 0; }
+#c22-toasts.pos-bottom-left   { inset: auto auto 1.15rem 1.15rem; margin: 0; }
+
+/* Höhen-Slide-Primitive (grid 0fr↔1fr): Höhe UND Deckkraft laufen PARALLEL — ein-/ausblenden
+   und rumschieben gleichzeitig, nicht nacheinander. Für Karten, Zeilen, Fußzeile, Leiste. */
+.c22-slide { display: grid; grid-template-rows: 0fr; transition: grid-template-rows var(--dur-enter) var(--ease-out); }
+.c22-slide > :first-child { overflow: hidden; min-height: 0; opacity: 0; transition: opacity var(--dur-enter) var(--ease-out); }   /* nur der Inhalts-Wrapper, nicht der angehängte Reiter */
+.c22-slide.in { grid-template-rows: 1fr; }
+.c22-slide.in > :first-child { opacity: 1; }
+/* Der Karten-Slot trägt Abstand UND Schatten. Slot-Box = Karte (Inner hat keinen eigenen Gap),
+   deshalb umschließt der Schatten EXAKT die Karte — und da der Slot selbst kein overflow:hidden hat
+   (nur sein Kind .toast-inner, für den Slide), wird der Schatten nicht links/rechts abgeschnitten.
+   Abstand als margin am Slot, der beim Kollabieren mit-animiert → kein Geister-Gap. */
+.toast-slot {
+  position: relative;                 /* Anker für den rechts hängenden Reiter */
+  margin-block-end: .7rem;
+  border-radius: var(--radius);
+  box-shadow: 0 18px 40px transparent, 0 3px 12px transparent;   /* transparente Basis → blendet mit .in weich ein/aus (kein leerer „Container") */
+  transition: grid-template-rows var(--dur-enter) var(--ease-out), margin-block-end var(--dur-enter) var(--ease-out), box-shadow var(--dur-enter) var(--ease-out);
+}
+.toast-slot.in  { box-shadow: var(--shadow), 0 3px 12px color-mix(in oklab, #000 22%, transparent); }   /* Schatten liegt am Slot = Kartengröße */
+.toast-slot.out { margin-block-end: 0; }
+.toast-slot > .toast-inner { position: relative; z-index: 1; }   /* Karte über dem Reiter, aber vor dem Slot-Schatten */
+
+/* Globale Leiste „Alles schließen" — rechts unter dem letzten Container (hohe order).
+   Schatten liegt am SLOT (fit-content, rechtsbündig) — genau wie bei den Karten — sonst schneidet
+   das overflow:hidden von .toast-inner (Slide) den Button-Schatten ab. */
+.toasts-bar-slot {
+  order: 999; align-self: flex-end; width: fit-content;
+  border-radius: var(--radius-pill);
+  box-shadow: 0 6px 18px transparent;   /* transparente Basis → blendet mit .in weich ein/aus */
+  transition: grid-template-rows var(--dur-enter) var(--ease-out), box-shadow var(--dur-enter) var(--ease-out);
+}
+.toasts-bar-slot.in { box-shadow: var(--shadow-s); }
+.toasts-bar { display: flex; justify-content: flex-end; }
+.toasts-bar button {
+  border: 1px solid var(--line); background: color-mix(in oklab, var(--card) 85%, transparent);
+  backdrop-filter: blur(var(--blur)); color: var(--muted);
+  border-radius: var(--radius-pill); padding: .35rem .95rem; cursor: pointer;
+  font: inherit; font-size: var(--step--1);
+}
+.toasts-bar button:hover { background: var(--hover); color: var(--ink); }
+
+.toast {
+  position: relative; overflow: hidden;
+  display: flex; align-items: center; gap: .8rem;
+  padding: .85rem 1.05rem;
+  background: color-mix(in oklab, var(--accent) 12%, var(--card));
+  border: 1px solid color-mix(in oklab, var(--accent) 28%, var(--line));
+  border-inline-start: 4px solid var(--accent);
+  border-radius: var(--radius); color: var(--ink);
+  /* Schatten liegt auf .toast-slot > .toast-inner (sonst würde overflow:hidden ihn abschneiden) */
+}
+.toast.ok   { background: color-mix(in oklab, var(--ok) 14%, var(--card));   border-color: color-mix(in oklab, var(--ok) 32%, var(--line));   border-inline-start-color: var(--ok); }
+.toast.warn { background: color-mix(in oklab, var(--warn) 16%, var(--card)); border-color: color-mix(in oklab, var(--warn) 34%, var(--line)); border-inline-start-color: var(--warn); }
+.toast.info { background: color-mix(in oklab, var(--info) 15%, var(--card)); border-color: color-mix(in oklab, var(--info) 34%, var(--line)); border-inline-start-color: var(--info); }
+.toast.status   { background: color-mix(in oklab, var(--status) 13%, var(--card));   border-color: color-mix(in oklab, var(--status) 30%, var(--line));   border-inline-start-color: var(--status); }
+.toast.app      { background: color-mix(in oklab, var(--app) 12%, var(--card));      border-color: color-mix(in oklab, var(--app) 30%, var(--line));      border-inline-start-color: var(--app); }
+.toast.progress { background: color-mix(in oklab, var(--progress) 12%, var(--card)); border-color: color-mix(in oklab, var(--progress) 30%, var(--line)); border-inline-start-color: var(--progress); }
+.toast.bad  {
+  background: color-mix(in oklab, var(--bad) 82%, #5c0008); color: #fff;
+  border-color: color-mix(in oklab, #fff 55%, transparent);          /* weißer Rahmen */
+  border-inline-start-color: color-mix(in oklab, #fff 88%, transparent);
+}
+/* Inhalt über der Timer-Füllung */
+.toast > .toast-icon, .toast > .toast-body { position: relative; z-index: 1; }
+
+/* Timer = ablaufende Hintergrund-Füllung (nur ok/info); Hover pausiert + blendet aus */
+.toast-fill {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  --fill: color-mix(in oklab, var(--accent) 11%, transparent);
+  transform-origin: left; transform: scaleX(1); opacity: 0;
+  background: linear-gradient(to right, var(--fill) 0%, var(--fill) 60%, transparent 100%);   /* weiche, verwischte Kante statt harter Linie */
+  transition: opacity .3s ease;
+}
+.toast.ok     .toast-fill { --fill: color-mix(in oklab, var(--ok) 13%, transparent); }
+.toast.info   .toast-fill { --fill: color-mix(in oklab, var(--info) 14%, transparent); }
+.toast.status .toast-fill { --fill: color-mix(in oklab, var(--status) 12%, transparent); }
+.toast.app    .toast-fill { --fill: color-mix(in oklab, var(--app) 12%, transparent); }
+.toast.auto .toast-fill { opacity: 1; animation: c22-shrink var(--toast-life, 4.5s) linear forwards; }
+#c22-toasts:hover .toast.auto .toast-fill,
+#c22-toasts:focus-within .toast.auto .toast-fill { animation-play-state: paused; opacity: 0; }   /* Hover UND Tastaturfokus pausieren (Aktion in der Notiz erreichbar halten) */
+
+/* Icon = großes, dezentes Wasserzeichen absolut über die VOLLE Höhe des Toasts — bei EINEM wie bei
+   MEHREREN Einträgen GLEICH groß. inset-block (oben+unten) macht die Höhe definit; aspect-ratio 1 →
+   Breite folgt; svg füllt die Fläche. */
+.toast .toast-icon {
+  position: absolute; z-index: 1; inset-inline-start: .95rem; inset-block-start: .7rem;
+  width: 2.6rem; height: 2.6rem;   /* FESTE Größe, OBEN ausgerichtet (nicht vertikal mittig) */
+  display: grid; place-items: center; margin: 0;
+  color: var(--accent); opacity: .28; pointer-events: none;
+}
+.toast.ok       .toast-icon { color: var(--ok); }
+.toast.warn     .toast-icon { color: var(--warn); }
+.toast.bad      .toast-icon { color: #fff; }
+.toast.info     .toast-icon { color: var(--info); }
+.toast.status   .toast-icon { color: var(--status); }
+.toast.app      .toast-icon { color: var(--app); }
+.toast.progress .toast-icon { color: var(--progress); }
+.toast .toast-icon svg { width: 100%; height: 100%; }
+.toast .toast-body { padding-inline-start: 3.9rem; }   /* Platz für das große Icon */
+
+/* Rumpf: Liste der Meldungs-Zeilen + Fußzeile „Alle schließen" (nur .multi) */
+.toast .toast-body { flex: 1; min-width: 0; display: grid; gap: 0; }
+.toast .toast-list { display: grid; }
+
+/* Eine Meldungs-Zeile — sieht IMMER gleich aus, egal wie viele im Toast sind (nur Weißraum trennt) */
+.toast-row { display: flex; align-items: flex-start; gap: .5rem; padding-block: .15rem; }
+.toast-list .toast-row-slot + .toast-row-slot .toast-row { margin-block-start: .5rem; }
+.toast .row-main { flex: 1; min-width: 0; display: grid; gap: .05rem; }
+.toast .row-title { font-size: var(--step-0); font-weight: 600; line-height: 1.3; }
+.toast .row-text  { font-size: var(--step--1); color: var(--muted); line-height: 1.4; }
+.toast.bad .row-title { color: #fff; }
+.toast.bad .row-text  { color: color-mix(in oklab, #fff 80%, transparent); }
+/* Notiz (aufklappbar, Rich-Content) — Klick auf den Eintrag öffnet sie, KEIN Chevron im Toast */
+/* App-Gruppen: EIN Logo je App (nicht je Zeile), Gruppen durch eine Trennlinie abgegrenzt */
+.toast.app .toast-body { padding-inline-start: .2rem; }   /* App-Karte hat kein Wasserzeichen → kein Icon-Gutter */
+.toast-appgroup { display: flex; gap: .7rem; align-items: flex-start; }
+.toast-appgroup + .toast-appgroup { margin-block-start: .55rem; padding-block-start: .6rem; border-top: 1px solid color-mix(in oklab, var(--ink) 12%, transparent); }
+.toast-appgroup .tg-icon { flex: none; width: 1.7rem; height: 1.7rem; display: inline-grid; place-items: center; margin-block-start: .3rem; }
+.toast-appgroup .tg-icon img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.toast-appgroup .tg-body { flex: 1; min-width: 0; }
+/* Notiz jetzt INLINE sichtbar (kein Aufklappen) → Link/Button direkt klickbar */
+.toast .row-note { margin-block-start: .4rem; font-size: var(--step--1); color: var(--muted); line-height: 1.5; display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+.toast .row-note a { color: inherit; text-decoration: underline; font-weight: 600; }
+.toast.bad .row-note { color: color-mix(in oklab, #fff 82%, transparent); }
+.toast.bad .row-note a { color: #fff; }
+
+/* Zähler bei identischer Zeile */
+.toast .row-count {
+  flex: none; align-self: center; min-width: 1.65rem; height: 1.65rem; padding: 0 .44rem;
+  display: grid; place-items: center; border-radius: var(--radius-pill);
+  background: color-mix(in oklab, var(--ink) 14%, transparent);
+  font-size: .8rem; font-weight: 700; font-variant-numeric: tabular-nums;
+}
+.toast.bad .row-count { background: color-mix(in oklab, #fff 30%, transparent); color: #fff; }   /* weißer, größer */
+
+/* Schließen. Jede Zeile trägt ihr eigenes GROSSES × — kein oberes Karten-× mehr.
+   Bei mehreren Zeilen gleitet „Alle schließen" rechts unter die letzte Zeile. */
+.toast .row-x {
+  flex: none; align-self: center; border: 0; background: transparent; cursor: pointer;
+  color: var(--muted); font-size: 1.7rem; line-height: 1; opacity: .95;   /* größer, weniger grau */
+  display: grid; place-items: center; width: 2.7rem; height: 2.7rem; margin: -.55rem -.4rem; border-radius: var(--radius-s);   /* großer Klickbereich, Layout-Footprint via negativem Margin */
+}
+.toast .row-x:hover { opacity: 1; color: var(--ink); background: var(--hover); }
+.toast.bad .row-x { color: #fff; opacity: .95; }   /* auf Rot: klares Weiß statt Grau */
+.toast.bad .row-x:hover { opacity: 1; color: #fff; background: color-mix(in oklab, #fff 16%, transparent); }
+
+/* „Alle schließen" als heller Reiter UNTEN RECHTS: hängt unter dem Toast raus, rechtsbündig.
+   Hinter der Karte (z-index 0 < Karte z-index 1) aber vor dem Slot-Schatten → oben hinter die
+   Unterkante getuckt, unten hängt der Text raus. */
+.toast-foot {
+  position: absolute; z-index: 0;
+  top: calc(100% - .85rem);       /* .85rem hinter die Unterkante getuckt */
+  inset-inline-end: 1.3rem;       /* rechtsbündig */
+  opacity: 0; pointer-events: none;
+  transition: opacity var(--dur-exit) var(--ease-out);
+}
+.toast-foot.in { opacity: 1; pointer-events: auto; }
+.toast-closeall {
+  border: 0; cursor: pointer; font: inherit; font-size: .66rem; font-weight: 600; white-space: nowrap;
+  background: var(--chip);          /* theme-adaptiv: hell im Hellmodus, dunkel im Dunkelmodus */
+  color: var(--muted);
+  padding: .95rem .85rem .24rem;   /* oben extra (steckt hinter der Karte), Text hängt unten raus */
+  border-radius: 0 0 var(--radius-s) var(--radius-s);   /* unten rund → umgedrehter Reiter */
+  box-shadow: 2px 3px 7px color-mix(in oklab, #000 18%, transparent);
+}
+.toast-closeall:hover { color: var(--ink); background: var(--raised); }
+
+/* Statisches Vorschau-Muster (einzeilig, .toast-msg) */
+.toast:has(.toast-msg) { align-items: center; }
+.toast .toast-msg { flex: 1; position: relative; z-index: 1; font-size: var(--step-0); font-weight: 500; }
+.toast.bad .toast-msg { color: #fff; }
+
+/* Re-Trigger + Ein-/Ausblenden */
+.toast.shake     { animation: c22-shake .5s cubic-bezier(.36,.07,.19,.97); }   /* neuer/gebündelter Fehler */
+.toast.bump      { animation: c22-bump .3s ease; }
+.toast-row.bump  { animation: c22-bump .3s ease; }
+.toast-slot.out .toast { animation: c22-toast-out var(--dur-exit) var(--ease-out) forwards; }
+
+@keyframes c22-toast-in  { from { opacity: 0; transform: scale(.98); } to { opacity: 1; transform: none; } }
+@keyframes c22-toast-out { to   { opacity: 0; transform: scale(.98); } }
+@keyframes c22-bump      { 0%,100% { transform: none; } 40% { transform: scale(1.03); } }
+@keyframes c22-shake {
+  0%,100% { transform: translateX(0); }
+  15% { transform: translateX(-13px); } 30% { transform: translateX(12px); }
+  45% { transform: translateX(-9px); } 60% { transform: translateX(6px); } 78% { transform: translateX(-4px); }
+}
+@keyframes c22-shrink { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+
+/* ---------- Banner (fest im Layout, schiebt Inhalt runter — kein Overlay) ---------- */
+.banner {
+  display: flex; align-items: center; gap: .8rem;
+  padding: .8rem clamp(1rem, 4vw, 2rem);
+  background: color-mix(in oklab, var(--accent) 14%, var(--card));
+  border-block-end: 1px solid color-mix(in oklab, var(--accent) 30%, var(--line));
+  color: var(--ink); font-size: var(--step--1);
+}
+.banner.ok       { background: color-mix(in oklab, var(--ok) 15%, var(--card));       border-block-end-color: color-mix(in oklab, var(--ok) 32%, var(--line)); }
+.banner.warn     { background: color-mix(in oklab, var(--warn) 17%, var(--card));     border-block-end-color: color-mix(in oklab, var(--warn) 34%, var(--line)); }
+.banner.bad      { background: color-mix(in oklab, var(--bad) 16%, var(--card));      border-block-end-color: color-mix(in oklab, var(--bad) 32%, var(--line)); }
+.banner.info     { background: color-mix(in oklab, var(--info) 14%, var(--card));     border-block-end-color: color-mix(in oklab, var(--info) 30%, var(--line)); }
+.banner.status   { background: color-mix(in oklab, var(--status) 13%, var(--card));   border-block-end-color: color-mix(in oklab, var(--status) 30%, var(--line)); }
+.banner.app      { background: color-mix(in oklab, var(--app) 12%, var(--card));      border-block-end-color: color-mix(in oklab, var(--app) 30%, var(--line)); }
+.banner.progress { background: color-mix(in oklab, var(--progress) 12%, var(--card)); border-block-end-color: color-mix(in oklab, var(--progress) 30%, var(--line)); }
+.banner .banner-icon { flex: none; display: grid; place-items: center; color: var(--accent); }
+.banner.ok .banner-icon       { color: var(--ok); }
+.banner.warn .banner-icon     { color: var(--warn); }
+.banner.bad .banner-icon      { color: var(--bad); }
+.banner.info .banner-icon     { color: var(--info); }
+.banner.status .banner-icon   { color: var(--status); }
+.banner.app .banner-icon      { color: var(--app); }
+.banner.progress .banner-icon { color: var(--progress); }
+.banner .banner-icon svg { width: 1.35rem; height: 1.35rem; }
+.banner .banner-msg { flex: 1; }
+.banner .banner-msg b { font-weight: 600; }
+.banner .banner-actions { display: flex; align-items: center; gap: .6rem; }
+.banner .banner-x { flex: none; border: 0; background: transparent; color: var(--faint); cursor: pointer; font-size: 1.35rem; line-height: 1; display: grid; place-items: center; width: 2.5rem; height: 2.5rem; margin: -.4rem -.3rem; border-radius: var(--radius-s); }
+.banner .banner-x:hover { color: var(--ink); }
+.banner.slide-in { animation: c22-banner-in .3s ease; }
+@keyframes c22-banner-in { from { transform: translateY(-100%); opacity: 0; } to { transform: none; opacity: 1; } }
+
+/* ---------- Dropdown: Richtungen + Kollisions-Flip (JS setzt die Klasse) ---------- */
+.menu-panel.drop-up    { top: auto; bottom: calc(100% + .45rem); animation: c22-pop-up .16s cubic-bezier(.2,.7,.2,1); }
+.menu-panel.drop-right { top: 0; inset-inline-start: calc(100% + .45rem); }
+.menu-panel.drop-left  { top: 0; inset-inline-start: auto; inset-inline-end: calc(100% + .45rem); }
+@keyframes c22-pop-up { from { opacity: 0; transform: translateY(.35rem) scale(.98); } to { opacity: 1; transform: none; } }
+/* Trigger ohne Button-Look */
+.menu > summary.plain { display: inline-flex; align-items: center; gap: .4ch; cursor: pointer; color: var(--ink); }
+.menu > summary.plain:hover { color: var(--accent); }
+/* Umschalter als Menü-Zeile */
+.menu-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .4rem .65rem; font-size: var(--step--1); }
+
+/* ---------- Dialog / Popup (nativ <dialog>) ---------- */
+dialog.c22-dialog {
+  border: 1px solid var(--line); border-radius: var(--radius-l);
+  background: var(--card); color: var(--ink); box-shadow: var(--shadow);
+  padding: 0; max-width: min(92vw, 30rem); width: 100%;
+}
+dialog.c22-dialog::backdrop { background: color-mix(in oklab, #000 50%, transparent); backdrop-filter: blur(2px); }
+dialog.c22-dialog[open] { animation: c22-dialog-in .2s cubic-bezier(.2,.7,.2,1); }
+@keyframes c22-dialog-in { from { opacity: 0; transform: translateY(.5rem) scale(.98); } to { opacity: 1; transform: none; } }
+.dialog-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.1rem 1.3rem .2rem; }
+.dialog-head h3 { font-family: var(--serif); font-size: var(--step-1); margin: 0; font-weight: 600; }
+.dialog-body { padding: .4rem 1.3rem 1rem; color: var(--muted); }
+.dialog-actions { display: flex; justify-content: flex-end; gap: .6rem; padding: .3rem 1.3rem 1.2rem; }
+.dialog-head .banner-x { border: 0; background: transparent; color: var(--faint); cursor: pointer; font-size: 1.7rem; line-height: 1; display: grid; place-items: center; width: 2.8rem; height: 2.8rem; margin: -.5rem; border-radius: var(--radius-s); }
+.dialog-head .banner-x:hover { background: var(--hover); color: var(--ink); }
+
+/* ---------- Mittige Popup-Meldung + Scrim (NON-modal — blockiert nichts) ----------
+   Scrim: rein visuell, pointer-events:none → Seite bleibt bedienbar. Blur + Dim, weicher Rand
+   per mask (Vignette zur Mitte), blendet über die Deckkraft mit ein. KEIN <dialog>-Backdrop
+   (der würde sperren). Popup: mittige Karte, Enter = origin-nahe Scale-Blende, Exit schneller. */
+#c22-popup-scrim {
+  position: fixed; inset: 0; z-index: 110; pointer-events: none;   /* ÜBER den Toasts (100): Popup UND sein Hintergrund liegen vor den Toasts */
+  /* KEIN backdrop-filter mehr: ein Blur-Backdrop wird bei JEDER Animation im Vordergrund pro Frame
+     neu gefiltert → das ruckelte alles im Popup (v.a. den Fortschrittsbalken). Reiner Radial-Dim ist
+     kostenlos zu compositen und damit glatt. (Optik: weiche Vignette statt Milchglas.) */
+  background: radial-gradient(130% 130% at 50% 46%, color-mix(in oklab, #000 14%, transparent), color-mix(in oklab, #000 38%, transparent));
+  opacity: 0; will-change: opacity; transition: opacity 220ms ease;
+}
+#c22-popup-scrim.in { opacity: 1; }
+
+#c22-popups {
+  position: fixed; inset: 0; z-index: 111; pointer-events: none;   /* über Scrim (110) und Toasts (100) */
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: .9rem; padding: 1.15rem;
+}
+/* Position (SPOT: dieselbe Karte, nur die Ausrichtung) — Vorgabe „mitte" */
+#c22-popups[data-pos="oben"]  { justify-content: flex-start; padding-block-start: 4.5vh; }
+#c22-popups[data-pos="unten"] { justify-content: flex-end;   padding-block-end: 4.5vh; }
+#c22-popup-scrim[data-pos="oben"]  { background: radial-gradient(130% 130% at 50% 22%, color-mix(in oklab, #000 12%, transparent), color-mix(in oklab, #000 34%, transparent)); }
+#c22-popup-scrim[data-pos="unten"] { background: radial-gradient(130% 130% at 50% 78%, color-mix(in oklab, #000 12%, transparent), color-mix(in oklab, #000 34%, transparent)); }
+.c22-popup {
+  pointer-events: auto; position: relative; box-sizing: border-box;
+  width: min(92vw, 25rem);
+  display: grid; justify-items: center; gap: .45rem; text-align: center;
+  padding: 1.8rem 1.5rem 1.6rem;
+  background: var(--card); color: var(--ink);
+  border: 1px solid var(--line); border-radius: var(--radius-l);
+  box-shadow: var(--shadow), 0 4px 16px color-mix(in oklab, #000 22%, transparent);
+  overflow: hidden;
+  transform: scale(.96); opacity: 0; will-change: transform, opacity;   /* nur transform/opacity → GPU-glatt */
+  transition: transform var(--dur-enter, 300ms) cubic-bezier(0.16, 1, 0.3, 1),
+              opacity var(--dur-enter, 300ms) var(--ease-out);
+}
+.c22-popup.in  { transform: none; opacity: 1; }
+.c22-popup.out { transform: scale(.98); opacity: 0; transition-duration: var(--dur-exit, 180ms); }
+.c22-popup.ok       { --pop-c: var(--ok); }
+.c22-popup.warn     { --pop-c: var(--warn); }
+.c22-popup.bad      { --pop-c: var(--bad); }
+.c22-popup.info     { --pop-c: var(--info); }
+.c22-popup.status   { --pop-c: var(--status); }
+.c22-popup.app      { --pop-c: var(--app); }
+.c22-popup.progress { --pop-c: var(--progress); }
+.c22-popup .pop-icon {
+  display: grid; place-items: center; width: 3.4rem; height: 3.4rem; margin-block-end: .25rem;
+  border-radius: var(--radius-pill); color: var(--pop-c);
+  background: color-mix(in oklab, var(--pop-c) 15%, var(--card));
+}
+.c22-popup .pop-icon svg { width: 1.9rem; height: 1.9rem; }
+.c22-popup .pop-title { font-family: var(--serif); font-size: var(--step-1); font-weight: 600; line-height: 1.25; }
+.c22-popup .pop-text  { color: var(--muted); font-size: var(--step-0); line-height: 1.45; }
+.c22-popup .pop-note  { display: grid; gap: .55rem; justify-items: center; margin-block-start: .6rem; color: var(--muted); font-size: var(--step--1); line-height: 1.5; }
+.c22-popup .pop-note a { color: var(--accent); text-decoration: underline; font-weight: 600; }
+.c22-popup .pop-note .btn { margin-block-start: .15rem; }
+.c22-popup .pop-x {
+  position: absolute; inset-block-start: .4rem; inset-inline-end: .4rem;
+  border: 0; background: transparent; color: var(--faint); cursor: pointer;
+  font-size: 1.5rem; line-height: 1; display: grid; place-items: center;
+  width: 2.8rem; height: 2.8rem; border-radius: var(--radius-s);
+}
+.c22-popup .pop-x:hover { background: var(--hover); color: var(--ink); }
+/* Varianten: Größe · gesperrt · Fortschritt */
+.c22-popup.big { width: min(94vw, 46rem); }
+.c22-popup.locked .pop-x { display: none; }   /* gesperrt: kein Schließen-× (Esc/Klick-weg sind ebenfalls aus) */
+.c22-popup .pop-progress { width: 100%; height: 6px; margin-block-start: .55rem; border-radius: var(--radius-pill); overflow: hidden; background: color-mix(in oklab, var(--pop-c) 18%, transparent); }
+/* Balken bewegt nur transform (GPU). .set() gleitet weich; die Demo fährt ihn über run() in
+   EINEM langen Übergang → keine rAF-pro-Frame-Konkurrenz mehr (das war die Stotter-Ursache). */
+/* Fill OHNE eigenen Radius (die Spur clippt via overflow:hidden) → kein Radius-Verzerren beim scaleX;
+   will-change/translateZ erzwingt eine GPU-Ebene → butterweiche Composited-Animation. */
+.c22-popup .pop-progress-fill { height: 100%; width: 100%; background: var(--pop-c); transform: scaleX(0); transform-origin: left; transition: transform .35s var(--ease-out); will-change: transform; }
+.c22-popup .pop-progress.indet .pop-progress-fill { width: 40%; animation: c22-indet 1.15s ease-in-out infinite; }
+@keyframes c22-indet { 0% { transform: translateX(-110%); } 100% { transform: translateX(360%); } }
+.c22-popup .pop-icon svg.pop-spin { animation: c22-spin .9s linear infinite; transform-origin: 50% 50%; }
+@keyframes c22-spin { to { transform: rotate(360deg); } }
+
+/* Selbst-schließendes Popup (z.B. Erfolg): Hintergrund-Countdown wie beim Toast, Hover pausiert. */
+.c22-popup .pop-fill {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 4px;
+  transform: scaleX(1); transform-origin: left;
+  background: color-mix(in oklab, var(--pop-c) 55%, transparent);
+}
+.c22-popup.auto .pop-fill { animation: c22-shrink 2.6s linear forwards; }
+#c22-popups .c22-popup.auto:hover .pop-fill, #c22-popups .c22-popup.auto:focus-within .pop-fill { animation-play-state: paused; }
+
+@media (prefers-reduced-motion: reduce) {
+  /* nur Bewegung raus (Scale/Spin) — Blur/Opacity sind keine Bewegung und bleiben (Look konsistent) */
+  .c22-popup { transform: none; transition: opacity var(--dur-enter, 300ms) var(--ease-out); }
+  .c22-popup.in, .c22-popup.out { transform: none; }
+  .c22-popup .pop-icon svg.pop-spin, .c22-popup .pop-progress.indet .pop-progress-fill { animation: none; }
+}
+
+/* ---------- Custom Scrollbars (.c22-scroll auf scrollbaren Bereich) ---------- */
+.c22-scroll { scrollbar-width: thin; scrollbar-color: color-mix(in oklab, var(--ink) 28%, transparent) transparent; }
+.c22-scroll::-webkit-scrollbar { width: 10px; height: 10px; }
+.c22-scroll::-webkit-scrollbar-track { background: transparent; }
+.c22-scroll::-webkit-scrollbar-thumb {
+  background: color-mix(in oklab, var(--ink) 26%, transparent);
+  border-radius: var(--radius-pill); border: 2px solid transparent; background-clip: padding-box;
+}
+.c22-scroll::-webkit-scrollbar-thumb:hover { background: color-mix(in oklab, var(--ink) 44%, transparent); background-clip: padding-box; }
+
+/* ---------- Benachrichtigungs-Center (stille Oberfläche / Historie) ---------- */
+.bell { position: relative; }
+.bell .bell-badge {
+  position: absolute; top: -.25rem; inset-inline-end: -.25rem;
+  min-width: 1.15rem; height: 1.15rem; padding: 0 .3rem;
+  display: grid; place-items: center; border-radius: var(--radius-pill);
+  background: var(--bad); color: #fff; font-size: .66rem; font-weight: 700;
+}
+.center-panel { display: flex; flex-direction: column; max-height: min(72vh, 32rem); width: min(94vw, 30rem); padding: 0; }
+.center-panel .center-head { display: flex; align-items: center; justify-content: space-between; padding: .7rem .9rem; border-block-end: 1px solid var(--line); }
+.center-panel .center-head b { font-weight: 600; }
+.center-panel .center-list { overflow-y: auto; padding: .5rem; display: grid; gap: .45rem; }
+.center-panel .center-empty { padding: 2rem 1rem; text-align: center; color: var(--faint); font-size: var(--step--1); }
+
+/* Filter als Wechsler (Alle / Fehler / Mitteilungen / Apps) — immer alle Gruppen, volle Breite */
+.center-panel .center-filter.switch { display: flex; margin: .55rem .6rem .15rem; }
+.center-panel .center-filter.switch button { white-space: nowrap; padding-inline: .45rem; min-width: 0; }
+
+/* Feinfilter „nach App" — nur im Apps-Tab, gefüllt aus den Apps, die in der Historie liegen. Mehrfachauswahl. */
+.center-panel .center-appfilter { display: flex; flex-wrap: wrap; gap: .35rem; margin: .1rem .6rem .4rem; }
+.center-panel .center-appfilter[hidden] { display: none; }
+.center-appfilter .ci-appchip { padding: .22rem .55rem; gap: .35rem; font-size: .76rem; }
+.center-appfilter .ci-appchip-logo { width: 1.1rem; height: 1.1rem; flex: none; display: inline-grid; place-items: center; }
+.center-appfilter .ci-appchip-logo img { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+/* Ein History-Eintrag — je Art dezent getönt, Statusfarbe an der Kante. Eigener Icon-Slot
+   (item.icon) macht spätere Benachrichtigungstypen mit eigenem Icon möglich. */
+.center-item {
+  display: flex; align-items: flex-start; gap: .65rem;
+  padding: .6rem .7rem; border-radius: var(--radius-s);
+  background: color-mix(in oklab, var(--card) 88%, var(--paper));
+  border: 1px solid var(--line); border-inline-start: 3px solid var(--accent);
+}
+.center-item.ok   { background: color-mix(in oklab, var(--ok) 9%, var(--card));   border-color: color-mix(in oklab, var(--ok) 22%, var(--line));   border-inline-start-color: var(--ok); }
+.center-item.warn { background: color-mix(in oklab, var(--warn) 10%, var(--card)); border-color: color-mix(in oklab, var(--warn) 24%, var(--line)); border-inline-start-color: var(--warn); }
+.center-item.bad  { background: color-mix(in oklab, var(--bad) 9%, var(--card));  border-color: color-mix(in oklab, var(--bad) 24%, var(--line));  border-inline-start-color: var(--bad); }
+.center-item.info { background: color-mix(in oklab, var(--info) 9%, var(--card)); border-color: color-mix(in oklab, var(--info) 24%, var(--line)); border-inline-start-color: var(--info); }
+.center-item.status   { background: color-mix(in oklab, var(--status) 9%, var(--card));   border-color: color-mix(in oklab, var(--status) 22%, var(--line));   border-inline-start-color: var(--status); }
+.center-item.app      { background: color-mix(in oklab, var(--app) 9%, var(--card));      border-color: color-mix(in oklab, var(--app) 22%, var(--line));      border-inline-start-color: var(--app); }
+.center-item.progress { background: color-mix(in oklab, var(--progress) 9%, var(--card)); border-color: color-mix(in oklab, var(--progress) 22%, var(--line)); border-inline-start-color: var(--progress); }
+.center-item .ci-icon { flex: none; margin-block-start: .1rem; color: var(--accent); display: grid; place-items: center; }
+.center-item.ok .ci-icon { color: var(--ok); }
+.center-item.warn .ci-icon { color: var(--warn); }
+.center-item.bad .ci-icon { color: var(--bad); }
+.center-item.info .ci-icon { color: var(--info); }
+.center-item.status .ci-icon { color: var(--status); }
+.center-item.app .ci-icon { color: var(--app); }
+.center-item.progress .ci-icon { color: var(--progress); }
+.center-item .ci-icon svg { width: 1.2rem; height: 1.2rem; }
+.center-item .ci-icon img { width: 1.45rem; height: 1.45rem; object-fit: contain; display: block; }   /* Marken-/App-Logo (selfh.st) volle Farbe */
+/* Notiz ist inline sichtbar → kein Klick-zum-Aufklappen, kein cursor:pointer mehr */
+.center-item .ci-body { flex: 1; min-width: 0; }
+.center-item .ci-head { display: flex; align-items: baseline; gap: .6rem; }
+.center-item .ci-msg { flex: 1; min-width: 0; font-size: var(--step--1); font-weight: 600; }   /* Titel links */
+.center-item .ci-timeblock { flex: none; display: grid; justify-items: end; gap: .05rem; }     /* Zeit RECHTS (wie vorher) */
+.center-item .ci-time { font-size: .72rem; color: var(--faint); font-variant-numeric: tabular-nums; }
+.center-item .ci-rel { display: inline-flex; align-items: center; gap: .25rem; font-size: .68rem; color: var(--faint); }   /* „vor X Min/Std" + Uhr-Icon */
+.center-item .ci-rel svg { width: .8rem; height: .8rem; }
+.center-item .ci-sub { display: block; font-size: var(--step--1); color: var(--muted); line-height: 1.4; }   /* Untertitel — immer */
+.center-item .ci-note { margin-block-start: .45rem; font-size: var(--step--1); color: var(--muted); line-height: 1.5; display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+.center-item .ci-note a { color: inherit; text-decoration: underline; font-weight: 600; }
+
+/* ---------- Formulare / Eingaben ----------
+   Feld = Wrapper mit schwebendem Label (placeholder=" "-Trick), Hinweis und Fehlerzeile.
+   Alle Radien/Farben aus Tokens → folgen Theme/Größe/Form-Achse. */
+.field { position: relative; display: block; }
+
+.input, .textarea, .select {
+  width: 100%; appearance: none;
+  padding: 1.35rem .9rem .5rem;
+  background: var(--card); color: var(--ink);
+  border: 1px solid var(--line); border-radius: var(--radius-s);
+  font: inherit; font-size: var(--step-0); line-height: 1.3;
+  transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+}
+.textarea { min-height: 6.5rem; resize: vertical; padding-top: 1.6rem; }
+/* Auto-Modus: Feld wächst mit dem Inhalt (Textarea vertikal, Input horizontal) —
+   nativ über field-sizing (Chrome), sonst JS-Fallback für die Textarea (initForms). */
+.input.auto, .textarea.auto { field-sizing: content; }
+.input.auto { width: auto; min-width: 12rem; max-width: 100%; }
+.textarea.auto { resize: none; max-height: 18rem; }
+.input::placeholder, .textarea::placeholder { color: transparent; }   /* Platzhalter dient nur dem :placeholder-shown-Trick */
+.input:hover, .textarea:hover, .select:hover { border-color: color-mix(in oklab, var(--ink) 22%, var(--line)); }
+.input:focus, .textarea:focus, .select:focus {
+  outline: none; border-color: var(--accent);
+  box-shadow: 0 0 0 var(--focus-w) var(--focus-col);
+}
+.input:disabled, .textarea:disabled, .select:disabled { opacity: .55; cursor: not-allowed; }
+
+/* Schwebendes Label — ruht im Feld, steigt bei Fokus/Inhalt nach oben.
+   Deckender Hintergrund (= Feldfarbe) + etwas Innenabstand: das gestiegene Label liegt IMMER
+   deckend über dem Eingabetext, nie halb dahinter → bleibt lesbar. Der Innenabstand wird links
+   herausgerechnet, damit der Text bündig mit dem Feldinhalt bleibt. */
+.field-label {
+  position: absolute; left: calc(.9rem + 1px - .3rem); top: .95rem;
+  padding-inline: .3rem; background: var(--card); border-radius: .2rem;
+  color: var(--muted); font-size: var(--step-0); line-height: 1;
+  max-width: calc(100% - 1.2rem); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  pointer-events: none; transform-origin: left top;
+  transition: transform .16s var(--ease-out), color .16s ease;
+}
+.input:focus ~ .field-label,
+.input:not(:placeholder-shown) ~ .field-label,
+.textarea:focus ~ .field-label,
+.textarea:not(:placeholder-shown) ~ .field-label,
+.field.filled .field-label {
+  transform: translateY(-.62rem) scale(.76); color: var(--accent);
+}
+
+/* Select — zeigt stets einen Wert → Label steht immer oben; eigener Caret (pointer-events:none) */
+.field-select .field-label { transform: translateY(-.62rem) scale(.76); color: var(--muted); }
+.field-select .input:focus ~ .field-label, .field-select .select:focus ~ .field-label { color: var(--accent); }
+.select { padding-right: 2.4rem; cursor: pointer; }
+.field-caret {
+  position: absolute; right: .8rem; top: 1.15rem; width: 1.15rem; height: 1.15rem;
+  color: var(--muted); pointer-events: none;
+}
+
+/* Hinweis / Fehler — Fehlerzeile ist IMMER im Layout (Platz reserviert), nur unsichtbar,
+   damit beim Einblenden nichts springt. */
+.field-hint, .field-error { font-size: var(--step--1); line-height: 1.35; margin-block-start: .35rem; }
+.field-hint { color: var(--faint); }
+.field-error { color: var(--bad); display: flex; align-items: center; gap: .4ch; min-height: 1.15em; visibility: hidden; }
+.field-error .fe-ico { flex: none; width: 1em; height: 1em; display: inline-grid; }
+/* Fehler-Timing kommt vom Browser: :user-invalid greift erst nach Blur/Submit, nie bei unberührten
+   Feldern (im Gegensatz zu :invalid). Kein JS-Klassen-Toggle mehr. */
+.field[data-validate]:has(:user-invalid) .field-error { visibility: visible; }
+.field[data-validate]:has(:user-invalid) .input,
+.field[data-validate]:has(:user-invalid) .textarea,
+.field[data-validate]:has(:user-invalid) .select { border-color: var(--bad); }
+.field[data-validate]:has(:user-invalid) .input:focus,
+.field[data-validate]:has(:user-invalid) .textarea:focus,
+.field[data-validate]:has(:user-invalid) .select:focus {
+  box-shadow: 0 0 0 var(--focus-w) color-mix(in oklab, var(--bad) 55%, transparent);
+}
+.field[data-validate]:has(:user-invalid) .field-label { color: var(--bad); }
+
+/* ---------- Auswahl: Checkbox / Radio / Toggle (nativ + appearance:none) ---------- */
+.choice { display: inline-flex; align-items: center; gap: .6ch; cursor: pointer; font-size: var(--step-0); }
+.choice-input { position: absolute; width: 1px; height: 1px; opacity: 0; margin: 0; }
+.choice-box {
+  flex: none; width: 1.35rem; height: 1.35rem;
+  border: 1.6px solid color-mix(in oklab, var(--ink) 30%, var(--line));
+  border-radius: var(--radius-s); background: var(--card);
+  display: grid; place-items: center;
+  transition: background .18s ease, border-color .18s ease;
+}
+.choice.radio .choice-box { border-radius: var(--radius-pill); }
+.choice-check {
+  width: 78%; height: 78%; fill: none; stroke: var(--accent-ink); stroke-width: 3.2;
+  stroke-linecap: round; stroke-linejoin: round;
+  stroke-dasharray: 24; stroke-dashoffset: 24;
+  transition: stroke-dashoffset .22s var(--ease-out);
+}
+.choice.radio .choice-dot {
+  width: 52%; height: 52%; border-radius: var(--radius-pill);
+  background: var(--accent-ink); transform: scale(0);
+  transition: transform .18s var(--ease-out);
+}
+.choice:hover .choice-box { border-color: color-mix(in oklab, var(--ink) 48%, var(--line)); }
+.choice-input:checked ~ .choice-box { background: var(--accent); border-color: var(--accent); }
+.choice-input:checked ~ .choice-box .choice-check { stroke-dashoffset: 0; }
+.choice-input:checked ~ .choice-box .choice-dot { transform: scale(1); }
+.choice-input:focus-visible ~ .choice-box { outline: var(--focus-w) solid var(--focus-col); outline-offset: var(--focus-offset); }
+.choice-input:disabled ~ .choice-box { opacity: .5; }
+.choice:has(.choice-input:disabled) { cursor: not-allowed; color: var(--faint); }
+
+/* Toggle (Schalter) — native Checkbox als gleitende Pille; Track folgt der Form-Achse */
+.toggle { display: inline-flex; align-items: center; gap: .7ch; cursor: pointer; font-size: var(--step-0); }
+.toggle-input { position: absolute; width: 1px; height: 1px; opacity: 0; margin: 0; }
+.toggle-track {
+  flex: none; width: 2.9rem; height: 1.65rem; padding: .18rem;
+  background: color-mix(in oklab, var(--ink) 24%, var(--line));
+  border-radius: var(--radius-pill); display: flex; align-items: center;
+  transition: background .2s ease;
+}
+.toggle-knob {
+  width: 1.29rem; height: 1.29rem; border-radius: var(--radius-pill);
+  background: #fff; box-shadow: var(--shadow-s);
+  transition: transform .22s var(--ease-out);
+}
+.toggle-input:checked ~ .toggle-track { background: var(--accent); }
+.toggle-input:checked ~ .toggle-track .toggle-knob { transform: translateX(1.25rem); }
+.toggle-input:focus-visible ~ .toggle-track { outline: var(--focus-w) solid var(--focus-col); outline-offset: var(--focus-offset); }
+.toggle-input:disabled ~ .toggle-track { opacity: .5; }
+
+/* ---------- Accordion (Disclosure) ----------
+   Echtes Button-Disclosure (aria-expanded/-controls), Höhe animiert über den
+   grid-template-rows 0fr↔1fr-Trick (Inner: overflow:hidden; min-height:0). */
+.accordion {
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: var(--radius-s); overflow: hidden;
+}
+.acc-item + .acc-item { border-top: 1px solid var(--line); }
+.acc-h { margin: 0; font: inherit; }
+.acc-trigger {
+  width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 1ch;
+  padding: .95rem 1.1rem; background: transparent; border: 0; color: var(--ink);
+  font: inherit; font-size: var(--step-0); font-weight: 600; text-align: start; cursor: pointer;
+  transition: background .18s ease;
+}
+.acc-trigger:hover { background: var(--hover); }
+.acc-ico { flex: none; width: 1.2rem; height: 1.2rem; color: var(--muted); transition: transform .22s var(--ease-out); }
+.acc-trigger[aria-expanded="true"] .acc-ico { transform: rotate(180deg); }
+.acc-panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .28s var(--ease-out); }
+.acc-panel.open { grid-template-rows: 1fr; }
+.acc-inner { overflow: hidden; min-height: 0; }
+.acc-content { padding: .1rem 1.1rem 1.05rem; color: var(--muted); }
+.acc-content > :first-child { margin-top: 0; }
+.acc-content > :last-child { margin-bottom: 0; }
+
+/* ---------- Cards ---------- */
+.card {
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: var(--radius); box-shadow: var(--shadow-s); overflow: hidden;
+}
+.card-media { aspect-ratio: 16 / 9; background: linear-gradient(135deg, var(--chip), color-mix(in oklab, var(--accent) 18%, var(--chip))); }
+.card-body { padding: 1.05rem 1.2rem 1.2rem; }
+.card-title { font-family: var(--serif); font-weight: 600; font-size: var(--step-1); margin: 0 0 .3rem; line-height: 1.2; }
+.card-text { color: var(--muted); font-size: var(--step--1); margin: 0; }
+.card-foot { margin-top: .9rem; display: flex; align-items: center; gap: .6rem; }
+/* Interaktive Karte: Hover-Lift + Stretched-Link (a::after deckt die ganze Karte ab) */
+.card.interactive { position: relative; cursor: pointer; transition: transform .2s var(--ease-out), box-shadow .2s ease, border-color .2s ease; }
+.card.interactive:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: color-mix(in oklab, var(--accent) 30%, var(--line)); }
+.card .stretched-link::after { content: ""; position: absolute; inset: 0; z-index: 1; }
+
+/* Skeleton-Shimmer (Ladeplatzhalter) */
+.skeleton {
+  position: relative; overflow: hidden; border-radius: var(--radius-s);
+  background: var(--chip);
+}
+.skeleton::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(100deg, transparent 20%, color-mix(in oklab, var(--ink) 7%, transparent) 50%, transparent 80%);
+  transform: translateX(-100%); animation: c22-shimmer 1.3s infinite;
+}
+.skeleton.line { height: .8rem; margin-block: .45rem; }
+.skeleton.line.short { width: 55%; }
+@keyframes c22-shimmer { to { transform: translateX(100%); } }
+
+/* ---------- Tabs / Segmented ----------
+   Gleitender Indikator: --x/--w werden aus offsetLeft/Width gesetzt (JS), Bewegung nur transform/width.
+   Roving tabindex + Pfeiltasten (ARIA-Tabs-Muster). */
+.tabs {
+  position: relative; display: inline-flex; gap: .1rem; border-bottom: 2px solid var(--line);
+  max-width: 100%; overflow-x: auto;
+  scrollbar-width: none;               /* Tab-Leiste ohne sichtbaren Scrollbalken … */
+}
+.tabs::-webkit-scrollbar { display: none; }   /* … Wischen/Scrollen bleibt bei vielen Reitern möglich */
+.tab {
+  position: relative; z-index: 1; appearance: none; background: transparent; border: 0;
+  padding: .6rem .95rem; color: var(--muted); font: inherit; font-weight: 600; font-size: var(--step--1);
+  cursor: pointer; white-space: nowrap; transition: color .18s ease, background .18s ease;
+}
+.tab:hover { color: var(--ink); }
+.tab[aria-selected="true"] { color: var(--accent); }
+.tab-indicator {
+  position: absolute; bottom: -2px; left: 0; height: 3px;
+  width: var(--w, 0); transform: translateX(var(--x, 0));
+  background: var(--accent); border-radius: var(--radius-pill); pointer-events: none;
+  transition: transform .25s var(--ease-out), width .25s var(--ease-out);
+}
+.tab-panel { padding-top: 1rem; animation: c22-fade .25s var(--ease-out); }
+.tab-panel[hidden] { display: none; }
+@keyframes c22-fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+/* Variante „Reiter" (Browser-Stil): die Reiter sitzen OBEN AUF dem Container. Der aktive Reiter teilt
+   Hintergrund + Rahmen mit dem Container, ist UNTEN rahmenlos und schmiegt sich nahtlos an ihn.
+   Trick: die Leiste überlappt die Container-Oberkante um 1px und liegt (z-index) darüber; der aktive
+   Reiter deckt mit seiner Fläche genau diese 1px-Rahmenlinie → optische Verschmelzung. Kein Gleit-Indikator. */
+.tabs.reiter { gap: .3rem; border: 0; padding: 0 .5rem; margin-bottom: -1px; position: relative; z-index: 1; }
+.tabs.reiter .tab {
+  padding: .55rem 1.1rem;
+  border: 1px solid transparent; border-bottom: 0;
+  border-radius: var(--radius-s) var(--radius-s) 0 0; color: var(--muted);
+}
+.tabs.reiter .tab:hover:not([aria-selected="true"]) { color: var(--ink); background: color-mix(in oklab, var(--ink) 5%, transparent); }
+.tabs.reiter .tab[aria-selected="true"] {
+  background: var(--card); color: var(--ink);
+  border-color: var(--line); border-bottom: 0;   /* rahmenlos unten */
+}
+.tabs.reiter .tab-indicator { display: none; }
+/* Container: volle, geschlossene Umrandung mit runden Ecken. Die Reiter überlappen nur die Oberkante. */
+.reiter-panels {
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: var(--radius-s); padding: 1.1rem 1.2rem; position: relative;
+}
+.reiter-panels .tab-panel { padding-top: 0; }
+
+/* ---------- Navigation ---------- */
+/* Skip-Link: für Tastatur/Screenreader, sichtbar nur bei Fokus */
+.skip-link {
+  position: absolute; left: .5rem; top: -3.5rem; z-index: 200;
+  background: var(--accent); color: var(--accent-ink);
+  padding: .55rem .95rem; border-radius: var(--radius-s); font-weight: 600;
+  transition: top .18s var(--ease-out);
+}
+.skip-link:focus { top: .5rem; }
+
+/* Navbar (horizontale Kopfleiste) */
+.navbar {
+  display: flex; align-items: center; gap: .3rem;
+  padding: .55rem .8rem; background: var(--card);
+  border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow-s);
+}
+.navbar-brand { display: flex; align-items: center; gap: .5ch; font-family: var(--serif); font-weight: 600; font-size: var(--step-1); margin-inline-end: .6rem; }
+.navbar-brand .nb-logo { width: 1.6rem; height: 1.6rem; display: grid; place-items: center; color: var(--accent); }
+.navbar-spacer { flex: 1; }
+.nav-link {
+  padding: .45rem .7rem; border-radius: var(--radius-s); color: var(--muted);
+  font-weight: 550; font-size: var(--step--1); transition: background .18s ease, color .18s ease;
+}
+.nav-link:hover { background: var(--hover); color: var(--ink); }
+.nav-link[aria-current="page"] { color: var(--accent); background: var(--accent-soft); }
+/* Hide-on-scroll: Leiste fährt beim Runterscrollen weg, beim Hochscrollen zurück (initNavbar) */
+.navbar.sticky { position: sticky; top: .5rem; z-index: 50; transition: transform .28s var(--ease-out); }
+.navbar.sticky.nav-hidden { transform: translateY(calc(-100% - 1rem)); }
+
+/* Sidebar (vertikale Navigation, einklappbar auf Icons) */
+.sidenav {
+  width: 15rem; padding: .5rem; display: flex; flex-direction: column; gap: .12rem;
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  transition: width .25s var(--ease-out); overflow: hidden;
+}
+.sidenav.collapsed { width: 3.7rem; }
+.sidenav-item {
+  display: flex; align-items: center; gap: .75ch; padding: .55rem .6rem;
+  border-radius: var(--radius-s); color: var(--muted); white-space: nowrap;
+  transition: background .18s ease, color .18s ease;
+}
+.sidenav-item:hover { background: var(--hover); color: var(--ink); }
+.sidenav-item[aria-current="page"] { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+.sidenav-item .si-ico { flex: none; width: 1.3rem; height: 1.3rem; display: grid; place-items: center; }
+.sidenav-item .si-label { transition: opacity .18s ease; }
+.sidenav.collapsed .si-label { opacity: 0; }
+.sidenav-sep { height: 1px; background: var(--line); margin: .35rem .2rem; }
+
+/* Breadcrumbs */
+.breadcrumbs { display: flex; flex-wrap: wrap; align-items: center; gap: .3ch; font-size: var(--step--1); color: var(--muted); }
+.breadcrumbs a { color: var(--muted); }
+.breadcrumbs a:hover { color: var(--ink); text-decoration: underline; }
+.breadcrumbs .crumb-sep { color: var(--faint); padding-inline: .15rem; }
+.breadcrumbs [aria-current="page"] { color: var(--ink); font-weight: 600; }
+
+/* ---------- Kleinkram: Badge · Avatar · Spinner · Pagination ---------- */
+.badge {
+  display: inline-flex; align-items: center; gap: .4ch;
+  padding: .15rem .55rem; border-radius: var(--radius-pill);
+  font-size: .72rem; font-weight: 650; line-height: 1.5;
+  background: var(--chip); color: var(--muted);
+}
+.badge.accent { background: var(--accent); color: var(--accent-ink); }
+.badge.ok   { background: color-mix(in oklab, var(--ok) 18%, var(--card));   color: var(--ok); }
+.badge.warn { background: color-mix(in oklab, var(--warn) 20%, var(--card)); color: var(--warn); }
+.badge.bad  { background: color-mix(in oklab, var(--bad) 16%, var(--card));  color: var(--bad); }
+.badge.info { background: color-mix(in oklab, var(--info) 16%, var(--card)); color: var(--info); }
+.badge .badge-dot { width: .5rem; height: .5rem; border-radius: var(--radius-pill); background: currentColor; }
+
+.avatar {
+  width: 2.4rem; height: 2.4rem; border-radius: var(--radius-pill); overflow: hidden;
+  background: var(--chip); color: var(--muted); font-weight: 650; font-size: .85rem;
+  display: inline-grid; place-items: center; flex: none;
+}
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
+.avatar-group { display: inline-flex; }
+.avatar-group .avatar { border: 2px solid var(--card); }
+.avatar-group .avatar + .avatar { margin-inline-start: -.7rem; }
+
+.spinner {
+  display: inline-block; width: 1.4rem; height: 1.4rem; border-radius: var(--radius-pill);
+  border: 2.5px solid color-mix(in oklab, var(--ink) 14%, var(--line));
+  border-top-color: var(--accent); animation: c22-spin .8s linear infinite;
+}
+
+.pagination { display: inline-flex; flex-wrap: wrap; gap: .25rem; align-items: center; }
+.pagination .pg {
+  min-width: 2.2rem; height: 2.2rem; padding: 0 .5rem;
+  display: inline-grid; place-items: center; border-radius: var(--radius-s);
+  background: transparent; border: 1px solid var(--line); color: var(--ink);
+  font: inherit; font-size: var(--step--1); font-weight: 600; cursor: pointer;
+  transition: background .18s ease, border-color .18s ease;
+}
+.pagination .pg:hover:not([disabled]):not([aria-current="page"]) { background: var(--hover); }
+.pagination .pg[aria-current="page"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.pagination .pg[disabled] { opacity: .45; cursor: not-allowed; }
+.pagination .pg-gap { color: var(--faint); padding-inline: .1rem; }
+
+/* ---------- Overlay-Engine: Tooltip · Popover (gemeinsamer Positionierer placeFloating) ----------
+   Ein JS-Kern rechnet Seite/Ausrichtung + Viewport-Flip; Tooltip und Popover teilen ihn.
+   (Dropdown/Popup/Dialog bleiben vorerst eigenständig, können später hier andocken.) */
+.c22-tooltip {
+  position: fixed; z-index: 300; max-width: 18rem; pointer-events: none;
+  padding: .35rem .6rem; border-radius: var(--radius-s);
+  background: var(--ink); color: var(--paper);
+  font-size: var(--step--1); line-height: 1.3; box-shadow: var(--shadow-s);
+  opacity: 0; transform: translateY(2px); transition: opacity .14s ease, transform .14s ease;
+}
+.c22-tooltip.in { opacity: 1; transform: none; }
+
+[popover].c22-popover {
+  margin: 0; padding: .9rem 1.05rem; inset: unset; overflow: visible;
+  border: 1px solid var(--line); border-radius: var(--radius-s);
+  background: var(--card); color: var(--ink); box-shadow: var(--shadow);
+  max-width: 22rem; font-size: var(--step--1);
+}
+.c22-popover { opacity: 0; transform: scale(.96); transition: opacity .16s var(--ease-out), transform .16s var(--ease-out); }
+.c22-popover:popover-open { opacity: 1; transform: none; }
+@starting-style { .c22-popover:popover-open { opacity: 0; transform: scale(.96); } }
+.c22-popover .pop-h { font-weight: 600; margin: 0 0 .25rem; }
+.c22-popover .pop-p { margin: 0; color: var(--muted); line-height: 1.5; }
+
+/* Screenreader-only (Clip-Technik — NIE display:none/aria-hidden, sonst keine Ansage) */
+.c22-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+
+/* ---------- Chips (Assist / Filter / Input) ---------- */
+.chip {
+  display: inline-flex; align-items: center; gap: .5ch;
+  padding: .35rem .8rem; border-radius: var(--radius-pill);
+  background: var(--chip); color: var(--ink); border: 1px solid transparent;
+  font-size: var(--step--1); font-weight: 550; line-height: 1.3; white-space: nowrap;
+  transition: background .16s ease, border-color .16s ease, color .16s ease;
+}
+a.chip, button.chip, .chip.clickable { cursor: pointer; }
+button.chip { font: inherit; font-size: var(--step--1); font-weight: 550; }
+a.chip:hover, button.chip:hover, .chip.clickable:hover { background: color-mix(in oklab, var(--ink) 8%, var(--chip)); }
+.chip.outline { background: transparent; border-color: var(--line); }
+.chip.outline:hover { border-color: color-mix(in oklab, var(--ink) 25%, var(--line)); }
+.chip[aria-pressed="true"], .chip.selected { background: var(--accent); color: var(--accent-ink); border-color: transparent; }
+.chip .chip-ico { width: 1.05em; height: 1.05em; display: inline-grid; place-items: center; }
+.chip .chip-avatar { width: 1.4rem; height: 1.4rem; border-radius: var(--radius-pill); object-fit: cover; margin-inline-start: -.35rem; }
+.chip .chip-x {
+  display: inline-grid; place-items: center; width: 1.25rem; height: 1.25rem; margin-inline-end: -.35rem;
+  border: 0; border-radius: var(--radius-pill); background: color-mix(in oklab, currentColor 18%, transparent);
+  color: inherit; cursor: pointer; font-size: .9rem; line-height: 1;
+}
+.chip .chip-x:hover { background: color-mix(in oklab, currentColor 32%, transparent); }
+
+/* ---------- List (strukturierte Zeilen: Lead · Body · Trail) ---------- */
+.list {
+  display: flex; flex-direction: column;
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-s); overflow: hidden;
+}
+.list.flush { background: transparent; border: 0; border-radius: 0; }
+.list-item { display: flex; align-items: center; gap: .9rem; padding: .7rem .9rem; }
+.list-item + .list-item { border-top: 1px solid var(--line); }
+.list-item.interactive { cursor: pointer; transition: background .15s ease; }
+.list-item.interactive:hover { background: var(--hover); }
+.list-item[aria-current="true"], .list-item.selected { background: var(--accent-soft); }
+.list-lead, .list-trail { flex: none; display: grid; place-items: center; color: var(--muted); }
+.list-lead .list-ico, .list-trail .list-ico { width: 1.4rem; height: 1.4rem; display: grid; place-items: center; }
+.list-lead img, .list-lead .avatar { width: 2.2rem; height: 2.2rem; }
+.list-body { flex: 1; min-width: 0; }
+.list-title { font-weight: 600; font-size: var(--step-0); line-height: 1.3; }
+.list-sub { color: var(--muted); font-size: var(--step--1); line-height: 1.35; overflow: hidden; text-overflow: ellipsis; }
+.list-trail { color: var(--muted); font-size: var(--step--1); font-variant-numeric: tabular-nums; }
+
+/* ---------- Divider ---------- */
+.divider { border: 0; height: 1px; background: var(--line); margin-block: .9rem; }
+.divider.vertical { width: 1px; height: auto; align-self: stretch; margin-block: 0; margin-inline: .9rem; }
+.divider-label { display: flex; align-items: center; gap: .8rem; color: var(--faint); font-size: var(--step--1); margin-block: .9rem; }
+.divider-label::before, .divider-label::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+
+/* ---------- Progress (linear, nativ <progress class="c22-progress">; kollidiert NICHT mit der .progress-Kind-Klasse) ---------- */
+progress.c22-progress {
+  appearance: none; -webkit-appearance: none;
+  width: 100%; height: .5rem; border: 0; border-radius: var(--radius-pill); overflow: hidden;
+  background: color-mix(in oklab, var(--accent) 16%, var(--chip)); color: var(--accent);
+}
+progress.c22-progress::-webkit-progress-bar { background: transparent; }
+progress.c22-progress::-webkit-progress-value { background: var(--accent); border-radius: var(--radius-pill); transition: inline-size .35s var(--ease-out); }
+progress.c22-progress::-moz-progress-bar { background: var(--accent); border-radius: var(--radius-pill); }
+progress.c22-progress.thick { height: .85rem; }
+progress.c22-progress.ok  { color: var(--ok);  background: color-mix(in oklab, var(--ok) 16%, var(--chip)); }
+progress.c22-progress.ok::-webkit-progress-value  { background: var(--ok); }
+progress.c22-progress.ok::-moz-progress-bar  { background: var(--ok); }
+progress.c22-progress.bad { color: var(--bad); background: color-mix(in oklab, var(--bad) 16%, var(--chip)); }
+progress.c22-progress.bad::-webkit-progress-value { background: var(--bad); }
+progress.c22-progress.bad::-moz-progress-bar { background: var(--bad); }
+
+/* ---------- Table ---------- */
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius-s); }
+.table { width: 100%; border-collapse: collapse; font-size: var(--step--1); }
+.table th, .table td { padding: .6rem .85rem; text-align: start; vertical-align: middle; }
+.table thead th { color: var(--muted); font-weight: 650; background: var(--chip); border-bottom: 1px solid var(--line); white-space: nowrap; }
+.table tbody tr + tr td { border-top: 1px solid var(--line); }
+.table.striped tbody tr:nth-child(even) td { background: color-mix(in oklab, var(--ink) 3.5%, transparent); }
+.table.hover tbody tr:hover td { background: var(--hover); }
+.table .num { text-align: end; font-variant-numeric: tabular-nums; }
+.table caption { caption-side: top; text-align: start; padding: .1rem .85rem .6rem; color: var(--muted); font-size: var(--step--1); }
+
+/* ---------- Slider (natives <input type=range>, gestylt; Tastatur/ARIA = Plattform) ----------
+   Füllung: Firefox nativ (::-moz-range-progress), WebKit über Gradient + --_fill (initRange). */
+.c22-range { appearance: none; -webkit-appearance: none; width: 100%; height: 1.4rem; background: transparent; cursor: pointer; }
+.c22-range::-webkit-slider-runnable-track {
+  height: .45rem; border-radius: var(--radius-pill);
+  background: linear-gradient(var(--accent), var(--accent)) 0 / var(--_fill, 0%) 100% no-repeat,
+              color-mix(in oklab, var(--accent) 18%, var(--chip));
+}
+.c22-range::-moz-range-track { height: .45rem; border-radius: var(--radius-pill); background: color-mix(in oklab, var(--accent) 18%, var(--chip)); }
+.c22-range::-moz-range-progress { height: .45rem; border-radius: var(--radius-pill); background: var(--accent); }
+.c22-range::-webkit-slider-thumb {
+  appearance: none; -webkit-appearance: none; margin-top: -.35rem;
+  width: 1.15rem; height: 1.15rem; border-radius: var(--radius-pill);
+  background: var(--accent); border: 2px solid var(--card); box-shadow: var(--shadow-s);
+  transition: box-shadow .15s ease;
+}
+.c22-range::-moz-range-thumb {
+  width: 1.15rem; height: 1.15rem; border-radius: var(--radius-pill); border: 2px solid var(--card);
+  background: var(--accent); box-shadow: var(--shadow-s);
+}
+.c22-range:focus-visible { outline: none; }
+.c22-range:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 var(--focus-w) var(--focus-col); }
+.c22-range:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 var(--focus-w) var(--focus-col); }
+.c22-range:disabled { opacity: .5; cursor: not-allowed; }
+/* mit Wert-Ausgabe daneben */
+.range-field { display: flex; align-items: center; gap: .9rem; }
+.range-field output { flex: none; min-width: 2.8em; text-align: end; font-variant-numeric: tabular-nums; color: var(--muted); font-size: var(--step--1); }
+
+/* ---------- Media (responsive Bild/Video mit Seitenverhältnis) ---------- */
+.media { display: block; width: 100%; overflow: hidden; border-radius: var(--radius-s); background: var(--chip); }
+.media img, .media video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.media.r-16-9 { aspect-ratio: 16 / 9; }
+.media.r-4-3 { aspect-ratio: 4 / 3; }
+.media.r-1-1 { aspect-ratio: 1 / 1; }
+.media.r-21-9 { aspect-ratio: 21 / 9; }
+figure.c22-figure { margin: 0; }
+figure.c22-figure figcaption { color: var(--muted); font-size: var(--step--1); margin-block-start: .4rem; }
+
+/* ---------- Dual-Thumb-Slider (Range mit zwei Griffen; Füll-Mathematik geportet) ---------- */
+.c22-range-dual { position: relative; height: 1.4rem; width: 100%; }   /* Interna sind absolut → ohne Breite kollabiert der Slider in Flex-Kontexten */
+.c22-range-dual .rd-track { position: absolute; inset-inline: 0; top: 50%; transform: translateY(-50%); height: .45rem; border-radius: var(--radius-pill); background: color-mix(in oklab, var(--accent) 18%, var(--chip)); }
+.c22-range-dual .rd-fill { position: absolute; top: 0; bottom: 0; inset-inline-start: var(--lo, 0%); inset-inline-end: calc(100% - var(--hi, 100%)); background: var(--accent); border-radius: var(--radius-pill); }
+.c22-range-dual input {
+  position: absolute; inset: 0; width: 100%; height: 1.4rem; margin: 0;
+  appearance: none; -webkit-appearance: none; background: transparent; pointer-events: none;
+}
+.c22-range-dual input::-webkit-slider-runnable-track { background: transparent; height: .45rem; }
+.c22-range-dual input::-moz-range-track { background: transparent; height: .45rem; }
+.c22-range-dual input::-webkit-slider-thumb {
+  pointer-events: auto; appearance: none; -webkit-appearance: none; margin-top: -.35rem;
+  width: 1.15rem; height: 1.15rem; border-radius: var(--radius-pill);
+  background: var(--accent); border: 2px solid var(--card); box-shadow: var(--shadow-s); cursor: pointer;
+}
+.c22-range-dual input::-moz-range-thumb {
+  pointer-events: auto; width: 1.15rem; height: 1.15rem; border-radius: var(--radius-pill);
+  background: var(--accent); border: 2px solid var(--card); box-shadow: var(--shadow-s); cursor: pointer;
+}
+.c22-range-dual input:focus-visible { outline: none; }
+.c22-range-dual input:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 var(--focus-w) var(--focus-col); }
+.c22-range-dual input:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 var(--focus-w) var(--focus-col); }
+
+/* ---------- ARIA-Menu (Aktions-Menü, role=menu/menuitem) ----------
+   Anders als das <details>-Disclosure-Dropdown: echtes Befehlsmenü mit Roving-Tabindex, Pfeil-
+   navigation, Typeahead, Escape→Fokus zurück zum Button. Positioniert über placeFloating (Flip). */
+.c22-menu { position: relative; display: inline-block; }
+.c22-menu-list {
+  position: fixed; z-index: 60; min-width: 12rem; margin: 0; padding: .35rem; list-style: none;
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-s);
+  box-shadow: var(--shadow); backdrop-filter: blur(var(--blur));
+  opacity: 0; transform: scale(.97); transform-origin: top center;
+  transition: opacity .14s var(--ease-out), transform .14s var(--ease-out);
+}
+.c22-menu-list[hidden] { display: none; }
+.c22-menu-list.open { opacity: 1; transform: none; }
+.c22-menu-list [role="menuitem"] {
+  display: flex; align-items: center; gap: .65ch; width: 100%;
+  padding: .5rem .65rem; border-radius: var(--radius-s);
+  color: var(--ink); cursor: pointer; font-size: var(--step--1); user-select: none;
+}
+.c22-menu-list [role="menuitem"]:hover, .c22-menu-list [role="menuitem"]:focus-visible { background: var(--hover); outline: none; }
+.c22-menu-list [role="menuitem"] .mi-ico { flex: none; width: 1.05em; height: 1.05em; display: inline-grid; place-items: center; color: var(--muted); }
+.c22-menu-list [role="menuitem"] .mi-key { margin-inline-start: auto; color: var(--faint); font-size: .8em; font-variant-numeric: tabular-nums; }
+.c22-menu-list [role="menuitem"].danger { color: var(--bad); }
+.c22-menu-list [role="menuitem"].danger .mi-ico { color: var(--bad); }
+.c22-menu-list [role="menuitem"][aria-disabled="true"] { color: var(--faint); cursor: not-allowed; }
+.c22-menu-list [role="menuitem"][aria-disabled="true"]:hover { background: transparent; }
+.c22-menu-list [role="separator"] { height: 1px; margin: .3rem .2rem; background: var(--line); }
+
+/* ---------- Combobox / Autocomplete (input[role=combobox] + listbox, Virtual Focus) ---------- */
+.c22-combobox { position: relative; }
+.c22-combobox-list {
+  position: fixed; z-index: 60; margin: 0; padding: .3rem; list-style: none;
+  max-height: 15rem; overflow-y: auto;
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-s); box-shadow: var(--shadow);
+  opacity: 0; transform: scale(.98); transform-origin: top center;
+  transition: opacity .14s var(--ease-out), transform .14s var(--ease-out);
+}
+.c22-combobox-list[hidden] { display: none; }
+.c22-combobox-list.open { opacity: 1; transform: none; }
+.c22-combobox-list [role="option"] { padding: .5rem .65rem; border-radius: var(--radius-s); cursor: pointer; font-size: var(--step--1); }
+.c22-combobox-list [role="option"]:hover { background: var(--hover); }
+.c22-combobox-list [role="option"].active { background: var(--accent-soft); color: var(--accent); }   /* Virtual-Focus-Highlight (aria-activedescendant) */
+.c22-combobox-list .cb-empty { padding: .5rem .65rem; color: var(--muted); font-size: var(--step--1); }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}

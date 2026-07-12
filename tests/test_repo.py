@@ -46,9 +46,11 @@ treffer = hygiene.pruefe_private_infrastruktur(str(ROOT), DATEIEN, POLICY, PROJE
 r.check(f"keine private Infrastruktur ({n_muster} Muster + {n_namen} Namen)",
         not treffer, " | ".join(sorted(set(treffer))[:4]))
 
-# ---- Nur neutrale Beispieladressen (+ flaticon.com für die Pflicht-Attribution des README-Logos)
+# ---- Nur neutrale Beispieladressen (+ Pflicht-Attributionen: flaticon.com fürs README-Logo,
+#      phosphoricons.com für den Phosphor-Icon-Subset (MIT), selfh.st für die App-Logos (CC BY 4.0))
 adressen = hygiene.pruefe_adressen(str(ROOT), DATEIEN, POLICY,
-                                   zusaetzliche_hosts=[r"(www\.)?flaticon\.com", r"img\.shields\.io"])
+                                   zusaetzliche_hosts=[r"(www\.)?flaticon\.com", r"img\.shields\.io",
+                                                       r"phosphoricons\.com", r"selfh\.st"])
 r.check("nur neutrale Beispieladressen", not adressen, " | ".join(sorted(set(adressen))[:4]))
 
 # ---- Version steht überall gleich
