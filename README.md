@@ -65,4 +65,4 @@ MIT — see [LICENSE](LICENSE).
 
 ## Credits
 
-Logo: <a href="https://www.flaticon.com/free-icons/cultures" title="cultures icons">Cultures icons created by Iconjam - Flaticon</a>
+Icon: <a href="https://www.flaticon.com/authors/iconjam" target="_blank" rel="noopener">Origami Bird PNG Image by Iconjam - flaticon.com</a>
