@@ -38,6 +38,9 @@ below the heading and the logo bottom-right — the same pattern across all own 
 `CODE_OF_CONDUCT.md` stays untouched and **pure** so GitHub recognises it as Contributor Covenant
 rather than "Other".
 
+The Flaticon credit now links straight to the author page (Iconjam) and opens in a new tab, in the
+format shared across the repos: `Icon: … PNG Image by … - flaticon.com`.
+
 ## [0.1.0] - 2026-07-10
 
 ### Added
