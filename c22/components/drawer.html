@@ -1,0 +1,118 @@
+<!-- basecoat: Drawer = seitlich/oben/unten einfahrender <dialog>-Layer (.drawer), Seite über data-side (top/bottom/left/right, Standard = bottom). Kein Drag-to-close/Snap-Points (nativ, keine Gesten-Bibliothek) - schließt per Außenklick, Esc oder Button. Inhalt via header/section/footer, section scrollt eigenständig. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Standard (von unten, mit Regler)</span>
+    <button type="button" class="btn" data-variant="outline" onclick="document.getElementById('c22-drawer-goal').showModal()">Tagesziel setzen</button>
+    <dialog id="c22-drawer-goal" class="drawer" data-side="bottom" aria-labelledby="c22-drawer-goal-title" aria-describedby="c22-drawer-goal-desc" onclick="if (event.target === this) this.close()">
+      <div>
+        <header class="mx-auto w-full max-w-sm">
+          <h2 id="c22-drawer-goal-title">Tagesziel</h2>
+          <p id="c22-drawer-goal-desc">Lege dein tägliches Aktivitätsziel fest.</p>
+        </header>
+        <section class="px-4">
+          <div class="mx-auto flex w-full max-w-sm items-center justify-center gap-6">
+            <button type="button" class="btn rounded-full" data-variant="outline" data-size="icon-sm" aria-label="Verringern"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg></button>
+            <div class="text-center">
+              <div class="text-7xl font-bold tabular-nums">350</div>
+              <div class="text-muted-foreground text-xs uppercase">Kalorien/Tag</div>
+            </div>
+            <button type="button" class="btn rounded-full" data-variant="outline" data-size="icon-sm" aria-label="Erhöhen"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button>
+          </div>
+        </section>
+        <footer class="mx-auto w-full max-w-sm">
+          <button type="button" class="btn" onclick="this.closest('dialog').close()">Speichern</button>
+          <button type="button" class="btn" data-variant="outline" onclick="this.closest('dialog').close()">Abbrechen</button>
+        </footer>
+      </div>
+    </dialog>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Von oben (<code class="text-[11px]">data-side="top"</code>, Auswahlliste)</span>
+    <button type="button" class="btn" data-variant="outline" onclick="document.getElementById('c22-drawer-top').showModal()">Sortieren nach</button>
+    <dialog id="c22-drawer-top" class="drawer" data-side="top" aria-labelledby="c22-drawer-top-title" onclick="if (event.target === this) this.close()">
+      <div>
+        <header class="mx-auto w-full max-w-sm">
+          <h2 id="c22-drawer-top-title">Sortieren nach</h2>
+        </header>
+        <section class="mx-auto w-full max-w-sm px-4">
+          <div class="flex flex-col">
+            <button type="button" class="btn justify-start" data-variant="ghost" onclick="this.closest('dialog').close()">Relevanz</button>
+            <button type="button" class="btn justify-start" data-variant="ghost" onclick="this.closest('dialog').close()">Preis aufsteigend</button>
+            <button type="button" class="btn justify-start" data-variant="ghost" onclick="this.closest('dialog').close()">Preis absteigend</button>
+            <button type="button" class="btn justify-start" data-variant="ghost" onclick="this.closest('dialog').close()">Neueste zuerst</button>
+          </div>
+        </section>
+        <footer class="mx-auto w-full max-w-sm">
+          <button type="button" class="btn" data-variant="outline" onclick="this.closest('dialog').close()">Schließen</button>
+        </footer>
+      </div>
+    </dialog>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Von links (<code class="text-[11px]">data-side="left"</code>, Navigation)</span>
+    <button type="button" class="btn" data-variant="outline" onclick="document.getElementById('c22-drawer-left').showModal()">Menü öffnen</button>
+    <dialog id="c22-drawer-left" class="drawer" data-side="left" aria-labelledby="c22-drawer-left-title" onclick="if (event.target === this) this.close()">
+      <div>
+        <header>
+          <h2 id="c22-drawer-left-title">C22 Admin</h2>
+        </header>
+        <section>
+          <nav class="flex flex-col gap-1 px-2">
+            <a href="#" class="text-foreground hover:bg-accent flex items-center gap-2 rounded-md px-2 py-1.5 text-sm"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>Übersicht</a>
+            <a href="#" class="text-foreground hover:bg-accent flex items-center gap-2 rounded-md px-2 py-1.5 text-sm"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Nutzer</a>
+            <a href="#" class="text-foreground hover:bg-accent flex items-center gap-2 rounded-md px-2 py-1.5 text-sm"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>Einstellungen</a>
+          </nav>
+        </section>
+        <footer>
+          <button type="button" class="btn" data-variant="outline" onclick="this.closest('dialog').close()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>Abmelden</button>
+        </footer>
+      </div>
+    </dialog>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Von rechts (<code class="text-[11px]">data-side="right"</code>, scrollbarer Inhalt)</span>
+    <button type="button" class="btn" data-variant="outline" onclick="document.getElementById('c22-drawer-right').showModal()">Warenkorb (3)</button>
+    <dialog id="c22-drawer-right" class="drawer" data-side="right" aria-labelledby="c22-drawer-right-title" onclick="if (event.target === this) this.close()">
+      <div>
+        <header>
+          <h2 id="c22-drawer-right-title">Warenkorb</h2>
+          <p>3 Artikel</p>
+        </header>
+        <section class="scrollbar space-y-3 px-4">
+          <div class="flex items-center justify-between gap-3 text-sm">
+            <div><div class="font-medium">C22-Lizenz (Team)</div><div class="text-muted-foreground">1 × 89,00 €</div></div>
+            <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Entfernen"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+          </div>
+          <div class="flex items-center justify-between gap-3 text-sm">
+            <div><div class="font-medium">Zusätzlicher Speicher</div><div class="text-muted-foreground">3 × 12,00 €</div></div>
+            <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Entfernen"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+          </div>
+          <div class="flex items-center justify-between gap-3 text-sm">
+            <div><div class="font-medium">Support (Premium)</div><div class="text-muted-foreground">1 × 25,00 €</div></div>
+            <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Entfernen"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+          </div>
+        </section>
+        <footer>
+          <div class="flex items-center justify-between text-sm font-medium"><span>Gesamt</span><span class="tabular-nums">150,00 €</span></div>
+          <button type="button" class="btn" onclick="this.closest('dialog').close()">Zur Kasse</button>
+        </footer>
+      </div>
+    </dialog>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Kompakt (ohne <code class="text-[11px]">section</code>)</span>
+    <button type="button" class="btn" data-variant="outline" onclick="document.getElementById('c22-drawer-compact').showModal()">Änderungen verwerfen</button>
+    <dialog id="c22-drawer-compact" class="drawer" data-side="bottom" aria-labelledby="c22-drawer-compact-title" aria-describedby="c22-drawer-compact-desc" onclick="if (event.target === this) this.close()">
+      <div>
+        <header class="mx-auto w-full max-w-sm">
+          <h2 id="c22-drawer-compact-title">Änderungen verwerfen?</h2>
+          <p id="c22-drawer-compact-desc">Nicht gespeicherte Änderungen gehen verloren.</p>
+        </header>
+        <footer class="mx-auto w-full max-w-sm">
+          <button type="button" class="btn" data-variant="destructive" onclick="this.closest('dialog').close()">Verwerfen</button>
+          <button type="button" class="btn" data-variant="outline" onclick="this.closest('dialog').close()">Abbrechen</button>
+        </footer>
+      </div>
+    </dialog>
+  </div>
+</div>

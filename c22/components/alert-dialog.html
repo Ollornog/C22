@@ -1,0 +1,85 @@
+<!-- basecoat: Alert Dialog = modaler Bestätigungsdialog (.alert-dialog). data-size="sm" = kompakt, header>figure = Medien/Icon. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Standard</span>
+    <button type="button" class="btn" data-variant="outline" onclick="document.getElementById('c22-ad-basic').showModal()">Abmelden</button>
+    <dialog id="c22-ad-basic" class="alert-dialog" aria-labelledby="c22-ad-basic-t" onclick="if (event.target === this) this.close()">
+      <div>
+        <header>
+          <h2 id="c22-ad-basic-t">Wirklich abmelden?</h2>
+          <p>Du wirst von diesem Gerät abgemeldet und musst dich erneut anmelden.</p>
+        </header>
+        <footer>
+          <button type="button" class="btn" data-variant="outline" onclick="this.closest('dialog').close()">Abbrechen</button>
+          <button type="button" class="btn" onclick="this.closest('dialog').close()">Abmelden</button>
+        </footer>
+      </div>
+    </dialog>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Destruktiv (destructive-Aktion)</span>
+    <button type="button" class="btn" data-variant="destructive" onclick="document.getElementById('c22-ad-del').showModal()">Konto löschen</button>
+    <dialog id="c22-ad-del" class="alert-dialog" aria-labelledby="c22-ad-del-t" onclick="if (event.target === this) this.close()">
+      <div>
+        <header>
+          <h2 id="c22-ad-del-t">Bist du sicher?</h2>
+          <p>Diese Aktion kann nicht rückgängig gemacht werden. Dein Konto und alle Daten werden dauerhaft gelöscht.</p>
+        </header>
+        <footer>
+          <button type="button" class="btn" data-variant="outline" onclick="this.closest('dialog').close()">Abbrechen</button>
+          <button type="button" class="btn" data-variant="destructive" onclick="this.closest('dialog').close()">Ja, löschen</button>
+        </footer>
+      </div>
+    </dialog>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Icon (<code class="text-[11px]">header &gt; figure</code>)</span>
+    <button type="button" class="btn" data-variant="outline" onclick="document.getElementById('c22-ad-media').showModal()">Abo kündigen</button>
+    <dialog id="c22-ad-media" class="alert-dialog" aria-labelledby="c22-ad-media-t" onclick="if (event.target === this) this.close()">
+      <div>
+        <header>
+          <figure><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></figure>
+          <h2 id="c22-ad-media-t">Abo kündigen?</h2>
+          <p>Dein Zugang bleibt bis zum Ende des laufenden Zeitraums bestehen, wird danach aber nicht verlängert.</p>
+        </header>
+        <footer>
+          <button type="button" class="btn" data-variant="outline" onclick="this.closest('dialog').close()">Behalten</button>
+          <button type="button" class="btn" onclick="this.closest('dialog').close()">Kündigen</button>
+        </footer>
+      </div>
+    </dialog>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Klein (<code class="text-[11px]">data-size="sm"</code>)</span>
+    <button type="button" class="btn" data-variant="outline" onclick="document.getElementById('c22-ad-sm').showModal()">Änderungen verwerfen</button>
+    <dialog id="c22-ad-sm" class="alert-dialog" data-size="sm" aria-labelledby="c22-ad-sm-t" onclick="if (event.target === this) this.close()">
+      <div>
+        <header>
+          <h2 id="c22-ad-sm-t">Änderungen verwerfen?</h2>
+          <p>Nicht gespeicherte Änderungen gehen verloren.</p>
+        </header>
+        <footer>
+          <button type="button" class="btn" data-variant="outline" onclick="this.closest('dialog').close()">Abbrechen</button>
+          <button type="button" class="btn" onclick="this.closest('dialog').close()">Verwerfen</button>
+        </footer>
+      </div>
+    </dialog>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Klein mit Icon</span>
+    <button type="button" class="btn" data-variant="outline" onclick="document.getElementById('c22-ad-smmedia').showModal()">Datei entfernen</button>
+    <dialog id="c22-ad-smmedia" class="alert-dialog" data-size="sm" aria-labelledby="c22-ad-smmedia-t" onclick="if (event.target === this) this.close()">
+      <div>
+        <header>
+          <figure><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></figure>
+          <h2 id="c22-ad-smmedia-t">Datei entfernen?</h2>
+          <p>Die Datei wird endgültig gelöscht.</p>
+        </header>
+        <footer>
+          <button type="button" class="btn" data-variant="outline" onclick="this.closest('dialog').close()">Abbrechen</button>
+          <button type="button" class="btn" data-variant="destructive" onclick="this.closest('dialog').close()">Entfernen</button>
+        </footer>
+      </div>
+    </dialog>
+  </div>
+</div>

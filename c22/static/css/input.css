@@ -1,0 +1,19 @@
+/* C22 — Tailwind entry point, built by the Tailwind standalone CLI (no Node).
+ *
+ * Build:  tools/tailwindcss -i c22/static/css/input.css -o c22/static/css/c22.css --minify
+ * (wired into scripts/check.sh / ci-local; the binary comes from scripts/fetch-tailwind.sh)
+ */
+@import "tailwindcss";
+
+/* Basecoat (vendored, "own the code") — the shadcn look as HTML + Tailwind. */
+@import "../../vendor/basecoat/dist/basecoat.css";
+
+/* C22 tokens on top (web font + status colours + radius axis). */
+@import "./tokens.css";
+
+/* C22 custom component variants (the one place for extra "Ausführungen"). */
+@import "./components.css";
+
+/* Scan the canonical component HTML and the gallery for utility classes. */
+@source "../../components/**/*.html";
+@source "../../../gallery/**/*.html";

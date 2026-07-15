@@ -1,0 +1,151 @@
+<!-- custom (shadcn-Vorlage "Message", kein Basecoat-Pendant): Chat-Nachricht = Avatar (verankert
+     am unteren Ende der Nachricht) + Header (Name/Zeit) + .bubble-Inhalt (siehe bubble.html) +
+     Footer (Status/Aktionen). Ausrichtung über data-align/flex-row-reverse: start = Empfänger
+     links, end = Absender rechts. MessageGroup = mehrere Bubbles eines Absenders teilen sich
+     Avatar/Header/Footer; .bubble-group lässt nur die letzte Blase die Spitze behalten. Footer-
+     Aktionen (Kopieren/Wiederholen/Feedback/Bearbeiten) erscheinen bei Hover und bleiben auf der
+     jeweiligen Seite ausgerichtet. Anhänge: Bild (Datei-Chip s. attachment.html). -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Standard (Empfänger links · Absender rechts)</span>
+    <div class="flex w-full max-w-md flex-col gap-4">
+      <div class="flex gap-3">
+        <span class="avatar" data-size="sm"><span>AK</span></span>
+        <div class="flex flex-col items-start gap-1">
+          <div class="flex items-baseline gap-2"><span class="text-sm font-medium">Anna K.</span><span class="text-muted-foreground text-xs">09:41</span></div>
+          <div class="bubble" data-variant="muted">Kannst du die Galerie teilen?</div>
+        </div>
+      </div>
+      <div class="flex flex-row-reverse gap-3">
+        <span class="avatar" data-size="sm"><span>DB</span></span>
+        <div class="flex flex-col items-end gap-1">
+          <div class="flex items-baseline gap-2"><span class="text-muted-foreground text-xs">09:42</span><span class="text-sm font-medium">Du</span></div>
+          <div class="bubble" data-align="end">Klar, kommt gleich!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Gruppiert (MessageGroup — Avatar unten verankert, <code class="text-[11px]">.bubble-group</code>)</span>
+    <div class="flex w-full max-w-md flex-col gap-4">
+      <div class="flex gap-3">
+        <span class="avatar self-end" data-size="sm"><span>AK</span></span>
+        <div class="flex flex-col items-start gap-1">
+          <span class="text-sm font-medium">Anna K.</span>
+          <div class="bubble-group">
+            <div class="bubble" data-variant="muted">Kurze Frage zum Deployment.</div>
+            <div class="bubble" data-variant="muted">Läuft das noch heute?</div>
+          </div>
+          <span class="text-muted-foreground text-xs">09:44</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Footer-Aktionen (bei Hover · bleiben seitentreu ausgerichtet)</span>
+    <div class="flex w-full max-w-md flex-col gap-4">
+      <div class="flex gap-3">
+        <span class="avatar" data-size="sm"><span>KI</span></span>
+        <div class="group flex flex-col items-start gap-1">
+          <span class="text-sm font-medium">Assistent</span>
+          <div class="bubble" data-variant="muted">Ich habe drei Varianten vorbereitet — Standard, kompakt und mit Bild.</div>
+          <div class="text-muted-foreground -ml-1.5 flex items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
+            <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Kopieren"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg></button>
+            <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Wiederholen"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></button>
+            <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Gut"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2h.94a2 2 0 0 1 2 2.22Z"/></svg></button>
+            <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Schlecht"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 14V2"/><path d="M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L13 22h-.94a2 2 0 0 1-2-2.22Z"/></svg></button>
+          </div>
+        </div>
+      </div>
+      <div class="group flex flex-row-reverse gap-3">
+        <span class="avatar" data-size="sm"><span>DB</span></span>
+        <div class="flex flex-col items-end gap-1">
+          <div class="bubble" data-align="end">Gut, dann bau die Bild-Variante zuerst.</div>
+          <div class="text-muted-foreground -mr-1.5 flex items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
+            <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Bearbeiten"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg></button>
+            <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Kopieren"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Anhang (Bild · Datei)</span>
+    <div class="flex w-full max-w-md flex-col gap-4">
+      <div class="flex flex-row-reverse gap-3">
+        <span class="avatar" data-size="sm"><span>DB</span></span>
+        <div class="flex flex-col items-end gap-1">
+          <div class="flex items-baseline gap-2"><span class="text-muted-foreground text-xs">10:03</span><span class="text-sm font-medium">Du</span></div>
+          <div class="bg-primary text-primary-foreground flex w-fit flex-col gap-2 rounded-lg p-2 text-sm">
+            <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=320&h=200&fit=crop&q=80" alt="Arbeitsplatz" class="aspect-[8/5] w-56 rounded-md object-cover">
+            <span class="px-1">So sieht der neue Schreibtisch aus.</span>
+          </div>
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <span class="avatar" data-size="sm"><span>AK</span></span>
+        <div class="flex flex-col items-start gap-1">
+          <div class="flex items-baseline gap-2"><span class="text-sm font-medium">Anna K.</span><span class="text-muted-foreground text-xs">10:05</span></div>
+          <div class="bg-muted flex w-64 items-center gap-3 rounded-lg p-3 text-sm">
+            <span class="bg-background grid size-9 shrink-0 place-items-center rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg></span>
+            <div class="min-w-0 flex-1"><div class="truncate font-medium">Bericht-Q3.pdf</div><div class="text-muted-foreground text-xs">2,4 MB</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Status (Tippt … · Zugestellt · Gelesen · Fehlgeschlagen)</span>
+    <div class="flex w-full max-w-md flex-col gap-4">
+      <div class="flex gap-3">
+        <span class="avatar" data-size="sm"><span>AK</span></span>
+        <div class="flex flex-col items-start gap-1">
+          <span class="text-sm font-medium">Anna K.</span>
+          <div class="bubble flex items-center gap-1 py-3" data-variant="muted">
+            <span class="bg-muted-foreground/60 size-1.5 animate-bounce rounded-full [animation-delay:-0.3s]"></span>
+            <span class="bg-muted-foreground/60 size-1.5 animate-bounce rounded-full [animation-delay:-0.15s]"></span>
+            <span class="bg-muted-foreground/60 size-1.5 animate-bounce rounded-full"></span>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-row-reverse gap-3">
+        <span class="avatar" data-size="sm"><span>DB</span></span>
+        <div class="flex flex-col items-end gap-1">
+          <div class="bubble" data-align="end">Zugestellt.</div>
+          <span class="text-muted-foreground text-xs">Zugestellt · 09:45</span>
+        </div>
+      </div>
+      <div class="flex flex-row-reverse gap-3">
+        <span class="avatar" data-size="sm"><span>DB</span></span>
+        <div class="flex flex-col items-end gap-1">
+          <div class="bubble" data-align="end">Und gelesen?</div>
+          <span class="text-muted-foreground text-xs">Gelesen · gestern</span>
+        </div>
+      </div>
+      <div class="flex flex-row-reverse gap-3">
+        <span class="avatar" data-size="sm"><span>DB</span></span>
+        <div class="flex flex-col items-end gap-1">
+          <div class="bubble" data-variant="destructive" data-align="end">Läuft der Server noch?</div>
+          <div class="text-destructive flex items-center gap-1 text-xs">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+            Fehlgeschlagen <button type="button" class="underline underline-offset-2">Erneut senden</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Assistent — Reasoning + Antwort im Aufbau</span>
+    <div class="flex w-full max-w-md gap-3">
+      <span class="avatar" data-size="sm"><span>KI</span></span>
+      <div class="flex flex-col items-start gap-1.5">
+        <span class="text-sm font-medium">Assistent</span>
+        <div class="text-muted-foreground flex items-center gap-1.5 text-xs">
+          <svg class="size-3.5 animate-spin" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+          <span class="c22-shimmer">Denkt nach …</span>
+        </div>
+        <div class="bubble" data-variant="muted">Basierend auf den Daten schlage ich vor, zuerst die Standard-Variante<span class="animate-pulse">▌</span></div>
+      </div>
+    </div>
+  </div>
+</div>

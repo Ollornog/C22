@@ -6,3 +6,12 @@ _site/
 data/
 .env
 *.bak
+
+# Tailwind standalone CLI — fetched via scripts/fetch-tailwind.sh, not committed
+tools/tailwindcss
+
+# Generierte Build-Outputs (scripts/build-gallery.sh) — Quelle sind input/tokens/components.css
+# + vendored Basecoat; die kompilierten Pack-CSS und die Galerie-Seite werden lokal gebaut.
+c22/static/css/c22.css
+c22/static/css/c22-*.css
+gallery/index.html

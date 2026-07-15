@@ -1,0 +1,64 @@
+<!-- basecoat: Slider = natives input[type="range"] + .input; --slider-value wird von basecoat.all.min.js (range.js) live auf den Prozentwert gesetzt und färbt den Track (linear-gradient primary/muted). Kein eigenes Markup-Widget, keine data-orientation/data-variant von Basecoat selbst — Mehrfach-Griffe/vertikale Ausrichtung/Ticks unterstützt Basecoat nicht (bewusst natives Element). Innerhalb von .field wird die Höhe automatisch angepasst. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Standard</span>
+    <input type="range" class="input w-full max-w-sm" min="0" max="100" value="60" aria-label="Lautstärke">
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Wertanzeige (Label · <code class="text-[11px]">&lt;output&gt;</code>, live)</span>
+    <div class="w-full max-w-sm">
+      <div class="mb-2 flex items-center justify-between">
+        <label for="c22-slider-value" class="text-sm font-medium">Helligkeit</label>
+        <output for="c22-slider-value" id="c22-slider-value-out" class="text-muted-foreground text-sm tabular-nums">60</output>
+      </div>
+      <input type="range" class="input w-full" id="c22-slider-value" min="0" max="100" value="60" oninput="document.getElementById('c22-slider-value-out').textContent = this.value">
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Icons (Lautstärke)</span>
+    <div class="flex w-full max-w-sm items-center gap-3">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground size-4 shrink-0"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/></svg>
+      <input type="range" class="input w-full" min="0" max="100" value="40" aria-label="Lautstärke">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground size-4 shrink-0"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/></svg>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Schritte (<code class="text-[11px]">step="20"</code> mit Skala)</span>
+    <div class="w-full max-w-sm">
+      <input type="range" class="input w-full" min="0" max="100" step="20" value="40" list="c22-slider-ticks" aria-label="Stufen">
+      <datalist id="c22-slider-ticks"><option value="0"></option><option value="20"></option><option value="40"></option><option value="60"></option><option value="80"></option><option value="100"></option></datalist>
+      <div class="text-muted-foreground mt-1.5 flex justify-between text-xs tabular-nums">
+        <span>0</span><span>20</span><span>40</span><span>60</span><span>80</span><span>100</span>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Statusfarben (Erfolg · Warnung · Destruktiv — C22-Erweiterung)</span>
+    <div class="flex w-full max-w-sm flex-col gap-4">
+      <input type="range" class="input w-full" data-variant="success" min="0" max="100" value="100" aria-label="Erfolgreich">
+      <input type="range" class="input w-full" data-variant="warning" min="0" max="100" value="85" aria-label="Wird knapp">
+      <input type="range" class="input w-full" data-variant="destructive" min="0" max="100" value="45" aria-label="Kritisch">
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Im Formularfeld (Standard · Deaktiviert)</span>
+    <div class="flex w-full max-w-sm flex-col gap-4">
+      <div class="field" role="group">
+        <label for="c22-slider-field">Federung</label>
+        <input type="range" class="input" id="c22-slider-field" min="0" max="100" value="70">
+        <p>Höhere Werte machen die Federung weicher.</p>
+      </div>
+      <div class="field" role="group" data-disabled="true">
+        <label for="c22-slider-field-disabled">Zentral verwaltet</label>
+        <input type="range" class="input" id="c22-slider-field-disabled" min="0" max="100" value="30" disabled>
+        <p>Wird vom Administrator vorgegeben — hier nicht änderbar.</p>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Rechts-nach-links (<code class="text-[11px]">dir="rtl"</code>)</span>
+    <div class="w-full max-w-sm" dir="rtl">
+      <input type="range" class="input w-full" min="0" max="100" value="60" aria-label="مستوى الصوت">
+    </div>
+  </div>
+</div>

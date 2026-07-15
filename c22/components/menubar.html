@@ -1,0 +1,112 @@
+<!-- custom (basecoat-Bausteine): Basecoat/shadcn haben keine eigene .menubar-CSS -- die Leiste ist reine Komposition aus mehreren .dropdown-menu-Instanzen (ghost-Trigger, dünner Rahmen), Optik 1:1 von dropdown-menu.html übernommen (role=menu/menuitem*, data-indicator, kbd-Shortcuts, data-inset, data-variant=destructive, aria-disabled, role=group/heading). Jede Instanz wird von basecoat.all.min.js verdrahtet. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Standard</span>
+    <div class="flex items-center gap-1 rounded-md border p-1">
+      <div class="dropdown-menu" id="c22-mb1">
+        <button type="button" class="btn" data-variant="ghost" data-size="sm" id="c22-mb1-trigger" aria-haspopup="menu" aria-controls="c22-mb1-menu" aria-expanded="false">Datei</button>
+        <div id="c22-mb1-popover" data-popover aria-hidden="true"><div role="menu" id="c22-mb1-menu" aria-labelledby="c22-mb1-trigger"><button type="button" role="menuitem">Neu</button><button type="button" role="menuitem">Öffnen</button><button type="button" role="menuitem">Speichern</button></div></div>
+      </div>
+      <div class="dropdown-menu" id="c22-mb2">
+        <button type="button" class="btn" data-variant="ghost" data-size="sm" id="c22-mb2-trigger" aria-haspopup="menu" aria-controls="c22-mb2-menu" aria-expanded="false">Bearbeiten</button>
+        <div id="c22-mb2-popover" data-popover aria-hidden="true"><div role="menu" id="c22-mb2-menu" aria-labelledby="c22-mb2-trigger"><button type="button" role="menuitem">Rückgängig</button><button type="button" role="menuitem">Wiederholen</button></div></div>
+      </div>
+      <div class="dropdown-menu" id="c22-mb3">
+        <button type="button" class="btn" data-variant="ghost" data-size="sm" id="c22-mb3-trigger" aria-haspopup="menu" aria-controls="c22-mb3-menu" aria-expanded="false">Ansicht</button>
+        <div id="c22-mb3-popover" data-popover aria-hidden="true"><div role="menu" id="c22-mb3-menu" aria-labelledby="c22-mb3-trigger"><button type="button" role="menuitem">Zoom +</button><button type="button" role="menuitem">Zoom −</button></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Icons &amp; Tastenkürzeln</span>
+    <div class="flex items-center gap-1 rounded-md border p-1">
+      <div class="dropdown-menu" id="c22-mb4">
+        <button type="button" class="btn" data-variant="ghost" data-size="sm" id="c22-mb4-trigger" aria-haspopup="menu" aria-controls="c22-mb4-menu" aria-expanded="false">Datei</button>
+        <div id="c22-mb4-popover" data-popover aria-hidden="true">
+          <div role="menu" id="c22-mb4-menu" aria-labelledby="c22-mb4-trigger">
+            <button type="button" role="menuitem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M12 12v6"/><path d="M9 15h6"/></svg>Neuer Tab<kbd class="kbd">Strg T</kbd></button>
+            <button type="button" role="menuitem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/></svg>Neues Fenster<kbd class="kbd">Strg N</kbd></button>
+            <hr role="separator">
+            <button type="button" role="menuitem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6"/><rect width="12" height="8" x="6" y="14" rx="1"/></svg>Drucken<kbd class="kbd">Strg P</kbd></button>
+          </div>
+        </div>
+      </div>
+      <div class="dropdown-menu" id="c22-mb5">
+        <button type="button" class="btn" data-variant="ghost" data-size="sm" id="c22-mb5-trigger" aria-haspopup="menu" aria-controls="c22-mb5-menu" aria-expanded="false">Bearbeiten</button>
+        <div id="c22-mb5-popover" data-popover aria-hidden="true">
+          <div role="menu" id="c22-mb5-menu" aria-labelledby="c22-mb5-trigger">
+            <button type="button" role="menuitem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5v0a5.5 5.5 0 0 1-5.5 5.5H11"/></svg>Rückgängig<kbd class="kbd">Strg Z</kbd></button>
+            <button type="button" role="menuitem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 14 5-5-5-5"/><path d="M20 9H9.5A5.5 5.5 0 0 0 4 14.5v0A5.5 5.5 0 0 0 9.5 20H13"/></svg>Wiederholen<kbd class="kbd">Umschalt Strg Z</kbd></button>
+            <hr role="separator">
+            <button type="button" role="menuitem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><path d="M8.12 8.12 12 12"/><path d="M20 4 8.12 15.88"/><circle cx="6" cy="18" r="3"/><path d="M14.8 14.8 20 20"/></svg>Ausschneiden<kbd class="kbd">Strg X</kbd></button>
+            <button type="button" role="menuitem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>Kopieren<kbd class="kbd">Strg C</kbd></button>
+            <button type="button" role="menuitem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>Einfügen<kbd class="kbd">Strg V</kbd></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Checkboxen &amp; Radiogruppe</span>
+    <div class="flex items-center gap-1 rounded-md border p-1">
+      <div class="dropdown-menu" id="c22-mb6">
+        <button type="button" class="btn" data-variant="ghost" data-size="sm" id="c22-mb6-trigger" aria-haspopup="menu" aria-controls="c22-mb6-menu" aria-expanded="false">Ansicht</button>
+        <div id="c22-mb6-popover" data-popover aria-hidden="true">
+          <div role="menu" id="c22-mb6-menu" aria-labelledby="c22-mb6-trigger">
+            <div role="group" aria-labelledby="c22-mb6-h1"><div role="heading" id="c22-mb6-h1">Symbolleisten</div>
+              <button type="button" role="menuitemcheckbox" aria-checked="true"><span data-indicator><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Statusleiste</button>
+              <button type="button" role="menuitemcheckbox" aria-checked="false"><span data-indicator><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Lesezeichenleiste</button>
+              <button type="button" role="menuitemcheckbox" aria-checked="false"><span data-indicator><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Vollbild</button>
+            </div>
+            <hr role="separator">
+            <div role="group" aria-labelledby="c22-mb6-h2"><div role="heading" id="c22-mb6-h2">Zoomstufe</div>
+              <button type="button" role="menuitemradio" aria-checked="false"><span data-indicator><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="12" cy="12" r="6"/></svg></span>100 %</button>
+              <button type="button" role="menuitemradio" aria-checked="true"><span data-indicator><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="12" cy="12" r="6"/></svg></span>150 %</button>
+              <button type="button" role="menuitemradio" aria-checked="false"><span data-indicator><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="12" cy="12" r="6"/></svg></span>200 %</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Gruppen, Überschrift &amp; eingerückt</span>
+    <div class="flex items-center gap-1 rounded-md border p-1">
+      <div class="dropdown-menu" id="c22-mb7">
+        <button type="button" class="btn" data-variant="ghost" data-size="sm" id="c22-mb7-trigger" aria-haspopup="menu" aria-controls="c22-mb7-menu" aria-expanded="false">Profil</button>
+        <div id="c22-mb7-popover" data-popover aria-hidden="true">
+          <div role="menu" id="c22-mb7-menu" aria-labelledby="c22-mb7-trigger">
+            <div role="group" aria-labelledby="c22-mb7-h1"><div role="heading" id="c22-mb7-h1">Sara Nowak</div>
+              <button type="button" role="menuitem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profil bearbeiten</button>
+              <button type="button" role="menuitem" data-inset>Team wechseln</button>
+            </div>
+            <hr role="separator">
+            <div role="group" aria-labelledby="c22-mb7-h2"><div role="heading" id="c22-mb7-h2">Arbeitsbereich</div>
+              <button type="button" role="menuitemradio" aria-checked="true"><span data-indicator><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="12" cy="12" r="6"/></svg></span>Persönlich</button>
+              <button type="button" role="menuitemradio" aria-checked="false"><span data-indicator><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="12" cy="12" r="6"/></svg></span>Team A</button>
+              <button type="button" role="menuitemradio" aria-checked="false"><span data-indicator><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="12" cy="12" r="6"/></svg></span>Team B</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Deaktiviert &amp; destruktiv</span>
+    <div class="flex items-center gap-1 rounded-md border p-1">
+      <div class="dropdown-menu" id="c22-mb8">
+        <button type="button" class="btn" data-variant="ghost" data-size="sm" id="c22-mb8-trigger" aria-haspopup="menu" aria-controls="c22-mb8-menu" aria-expanded="false">Datei</button>
+        <div id="c22-mb8-popover" data-popover aria-hidden="true">
+          <div role="menu" id="c22-mb8-menu" aria-labelledby="c22-mb8-trigger">
+            <button type="button" role="menuitem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"/><path d="M7 3v4a1 1 0 0 0 1 1h7"/></svg>Speichern<kbd class="kbd">Strg S</kbd></button>
+            <button type="button" role="menuitem" data-inset>Speichern unter …</button>
+            <hr role="separator">
+            <button type="button" role="menuitem" aria-disabled="true">Schließen ohne Speichern</button>
+            <hr role="separator">
+            <button type="button" role="menuitem" data-variant="destructive"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>Löschen<kbd class="kbd">Umschalt Entf</kbd></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

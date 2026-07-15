@@ -1,0 +1,255 @@
+<!-- basecoat: Table (.table-container + .table). thead/tbody/tfoot, <caption>, data-state="selected" hebt eine Zeile hervor (Basecoat-CSS), [role=checkbox] bekommt automatisch Innenabstand/Ausrichtung kompensiert. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Standard (mit Bildunterschrift)</span>
+    <div class="table-container w-full max-w-2xl">
+      <table class="table">
+        <caption>Deine letzten Rechnungen.</caption>
+        <thead>
+          <tr>
+            <th>Rechnung</th>
+            <th>Status</th>
+            <th>Methode</th>
+            <th class="text-end">Betrag</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="font-medium">INV-001</td>
+            <td><span class="badge bg-success text-success-foreground border-transparent">Bezahlt</span></td>
+            <td>Kreditkarte</td>
+            <td class="text-end tabular-nums">250,00 €</td>
+          </tr>
+          <tr>
+            <td class="font-medium">INV-002</td>
+            <td><span class="badge" data-variant="secondary">Offen</span></td>
+            <td>Überweisung</td>
+            <td class="text-end tabular-nums">150,00 €</td>
+          </tr>
+          <tr>
+            <td class="font-medium">INV-003</td>
+            <td><span class="badge" data-variant="destructive">Storniert</span></td>
+            <td>PayPal</td>
+            <td class="text-end tabular-nums">350,00 €</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Fußzeile (Summe)</span>
+    <div class="table-container w-full max-w-2xl">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Rechnung</th>
+            <th>Status</th>
+            <th class="text-end">Betrag</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="font-medium">INV-001</td>
+            <td><span class="badge bg-success text-success-foreground border-transparent">Bezahlt</span></td>
+            <td class="text-end tabular-nums">250,00 €</td>
+          </tr>
+          <tr>
+            <td class="font-medium">INV-002</td>
+            <td><span class="badge bg-success text-success-foreground border-transparent">Bezahlt</span></td>
+            <td class="text-end tabular-nums">150,00 €</td>
+          </tr>
+          <tr>
+            <td class="font-medium">INV-003</td>
+            <td><span class="badge" data-variant="secondary">Offen</span></td>
+            <td class="text-end tabular-nums">350,00 €</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="2">Gesamt</td>
+            <td class="text-end tabular-nums">750,00 €</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Auswählbare Zeilen (Checkbox-Spalte)</span>
+    <div class="table-container w-full max-w-2xl">
+      <table class="table">
+        <thead>
+          <tr>
+            <th><input class="input" type="checkbox" role="checkbox" aria-label="Alle auswählen"></th>
+            <th>Kunde</th>
+            <th>E-Mail</th>
+            <th class="text-end">Umsatz</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr data-state="selected">
+            <td><input class="input" type="checkbox" role="checkbox" checked aria-label="Zeile auswählen"></td>
+            <td class="font-medium">Mara Albrecht</td>
+            <td>mara@example.com</td>
+            <td class="text-end tabular-nums">1.240,00 €</td>
+          </tr>
+          <tr>
+            <td><input class="input" type="checkbox" role="checkbox" aria-label="Zeile auswählen"></td>
+            <td class="font-medium">Jonas Weber</td>
+            <td>jonas@example.com</td>
+            <td class="text-end tabular-nums">860,00 €</td>
+          </tr>
+          <tr data-state="selected">
+            <td><input class="input" type="checkbox" role="checkbox" checked aria-label="Zeile auswählen"></td>
+            <td class="font-medium">Lena Krüger</td>
+            <td>lena@example.com</td>
+            <td class="text-end tabular-nums">2.030,00 €</td>
+          </tr>
+          <tr>
+            <td><input class="input" type="checkbox" role="checkbox" aria-label="Zeile auswählen"></td>
+            <td class="font-medium">Tim Fischer</td>
+            <td>tim@example.com</td>
+            <td class="text-end tabular-nums">430,00 €</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Nutzerliste (Avatar + Status)</span>
+    <div class="table-container w-full max-w-2xl">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Nutzer</th>
+            <th>Rolle</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="flex items-center gap-3">
+                <span class="avatar" data-size="sm"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=64&h=64&fit=crop&crop=faces&q=80" alt="Mara Albrecht"><span>MA</span></span>
+                <span class="font-medium">Mara Albrecht</span>
+              </div>
+            </td>
+            <td>Admin</td>
+            <td><span class="badge bg-success text-success-foreground border-transparent">Aktiv</span></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="flex items-center gap-3">
+                <span class="avatar" data-size="sm"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=64&h=64&fit=crop&crop=faces&q=80" alt="Jonas Weber"><span>JO</span></span>
+                <span class="font-medium">Jonas Weber</span>
+              </div>
+            </td>
+            <td>Mitglied</td>
+            <td><span class="badge bg-success text-success-foreground border-transparent">Aktiv</span></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="flex items-center gap-3">
+                <span class="avatar" data-size="sm"><img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=64&h=64&fit=crop&crop=faces&q=80" alt="Lena Krüger"><span>LE</span></span>
+                <span class="font-medium">Lena Krüger</span>
+              </div>
+            </td>
+            <td>Mitglied</td>
+            <td><span class="badge" data-variant="secondary">Eingeladen</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Zeilenaktionen (Dropdown-Menü)</span>
+    <div class="table-container w-full max-w-2xl">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Rechnung</th>
+            <th>Status</th>
+            <th class="text-end">Betrag</th>
+            <th class="w-px"><span class="sr-only">Aktionen</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="font-medium">INV-001</td>
+            <td><span class="badge bg-success text-success-foreground border-transparent">Bezahlt</span></td>
+            <td class="text-end tabular-nums">250,00 €</td>
+            <td>
+              <div class="dropdown-menu" id="c22-table-dd-1">
+                <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" id="c22-table-dd-1-trigger" aria-haspopup="menu" aria-controls="c22-table-dd-1-menu" aria-expanded="false" aria-label="Aktionen für INV-001">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+                </button>
+                <div id="c22-table-dd-1-popover" data-popover aria-hidden="true">
+                  <div role="menu" id="c22-table-dd-1-menu" aria-labelledby="c22-table-dd-1-trigger">
+                    <button type="button" role="menuitem">Rechnung ansehen</button>
+                    <button type="button" role="menuitem">Als bezahlt markieren</button>
+                    <hr role="separator">
+                    <button type="button" role="menuitem" data-variant="destructive">Stornieren</button>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="font-medium">INV-002</td>
+            <td><span class="badge" data-variant="secondary">Offen</span></td>
+            <td class="text-end tabular-nums">150,00 €</td>
+            <td>
+              <div class="dropdown-menu" id="c22-table-dd-2">
+                <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" id="c22-table-dd-2-trigger" aria-haspopup="menu" aria-controls="c22-table-dd-2-menu" aria-expanded="false" aria-label="Aktionen für INV-002">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+                </button>
+                <div id="c22-table-dd-2-popover" data-popover aria-hidden="true">
+                  <div role="menu" id="c22-table-dd-2-menu" aria-labelledby="c22-table-dd-2-trigger">
+                    <button type="button" role="menuitem">Rechnung ansehen</button>
+                    <button type="button" role="menuitem">Als bezahlt markieren</button>
+                    <hr role="separator">
+                    <button type="button" role="menuitem" data-variant="destructive">Stornieren</button>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Kompakt (dichte Zeilen)</span>
+    <div class="table-container w-full max-w-2xl">
+      <table class="table text-xs [&_th]:h-8 [&_td]:p-1.5">
+        <thead>
+          <tr>
+            <th>Rechnung</th>
+            <th>Status</th>
+            <th>Methode</th>
+            <th class="text-end">Betrag</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="font-medium">INV-001</td>
+            <td><span class="badge bg-success text-success-foreground border-transparent">Bezahlt</span></td>
+            <td>Kreditkarte</td>
+            <td class="text-end tabular-nums">250,00 €</td>
+          </tr>
+          <tr>
+            <td class="font-medium">INV-002</td>
+            <td><span class="badge" data-variant="secondary">Offen</span></td>
+            <td>Überweisung</td>
+            <td class="text-end tabular-nums">150,00 €</td>
+          </tr>
+          <tr>
+            <td class="font-medium">INV-003</td>
+            <td><span class="badge" data-variant="destructive">Storniert</span></td>
+            <td>PayPal</td>
+            <td class="text-end tabular-nums">350,00 €</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

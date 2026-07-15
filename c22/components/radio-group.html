@@ -1,0 +1,99 @@
+<!-- basecoat: Radio Group (natives input[type=radio] + gemeinsames name-Attribut, kein JS nötig). role="radiogroup" gruppiert exklusive Optionen; .field[role=group][data-orientation=horizontal] mit <section> für Label+Beschreibung je Option; .field > label(> input) = klickbare Karte, automatisch hervorgehoben bei Auswahl (has-checked); fieldset + legend[data-variant=label] + [data-slot=radio-group] gruppiert semantisch; data-disabled/data-invalid steuern Zustände automatisch. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Standard</span>
+    <div role="radiogroup" class="flex flex-col gap-3" aria-label="Anzeigemodus">
+      <label class="label inline-flex items-center gap-2"><input class="input" type="radio" name="rg-std" checked> Standard</label>
+      <label class="label inline-flex items-center gap-2"><input class="input" type="radio" name="rg-std"> Komfort</label>
+      <label class="label inline-flex items-center gap-2"><input class="input" type="radio" name="rg-std"> Sparmodus</label>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Horizontal</span>
+    <div role="radiogroup" class="flex flex-wrap justify-center gap-6" aria-label="Größe">
+      <label class="label inline-flex items-center gap-2"><input class="input" type="radio" name="rg-horiz" checked> S</label>
+      <label class="label inline-flex items-center gap-2"><input class="input" type="radio" name="rg-horiz"> M</label>
+      <label class="label inline-flex items-center gap-2"><input class="input" type="radio" name="rg-horiz"> L</label>
+      <label class="label inline-flex items-center gap-2"><input class="input" type="radio" name="rg-horiz"> XL</label>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Beschreibung</span>
+    <div role="radiogroup" class="flex w-full max-w-sm flex-col gap-4" aria-label="Versandart">
+      <div class="field" role="group" data-orientation="horizontal">
+        <input class="input" type="radio" name="rg-desc" id="rg-desc-1" checked aria-describedby="rg-desc-1-hint">
+        <section>
+          <label for="rg-desc-1">Standardversand</label>
+          <p id="rg-desc-1-hint">3–5 Werktage, kostenlos.</p>
+        </section>
+      </div>
+      <div class="field" role="group" data-orientation="horizontal">
+        <input class="input" type="radio" name="rg-desc" id="rg-desc-2" aria-describedby="rg-desc-2-hint">
+        <section>
+          <label for="rg-desc-2">Expressversand</label>
+          <p id="rg-desc-2-hint">1–2 Werktage, 4,99&nbsp;€ Aufpreis.</p>
+        </section>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Als Karte (hervorgehoben bei Auswahl)</span>
+    <div role="radiogroup" class="flex w-full max-w-sm flex-col gap-3" aria-label="Tarif">
+      <div class="field">
+        <label class="label items-start gap-3">
+          <input class="input mt-0.5" type="radio" name="rg-card" checked>
+          <span class="flex flex-col gap-1">
+            <span class="text-sm font-medium">Starter</span>
+            <span class="text-muted-foreground text-sm font-normal">Für einzelne Projekte, bis 3 Nutzer.</span>
+          </span>
+        </label>
+      </div>
+      <div class="field">
+        <label class="label items-start gap-3">
+          <input class="input mt-0.5" type="radio" name="rg-card">
+          <span class="flex flex-col gap-1">
+            <span class="text-sm font-medium">Team</span>
+            <span class="text-muted-foreground text-sm font-normal">Für wachsende Teams, bis 20 Nutzer.</span>
+          </span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Fieldset mit Legende (Gruppe)</span>
+    <fieldset class="fieldset w-full max-w-sm">
+      <legend data-variant="label">Benachrichtigungsintervall</legend>
+      <p>Wie oft möchtest du Zusammenfassungen erhalten?</p>
+      <div role="radiogroup" aria-label="Benachrichtigungsintervall" data-slot="radio-group">
+        <div role="group" class="field" data-orientation="horizontal">
+          <input class="input" type="radio" name="rg-fieldset" id="rg-fs-1" checked>
+          <label for="rg-fs-1" class="font-normal">Täglich</label>
+        </div>
+        <div role="group" class="field" data-orientation="horizontal">
+          <input class="input" type="radio" name="rg-fieldset" id="rg-fs-2">
+          <label for="rg-fs-2" class="font-normal">Wöchentlich</label>
+        </div>
+        <div role="group" class="field" data-orientation="horizontal">
+          <input class="input" type="radio" name="rg-fieldset" id="rg-fs-3">
+          <label for="rg-fs-3" class="font-normal">Nie</label>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Deaktiviert</span>
+    <div role="radiogroup" class="flex flex-col gap-3" aria-label="Zahlungsart" data-disabled="true">
+      <label class="label inline-flex items-center gap-2"><input class="input" type="radio" name="rg-disabled" checked disabled> Kreditkarte</label>
+      <label class="label inline-flex items-center gap-2"><input class="input" type="radio" name="rg-disabled" disabled> PayPal</label>
+      <label class="label inline-flex items-center gap-2"><input class="input" type="radio" name="rg-disabled" disabled> Rechnung</label>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Ungültig (Pflichtfeld nicht ausgewählt)</span>
+    <div class="field w-full max-w-sm" role="radiogroup" data-invalid="true" aria-label="Abo-Typ" aria-describedby="rg-invalid-err">
+      <label class="label inline-flex items-center gap-2"><input class="input" type="radio" name="rg-invalid" aria-invalid="true"> Monatlich</label>
+      <label class="label inline-flex items-center gap-2"><input class="input" type="radio" name="rg-invalid" aria-invalid="true"> Jährlich</label>
+      <p id="rg-invalid-err" role="alert" class="text-destructive">Pflichtfeld — bitte eine Option auswählen.</p>
+    </div>
+  </div>
+</div>

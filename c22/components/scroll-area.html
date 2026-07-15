@@ -1,0 +1,104 @@
+<!-- basecoat: Scroll Area (Basecoat nennt sie "Scrollbar") = gestylte native Scrollleiste, kein JS/Overlay wie bei Radix. .scrollbar Standard, .scrollbar-sm dünn für Menüs/Listboxen. Container braucht selbst overflow-y-auto/overflow-x-auto + eine Höhen-/Breitenbegrenzung. Farben/Breite über C22-Tokens (--scrollbar-track/-thumb/-width/-sm-width/-radius). Funktioniert mit dir="rtl". -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Standard (<code class="text-[11px]">.scrollbar</code>, vertikal)</span>
+    <div class="scrollbar h-72 w-full max-w-xs overflow-y-auto rounded-md border p-4">
+      <h4 class="mb-4 text-sm font-medium leading-none">Versionen</h4>
+      <div class="flex flex-col gap-3 text-sm">
+        <div>v2.1.0 — Basecoat-Merge</div>
+        <div class="border-t pt-3">v2.0.4 — Fix Tokens</div>
+        <div class="border-t pt-3">v2.0.3 — Dark-Mode</div>
+        <div class="border-t pt-3">v2.0.2 — Slider</div>
+        <div class="border-t pt-3">v2.0.1 — Toast</div>
+        <div class="border-t pt-3">v2.0.0 — Neuaufbau</div>
+        <div class="border-t pt-3">v1.9.0 — Sidebar</div>
+        <div class="border-t pt-3">v1.8.0 — Command</div>
+        <div class="border-t pt-3">v1.7.0 — Combobox</div>
+        <div class="border-t pt-3">v1.6.0 — Dialog</div>
+        <div class="border-t pt-3">v1.5.0 — Table</div>
+        <div class="border-t pt-3">v1.4.0 — Card</div>
+        <div class="border-t pt-3">v1.3.0 — Button</div>
+        <div class="border-t pt-3">v1.2.0 — Tokens</div>
+        <div class="border-t pt-3">v1.1.0 — Setup</div>
+        <div class="border-t pt-3">v1.0.0 — Erstes Release</div>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Kompakt (<code class="text-[11px]">.scrollbar-sm</code>, für Menüs/Listen)</span>
+    <div class="scrollbar-sm h-56 w-full max-w-xs overflow-y-auto rounded-md border p-2">
+      <div class="flex flex-col gap-1 text-sm">
+        <div class="flex items-center gap-2 rounded-sm p-2"><span class="avatar" data-size="sm"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=64&h=64&fit=crop&crop=faces&q=80" alt="Mara Bauer"><span>MA</span></span><div class="flex flex-col"><span class="font-medium">Mara Bauer</span><span class="text-muted-foreground text-xs">Design</span></div></div>
+        <div class="flex items-center gap-2 rounded-sm p-2"><span class="avatar" data-size="sm"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=64&h=64&fit=crop&crop=faces&q=80" alt="Jonas Kramer"><span>JO</span></span><div class="flex flex-col"><span class="font-medium">Jonas Kramer</span><span class="text-muted-foreground text-xs">Backend</span></div></div>
+        <div class="flex items-center gap-2 rounded-sm p-2"><span class="avatar" data-size="sm"><img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=64&h=64&fit=crop&crop=faces&q=80" alt="Lena Fischer"><span>LE</span></span><div class="flex flex-col"><span class="font-medium">Lena Fischer</span><span class="text-muted-foreground text-xs">Frontend</span></div></div>
+        <div class="flex items-center gap-2 rounded-sm p-2"><span class="avatar" data-size="sm"><img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=64&h=64&fit=crop&crop=faces&q=80" alt="Tim Weber"><span>TI</span></span><div class="flex flex-col"><span class="font-medium">Tim Weber</span><span class="text-muted-foreground text-xs">DevOps</span></div></div>
+        <div class="flex items-center gap-2 rounded-sm p-2"><span class="avatar" data-size="sm"><img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=64&h=64&fit=crop&crop=faces&q=80" alt="Sara Nowak"><span>SA</span></span><div class="flex flex-col"><span class="font-medium">Sara Nowak</span><span class="text-muted-foreground text-xs">Support</span></div></div>
+        <div class="flex items-center gap-2 rounded-sm p-2"><span class="avatar" data-size="sm"><span>AK</span></span><div class="flex flex-col"><span class="font-medium">Anna Klein</span><span class="text-muted-foreground text-xs">Produkt</span></div></div>
+        <div class="flex items-center gap-2 rounded-sm p-2"><span class="avatar" data-size="sm"><span>PM</span></span><div class="flex flex-col"><span class="font-medium">Paul Meyer</span><span class="text-muted-foreground text-xs">QA</span></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Horizontal (<code class="text-[11px]">overflow-x-auto</code>)</span>
+    <div class="scrollbar w-full max-w-md overflow-x-auto rounded-md">
+      <div class="flex w-max gap-4 p-4">
+        <figure class="w-40 shrink-0">
+          <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=200&h=200&fit=crop&q=80" alt="Team-Meetup" class="aspect-square w-40 rounded-md object-cover">
+          <figcaption class="text-muted-foreground mt-2 text-xs">Team-Meetup</figcaption>
+        </figure>
+        <figure class="w-40 shrink-0">
+          <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=200&h=200&fit=crop&q=80" alt="Workshop" class="aspect-square w-40 rounded-md object-cover">
+          <figcaption class="text-muted-foreground mt-2 text-xs">Workshop</figcaption>
+        </figure>
+        <figure class="w-40 shrink-0">
+          <img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=200&h=200&fit=crop&q=80" alt="Sommerfest" class="aspect-square w-40 rounded-md object-cover">
+          <figcaption class="text-muted-foreground mt-2 text-xs">Sommerfest</figcaption>
+        </figure>
+        <figure class="w-40 shrink-0">
+          <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=200&h=200&fit=crop&q=80" alt="Kick-off" class="aspect-square w-40 rounded-md object-cover">
+          <figcaption class="text-muted-foreground mt-2 text-xs">Kick-off</figcaption>
+        </figure>
+        <figure class="w-40 shrink-0">
+          <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=200&h=200&fit=crop&q=80" alt="Retro" class="aspect-square w-40 rounded-md object-cover">
+          <figcaption class="text-muted-foreground mt-2 text-xs">Retro</figcaption>
+        </figure>
+        <figure class="w-40 shrink-0">
+          <img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=200&h=200&fit=crop&q=80" alt="Weihnachtsfeier" class="aspect-square w-40 rounded-md object-cover">
+          <figcaption class="text-muted-foreground mt-2 text-xs">Weihnachtsfeier</figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">In einer Karte (Aktivitäts-Log)</span>
+    <div class="card w-full max-w-sm">
+      <header>
+        <h2>Aktivität</h2>
+        <p>Letzte Ereignisse in diesem Projekt.</p>
+      </header>
+      <section>
+        <div class="scrollbar h-48 overflow-y-auto pe-2">
+          <div class="flex flex-col gap-3 text-sm">
+            <div><span class="text-muted-foreground text-xs">Vor 2 Minuten</span><div>Lena Fischer hat <span class="font-medium">Build #482</span> ausgelöst.</div></div>
+            <div class="border-t pt-3"><span class="text-muted-foreground text-xs">Vor 18 Minuten</span><div>Jonas Kramer hat einen Kommentar zu <span class="font-medium">Issue #91</span> hinterlassen.</div></div>
+            <div class="border-t pt-3"><span class="text-muted-foreground text-xs">Vor 1 Stunde</span><div>Mara Bauer hat <span class="font-medium">v2.1.0</span> veröffentlicht.</div></div>
+            <div class="border-t pt-3"><span class="text-muted-foreground text-xs">Vor 3 Stunden</span><div>Tim Weber hat das Deployment nach <span class="font-medium">Staging</span> gestartet.</div></div>
+            <div class="border-t pt-3"><span class="text-muted-foreground text-xs">Gestern</span><div>Sara Nowak hat <span class="font-medium">3 Tickets</span> geschlossen.</div></div>
+            <div class="border-t pt-3"><span class="text-muted-foreground text-xs">Vor 2 Tagen</span><div>Anna Klein hat die Roadmap aktualisiert.</div></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Rechts-nach-links (<code class="text-[11px]">dir="rtl"</code>)</span>
+    <div dir="rtl" class="scrollbar h-40 w-full max-w-xs overflow-y-auto rounded-md border p-4">
+      <div class="flex flex-col gap-3 text-sm">
+        <div>Die Scroll-Leiste spiegelt sich automatisch auf die linke Seite.</div>
+        <div class="border-t pt-3">Kein zusätzliches CSS nötig — <code class="text-[11px]">dir="rtl"</code> reicht.</div>
+        <div class="border-t pt-3">Nützlich für arabische oder hebräische Oberflächen.</div>
+        <div class="border-t pt-3">Der Inhalt selbst bleibt unverändert lesbar.</div>
+      </div>
+    </div>
+  </div>
+</div>

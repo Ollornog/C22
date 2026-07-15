@@ -1,0 +1,81 @@
+<!-- basecoat: Switch (natives input[type=checkbox][role=switch] + Basecoat-CSS, kein JS). .field[role=group][data-orientation=horizontal] = Switch+Label nebeneinander; <section> darin = mit Beschreibung (aria-describedby); data-size="sm" = kleine Variante; .field > label(> input) = Karte mit Switch am Zeilenende; data-disabled/data-invalid steuern Zustände automatisch. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Standard (aus · ein · deaktiviert)</span>
+    <div class="flex flex-col gap-3">
+      <div role="group" class="field" data-orientation="horizontal">
+        <input class="input" type="checkbox" role="switch" id="sw-std-1">
+        <label for="sw-std-1">Flugmodus</label>
+      </div>
+      <div role="group" class="field" data-orientation="horizontal">
+        <input class="input" type="checkbox" role="switch" id="sw-std-2" checked>
+        <label for="sw-std-2">WLAN</label>
+      </div>
+      <div role="group" class="field" data-orientation="horizontal" data-disabled="true">
+        <input class="input" type="checkbox" role="switch" id="sw-std-3" disabled checked>
+        <label for="sw-std-3">Bluetooth (gesperrt)</label>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Beschreibung</span>
+    <div class="flex w-full max-w-sm flex-col gap-4">
+      <div role="group" class="field" data-orientation="horizontal">
+        <section>
+          <label for="sw-desc-1">Geräteübergreifend</label>
+          <p id="sw-desc-1-hint">Der Fokus-Status wird auf allen angemeldeten Geräten übernommen.</p>
+        </section>
+        <input class="input" type="checkbox" role="switch" id="sw-desc-1" checked aria-describedby="sw-desc-1-hint">
+      </div>
+      <div role="group" class="field" data-orientation="horizontal">
+        <section>
+          <label for="sw-desc-2">Automatische Antworten</label>
+          <p id="sw-desc-2-hint">Sendet eine Abwesenheitsnotiz auf eingehende Nachrichten.</p>
+        </section>
+        <input class="input" type="checkbox" role="switch" id="sw-desc-2" aria-describedby="sw-desc-2-hint">
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Größen (Standard · Klein)</span>
+    <div class="flex flex-wrap items-center justify-center gap-6">
+      <label class="label inline-flex items-center gap-2"><input class="input" type="checkbox" role="switch" checked> Standard</label>
+      <label class="label inline-flex items-center gap-2"><input class="input" type="checkbox" role="switch" data-size="sm" checked> Klein</label>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Als Karte (Switch am Zeilenende)</span>
+    <div class="flex w-full max-w-sm flex-col gap-3">
+      <div class="field">
+        <label class="label items-start justify-between gap-3">
+          <span class="flex flex-col gap-1">
+            <span class="text-sm font-medium">E-Mail-Benachrichtigungen</span>
+            <span class="text-muted-foreground text-sm font-normal">Erhalte eine Mail bei neuen Kommentaren.</span>
+          </span>
+          <input class="input" type="checkbox" role="switch" checked>
+        </label>
+      </div>
+      <div class="field">
+        <label class="label items-start justify-between gap-3">
+          <span class="flex flex-col gap-1">
+            <span class="text-sm font-medium">Push-Benachrichtigungen</span>
+            <span class="text-muted-foreground text-sm font-normal">Direkt aufs Gerät, auch offline.</span>
+          </span>
+          <input class="input" type="checkbox" role="switch">
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Ungültig (Pflichtfeld nicht bestätigt)</span>
+    <div class="w-full max-w-sm">
+      <div role="group" class="field" data-orientation="horizontal" data-invalid="true">
+        <section>
+          <label for="sw-inv-1">Nutzungsbedingungen zustimmen</label>
+          <p id="sw-inv-1-err" class="text-destructive">Pflichtfeld — bitte aktivieren, um fortzufahren.</p>
+        </section>
+        <input class="input" type="checkbox" role="switch" id="sw-inv-1" aria-invalid="true" aria-describedby="sw-inv-1-err">
+      </div>
+    </div>
+  </div>
+</div>

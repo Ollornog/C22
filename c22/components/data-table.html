@@ -1,0 +1,200 @@
+<!-- custom: Tabelle aus Basecoat-Bausteinen komponiert (table + button + input + dropdown-menu + select + badge) — Basecoat/shadcn haben keine eigene Data-Table-Komponente, nur die Bausteine. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Standard (Auswahl, Filter, Spalten-Dropdown)</span>
+    <div class="w-full">
+      <div class="flex items-center justify-between gap-4 pb-4">
+        <input class="input max-w-xs" type="search" placeholder="E-Mails filtern …">
+        <div class="dropdown-menu" id="c22-dt-cols">
+          <button type="button" class="btn" data-variant="outline" data-size="sm" id="c22-dt-cols-trigger" aria-haspopup="menu" aria-controls="c22-dt-cols-menu" aria-expanded="false">Spalten <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+          <div id="c22-dt-cols-popover" data-popover aria-hidden="true">
+            <div role="menu" id="c22-dt-cols-menu" aria-labelledby="c22-dt-cols-trigger">
+              <button type="button" role="menuitemcheckbox" aria-checked="true">Status</button>
+              <button type="button" role="menuitemcheckbox" aria-checked="true">E-Mail</button>
+              <button type="button" role="menuitemcheckbox" aria-checked="true">Betrag</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="table-container rounded-md border">
+        <table class="table text-sm">
+          <thead><tr class="text-muted-foreground text-left">
+            <th class="px-3 py-2"><input class="input" type="checkbox" aria-label="Alle auswählen"></th>
+            <th class="px-3 py-2 font-medium">Status</th>
+            <th class="px-3 py-2 font-medium">E-Mail</th>
+            <th class="px-3 py-2 text-right font-medium">Betrag</th>
+          </tr></thead>
+          <tbody>
+            <tr data-state="selected"><td class="px-3 py-2"><input class="input" type="checkbox" checked aria-label="Zeile auswählen"></td><td class="px-3 py-2"><span class="badge border-transparent bg-success text-success-foreground">Erfolg</span></td><td class="px-3 py-2">ken@example.com</td><td class="px-3 py-2 text-right tabular-nums">316,00 €</td></tr>
+            <tr data-state="selected"><td class="px-3 py-2"><input class="input" type="checkbox" checked aria-label="Zeile auswählen"></td><td class="px-3 py-2"><span class="badge" data-variant="secondary">Offen</span></td><td class="px-3 py-2">abe@example.com</td><td class="px-3 py-2 text-right tabular-nums">242,00 €</td></tr>
+            <tr><td class="px-3 py-2"><input class="input" type="checkbox" aria-label="Zeile auswählen"></td><td class="px-3 py-2"><span class="badge" data-variant="destructive">Fehler</span></td><td class="px-3 py-2">mon@example.com</td><td class="px-3 py-2 text-right tabular-nums">837,00 €</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="text-muted-foreground flex items-center justify-between pt-4 text-sm">
+        <span>2 von 3 Zeilen ausgewählt</span>
+        <div class="flex gap-2"><button type="button" class="btn" data-variant="outline" data-size="sm">Zurück</button><button type="button" class="btn" data-variant="outline" data-size="sm">Weiter</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Sortierung (klickbare Spaltenköpfe)</span>
+    <div class="table-container rounded-md border w-full">
+      <table class="table text-sm">
+        <thead><tr class="text-muted-foreground text-left">
+          <th class="px-1 py-1 font-medium"><button type="button" class="btn -mx-1" data-variant="ghost" data-size="sm">Kunde <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg></button></th>
+          <th class="px-1 py-1 font-medium"><button type="button" class="btn -mx-1" data-variant="ghost" data-size="sm" aria-sort="ascending">Betrag <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg></button></th>
+          <th class="px-3 py-2 font-medium">Status</th>
+          <th class="px-1 py-1 text-right font-medium"><button type="button" class="btn -mx-1 ms-auto" data-variant="ghost" data-size="sm">Datum <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg></button></th>
+        </tr></thead>
+        <tbody>
+          <tr><td class="px-3 py-2">Abe Schulz</td><td class="px-3 py-2 tabular-nums">242,00 €</td><td class="px-3 py-2"><span class="badge" data-variant="secondary">Offen</span></td><td class="px-3 py-2 text-right tabular-nums">03.02.2026</td></tr>
+          <tr><td class="px-3 py-2">Ken Voss</td><td class="px-3 py-2 tabular-nums">316,00 €</td><td class="px-3 py-2"><span class="badge border-transparent bg-success text-success-foreground">Erfolg</span></td><td class="px-3 py-2 text-right tabular-nums">28.01.2026</td></tr>
+          <tr><td class="px-3 py-2">Mona Berg</td><td class="px-3 py-2 tabular-nums">837,00 €</td><td class="px-3 py-2"><span class="badge" data-variant="destructive">Fehler</span></td><td class="px-3 py-2 text-right tabular-nums">15.01.2026</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Zeilenaktionen (Dropdown je Zeile)</span>
+    <div class="table-container rounded-md border w-full">
+      <table class="table text-sm">
+        <thead><tr class="text-muted-foreground text-left">
+          <th class="px-3 py-2 font-medium">Rechnung</th>
+          <th class="px-3 py-2 font-medium">Status</th>
+          <th class="px-3 py-2 text-right font-medium">Betrag</th>
+          <th class="px-2 py-2 w-px"><span class="sr-only">Aktionen</span></th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td class="px-3 py-2">INV-001</td>
+            <td class="px-3 py-2"><span class="badge border-transparent bg-success text-success-foreground">Bezahlt</span></td>
+            <td class="px-3 py-2 text-right tabular-nums">250,00 €</td>
+            <td class="px-2 py-2">
+              <div class="dropdown-menu" id="c22-dt-row1">
+                <button type="button" class="btn" data-variant="ghost" data-size="icon" id="c22-dt-row1-trigger" aria-haspopup="menu" aria-controls="c22-dt-row1-menu" aria-expanded="false" aria-label="Aktionen öffnen"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>
+                <div id="c22-dt-row1-popover" data-popover data-side="left" aria-hidden="true">
+                  <div role="menu" id="c22-dt-row1-menu" aria-labelledby="c22-dt-row1-trigger">
+                    <button type="button" role="menuitem">Rechnungs-ID kopieren</button>
+                    <hr role="separator">
+                    <button type="button" role="menuitem">Kunde anzeigen</button>
+                    <button type="button" role="menuitem">Zahlungsdetails</button>
+                    <hr role="separator">
+                    <button type="button" role="menuitem" data-variant="destructive">Rechnung stornieren</button>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="px-3 py-2">INV-002</td>
+            <td class="px-3 py-2"><span class="badge" data-variant="secondary">Offen</span></td>
+            <td class="px-3 py-2 text-right tabular-nums">150,00 €</td>
+            <td class="px-2 py-2">
+              <div class="dropdown-menu" id="c22-dt-row2">
+                <button type="button" class="btn" data-variant="ghost" data-size="icon" id="c22-dt-row2-trigger" aria-haspopup="menu" aria-controls="c22-dt-row2-menu" aria-expanded="false" aria-label="Aktionen öffnen"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>
+                <div id="c22-dt-row2-popover" data-popover data-side="left" aria-hidden="true">
+                  <div role="menu" id="c22-dt-row2-menu" aria-labelledby="c22-dt-row2-trigger">
+                    <button type="button" role="menuitem">Rechnungs-ID kopieren</button>
+                    <hr role="separator">
+                    <button type="button" role="menuitem">Kunde anzeigen</button>
+                    <button type="button" role="menuitem">Zahlungsdetails</button>
+                    <hr role="separator">
+                    <button type="button" role="menuitem" data-variant="destructive">Rechnung stornieren</button>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="px-3 py-2">INV-003</td>
+            <td class="px-3 py-2"><span class="badge" data-variant="destructive">Storniert</span></td>
+            <td class="px-3 py-2 text-right tabular-nums">350,00 €</td>
+            <td class="px-2 py-2">
+              <div class="dropdown-menu" id="c22-dt-row3">
+                <button type="button" class="btn" data-variant="ghost" data-size="icon" id="c22-dt-row3-trigger" aria-haspopup="menu" aria-controls="c22-dt-row3-menu" aria-expanded="false" aria-label="Aktionen öffnen"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>
+                <div id="c22-dt-row3-popover" data-popover data-side="left" aria-hidden="true">
+                  <div role="menu" id="c22-dt-row3-menu" aria-labelledby="c22-dt-row3-trigger">
+                    <button type="button" role="menuitem">Rechnungs-ID kopieren</button>
+                    <hr role="separator">
+                    <button type="button" role="menuitem">Kunde anzeigen</button>
+                    <button type="button" role="menuitem">Zahlungsdetails</button>
+                    <hr role="separator">
+                    <button type="button" role="menuitem" data-variant="destructive">Rechnung stornieren</button>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Einfache Tabelle (nur Lesen, mit Caption)</span>
+    <div class="table-container rounded-md border w-full">
+      <table class="table text-sm">
+        <caption>Letzte Anmeldungen deines Teams.</caption>
+        <thead><tr class="text-muted-foreground text-left">
+          <th class="px-3 py-2 font-medium">Name</th>
+          <th class="px-3 py-2 font-medium">Rolle</th>
+          <th class="px-3 py-2 text-right font-medium">Zuletzt aktiv</th>
+        </tr></thead>
+        <tbody>
+          <tr><td class="px-3 py-2">Nora Fink</td><td class="px-3 py-2">Admin</td><td class="px-3 py-2 text-right tabular-nums">vor 2 Min.</td></tr>
+          <tr><td class="px-3 py-2">Timo Brandt</td><td class="px-3 py-2">Mitglied</td><td class="px-3 py-2 text-right tabular-nums">vor 1 Std.</td></tr>
+          <tr><td class="px-3 py-2">Leyla Aksoy</td><td class="px-3 py-2">Mitglied</td><td class="px-3 py-2 text-right tabular-nums">gestern</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Mit nummerierter Pagination &amp; Zeilen pro Seite</span>
+    <div class="w-full">
+      <div class="table-container rounded-md border">
+        <table class="table text-sm">
+          <thead><tr class="text-muted-foreground text-left">
+            <th class="px-3 py-2 font-medium">Produkt</th>
+            <th class="px-3 py-2 font-medium">Lager</th>
+            <th class="px-3 py-2 text-right font-medium">Preis</th>
+          </tr></thead>
+          <tbody>
+            <tr><td class="px-3 py-2">Feldjacke</td><td class="px-3 py-2">auf Lager</td><td class="px-3 py-2 text-right tabular-nums">89,00 €</td></tr>
+            <tr><td class="px-3 py-2">Wanderstiefel</td><td class="px-3 py-2">wenige übrig</td><td class="px-3 py-2 text-right tabular-nums">129,00 €</td></tr>
+            <tr><td class="px-3 py-2">Trinkflasche</td><td class="px-3 py-2">auf Lager</td><td class="px-3 py-2 text-right tabular-nums">19,00 €</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="flex items-center justify-between gap-4 pt-4">
+        <div class="text-muted-foreground flex items-center gap-2 text-sm">
+          <span>Zeilen pro Seite</span>
+          <div class="select w-20" id="c22-dt-pp" data-placeholder="10">
+            <button type="button" id="c22-dt-pp-trigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="c22-dt-pp-listbox">
+              <span class="truncate">10</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground shrink-0 opacity-50"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div id="c22-dt-pp-popover" data-popover aria-hidden="true">
+              <div role="listbox" id="c22-dt-pp-listbox" aria-orientation="vertical" aria-labelledby="c22-dt-pp-trigger">
+                <div role="option" data-value="10">10</div>
+                <div role="option" data-value="20">20</div>
+                <div role="option" data-value="50">50</div>
+              </div>
+            </div>
+            <input type="hidden" name="c22-dt-pp-value" value="10">
+          </div>
+        </div>
+        <nav class="flex items-center gap-1" aria-label="Seitennavigation">
+          <button type="button" class="btn" data-variant="ghost" data-size="sm">‹ Zurück</button>
+          <button type="button" class="btn" data-variant="outline" data-size="icon" aria-current="page">1</button>
+          <button type="button" class="btn" data-variant="ghost" data-size="icon">2</button>
+          <button type="button" class="btn" data-variant="ghost" data-size="icon">3</button>
+          <button type="button" class="btn" data-variant="ghost" data-size="sm">Weiter ›</button>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>

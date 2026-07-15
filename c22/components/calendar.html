@@ -1,0 +1,133 @@
+<!-- custom: Monatskalender — kein Basecoat-Vendor-CSS (Basecoat liefert keine Calendar-Component); shadcn baut auf react-day-picker (JS-Datenmodell, kein statisches Markup-Beispiel dokumentiert). Nachgebaut mit Basecoat-Bausteinen (.btn, text-muted-foreground, bg-accent/bg-primary) + reinem Tailwind für Grid/Zellen. Varianten aus der shadcn-Doku: Einzelauswahl, Bereich, mehrere Monate, Monat/Jahr-Dropdown, deaktivierte Tage. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Einzelauswahl</span>
+    <div class="w-fit rounded-lg border p-3">
+      <div class="flex items-center justify-between px-1 pb-3">
+        <button type="button" class="btn" data-variant="outline" data-size="icon-sm" aria-label="Vorheriger Monat"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+        <div class="text-sm font-medium">Juli 2026</div>
+        <button type="button" class="btn" data-variant="outline" data-size="icon-sm" aria-label="Nächster Monat"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+      </div>
+      <table class="text-sm">
+        <thead><tr class="text-muted-foreground"><th class="size-9 font-normal">Mo</th><th class="size-9 font-normal">Di</th><th class="size-9 font-normal">Mi</th><th class="size-9 font-normal">Do</th><th class="size-9 font-normal">Fr</th><th class="size-9 font-normal">Sa</th><th class="size-9 font-normal">So</th></tr></thead>
+        <tbody class="[&_button]:size-9 [&_button]:rounded-md [&_button:hover]:bg-accent">
+          <tr><td></td><td></td><td><button type="button">1</button></td><td><button type="button">2</button></td><td><button type="button">3</button></td><td><button type="button">4</button></td><td><button type="button">5</button></td></tr>
+          <tr><td><button type="button">6</button></td><td><button type="button">7</button></td><td><button type="button">8</button></td><td><button type="button">9</button></td><td><button type="button">10</button></td><td><button type="button">11</button></td><td><button type="button">12</button></td></tr>
+          <tr><td><button type="button">13</button></td><td><button type="button">14</button></td><td><button type="button" aria-selected="true" class="bg-primary text-primary-foreground hover:bg-primary!">15</button></td><td><button type="button">16</button></td><td><button type="button">17</button></td><td><button type="button">18</button></td><td><button type="button">19</button></td></tr>
+          <tr><td><button type="button">20</button></td><td><button type="button">21</button></td><td><button type="button">22</button></td><td><button type="button">23</button></td><td><button type="button">24</button></td><td><button type="button">25</button></td><td><button type="button">26</button></td></tr>
+          <tr><td><button type="button">27</button></td><td><button type="button">28</button></td><td><button type="button">29</button></td><td><button type="button">30</button></td><td><button type="button">31</button></td><td></td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Bereich (Start–Ende)</span>
+    <div class="w-fit rounded-lg border p-3">
+      <div class="flex items-center justify-between px-1 pb-3">
+        <button type="button" class="btn" data-variant="outline" data-size="icon-sm" aria-label="Vorheriger Monat"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+        <div class="text-sm font-medium">Juli 2026</div>
+        <button type="button" class="btn" data-variant="outline" data-size="icon-sm" aria-label="Nächster Monat"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+      </div>
+      <table class="text-sm [&_td]:p-0">
+        <thead><tr class="text-muted-foreground"><th class="size-9 font-normal">Mo</th><th class="size-9 font-normal">Di</th><th class="size-9 font-normal">Mi</th><th class="size-9 font-normal">Do</th><th class="size-9 font-normal">Fr</th><th class="size-9 font-normal">Sa</th><th class="size-9 font-normal">So</th></tr></thead>
+        <tbody class="[&_button]:size-9 [&_button]:hover:bg-accent">
+          <tr><td></td><td></td><td><button type="button" class="rounded-md">1</button></td><td><button type="button" class="rounded-md">2</button></td><td><button type="button" class="rounded-md">3</button></td><td><button type="button" class="rounded-md">4</button></td><td><button type="button" class="rounded-md">5</button></td></tr>
+          <tr><td><button type="button" class="rounded-md">6</button></td><td><button type="button" class="rounded-md">7</button></td><td><button type="button" class="rounded-md">8</button></td><td><button type="button" class="rounded-md">9</button></td><td><button type="button" class="rounded-md">10</button></td><td><button type="button" class="rounded-md">11</button></td><td class="bg-accent rounded-l-md"><button type="button" aria-selected="true" class="bg-primary text-primary-foreground rounded-md">12</button></td></tr>
+          <tr class="bg-accent"><td><button type="button">13</button></td><td><button type="button">14</button></td><td><button type="button">15</button></td><td><button type="button">16</button></td><td><button type="button">17</button></td><td><button type="button">18</button></td><td class="rounded-r-md"><button type="button" aria-selected="true" class="bg-primary text-primary-foreground rounded-md">19</button></td></tr>
+          <tr><td><button type="button" class="rounded-md">20</button></td><td><button type="button" class="rounded-md">21</button></td><td><button type="button" class="rounded-md">22</button></td><td><button type="button" class="rounded-md">23</button></td><td><button type="button" class="rounded-md">24</button></td><td><button type="button" class="rounded-md">25</button></td><td><button type="button" class="rounded-md">26</button></td></tr>
+          <tr><td><button type="button" class="rounded-md">27</button></td><td><button type="button" class="rounded-md">28</button></td><td><button type="button" class="rounded-md">29</button></td><td><button type="button" class="rounded-md">30</button></td><td><button type="button" class="rounded-md">31</button></td><td></td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Mehrere Monate</span>
+    <div class="w-fit rounded-lg border p-3">
+      <div class="flex flex-col gap-4 sm:flex-row sm:gap-6">
+        <div>
+          <div class="flex items-center justify-between px-1 pb-3">
+            <button type="button" class="btn" data-variant="outline" data-size="icon-sm" aria-label="Vorheriger Monat"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+            <div class="text-sm font-medium">Juli 2026</div>
+            <div class="size-8"></div>
+          </div>
+          <table class="text-sm">
+            <thead><tr class="text-muted-foreground"><th class="size-9 font-normal">Mo</th><th class="size-9 font-normal">Di</th><th class="size-9 font-normal">Mi</th><th class="size-9 font-normal">Do</th><th class="size-9 font-normal">Fr</th><th class="size-9 font-normal">Sa</th><th class="size-9 font-normal">So</th></tr></thead>
+            <tbody class="[&_button]:size-9 [&_button]:rounded-md [&_button:hover]:bg-accent">
+              <tr><td></td><td></td><td><button type="button">1</button></td><td><button type="button">2</button></td><td><button type="button">3</button></td><td><button type="button">4</button></td><td><button type="button">5</button></td></tr>
+              <tr><td><button type="button">6</button></td><td><button type="button">7</button></td><td><button type="button">8</button></td><td><button type="button">9</button></td><td><button type="button">10</button></td><td><button type="button">11</button></td><td><button type="button">12</button></td></tr>
+              <tr><td><button type="button">13</button></td><td><button type="button">14</button></td><td><button type="button" aria-selected="true" class="bg-primary text-primary-foreground hover:bg-primary!">15</button></td><td><button type="button">16</button></td><td><button type="button">17</button></td><td><button type="button">18</button></td><td><button type="button">19</button></td></tr>
+              <tr><td><button type="button">20</button></td><td><button type="button">21</button></td><td><button type="button">22</button></td><td><button type="button">23</button></td><td><button type="button">24</button></td><td><button type="button">25</button></td><td><button type="button">26</button></td></tr>
+              <tr><td><button type="button">27</button></td><td><button type="button">28</button></td><td><button type="button">29</button></td><td><button type="button">30</button></td><td><button type="button">31</button></td><td></td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <div class="flex items-center justify-between px-1 pb-3">
+            <div class="size-8"></div>
+            <div class="text-sm font-medium">August 2026</div>
+            <button type="button" class="btn" data-variant="outline" data-size="icon-sm" aria-label="Nächster Monat"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+          </div>
+          <table class="text-sm">
+            <thead><tr class="text-muted-foreground"><th class="size-9 font-normal">Mo</th><th class="size-9 font-normal">Di</th><th class="size-9 font-normal">Mi</th><th class="size-9 font-normal">Do</th><th class="size-9 font-normal">Fr</th><th class="size-9 font-normal">Sa</th><th class="size-9 font-normal">So</th></tr></thead>
+            <tbody class="[&_button]:size-9 [&_button]:rounded-md [&_button:hover]:bg-accent">
+              <tr><td><button type="button">1</button></td><td><button type="button">2</button></td><td><button type="button">3</button></td><td><button type="button">4</button></td><td><button type="button">5</button></td><td><button type="button">6</button></td><td><button type="button">7</button></td></tr>
+              <tr><td><button type="button">8</button></td><td><button type="button">9</button></td><td><button type="button">10</button></td><td><button type="button">11</button></td><td><button type="button">12</button></td><td><button type="button">13</button></td><td><button type="button">14</button></td></tr>
+              <tr><td><button type="button">15</button></td><td><button type="button">16</button></td><td><button type="button">17</button></td><td><button type="button">18</button></td><td><button type="button">19</button></td><td><button type="button">20</button></td><td><button type="button">21</button></td></tr>
+              <tr><td><button type="button">22</button></td><td><button type="button">23</button></td><td><button type="button">24</button></td><td><button type="button">25</button></td><td><button type="button">26</button></td><td><button type="button">27</button></td><td><button type="button">28</button></td></tr>
+              <tr><td><button type="button">29</button></td><td><button type="button">30</button></td><td><button type="button">31</button></td><td></td><td></td><td></td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Monat/Jahr per Dropdown</span>
+    <div class="w-fit rounded-lg border p-3">
+      <div class="flex items-center justify-between gap-2 px-1 pb-3">
+        <button type="button" class="btn" data-variant="outline" data-size="icon-sm" aria-label="Vorheriger Monat"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+        <div class="flex items-center gap-1">
+          <select class="select" data-size="sm" aria-label="Monat wählen">
+            <option>Januar</option><option>Februar</option><option>März</option><option>April</option><option>Mai</option><option>Juni</option><option selected>Juli</option><option>August</option><option>September</option><option>Oktober</option><option>November</option><option>Dezember</option>
+          </select>
+          <select class="select" data-size="sm" aria-label="Jahr wählen">
+            <option>2024</option><option>2025</option><option selected>2026</option><option>2027</option><option>2028</option>
+          </select>
+        </div>
+        <button type="button" class="btn" data-variant="outline" data-size="icon-sm" aria-label="Nächster Monat"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+      </div>
+      <table class="text-sm">
+        <thead><tr class="text-muted-foreground"><th class="size-9 font-normal">Mo</th><th class="size-9 font-normal">Di</th><th class="size-9 font-normal">Mi</th><th class="size-9 font-normal">Do</th><th class="size-9 font-normal">Fr</th><th class="size-9 font-normal">Sa</th><th class="size-9 font-normal">So</th></tr></thead>
+        <tbody class="[&_button]:size-9 [&_button]:rounded-md [&_button:hover]:bg-accent">
+          <tr><td></td><td></td><td><button type="button">1</button></td><td><button type="button">2</button></td><td><button type="button">3</button></td><td><button type="button">4</button></td><td><button type="button">5</button></td></tr>
+          <tr><td><button type="button">6</button></td><td><button type="button">7</button></td><td><button type="button">8</button></td><td><button type="button">9</button></td><td><button type="button">10</button></td><td><button type="button">11</button></td><td><button type="button">12</button></td></tr>
+          <tr><td><button type="button">13</button></td><td><button type="button">14</button></td><td><button type="button" aria-selected="true" class="bg-primary text-primary-foreground hover:bg-primary!">15</button></td><td><button type="button">16</button></td><td><button type="button">17</button></td><td><button type="button">18</button></td><td><button type="button">19</button></td></tr>
+          <tr><td><button type="button">20</button></td><td><button type="button">21</button></td><td><button type="button">22</button></td><td><button type="button">23</button></td><td><button type="button">24</button></td><td><button type="button">25</button></td><td><button type="button">26</button></td></tr>
+          <tr><td><button type="button">27</button></td><td><button type="button">28</button></td><td><button type="button">29</button></td><td><button type="button">30</button></td><td><button type="button">31</button></td><td></td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Deaktivierte Tage</span>
+    <div class="w-fit rounded-lg border p-3">
+      <div class="flex items-center justify-between px-1 pb-3">
+        <button type="button" class="btn" data-variant="outline" data-size="icon-sm" aria-label="Vorheriger Monat"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+        <div class="text-sm font-medium">Juli 2026</div>
+        <button type="button" class="btn" data-variant="outline" data-size="icon-sm" aria-label="Nächster Monat"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+      </div>
+      <table class="text-sm">
+        <thead><tr class="text-muted-foreground"><th class="size-9 font-normal">Mo</th><th class="size-9 font-normal">Di</th><th class="size-9 font-normal">Mi</th><th class="size-9 font-normal">Do</th><th class="size-9 font-normal">Fr</th><th class="size-9 font-normal">Sa</th><th class="size-9 font-normal">So</th></tr></thead>
+        <tbody class="[&_button]:size-9 [&_button]:rounded-md [&_button:not(:disabled):hover]:bg-accent [&_button:disabled]:text-muted-foreground [&_button:disabled]:opacity-50 [&_button:disabled]:line-through [&_button:disabled]:cursor-not-allowed">
+          <tr><td></td><td></td><td><button type="button">1</button></td><td><button type="button">2</button></td><td><button type="button">3</button></td><td><button type="button" disabled aria-disabled="true">4</button></td><td><button type="button" disabled aria-disabled="true">5</button></td></tr>
+          <tr><td><button type="button">6</button></td><td><button type="button">7</button></td><td><button type="button">8</button></td><td><button type="button">9</button></td><td><button type="button">10</button></td><td><button type="button" disabled aria-disabled="true">11</button></td><td><button type="button" disabled aria-disabled="true">12</button></td></tr>
+          <tr><td><button type="button">13</button></td><td><button type="button">14</button></td><td><button type="button" aria-selected="true" class="bg-primary text-primary-foreground hover:bg-primary!">15</button></td><td><button type="button">16</button></td><td><button type="button">17</button></td><td><button type="button" disabled aria-disabled="true">18</button></td><td><button type="button" disabled aria-disabled="true">19</button></td></tr>
+          <tr><td><button type="button">20</button></td><td><button type="button">21</button></td><td><button type="button">22</button></td><td><button type="button">23</button></td><td><button type="button">24</button></td><td><button type="button" disabled aria-disabled="true">25</button></td><td><button type="button" disabled aria-disabled="true">26</button></td></tr>
+          <tr><td><button type="button">27</button></td><td><button type="button">28</button></td><td><button type="button">29</button></td><td><button type="button">30</button></td><td><button type="button">31</button></td><td></td><td></td></tr>
+        </tbody>
+      </table>
+      <p class="text-muted-foreground mt-2 px-1 text-xs">Grau + durchgestrichen: bereits gebuchte Termine.</p>
+    </div>
+  </div>
+</div>
+

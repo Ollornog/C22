@@ -1,0 +1,49 @@
+<!-- basecoat: Toast (.toaster > .toast). Ein #toaster pro Seite; getElementById('toaster').toast({...}) erzeugt die Meldung. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Standard (4 Kategorien)</span>
+    <div class="flex flex-wrap items-center justify-center gap-3">
+      <button type="button" class="btn" data-variant="outline"
+        onclick="document.getElementById('toaster').toast({category:'success',title:'Gespeichert',description:'Deine Änderungen sind live.'})">Erfolg</button>
+      <button type="button" class="btn" data-variant="outline"
+        onclick="document.getElementById('toaster').toast({category:'error',title:'Fehlgeschlagen',description:'Bitte erneut versuchen.'})">Fehler</button>
+      <button type="button" class="btn" data-variant="outline"
+        onclick="document.getElementById('toaster').toast({category:'info',title:'Hinweis',description:'Neue Version verfügbar.'})">Info</button>
+      <button type="button" class="btn" data-variant="outline"
+        onclick="document.getElementById('toaster').toast({category:'warning',title:'Achtung',description:'Speicher fast voll.'})">Warnung</button>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Aktion &amp; Abbrechen (<code class="text-[11px]">action</code> / <code class="text-[11px]">cancel</code>)</span>
+    <div class="flex justify-center">
+      <button type="button" class="btn" data-variant="outline"
+        onclick="document.getElementById('toaster').toast({category:'info',title:'Update verfügbar',description:'Version 2.4 kann installiert werden.',action:{label:'Installieren'},cancel:{label:'Später'}})">Update anzeigen</button>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Ausrichtung (<code class="text-[11px]">data-align</code>)</span>
+    <div class="flex flex-wrap items-center justify-center gap-3">
+      <button type="button" class="btn" data-variant="outline"
+        onclick="document.getElementById('toaster').dataset.align='start'; document.getElementById('toaster').toast({category:'success',title:'Linksbündig',description:'Toaster erscheint unten links.'})">Start</button>
+      <button type="button" class="btn" data-variant="outline"
+        onclick="document.getElementById('toaster').dataset.align='center'; document.getElementById('toaster').toast({category:'success',title:'Zentriert',description:'Toaster erscheint unten mittig.'})">Mitte</button>
+      <button type="button" class="btn" data-variant="outline"
+        onclick="document.getElementById('toaster').dataset.align='end'; document.getElementById('toaster').toast({category:'success',title:'Rechtsbündig',description:'Toaster erscheint unten rechts (Standard).'})">Ende</button>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Dauerhaft offen (<code class="text-[11px]">duration:-1</code>)</span>
+    <div class="flex justify-center">
+      <button type="button" class="btn" data-variant="outline"
+        onclick="document.getElementById('toaster').toast({category:'warning',title:'Aktion erforderlich',description:'Schließt sich nicht automatisch – bitte manuell bestätigen.',duration:-1,cancel:{label:'Verstanden'}})">Wichtiger Hinweis</button>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Eigenes Icon (überschreibt <code class="text-[11px]">category</code>-Icon)</span>
+    <div class="flex justify-center">
+      <button type="button" class="btn" data-variant="outline"
+        onclick='document.getElementById("toaster").toast({category:"info",title:"Hochgeladen",description:"3 Dateien wurden übertragen.",icon:"<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 3v12\"/><path d=\"m17 8-5-5-5 5\"/><path d=\"M21 21H3\"/></svg>"})'>Datei-Upload</button>
+    </div>
+  </div>
+</div>
+<div id="toaster" class="toaster"></div>

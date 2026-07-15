@@ -1,0 +1,122 @@
+<!-- basecoat: Tabs (.tabs > [role=tablist] + [role=tabpanel]). data-variant="line" = Unterstrich statt Pillen; aria-orientation="vertical" auf dem tablist dreht Ausrichtung (funktioniert mit beiden Varianten). JS aus basecoat.all.min.js verdrahtet Tastatursteuerung + aria-selected/hidden. -->
+<div class="c22-examples">
+
+  <div class="c22-example">
+    <span class="c22-example-label">Standard</span>
+    <div class="tabs w-full max-w-sm" id="t1">
+      <nav role="tablist">
+        <button type="button" role="tab" id="t1-1" aria-controls="t1-p1" aria-selected="true" tabindex="0">Konto</button>
+        <button type="button" role="tab" id="t1-2" aria-controls="t1-p2" aria-selected="false" tabindex="-1">Passwort</button>
+        <button type="button" role="tab" id="t1-3" aria-controls="t1-p3" aria-selected="false" tabindex="-1">Team</button>
+      </nav>
+      <div role="tabpanel" id="t1-p1" aria-labelledby="t1-1" tabindex="-1" class="text-muted-foreground pt-4 text-sm">Konto-Einstellungen.</div>
+      <div role="tabpanel" id="t1-p2" aria-labelledby="t1-2" tabindex="-1" hidden class="text-muted-foreground pt-4 text-sm">Passwort ändern.</div>
+      <div role="tabpanel" id="t1-p3" aria-labelledby="t1-3" tabindex="-1" hidden class="text-muted-foreground pt-4 text-sm">Team verwalten.</div>
+    </div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Line (<code class="text-[11px]">data-variant="line"</code>)</span>
+    <div class="tabs w-full max-w-sm" id="t2">
+      <nav role="tablist" data-variant="line">
+        <button type="button" role="tab" id="t2-1" aria-controls="t2-p1" aria-selected="true" tabindex="0">Übersicht</button>
+        <button type="button" role="tab" id="t2-2" aria-controls="t2-p2" aria-selected="false" tabindex="-1">Analyse</button>
+        <button type="button" role="tab" id="t2-3" aria-controls="t2-p3" aria-selected="false" tabindex="-1">Berichte</button>
+      </nav>
+      <div role="tabpanel" id="t2-p1" aria-labelledby="t2-1" tabindex="-1" class="text-muted-foreground pt-4 text-sm">Übersicht.</div>
+      <div role="tabpanel" id="t2-p2" aria-labelledby="t2-2" tabindex="-1" hidden class="text-muted-foreground pt-4 text-sm">Analyse.</div>
+      <div role="tabpanel" id="t2-p3" aria-labelledby="t2-3" tabindex="-1" hidden class="text-muted-foreground pt-4 text-sm">Berichte.</div>
+    </div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Line, vertikal (<code class="text-[11px]">data-variant="line"</code> + <code class="text-[11px]">aria-orientation="vertical"</code>)</span>
+    <div class="tabs w-full max-w-md" id="t5">
+      <nav role="tablist" data-variant="line" aria-orientation="vertical">
+        <button type="button" role="tab" id="t5-1" aria-controls="t5-p1" aria-selected="true" tabindex="0">Profil</button>
+        <button type="button" role="tab" id="t5-2" aria-controls="t5-p2" aria-selected="false" tabindex="-1">Benachrichtigungen</button>
+        <button type="button" role="tab" id="t5-3" aria-controls="t5-p3" aria-selected="false" tabindex="-1">Abrechnung</button>
+      </nav>
+      <div role="tabpanel" id="t5-p1" aria-labelledby="t5-1" tabindex="-1" class="text-muted-foreground ps-4 text-sm">Profilangaben.</div>
+      <div role="tabpanel" id="t5-p2" aria-labelledby="t5-2" tabindex="-1" hidden class="text-muted-foreground ps-4 text-sm">Benachrichtigungseinstellungen.</div>
+      <div role="tabpanel" id="t5-p3" aria-labelledby="t5-3" tabindex="-1" hidden class="text-muted-foreground ps-4 text-sm">Rechnungen und Zahlungsmittel.</div>
+    </div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Vertikal (<code class="text-[11px]">aria-orientation="vertical"</code>)</span>
+    <div class="tabs w-full max-w-md" id="t4">
+      <nav role="tablist" aria-orientation="vertical">
+        <button type="button" role="tab" id="t4-1" aria-controls="t4-p1" aria-selected="true" tabindex="0">Allgemein</button>
+        <button type="button" role="tab" id="t4-2" aria-controls="t4-p2" aria-selected="false" tabindex="-1">Sicherheit</button>
+        <button type="button" role="tab" id="t4-3" aria-controls="t4-p3" aria-selected="false" tabindex="-1">Integrationen</button>
+      </nav>
+      <div role="tabpanel" id="t4-p1" aria-labelledby="t4-1" tabindex="-1" class="text-muted-foreground text-sm">Allgemeine Optionen.</div>
+      <div role="tabpanel" id="t4-p2" aria-labelledby="t4-2" tabindex="-1" hidden class="text-muted-foreground text-sm">Sicherheit.</div>
+      <div role="tabpanel" id="t4-p3" aria-labelledby="t4-3" tabindex="-1" hidden class="text-muted-foreground text-sm">Integrationen.</div>
+    </div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Icons + deaktiviertem Reiter</span>
+    <div class="tabs w-full max-w-sm" id="t3">
+      <nav role="tablist">
+        <button type="button" role="tab" id="t3-1" aria-controls="t3-p1" aria-selected="true" tabindex="0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg> Dashboard</button>
+        <button type="button" role="tab" id="t3-2" aria-controls="t3-p2" aria-selected="false" tabindex="-1"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> Einstellungen</button>
+        <button type="button" role="tab" id="t3-3" aria-controls="t3-p3" aria-selected="false" tabindex="-1" disabled aria-disabled="true">Archiv</button>
+      </nav>
+      <div role="tabpanel" id="t3-p1" aria-labelledby="t3-1" tabindex="-1" class="text-muted-foreground pt-4 text-sm">Dashboard.</div>
+      <div role="tabpanel" id="t3-p2" aria-labelledby="t3-2" tabindex="-1" hidden class="text-muted-foreground pt-4 text-sm">Einstellungen.</div>
+      <div role="tabpanel" id="t3-p3" aria-labelledby="t3-3" tabindex="-1" hidden class="text-muted-foreground pt-4 text-sm">Archiv.</div>
+    </div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">In einer Karte (Reiter je eigenes Formular)</span>
+    <div class="tabs w-full max-w-sm" id="t6">
+      <nav role="tablist">
+        <button type="button" role="tab" id="t6-1" aria-controls="t6-p1" aria-selected="true" tabindex="0">Konto</button>
+        <button type="button" role="tab" id="t6-2" aria-controls="t6-p2" aria-selected="false" tabindex="-1">Passwort</button>
+      </nav>
+      <div role="tabpanel" id="t6-p1" aria-labelledby="t6-1" tabindex="-1">
+        <div class="card">
+          <header>
+            <h3 class="card-title">Konto</h3>
+            <p class="card-description">Änderungen werden sofort übernommen.</p>
+          </header>
+          <section class="grid gap-4">
+            <div class="grid gap-2">
+              <label class="label" for="t6-name">Name</label>
+              <input class="input" type="text" id="t6-name" value="Mara Schmidt">
+            </div>
+            <div class="grid gap-2">
+              <label class="label" for="t6-user">Benutzername</label>
+              <input class="input" type="text" id="t6-user" value="maras">
+            </div>
+          </section>
+          <footer><button type="button" class="btn">Speichern</button></footer>
+        </div>
+      </div>
+      <div role="tabpanel" id="t6-p2" aria-labelledby="t6-2" tabindex="-1" hidden>
+        <div class="card">
+          <header>
+            <h3 class="card-title">Passwort</h3>
+            <p class="card-description">Danach wirst du auf allen Geräten abgemeldet.</p>
+          </header>
+          <section class="grid gap-4">
+            <div class="grid gap-2">
+              <label class="label" for="t6-pw1">Aktuelles Passwort</label>
+              <input class="input" type="password" id="t6-pw1">
+            </div>
+            <div class="grid gap-2">
+              <label class="label" for="t6-pw2">Neues Passwort</label>
+              <input class="input" type="password" id="t6-pw2">
+            </div>
+          </section>
+          <footer><button type="button" class="btn">Passwort ändern</button></footer>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

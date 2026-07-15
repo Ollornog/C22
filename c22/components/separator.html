@@ -1,0 +1,49 @@
+<!-- custom: Separator (shadcn/Radix) — Basecoat hat keine eigene separator.css/-doku; Trennlinie via <hr> + data-orientation, Klassen 1:1 aus dem offiziellen shadcn-Markup übernommen (bg-border shrink-0 data-[orientation=…]:h-px/w-full bzw. h-full/w-px). Basecoat selbst nutzt <hr role="separator"> nur innerhalb anderer Components (dropdown-menu, command, button-group, .field-separator) — hier die generische, freistehende Variante. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Standard</span>
+    <div class="w-full max-w-xs">
+      <div class="space-y-1">
+        <h4 class="text-sm leading-none font-medium">C22</h4>
+        <p class="text-muted-foreground text-sm">Ein Design-System für konsistente UIs.</p>
+      </div>
+      <hr role="none" data-orientation="horizontal" class="bg-border my-4 shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px">
+      <div class="flex h-5 items-center gap-4 text-sm">
+        <span>Blog</span>
+        <hr role="none" data-orientation="vertical" class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px">
+        <span>Doku</span>
+        <hr role="none" data-orientation="vertical" class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px">
+        <span>Quelle</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Beschriftung ("oder")</span>
+    <div class="w-full max-w-xs">
+      <div class="field-separator"><hr role="separator"><span>oder</span></div>
+    </div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Vertikal in einer Werkzeugleiste</span>
+    <div class="flex items-center gap-1 rounded-md border p-1">
+      <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Fett"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12h9a4 4 0 0 1 0 8H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h7a4 4 0 0 1 0 8"/></svg></button>
+      <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Kursiv"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" x2="10" y1="4" y2="4"/><line x1="14" x2="5" y1="20" y2="20"/><line x1="15" x2="9" y1="4" y2="20"/></svg></button>
+      <hr role="none" data-orientation="vertical" class="bg-border mx-1 h-5 w-px shrink-0">
+      <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Linksbündig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="21" x2="3" y1="6" y2="6"/><line x1="15" x2="3" y1="12" y2="12"/><line x1="17" x2="3" y1="18" y2="18"/></svg></button>
+      <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Zentriert"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="21" x2="3" y1="6" y2="6"/><line x1="17" x2="7" y1="12" y2="12"/><line x1="19" x2="5" y1="18" y2="18"/></svg></button>
+    </div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Zwischen Abschnitten (Karte)</span>
+    <div class="border-border w-full max-w-xs rounded-lg border p-4">
+      <div class="text-sm font-medium">Profil</div>
+      <p class="text-muted-foreground mt-1 text-sm">Name, E-Mail, Avatar.</p>
+      <hr role="none" data-orientation="horizontal" class="bg-border my-3 h-px w-full shrink-0">
+      <div class="text-sm font-medium">Sicherheit</div>
+      <p class="text-muted-foreground mt-1 text-sm">Passwort &amp; Zwei-Faktor.</p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,82 @@
+<!-- basecoat: Dialog = modaler <dialog>-Layer (.dialog). showModal()/close() steuern das Öffnen; Breite über Utility-Klassen auf der inneren <div>, Inhalt via <header>/<section>/<footer>. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Standard (Formular)</span>
+    <button type="button" class="btn" data-variant="outline" onclick="document.getElementById('c22-dialog').showModal()">Profil bearbeiten</button>
+    <dialog id="c22-dialog" class="dialog" aria-labelledby="c22-dialog-title" aria-describedby="c22-dialog-desc" onclick="if (event.target === this) this.close()">
+      <div>
+        <header><h2 id="c22-dialog-title">Profil bearbeiten</h2><p id="c22-dialog-desc">Ändere deine Angaben. Speichern nicht vergessen.</p></header>
+        <section><div class="field"><label class="label" for="c22-d-name">Name</label><input class="input" id="c22-d-name" value="Daniel B."></div></section>
+        <footer>
+          <button type="button" class="btn" data-variant="outline" onclick="this.closest('dialog').close()">Abbrechen</button>
+          <button type="button" class="btn" onclick="this.closest('dialog').close()">Speichern</button>
+        </footer>
+        <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Schließen" onclick="this.closest('dialog').close()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+      </div>
+    </dialog>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Scrollbarer Inhalt (fixierte Fußzeile)</span>
+    <button type="button" class="btn" data-variant="outline" onclick="document.getElementById('c22-dialog-scroll').showModal()">AGB lesen</button>
+    <dialog id="c22-dialog-scroll" class="dialog" aria-labelledby="c22-ds-title" aria-describedby="c22-ds-desc" onclick="if (event.target === this) this.close()">
+      <div>
+        <header><h2 id="c22-ds-title">Nutzungsbedingungen</h2><p id="c22-ds-desc">Bitte lies die Bedingungen bis zum Ende.</p></header>
+        <section class="scrollbar -mx-4 max-h-64 space-y-3 overflow-y-auto px-4 text-sm">
+          <p>1. Diese Galerie dient der Demonstration von C22-Components.</p>
+          <p>2. Alle Beispiele sind Platzhalter ohne echte Daten.</p>
+          <p>3. Das Aussehen stammt aus Basecoat + den C22-Tokens.</p>
+          <p>4. Varianten werden über <code>data-*</code>-Attribute gesteuert.</p>
+          <p>5. Der Inhalt hier ist lang genug, damit die Sektion scrollt.</p>
+          <p>6. Kopf und Fußzeile bleiben dabei stehen, nur die Sektion scrollt.</p>
+          <p>7. So sieht ein Dialog mit viel Inhalt aus.</p>
+          <p>8. Ende der Bedingungen.</p>
+        </section>
+        <footer><button type="button" class="btn" data-variant="outline" onclick="this.closest('dialog').close()">Ablehnen</button><button type="button" class="btn" onclick="this.closest('dialog').close()">Akzeptieren</button></footer>
+        <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Schließen" onclick="this.closest('dialog').close()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+      </div>
+    </dialog>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Ohne Schließen-Button (Pflichtbestätigung)</span>
+    <button type="button" class="btn" data-variant="outline" onclick="document.getElementById('c22-dialog-noclose').showModal()">Update-Hinweis zeigen</button>
+    <dialog id="c22-dialog-noclose" class="dialog" aria-labelledby="c22-dn-title" aria-describedby="c22-dn-desc">
+      <div>
+        <header><h2 id="c22-dn-title">Sicherheitsupdate erforderlich</h2><p id="c22-dn-desc">Diese Version wird nicht mehr unterstützt. Bitte jetzt aktualisieren, um fortzufahren.</p></header>
+        <footer><button type="button" class="btn" onclick="this.closest('dialog').close()">Jetzt aktualisieren</button></footer>
+      </div>
+    </dialog>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Breiter Dialog (angepasste Breite)</span>
+    <button type="button" class="btn" data-variant="outline" onclick="document.getElementById('c22-dialog-wide').showModal()">Rechnung ansehen</button>
+    <dialog id="c22-dialog-wide" class="dialog" aria-labelledby="c22-dw-title" aria-describedby="c22-dw-desc" onclick="if (event.target === this) this.close()">
+      <div class="sm:max-w-2xl">
+        <header><h2 id="c22-dw-title">Rechnung INV-2026-014</h2><p id="c22-dw-desc">Übersicht der abgerechneten Posten.</p></header>
+        <section>
+          <div class="table-container">
+            <table class="table text-sm">
+              <thead>
+                <tr class="text-muted-foreground text-left">
+                  <th class="px-4 py-2 font-medium">Position</th>
+                  <th class="px-4 py-2 font-medium">Menge</th>
+                  <th class="px-4 py-2 font-medium text-right">Einzelpreis</th>
+                  <th class="px-4 py-2 font-medium text-right">Summe</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td class="px-4 py-2">C22-Lizenz (Team)</td><td class="px-4 py-2">1</td><td class="px-4 py-2 text-right tabular-nums">89,00 €</td><td class="px-4 py-2 text-right tabular-nums">89,00 €</td></tr>
+                <tr><td class="px-4 py-2">Zusätzlicher Speicher</td><td class="px-4 py-2">3</td><td class="px-4 py-2 text-right tabular-nums">12,00 €</td><td class="px-4 py-2 text-right tabular-nums">36,00 €</td></tr>
+                <tr><td class="px-4 py-2">Support (Premium)</td><td class="px-4 py-2">1</td><td class="px-4 py-2 text-right tabular-nums">25,00 €</td><td class="px-4 py-2 text-right tabular-nums">25,00 €</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+        <footer>
+          <button type="button" class="btn" data-variant="outline" onclick="this.closest('dialog').close()">Schließen</button>
+          <button type="button" class="btn" onclick="this.closest('dialog').close()">Als PDF herunterladen</button>
+        </footer>
+        <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Schließen" onclick="this.closest('dialog').close()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+      </div>
+    </dialog>
+  </div>
+</div>

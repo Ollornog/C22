@@ -1,0 +1,105 @@
+<!-- basecoat: Empty (.empty). header>figure+h2+p, section/footer für Aktionen. figure:has(>svg:only-child) bekommt automatisch bg-muted-Kachel; .border macht die gestrichelte Kontur sichtbar (sonst nur border-style ohne Breite). -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Standard (Icon + zwei Aktionen + Link)</span>
+    <div class="empty w-full max-w-md">
+      <header>
+        <figure>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
+        </figure>
+        <h2>Noch keine Projekte</h2>
+        <p>Lege dein erstes Projekt an oder importiere ein bestehendes, um loszulegen.</p>
+      </header>
+      <section class="flex flex-col items-center gap-3">
+        <div class="flex justify-center gap-2">
+          <button type="button" class="btn">Projekt anlegen</button>
+          <button type="button" class="btn" data-variant="outline">Importieren</button>
+        </div>
+        <a href="#" class="btn" data-variant="link">Mehr erfahren</a>
+      </section>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Umrandet, gestrichelt (Ablagezone — <code class="text-[11px]">.border</code>)</span>
+    <div class="empty border w-full max-w-md">
+      <header>
+        <figure>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M12 12v9"/><path d="m16 16-4-4-4 4"/></svg>
+        </figure>
+        <h2>Keine Dateien</h2>
+        <p>Dateien hierher ziehen oder auswählen, um sie hochzuladen.</p>
+      </header>
+      <section>
+        <button type="button" class="btn" data-variant="outline">Dateien auswählen</button>
+      </section>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Hintergrund (<code class="text-[11px]">bg-muted/30</code>, volle Höhe)</span>
+    <div class="empty bg-muted/30 h-64 w-full max-w-md rounded-lg">
+      <header>
+        <figure>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
+        </figure>
+        <h2>Keine Benachrichtigungen</h2>
+        <p>Neue Meldungen erscheinen hier, sobald es etwas gibt.</p>
+      </header>
+      <section>
+        <button type="button" class="btn" data-variant="outline"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>Aktualisieren</button>
+      </section>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Avatar</span>
+    <div class="empty w-full max-w-md">
+      <header>
+        <figure class="size-12 rounded-full">
+          <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=96&h=96&fit=crop&crop=faces&q=80" alt="Lena" class="grayscale">
+        </figure>
+        <h2>Lena ist offline</h2>
+        <p>Hinterlasse eine Nachricht — sie meldet sich, sobald sie wieder online ist.</p>
+      </header>
+      <section>
+        <button type="button" class="btn" data-variant="outline" data-size="sm">Nachricht hinterlassen</button>
+      </section>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Avatar-Gruppe</span>
+    <div class="empty w-full max-w-md">
+      <header>
+        <figure>
+          <div class="avatar-group">
+            <span class="avatar"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop&crop=faces&q=80" alt=""><span>MA</span></span>
+            <span class="avatar"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop&crop=faces&q=80" alt=""><span>JO</span></span>
+            <span class="avatar"><img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=80&h=80&fit=crop&crop=faces&q=80" alt=""><span>SA</span></span>
+          </div>
+        </figure>
+        <h2>Noch keine Teammitglieder</h2>
+        <p>Lade Kolleginnen und Kollegen ein, um gemeinsam zu arbeiten.</p>
+      </header>
+      <section>
+        <button type="button" class="btn" data-variant="outline"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>Mitglieder einladen</button>
+      </section>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Suche (404 / keine Treffer)</span>
+    <div class="empty w-full max-w-md">
+      <header>
+        <figure>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        </figure>
+        <h2>404 — Seite nicht gefunden</h2>
+        <p>Wir konnten die gesuchte Seite nicht finden. Probier eine andere Suche.</p>
+      </header>
+      <section>
+        <div class="input-group w-full">
+          <svg data-align="inline-start" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input class="input" type="search" placeholder="Seiten durchsuchen …">
+          <kbd class="kbd" data-align="inline-end">Strg K</kbd>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
