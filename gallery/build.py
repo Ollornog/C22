@@ -257,6 +257,7 @@ def render() -> tuple[str, int]:
 <link rel="icon" type="image/png" href="../docs/logo.png">
 {pack_links}
 <script src="../c22/static/js/basecoat.all.min.js" defer></script>
+<script src="../c22/static/js/c22.js" defer></script>
 </head>
 <body class="bg-background text-foreground flex h-screen flex-col overflow-hidden">
 <header class="flex shrink-0 flex-wrap items-center gap-x-6 gap-y-3 border-b px-6 py-3">
@@ -277,7 +278,7 @@ def render() -> tuple[str, int]:
   <aside class="hidden w-64 shrink-0 overflow-y-auto border-r px-3 py-4 lg:block">
     <nav class="flex flex-col gap-0.5">{''.join(toc)}</nav>
   </aside>
-  <main class="min-w-0 flex-1 overflow-y-auto px-6 py-8">
+  <main class="relative min-w-0 flex-1 overflow-y-auto px-6 py-8">
     {''.join(sections)}
   </main>
 </div>

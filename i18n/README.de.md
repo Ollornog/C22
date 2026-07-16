@@ -35,8 +35,9 @@ Abstände, Kontrast, Responsive-Brüche — und die App-seitigen Adapter dünn z
   Components — jeden in seinen Varianten — aus kanonischen HTML-Partials in `c22/components/`. Sie
   verlinkt je Component die Basecoat- und shadcn-Quelldoku und schaltet zwischen acht Style-Packs sowie
   hell/dunkel um.
-- **Engine-neutral, mit optionaler Jinja-Schicht:** Jeder Stack bindet das kompilierte CSS und das HTML
-  der Partials ein; `c22/macros` enthält optionale Seitengerüst-Makros für Python/Jinja-Apps.
+- **Engine-neutral, mit optionaler Jinja-Schicht:** Jeder Stack bindet das kompilierte CSS, das HTML
+  der Partials und die minimale `c22.js`-Verhaltensschicht ein (die verdrahtet, was Basecoats JS nicht
+  abdeckt, z.B. das Kontextmenü); `c22/macros` enthält optionale Seitengerüst-Makros für Python/Jinja-Apps.
 
 ## Status
 

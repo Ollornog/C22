@@ -1,15 +1,12 @@
-<!-- custom: Basecoat/shadcn haben kein eigenes Context-Menu-JS -- Optik 1:1 von .dropdown-menu übernommen (bg-popover, role=menuitem*, kbd-Shortcuts, data-variant=destructive), Trigger ist aber ein echtes Rechtsklick-Kontextmenü statt eines Klick-Buttons. Öffnen/Positionieren/Schließen läuft über kleine Inline-Handler, Untermenüs rein über CSS-Hover (wie hover-card.html). -->
+<!-- custom: Basecoat/shadcn haben kein Context-Menu-JS. Optik 1:1 von .dropdown-menu (bg-popover, role=menuitem*, kbd-Shortcuts, data-variant=destructive). Verhalten zentral in c22/static/js/c22.js: jedes .context-menu wird einmal verdrahtet, die Schließ-Variante kommt deklarativ über data-close="leave|leave-delay|manual". Untermenüs laufen rein über CSS-Hover. -->
 <div class="c22-examples">
   <div class="c22-example">
-    <span class="c22-example-label">Standard</span>
+    <span class="c22-example-label">Standard — schließt verzögert beim Verlassen (Default)</span>
     <div class="context-menu relative w-full max-w-xs">
-      <div class="text-muted-foreground bg-card flex h-40 w-full select-none items-center justify-center rounded-md border border-dashed text-sm"
-           oncontextmenu="event.preventDefault(); const r=this.getBoundingClientRect(); const p=this.nextElementSibling; p.style.left=Math.min(event.clientX-r.left, r.width-180)+'px'; p.style.top=Math.min(event.clientY-r.top, r.height-8)+'px'; p.hidden=false;">
-        Rechtsklick in diesen Bereich
+      <div class="text-muted-foreground bg-card flex h-40 w-full select-none items-center justify-center rounded-md border border-dashed text-sm">
+        Rechtsklick, dann Maus kurz wegbewegen
       </div>
-      <div data-cm-panel hidden role="menu" aria-label="Kontextmenü" class="w-44"
-           onclick="if (event.target.closest('[role=menuitem]')) this.hidden=true;"
-           onmouseleave="this.hidden=true;">
+      <div data-cm-panel hidden role="menu" aria-label="Kontextmenü" class="w-44">
         <button type="button" role="menuitem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>Zurück<kbd class="kbd ms-auto">Strg [</kbd></button>
         <button type="button" role="menuitem" aria-disabled="true" disabled><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>Vor<kbd class="kbd ms-auto">Strg ]</kbd></button>
         <button type="button" role="menuitem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/></svg>Neu laden<kbd class="kbd ms-auto">Strg R</kbd></button>
@@ -23,15 +20,44 @@
   </div>
 
   <div class="c22-example">
+    <span class="c22-example-label">Sofort schließen beim Verlassen</span>
+    <div class="context-menu relative w-full max-w-xs" data-close="leave">
+      <div class="text-muted-foreground bg-card flex h-40 w-full select-none items-center justify-center rounded-md border border-dashed text-sm">
+        Rechtsklick — Verlassen schließt sofort
+      </div>
+      <div data-cm-panel hidden role="menu" aria-label="Kontextmenü" class="w-44">
+        <button type="button" role="menuitem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>Kopieren<kbd class="kbd ms-auto">Strg C</kbd></button>
+        <button type="button" role="menuitem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>In neuem Tab öffnen</button>
+        <hr role="separator">
+        <button type="button" role="menuitem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" x2="12" y1="2" y2="15"/></svg>Teilen …</button>
+        <button type="button" role="menuitem" data-variant="destructive"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>Löschen</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Nur per Klick schließen (Escape / Außenklick)</span>
+    <div class="context-menu relative w-full max-w-xs" data-close="manual">
+      <div class="text-muted-foreground bg-card flex h-40 w-full select-none items-center justify-center rounded-md border border-dashed text-sm">
+        Rechtsklick — bleibt offen bis zur Auswahl
+      </div>
+      <div data-cm-panel hidden role="menu" aria-label="Kontextmenü" class="w-44">
+        <button type="button" role="menuitem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.376 3.622a1 1 0 0 1 3.002 3.002L7.368 18.635a2 2 0 0 1-.855.506l-2.872.838a.5.5 0 0 1-.62-.62l.838-2.872a2 2 0 0 1 .506-.854z"/></svg>Bearbeiten</button>
+        <button type="button" role="menuitem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>Duplizieren</button>
+        <button type="button" role="menuitem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="m6 16 6-12 6 12"/><path d="M8 12h8"/></svg>Umbenennen</button>
+        <hr role="separator">
+        <button type="button" role="menuitem" data-variant="destructive"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>Löschen</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="c22-example">
     <span class="c22-example-label">Checkboxen &amp; Radiogruppe</span>
     <div class="context-menu relative w-full max-w-xs">
-      <div class="text-muted-foreground bg-card flex h-40 w-full select-none items-center justify-center rounded-md border border-dashed text-sm"
-           oncontextmenu="event.preventDefault(); const r=this.getBoundingClientRect(); const p=this.nextElementSibling; p.style.left=Math.min(event.clientX-r.left, r.width-208)+'px'; p.style.top=Math.min(event.clientY-r.top, r.height-8)+'px'; p.hidden=false;">
+      <div class="text-muted-foreground bg-card flex h-40 w-full select-none items-center justify-center rounded-md border border-dashed text-sm">
         Rechtsklick für Ansichtsoptionen
       </div>
-      <div data-cm-panel hidden role="menu" aria-label="Ansichtsoptionen" class="w-52"
-           onclick="const c=event.target.closest('[role=menuitemcheckbox]'); if (c) { c.setAttribute('aria-checked', c.getAttribute('aria-checked')!=='true'); return; } const r=event.target.closest('[role=menuitemradio]'); if (r) { r.closest('[role=group]').querySelectorAll('[role=menuitemradio]').forEach(el => el.setAttribute('aria-checked', el===r ? 'true' : 'false')); return; } if (event.target.closest('[role=menuitem]')) this.hidden=true;"
-           onmouseleave="this.hidden=true;">
+      <div data-cm-panel hidden role="menu" aria-label="Ansichtsoptionen" class="w-52">
         <div role="heading">Ansicht</div>
         <button type="button" role="menuitemcheckbox" aria-checked="true"><span data-indicator><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Lesezeichenleiste</button>
         <button type="button" role="menuitemcheckbox" aria-checked="false"><span data-indicator><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Vollbild</button>
@@ -49,13 +75,10 @@
   <div class="c22-example">
     <span class="c22-example-label">Mit Untermenü</span>
     <div class="context-menu relative w-full max-w-xs">
-      <div class="text-muted-foreground bg-card flex h-40 w-full select-none items-center justify-center rounded-md border border-dashed text-sm"
-           oncontextmenu="event.preventDefault(); const r=this.getBoundingClientRect(); const p=this.nextElementSibling; p.style.left=Math.min(event.clientX-r.left, r.width-192)+'px'; p.style.top=Math.min(event.clientY-r.top, r.height-8)+'px'; p.hidden=false;">
+      <div class="text-muted-foreground bg-card flex h-40 w-full select-none items-center justify-center rounded-md border border-dashed text-sm">
         Rechtsklick auf die Datei
       </div>
-      <div data-cm-panel hidden role="menu" aria-label="Dateiaktionen" class="w-48"
-           onclick="if (event.target.closest('[role=menuitem]:not([aria-haspopup])')) this.hidden=true;"
-           onmouseleave="this.hidden=true;">
+      <div data-cm-panel hidden role="menu" aria-label="Dateiaktionen" class="w-48">
         <button type="button" role="menuitem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>Kopieren<kbd class="kbd ms-auto">Strg C</kbd></button>
         <button type="button" role="menuitem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>Umbenennen</button>
         <hr role="separator">

@@ -34,8 +34,9 @@ still green", not touching every app.
 - **A component gallery (the single point of truth):** `gallery/build.py` renders all 65 components —
   each in its variants — from canonical HTML partials in `c22/components/`. It links every component's
   Basecoat and shadcn source docs and switches between eight style packs and light/dark.
-- **Engine-neutral, with an optional Jinja layer:** any stack embeds the compiled CSS and the partials'
-  HTML; `c22/macros` holds optional page-shell macros for Python/Jinja apps.
+- **Engine-neutral, with an optional Jinja layer:** any stack embeds the compiled CSS, the partials'
+  HTML and the minimal `c22.js` behaviour layer (which wires what Basecoat's JS does not cover, e.g. the
+  context menu); `c22/macros` holds optional page-shell macros for Python/Jinja apps.
 
 ## Status
 

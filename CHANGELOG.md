@@ -24,6 +24,10 @@ kept thin. Basecoat is vendored under `c22/vendor/basecoat/` (reproducible via
 - Reusable C22 component rules in `components.css`: `badge-split` (shields-style two-part badges),
   `bubble`/`bubble-group` (chat bubbles), avatar shapes (`data-shape`), accordion `bordered`/`card`,
   a text shimmer for in-progress states, context-menu and resizable skins, and slider status colours.
+- A minimal own behaviour layer (`c22/static/js/c22.js`) for what Basecoat's JS does not cover:
+  the context menu — right-click to open, viewport-aware placement that flips left/up near the edges,
+  close on leave / after a short delay / manually (`data-close`), and a right-click inside the menu
+  acting like a normal click. Apps embed it alongside `basecoat.all.min.js`.
 - Example imagery sourced from Unsplash; a global `cursor: pointer` on interactive buttons.
 
 ## [0.2.0] - 2026-07-12
