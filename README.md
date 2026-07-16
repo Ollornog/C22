@@ -12,31 +12,35 @@
 
 > 🚧 **Work in progress** — under active development; interfaces and structure may still change before a stable `1.0` release.
 
-### A reusable, framework-agnostic layout & design system.
+### A reusable, framework-agnostic design system in the shadcn look.
 
-Its core is plain CSS (design tokens, layout primitives, page shells, native popovers) and a small
-amount of JavaScript — usable from any stack. On top sits an **optional** Jinja macro layer for
-Python/Jinja applications. The goal is to build a page or a dashboard once and stop re-solving the
-same layout problems — overflow, spacing, contrast, responsive breakage.
+C22 is shadcn-flavoured UI delivered as **canonical HTML + semantic classes + design tokens** — no
+React, no build lock-in. It vendors [Basecoat](https://basecoatui.com/) (MIT) and compiles it with the
+Tailwind CSS v4 standalone CLI, so any stack can use the same components. The goal is to build a page
+or a dashboard once and stop re-solving the same problems — overflow, spacing, contrast, responsive
+breakage — while keeping app-side adapters thin: a redesign becomes "new tokens + components, gallery
+still green", not touching every app.
 
 ---
 
 ## What it is
 
-- **A neutral core:** `c22/static/css` and `c22/static/js`. No dependency on any
-  framework, no CDN or tracker fetched at runtime. Any application — static, PHP, Node,
-  Python — can embed these files.
-- **An optional Jinja layer:** `c22/macros` holds page-shell and component macros for
-  apps that already render with Jinja. Nobody is required to use them.
-- **Theming by tokens:** designs differ by CSS custom properties, so several sites can
-  share one core and still look nothing alike.
+- **Vendored, pinned upstream:** Basecoat lives under `c22/vendor/basecoat/` (reproducible via
+  `scripts/vendor-basecoat.sh`); the Tailwind binary is fetched, not committed. You own the code and
+  build it locally — offline, no CDN, no runtime dependency.
+- **Tokens over hard-coded values:** colour, radius, spacing and typography come from CSS custom
+  properties (`c22/static/css/tokens.css`), so several sites can share one core and still look nothing
+  alike.
+- **A component gallery (the single point of truth):** `gallery/build.py` renders all 65 components —
+  each in its variants — from canonical HTML partials in `c22/components/`. It links every component's
+  Basecoat and shadcn source docs and switches between eight style packs and light/dark.
+- **Engine-neutral, with an optional Jinja layer:** any stack embeds the compiled CSS and the partials'
+  HTML; `c22/macros` holds optional page-shell macros for Python/Jinja apps.
 
 ## Status
 
-Early. This is the repository skeleton — hardened CI, shared hygiene kit, package layout
-and the `static_path()` / `macros_path()` helpers. **The design assets themselves are not
-in yet;** they follow once the layout foundation is settled. Do not depend on it for
-production.
+Work in progress. All 65 components exist with their variants, but interfaces and structure may still
+change before a stable `1.0`. Do not depend on it for production yet.
 
 ## Using it
 
@@ -48,18 +52,22 @@ from fastapi.staticfiles import StaticFiles
 app.mount("/c22", StaticFiles(directory=static_path()), name="c22")
 ```
 
-Other stacks take the files from `c22/static/` directly (or from a release tarball) — no
-Python required.
+The look is the shared source of truth: design questions are solved **in C22** (tokens + components)
+and adopted by the apps — not hard-coded per app. Other stacks take the partials' HTML and the
+compiled CSS directly.
 
 ## Development
 
 ```bash
 git config core.hooksPath .githooks   # once per clone
-./scripts/check.sh                     # tests + hygiene, run before every push
+./scripts/fetch-tailwind.sh           # Tailwind v4 standalone CLI (gitignored)
+./scripts/vendor-basecoat.sh          # pin/refresh the vendored Basecoat
+./scripts/build-gallery.sh            # render the gallery + compile the pack CSS
+./scripts/check.sh                    # tests + hygiene, run before every push
 ```
 
-The suite is repeatable by design: run it twice, both green. See
-[CONTRIBUTING](CONTRIBUTING.md).
+The compiled pack CSS and `gallery/index.html` are build outputs (gitignored) — rebuild them locally.
+The suite is repeatable by design: run it twice, both green. See [CONTRIBUTING](CONTRIBUTING.md).
 
 ## License
 
@@ -67,4 +75,7 @@ MIT — see [LICENSE](LICENSE).
 
 ## Credits
 
-Icon: <a href="https://www.flaticon.com/authors/iconjam" target="_blank" rel="noopener">Origami Bird PNG Image by Iconjam - flaticon.com</a>
+- UI primitives: [Basecoat](https://basecoatui.com/) (MIT), built on Tailwind CSS v4.
+- Component references: [shadcn/ui](https://ui.shadcn.com/).
+- Example imagery: [Unsplash](https://unsplash.com/).
+- Icon: <a href="https://www.flaticon.com/authors/iconjam" target="_blank" rel="noopener">Origami Bird PNG Image by Iconjam - flaticon.com</a>
