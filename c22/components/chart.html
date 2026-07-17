@@ -1,77 +1,61 @@
-<!-- custom: schlanke CSS/SVG-Diagramme (kein JS/Chart-Lib), Legende/Tooltip mit den ECHTEN
-     Basecoat-Klassen (chart-legend, chart-legend-item, chart-legend-indicator, chart-tooltip Familie)
-     und den echten chart-1 bis chart-5 Tokens aus base.css. Die volle JS-Variante (canvas.chart,
-     data-chart-type/-data/-series, window.basecoat.chart()) braucht Chart.js als externe
-     Abhängigkeit, die hier nicht vendored ist — deshalb bewusst nicht live verdrahtet. -->
+<!-- custom: datengetriebene SVG-Diagramme. Jedes Chart ist EIN <div data-chart='{…}'> mit einer
+     JSON-Config (Daten-Array) — c22.js (wireChart) rechnet daraus Skala, Achse, Formen, Legende UND
+     Tooltip: eine Quelle der Wahrheit (SPOT), keine handberechneten Koordinaten. Warum SVG statt
+     Canvas: shadcn/Recharts ist SVG, Basecoat/Chart.js ist Canvas — und wir wollen highlighten. In
+     SVG ist jedes Element ein DOM-Knoten, also Hover/Highlight/Tokens/a11y ohne Neuzeichnen. Farben
+     nur über Tokens (--chart-1..5). Die echten Basecoat-Klassen (chart-legend, chart-tooltip) baut
+     c22.js live ein; der Tooltip erscheint per Hover (Kategorie-/Segment-/Achsen-Band). Chart.js
+     als Live-Canvas ist bewusst nicht vendored. -->
 <div class="c22-examples">
+
   <div class="c22-example">
-    <span class="c22-example-label">Balken</span>
-    <div class="w-full max-w-md">
-      <div class="flex h-40 items-end gap-2">
-        <div class="bg-primary flex-1 rounded-t" style="height:45%"></div>
-        <div class="bg-primary flex-1 rounded-t" style="height:70%"></div>
-        <div class="bg-primary flex-1 rounded-t" style="height:55%"></div>
-        <div class="bg-primary flex-1 rounded-t" style="height:90%"></div>
-        <div class="bg-primary flex-1 rounded-t" style="height:65%"></div>
-        <div class="bg-primary/40 flex-1 rounded-t" style="height:30%"></div>
-        <div class="bg-primary/40 flex-1 rounded-t" style="height:25%"></div>
-      </div>
-      <div class="text-muted-foreground mt-2 flex justify-between text-xs"><span>Mo</span><span>Di</span><span>Mi</span><span>Do</span><span>Fr</span><span>Sa</span><span>So</span></div>
-    </div>
+    <span class="c22-example-label">Balken — einzeln (<code class="text-[11px]">type: "bar"</code>)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"bar","labels":["Jan","Feb","Mär","Apr","Mai","Jun"],"series":[{"name":"Besuche","data":[560,840,620,980,700,880]}]}'></div>
   </div>
+
   <div class="c22-example">
-    <span class="c22-example-label">Linie / Fläche</span>
-    <div class="w-full max-w-md">
-      <svg viewBox="0 0 300 120" class="text-primary h-40 w-full" preserveAspectRatio="none">
-        <polygon points="0,95 40,70 80,80 120,40 160,55 200,25 240,45 300,30 300,120 0,120" fill="currentColor" fill-opacity="0.12"/>
-        <polyline points="0,95 40,70 80,80 120,40 160,55 200,25 240,45 300,30" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
-      </svg>
-      <div class="text-muted-foreground mt-2 flex justify-between text-xs"><span>Jan</span><span>Mär</span><span>Mai</span><span>Jul</span></div>
-    </div>
+    <span class="c22-example-label">Balken — mehrere (<code class="text-[11px]">type: "bars"</code> + Legende)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"bars","legend":true,"labels":["Jan","Feb","Mär","Apr","Mai","Jun"],"series":[{"name":"Desktop","data":[520,760,600,880,680,800]},{"name":"Mobil","data":[300,440,360,560,420,500]}]}'></div>
   </div>
+
   <div class="c22-example">
-    <span class="c22-example-label">Kreis / Donut (mit echter <code class="text-[11px]">chart-legend</code>)</span>
-    <div class="flex flex-col items-center gap-5">
-      <div class="relative flex size-36 items-center justify-center rounded-full" style="background:conic-gradient(var(--chart-1) 0% 38%, var(--chart-2) 38% 63%, var(--chart-3) 63% 82%, var(--chart-4) 82% 100%)">
-        <div class="bg-background absolute inset-[14%] flex flex-col items-center justify-center rounded-full">
-          <span class="text-foreground text-lg font-semibold">8.412</span>
-          <span class="text-muted-foreground text-xs">Besuche</span>
-        </div>
-      </div>
-      <ul class="chart-legend">
-        <li><span class="chart-legend-item"><span class="chart-legend-indicator" style="--chart-indicator-color:var(--chart-1)"></span><span>Direkt</span></span></li>
-        <li><span class="chart-legend-item"><span class="chart-legend-indicator" style="--chart-indicator-color:var(--chart-2)"></span><span>Suche</span></span></li>
-        <li><span class="chart-legend-item"><span class="chart-legend-indicator" style="--chart-indicator-color:var(--chart-3)"></span><span>Verweise</span></span></li>
-        <li><span class="chart-legend-item"><span class="chart-legend-indicator" style="--chart-indicator-color:var(--chart-4)"></span><span>Social</span></span></li>
-      </ul>
-    </div>
+    <span class="c22-example-label">Balken — gestapelt (<code class="text-[11px]">type: "stacked"</code> + Legende)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"stacked","legend":true,"labels":["Jan","Feb","Mär","Apr","Mai","Jun"],"series":[{"name":"Direkt","data":[220,300,260,340,280,320]},{"name":"Suche","data":[150,200,160,240,180,220]},{"name":"Verweise","data":[80,120,100,140,100,120]}]}'></div>
   </div>
+
   <div class="c22-example">
-    <span class="c22-example-label">Tooltip (Vorschau der echten <code class="text-[11px]">chart-tooltip</code>-Klassen)</span>
-    <div class="relative w-full max-w-md pt-10">
-      <div class="flex h-32 items-end gap-2 opacity-40">
-        <div class="bg-chart-1 flex-1 rounded-t" style="height:40%"></div>
-        <div class="bg-chart-1 flex-1 rounded-t" style="height:60%"></div>
-        <div class="bg-chart-1 flex-1 rounded-t" style="height:50%"></div>
-        <div class="bg-chart-2 flex-1 rounded-t" style="height:95%"></div>
-        <div class="bg-chart-1 flex-1 rounded-t" style="height:70%"></div>
-      </div>
-      <div class="text-muted-foreground mt-2 flex justify-between text-xs opacity-40"><span>Mo</span><span>Di</span><span>Mi</span><span>Do</span><span>Fr</span></div>
-      <div class="chart-tooltip absolute top-0 left-[64%]">
-        <div class="chart-tooltip-title">Donnerstag</div>
-        <div class="chart-tooltip-items">
-          <div class="chart-tooltip-item">
-            <span class="chart-tooltip-indicator" style="--chart-indicator-color:var(--chart-2)"></span>
-            <span class="chart-tooltip-label">Besuche</span>
-            <span class="chart-tooltip-value">1.284</span>
-          </div>
-          <div class="chart-tooltip-item">
-            <span class="chart-tooltip-indicator" style="--chart-indicator-color:var(--chart-4)"></span>
-            <span class="chart-tooltip-label">Neu</span>
-            <span class="chart-tooltip-value">312</span>
-          </div>
-        </div>
-      </div>
-    </div>
+    <span class="c22-example-label">Linie — linear, mit Fläche (<code class="text-[11px]">type: "line"</code>, <code class="text-[11px]">area: true</code>)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"line","area":true,"unit":" €","labels":["Jan","Feb","Mär","Apr","Mai","Jun"],"series":[{"name":"Umsatz","data":[4500,6800,5400,8200,6000,7300]}]}'></div>
   </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Linie — mehrere (<code class="text-[11px]">type: "lines"</code> + Legende)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"lines","legend":true,"unit":" €","labels":["Jan","Feb","Mär","Apr","Mai","Jun"],"series":[{"name":"2026","data":[4500,6800,5400,8200,6000,7300]},{"name":"2025","data":[3200,4200,4800,5200,5800,6400]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Linie — Stufen (<code class="text-[11px]">type: "step"</code>)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"step","labels":["Jan","Feb","Mär","Apr","Mai","Jun"],"series":[{"name":"Offene Tickets","data":[35,50,45,68,58,72]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Linie — weiche Kurven (<code class="text-[11px]">type: "smooth"</code>, <code class="text-[11px]">area: true</code>)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"smooth","area":true,"labels":["Jan","Feb","Mär","Apr","Mai","Jun"],"series":[{"name":"Nutzer","data":[4000,7000,5000,7800,5500,7300]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Kreis / Donut (<code class="text-[11px]">type: "donut"</code> + Zentrum + Legende)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"donut","legend":true,"unit":"Anteil","labels":["Direkt","Suche","Verweise","Social"],"center":{"value":"8.412","label":"Besuche"},"series":[{"data":[38,25,19,18]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Radar (<code class="text-[11px]">type: "radar"</code>, <code class="text-[11px]">max: 100</code> + Legende)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"radar","legend":true,"max":100,"labels":["Speed","Reichweite","Preis","Support","Qualität"],"series":[{"name":"Kanal A","data":[80,60,90,50,70]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Y-Achse — ablesbare Skala (<code class="text-[11px]">axis: true</code>, <code class="text-[11px]">max: 1000</code>)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"bar","axis":true,"max":1000,"labels":["Jan","Feb","Mär","Apr","Mai","Jun"],"series":[{"name":"Besuche","data":[560,840,620,980,700,880]}]}'></div>
+  </div>
+
 </div>

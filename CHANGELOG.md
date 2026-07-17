@@ -29,6 +29,16 @@ kept thin. Basecoat is vendored under `c22/vendor/basecoat/` (reproducible via
   close on leave / after a short delay / manually (`data-close`), and a right-click inside the menu
   acting like a normal click. Apps embed it alongside `basecoat.all.min.js`.
 - Example imagery sourced from Unsplash; a global `cursor: pointer` on interactive buttons.
+- The behaviour layer now also renders interactive calendars (`data-calendar`: single/range selection,
+  multiple months, month/year dropdown, disabled days, today/weekend/holiday styling), carousels and
+  charts.
+- Menu components share one hover/active state (`accent`) across command, dropdown-menu, context-menu,
+  combobox and the calendar dropdown. Keyboard-shortcut keys render as `.kbd` key-caps (a single point
+  of truth with `kbd`/`dropdown-menu`), one cap per key, that keep a constant border and only lighten
+  their background on the highlighted row. The calendar's month/year dropdown marks the current choice
+  with a check like a selected `select` option instead of a filled row. The command palette gains
+  popover- and dialog-triggered variants plus a scrollable list, and opens without a pre-highlighted
+  first row. Combobox `auto-highlight` is limited to its dedicated variant.
 
 ## [0.2.0] - 2026-07-12
 

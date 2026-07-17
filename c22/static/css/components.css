@@ -235,6 +235,54 @@
 }
 
 @layer components {
+  /* Scrollbalken ausblenden — für Carousels, die rein über Buttons/Punkte/Autoplay laufen
+     (der native Snap-Scroll bleibt per Wisch/Trackpad erhalten, nur die Leiste ist unsichtbar). */
+  .no-scrollbar { scrollbar-width: none; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+
+  /* Chart-Hover-Übergänge an EINEM Ort: c22.js setzt beim Hover nur die Zielwerte (aktive
+     Kategorie/Segment volldeckend, Rest opacity .3; aktiver Radar-Punkt größer), der weiche Übergang
+     lebt hier im CSS. Balken + Donut-Segmente dimmen (opacity), Radar-Punkte wachsen (r). */
+  [data-chart] rect[data-cat],
+  [data-chart] [data-seg] { transition: opacity 0.12s; }
+  [data-chart] [data-dot] { transition: r 0.12s; }
+
+  /* SPOT-Rundung: JEDES Folien-Bild eines Carousels ist einheitlich gerundet — ein Ort, Backup
+     für alle Varianten, damit kein Bild irgendwo eckig bleibt (kein rounded-lg mehr je Bild im
+     Markup). Gilt auch für gerahmte/eingepasste Bilder (die Regel trifft das <img> selbst, egal ob
+     es in einem Container/Rahmen liegt). Avatar-Bilder (Zitate) bleiben rund — ihr .avatar clippt
+     kreisförmig, die Bild-Rundung ist dort unsichtbar. */
+  [data-carousel-viewport] img { @apply rounded-lg; }
+
+  /* Carousel-Punkt-Navigation: ein Punkt je Folie. c22.js markiert JEDE sichtbare Folie über
+     aria-current (volldeckend), inaktive gedämpft. SPOT-Klasse statt Utility-Kette je Punkt.
+     data-overlay = Punkte liegen ÜBER dem Bild -> weiß + Schatten, damit sie auf jedem Foto lesbar
+     bleiben (statt der gedämpften Variante fürs Layout "unterm Bild"). */
+  [data-carousel-dot] { @apply bg-muted-foreground/30 size-2 shrink-0 cursor-pointer rounded-full transition-colors; }
+  [data-carousel-dot]:hover { @apply bg-muted-foreground; }
+  [data-carousel-dot][aria-current='true'] { @apply bg-foreground; }
+  [data-carousel-dot][data-overlay] { @apply bg-white/60; box-shadow: 0 1px 3px rgb(0 0 0 / 0.6); }
+  [data-carousel-dot][data-overlay]:hover, [data-carousel-dot][data-overlay][aria-current='true'] { @apply bg-white; }
+
+  /* "x von y"-Zähler (von c22.js gefüllt). */
+  [data-carousel-counter] { @apply text-muted-foreground text-sm tabular-nums; }
+
+  /* Pfeil "im Bild" (Variante 3): KEIN Button-Kasten — transparent, fett, das linke bzw. rechte
+     VIERTEL des Bildes ist die Klickzone. Weiß + kräftiger Schlagschatten für Lesbarkeit auf jedem
+     Foto. Ausgegraut (am Rand) = dünnerer Pfeil, kein Schatten. */
+  [data-carousel-arrow] {
+    @apply absolute inset-y-0 z-10 flex w-1/4 cursor-pointer items-center text-white/90 transition;
+    filter: drop-shadow(0 2px 6px rgb(0 0 0 / 0.7));
+  }
+  [data-carousel-arrow] svg { width: 2rem; height: 2rem; stroke-width: 3; }
+  [data-carousel-arrow]:hover:not(:disabled) { @apply text-white; }
+  [data-carousel-arrow]:disabled { @apply cursor-default opacity-40; filter: none; }
+  [data-carousel-arrow]:disabled svg { stroke-width: 2; }
+  [data-carousel-arrow='prev'] { @apply left-0 justify-start ps-3; }
+  [data-carousel-arrow='next'] { @apply right-0 justify-end pe-3; }
+}
+
+@layer components {
   /* Resizable: skinnt den nativen Browser-Greifer eines resize-x/resize-y-Panels
    * dezent in Border-Farbe statt des grauen Standard-Dreiecks. Nur Chromium
    * (::-webkit-resizer); Firefox zeigt seinen eigenen Greifer, Funktion bleibt gleich. */
@@ -269,4 +317,78 @@
   .input[type='range'][data-variant]::-moz-range-thumb { border-color: var(--slider-color, var(--primary)); }
   .input[type='range'][data-variant]::-ms-thumb { border-color: var(--slider-color, var(--primary)); }
   .input[type='range'][data-variant]::-ms-fill-lower { background-color: var(--slider-color, var(--primary)); }
+
+  /* Combobox-Chevron auf den systemweiten Kanon bringen: der Trigger-Abwärtspfeil ist überall
+     muted-foreground bei 50% (Select .opacity-50, Native-Select var(--chevron-down-icon-50) mit
+     stroke-alpha 0.5, Navigation-Menu/Breadcrumb .opacity-50). Basecoats .combobox-trigger-icon
+     setzt nur die Farbe, keine Deckkraft → sonst wirkt der Combobox-Pfeil kräftiger als alle
+     anderen. Eine Quelle der Wahrheit fürs Indikator-Icon. */
+  .combobox-trigger-icon { opacity: 0.5; }
+  /* Im deaktivierten Zustand dimmt Basecoat das Input per opacity:.5 — der Chevron ist ein
+     Geschwister-SVG und bliebe sonst kräftiger als der blasse Platzhalter (der solide 2px-Strich
+     wirkt dichter als der dünne Text). Also mit dem Control mitdimmen: Basis .5 × disabled .5. */
+  .combobox:has(> input:disabled) > .combobox-trigger-icon { opacity: 0.25; }
+
+  /* Checkbox/Radio/Switch: pointer-Cursor auf Kästchen UND zugehörigem Label. Basecoat setzt
+     cursor nur für :disabled (not-allowed) — sonst bleibt der Text-Cursor stehen, obwohl die Fläche
+     klickbar ist. */
+  .input:is([type='checkbox'], [type='radio']):not(:disabled) { cursor: pointer; }
+  .field:not([data-disabled='true']):has(.input:is([type='checkbox'], [type='radio']):not(:disabled)) label {
+    cursor: pointer;
+  }
+
+  /* Button-Group hr[role=separator]: Basecoat rückt den Separator per my-px/mx-px ein
+     (kürzer als die Buttons) UND lässt dem Nachbar-Button seinen anliegenden Rand → daneben
+     entsteht eine 2px-Doppellinie mit Kerbe. Hier: Separator bündig über die volle Höhe/Breite
+     und der davorstehende Button verliert seinen anliegenden Rand → eine saubere Einzellinie,
+     identisch zum geteilten Rand zwischen zwei normalen Buttons. */
+  .button-group:not([data-orientation='vertical']) {
+    > hr[role='separator'] { @apply my-0; }
+    > *:has(+ hr[role='separator']) { @apply border-e-0; }
+  }
+  .button-group[data-orientation='vertical'] {
+    > hr[role='separator'] { @apply mx-0; }
+    > *:has(+ hr[role='separator']) { @apply border-b-0; }
+  }
+
+  /* Dropdown-Radio/-Checkbox: Markierung des gewählten Eintrags wahlweise über den Punkt
+     (data-indicator, Standard) ODER — via data-mark am Menü/der Gruppe — über fett bzw.
+     fett + Hintergrund. Wiederverwendbar (z.B. Kalender-Monat/Jahr-Dropdown). */
+  [data-mark] [data-indicator] { @apply hidden; }
+  [data-mark~="bold"] :is([role="menuitemradio"], [role="menuitemcheckbox"])[aria-checked="true"] { @apply font-bold; }
+  [data-mark~="bg"] :is([role="menuitemradio"], [role="menuitemcheckbox"])[aria-checked="true"] { @apply bg-primary text-primary-foreground hover:bg-primary; }
+
+  /* Alle Menüs teilen denselben Hover/Aktiv-Zustand: accent (wie dropdown-menu, context-menu,
+     combobox, Kalender-Dropdown). .command wich als einziges mit muted ab — hier angeglichen,
+     damit die markierte Zeile überall gleich aussieht. */
+  .command [role='menuitem'].active,
+  .command [role='menuitem'][data-selected='true'],
+  .command:not([data-command-initialized]) [role='menuitem']:not([aria-disabled='true']):not(:disabled):hover {
+    @apply bg-accent text-accent-foreground;
+  }
+
+  /* .kbd trägt IMMER einen Rahmen (border-border), damit die Boxgröße bei Hover konstant bleibt —
+     sonst "springt" die Taste, weil der Rahmen erst dazukäme. Normal: grauer Grund + grauer Rahmen.
+     Auf der markierten/gehoverten Menüzeile wechselt nur der Grund auf Weiß (Rahmen bleibt) → die Taste
+     hebt sich vom grauen Zeilen-Hover ab, ohne zu springen. */
+  .kbd { @apply border border-border; }
+  :is(.command, .dropdown-menu, .context-menu) [role^='menuitem']:is(.active, :focus-visible, :hover) .kbd {
+    @apply bg-background;
+  }
+
+  /* Mehrtasten-Kürzel im Menü stehen in einem rechtsbündigen Flex-Wrapper (<span class="ms-auto …">).
+     basecoat gibt der letzten .kbd im dropdown-menu selbst ms-auto + ps-8 (32px) — das würde die
+     zweite Taste im Wrapper nach rechts schieben UND aufblähen. Innerhalb des Wrappers behalten die
+     Tasten ihre Eigenbreite und ihr symmetrisches Standard-Padding. */
+  :is(.command, .dropdown-menu) [role='menuitem'] .kbd:last-child { @apply ms-0 ps-1; }
+
+  /* Kalender-Monat/Jahr-Dropdown (c22.js): gewählte Zeile im normalen Dropdown-Stil — Haken rechts
+     wie eine gewählte .select-Option (--check-icon), Hover bleibt accent. Kein gefülltes primary. */
+  [data-cal-menu] [aria-selected='true'] {
+    background-image: var(--check-icon);
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 0.875rem;
+    @apply font-medium;
+  }
 }

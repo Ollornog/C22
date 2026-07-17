@@ -1,62 +1,228 @@
-<!-- custom (shadcn-Vorlage, dort auf Embla): Basecoat hat keine Carousel-Komponente (404, kein vendored CSS). C22 baut sie JS-frei über natives CSS-Snap-Scrolling: Container ist per scroll-snap + tabindex bedienbar (Wisch/Trackpad/Pfeiltasten), die Punkt-Navigation nutzt reine Anker-Links (#id → scrollIntoView). Prev/Next/Auf/Ab-Buttons sind bewusst ohne JS verdrahtet (kein Autoplay/Embla-API verfügbar) und dienen als visuelle Affordanz; Klicks scrollen nicht automatisch. -->
+<!-- custom (shadcn-Vorlage, dort auf Embla): Basecoat hat keine Carousel-Komponente (404, kein vendored CSS). C22 baut sie auf nativem CSS-Snap-Scrolling auf (Wisch/Trackpad/Pfeiltasten funktionieren auch ohne JS). c22.js macht Prev/Next/Punkte funktional (nur der Viewport scrollt, kein Seiten-Sprung), markiert JEDE sichtbare Folie, pflegt "x von y"-Zähler + Endzustand (Button am Rand SOFORT deaktiviert) und optionales Autoplay. — STANDARD-LINIE: ein Bild je Ansicht, aspect-video, rounded-lg, kein Scrollbalken; Bilder IMMER rounded-lg. Varianten ändern je genau eine Sache dagegen (Pfeil-Position / Zähler / Punkte / Layout). Verdrahtung über data-carousel[="vertical"] / data-carousel-autoplay="ms" / data-carousel-viewport / data-carousel-prev|next / data-carousel-dot[ data-overlay] / data-carousel-counter. Beispielbilder: Unsplash. -->
 <div class="c22-examples">
+
+  <!-- ============ Pfeil-Position (3 Varianten gegen die Standard-Linie) ============ -->
   <div class="c22-example">
-    <span class="c22-example-label">Standard (ein Bild je Ansicht)</span>
-    <div class="relative w-full max-w-md" role="region" aria-roledescription="Karussell" aria-label="Bildergalerie">
-      <div class="scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2" tabindex="0">
-        <div class="bg-muted flex aspect-video min-w-full shrink-0 snap-center items-center overflow-hidden rounded-lg" role="group" aria-roledescription="Folie" aria-label="Folie 1 von 3"><img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=800&h=450&fit=crop&q=80" alt="Arbeitsplatz mit Laptop" class="size-full object-cover"></div>
-        <div class="bg-muted flex aspect-video min-w-full shrink-0 snap-center items-center overflow-hidden rounded-lg" role="group" aria-roledescription="Folie" aria-label="Folie 2 von 3"><img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=450&fit=crop&q=80" alt="Schreibtisch von oben" class="size-full object-cover"></div>
-        <div class="bg-muted flex aspect-video min-w-full shrink-0 snap-center items-center overflow-hidden rounded-lg" role="group" aria-roledescription="Folie" aria-label="Folie 3 von 3"><img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=800&h=450&fit=crop&q=80" alt="Modernes Büro" class="size-full object-cover"></div>
-      </div>
-      <button type="button" class="btn absolute left-2 top-1/2 -translate-y-1/2 shadow" data-variant="outline" data-size="icon" aria-label="Zurück"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
-      <button type="button" class="btn absolute right-2 top-1/2 -translate-y-1/2 shadow" data-variant="outline" data-size="icon" aria-label="Weiter"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
-    </div>
-  </div>
-  <div class="c22-example">
-    <span class="c22-example-label">Mehrere Folien sichtbar (<code class="text-[11px]">basis-1/2 md:basis-1/3</code>)</span>
-    <div class="relative w-full max-w-lg">
-      <div class="scrollbar-sm -ml-4 flex snap-x snap-mandatory overflow-x-auto pb-2" tabindex="0">
-        <div class="basis-1/2 shrink-0 snap-start pl-4 md:basis-1/3"><div class="bg-muted flex aspect-square items-center justify-center rounded-lg text-2xl font-semibold">1</div></div>
-        <div class="basis-1/2 shrink-0 snap-start pl-4 md:basis-1/3"><div class="bg-muted flex aspect-square items-center justify-center rounded-lg text-2xl font-semibold">2</div></div>
-        <div class="basis-1/2 shrink-0 snap-start pl-4 md:basis-1/3"><div class="bg-muted flex aspect-square items-center justify-center rounded-lg text-2xl font-semibold">3</div></div>
-        <div class="basis-1/2 shrink-0 snap-start pl-4 md:basis-1/3"><div class="bg-muted flex aspect-square items-center justify-center rounded-lg text-2xl font-semibold">4</div></div>
-        <div class="basis-1/2 shrink-0 snap-start pl-4 md:basis-1/3"><div class="bg-muted flex aspect-square items-center justify-center rounded-lg text-2xl font-semibold">5</div></div>
-      </div>
-      <button type="button" class="btn absolute -left-4 top-1/2 -translate-y-1/2 shadow" data-variant="outline" data-size="icon" aria-label="Zurück"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
-      <button type="button" class="btn absolute -right-4 top-1/2 -translate-y-1/2 shadow" data-variant="outline" data-size="icon" aria-label="Weiter"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
-    </div>
-  </div>
-  <div class="c22-example">
-    <span class="c22-example-label">Vertikal (<code class="text-[11px]">flex-col</code> + <code class="text-[11px]">snap-y</code>)</span>
-    <div class="relative w-full max-w-xs">
-      <div class="scrollbar-sm flex h-48 snap-y snap-mandatory flex-col gap-3 overflow-y-auto pr-1" tabindex="0">
-        <div class="bg-muted flex h-full shrink-0 snap-center flex-col items-center justify-center gap-1 rounded-lg"><span class="text-2xl font-semibold">1</span><span class="text-muted-foreground text-xs">Bestellung aufgeben</span></div>
-        <div class="bg-muted flex h-full shrink-0 snap-center flex-col items-center justify-center gap-1 rounded-lg"><span class="text-2xl font-semibold">2</span><span class="text-muted-foreground text-xs">Versand vorbereiten</span></div>
-        <div class="bg-muted flex h-full shrink-0 snap-center flex-col items-center justify-center gap-1 rounded-lg"><span class="text-2xl font-semibold">3</span><span class="text-muted-foreground text-xs">Zustellung</span></div>
-      </div>
-      <button type="button" class="btn absolute left-1/2 top-1 -translate-x-1/2 shadow" data-variant="outline" data-size="icon" aria-label="Nach oben"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg></button>
-      <button type="button" class="btn absolute bottom-1 left-1/2 -translate-x-1/2 shadow" data-variant="outline" data-size="icon" aria-label="Nach unten"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
-    </div>
-  </div>
-  <div class="c22-example">
-    <span class="c22-example-label">Mit Punkt-Navigation (Anker-Links, ohne JS)</span>
-    <div class="w-full max-w-md">
-      <div class="scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2" tabindex="0">
-        <div id="c22-carousel-dot-1" class="bg-muted flex aspect-video min-w-full shrink-0 scroll-ml-4 snap-center items-center overflow-hidden rounded-lg" role="group" aria-roledescription="Folie" aria-label="Folie 1 von 3"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800&h=450&fit=crop&crop=faces&q=80" alt="Mara" class="size-full object-cover"></div>
-        <div id="c22-carousel-dot-2" class="bg-muted flex aspect-video min-w-full shrink-0 scroll-ml-4 snap-center items-center overflow-hidden rounded-lg" role="group" aria-roledescription="Folie" aria-label="Folie 2 von 3"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=800&h=450&fit=crop&crop=faces&q=80" alt="Jonas" class="size-full object-cover"></div>
-        <div id="c22-carousel-dot-3" class="bg-muted flex aspect-video min-w-full shrink-0 scroll-ml-4 snap-center items-center overflow-hidden rounded-lg" role="group" aria-roledescription="Folie" aria-label="Folie 3 von 3"><img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=800&h=450&fit=crop&crop=faces&q=80" alt="Lena" class="size-full object-cover"></div>
-      </div>
-      <div class="mt-2 flex justify-center gap-2">
-        <a href="#c22-carousel-dot-1" class="bg-foreground size-2 rounded-full" aria-label="Zu Folie 1"></a>
-        <a href="#c22-carousel-dot-2" class="bg-muted-foreground/30 hover:bg-muted-foreground size-2 rounded-full transition-colors" aria-label="Zu Folie 2"></a>
-        <a href="#c22-carousel-dot-3" class="bg-muted-foreground/30 hover:bg-muted-foreground size-2 rounded-full transition-colors" aria-label="Zu Folie 3"></a>
+    <span class="c22-example-label">Standard — Pfeile außerhalb der Bilder</span>
+    <div class="w-full max-w-md" role="region" aria-roledescription="Karussell" aria-label="Bildergalerie" data-carousel>
+      <div class="flex items-center gap-3">
+        <button type="button" class="btn shrink-0" data-variant="outline" data-size="icon" data-carousel-prev aria-label="Zurück"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+        <div class="relative min-w-0 flex-1">
+          <div class="no-scrollbar flex snap-x snap-mandatory overflow-x-auto" tabindex="0" data-carousel-viewport>
+            <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=800&h=450&fit=crop&q=80" alt="Arbeitsplatz mit Laptop" class="aspect-video w-full shrink-0 snap-start object-cover">
+            <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=450&fit=crop&q=80" alt="Schreibtisch von oben" class="aspect-video w-full shrink-0 snap-start object-cover">
+            <img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=800&h=450&fit=crop&q=80" alt="Modernes Büro" class="aspect-video w-full shrink-0 snap-start object-cover">
+          </div>
+        </div>
+        <button type="button" class="btn shrink-0" data-variant="outline" data-size="icon" data-carousel-next aria-label="Weiter"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
       </div>
     </div>
   </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Pfeile mittig auf dem Rahmen</span>
+    <div class="w-full max-w-md" role="region" aria-roledescription="Karussell" aria-label="Bildergalerie" data-carousel>
+      <div class="relative">
+        <div class="no-scrollbar flex snap-x snap-mandatory overflow-x-auto" tabindex="0" data-carousel-viewport>
+          <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=800&h=450&fit=crop&q=80" alt="Arbeitsplatz mit Laptop" class="aspect-video w-full shrink-0 snap-start object-cover">
+          <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=450&fit=crop&q=80" alt="Schreibtisch von oben" class="aspect-video w-full shrink-0 snap-start object-cover">
+          <img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=800&h=450&fit=crop&q=80" alt="Modernes Büro" class="aspect-video w-full shrink-0 snap-start object-cover">
+        </div>
+        <button type="button" class="btn absolute left-0 top-1/2 -translate-x-1/2 -translate-y-1/2 shadow-md" data-variant="outline" data-size="icon" data-carousel-prev aria-label="Zurück"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+        <button type="button" class="btn absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 shadow-md" data-variant="outline" data-size="icon" data-carousel-next aria-label="Weiter"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Pfeile im Bild (linkes/rechtes Viertel klickbar)</span>
+    <div class="w-full max-w-md" role="region" aria-roledescription="Karussell" aria-label="Bildergalerie" data-carousel>
+      <div class="relative">
+        <div class="no-scrollbar flex snap-x snap-mandatory overflow-x-auto" tabindex="0" data-carousel-viewport>
+          <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=800&h=450&fit=crop&q=80" alt="Arbeitsplatz mit Laptop" class="aspect-video w-full shrink-0 snap-start object-cover">
+          <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=450&fit=crop&q=80" alt="Schreibtisch von oben" class="aspect-video w-full shrink-0 snap-start object-cover">
+          <img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=800&h=450&fit=crop&q=80" alt="Modernes Büro" class="aspect-video w-full shrink-0 snap-start object-cover">
+        </div>
+        <button type="button" data-carousel-arrow="prev" data-carousel-prev aria-label="Zurück"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+        <button type="button" data-carousel-arrow="next" data-carousel-next aria-label="Weiter"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ Zähler (2 Varianten) ============ -->
+  <div class="c22-example">
+    <span class="c22-example-label">Zähler im Bild</span>
+    <div class="w-full max-w-md" role="region" aria-roledescription="Karussell" aria-label="Bildergalerie" data-carousel>
+      <div class="flex items-center gap-3">
+        <button type="button" class="btn shrink-0" data-variant="outline" data-size="icon" data-carousel-prev aria-label="Zurück"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+        <div class="relative min-w-0 flex-1">
+          <div class="no-scrollbar flex snap-x snap-mandatory overflow-x-auto" tabindex="0" data-carousel-viewport>
+            <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=800&h=450&fit=crop&q=80" alt="Arbeitsplatz mit Laptop" class="aspect-video w-full shrink-0 snap-start object-cover">
+            <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=450&fit=crop&q=80" alt="Schreibtisch von oben" class="aspect-video w-full shrink-0 snap-start object-cover">
+            <img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=800&h=450&fit=crop&q=80" alt="Modernes Büro" class="aspect-video w-full shrink-0 snap-start object-cover">
+          </div>
+          <span class="text-background bg-foreground/70 absolute bottom-2 right-2 rounded-full px-2.5 py-1 text-xs font-medium shadow" data-carousel-counter></span>
+        </div>
+        <button type="button" class="btn shrink-0" data-variant="outline" data-size="icon" data-carousel-next aria-label="Weiter"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Zähler unterm Bild</span>
+    <div class="w-full max-w-md" role="region" aria-roledescription="Karussell" aria-label="Bildergalerie" data-carousel>
+      <div class="flex items-center gap-3">
+        <button type="button" class="btn shrink-0" data-variant="outline" data-size="icon" data-carousel-prev aria-label="Zurück"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+        <div class="relative min-w-0 flex-1">
+          <div class="no-scrollbar flex snap-x snap-mandatory overflow-x-auto" tabindex="0" data-carousel-viewport>
+            <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=800&h=450&fit=crop&q=80" alt="Arbeitsplatz mit Laptop" class="aspect-video w-full shrink-0 snap-start object-cover">
+            <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=450&fit=crop&q=80" alt="Schreibtisch von oben" class="aspect-video w-full shrink-0 snap-start object-cover">
+            <img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=800&h=450&fit=crop&q=80" alt="Modernes Büro" class="aspect-video w-full shrink-0 snap-start object-cover">
+          </div>
+        </div>
+        <button type="button" class="btn shrink-0" data-variant="outline" data-size="icon" data-carousel-next aria-label="Weiter"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+      </div>
+      <div class="mt-2 text-center"><span data-carousel-counter></span></div>
+    </div>
+  </div>
+
+  <!-- ============ Punkte (2 Varianten) ============ -->
+  <div class="c22-example">
+    <span class="c22-example-label">Punkte im Bild (mit Schatten)</span>
+    <div class="w-full max-w-md" role="region" aria-roledescription="Karussell" aria-label="Bildergalerie" data-carousel>
+      <div class="flex items-center gap-3">
+        <button type="button" class="btn shrink-0" data-variant="outline" data-size="icon" data-carousel-prev aria-label="Zurück"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+        <div class="relative min-w-0 flex-1">
+          <div class="no-scrollbar flex snap-x snap-mandatory overflow-x-auto" tabindex="0" data-carousel-viewport>
+            <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=800&h=450&fit=crop&q=80" alt="Arbeitsplatz mit Laptop" class="aspect-video w-full shrink-0 snap-start object-cover">
+            <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=450&fit=crop&q=80" alt="Schreibtisch von oben" class="aspect-video w-full shrink-0 snap-start object-cover">
+            <img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=800&h=450&fit=crop&q=80" alt="Modernes Büro" class="aspect-video w-full shrink-0 snap-start object-cover">
+          </div>
+          <div class="absolute inset-x-0 bottom-3 flex justify-center gap-2">
+            <button type="button" data-carousel-dot data-overlay aria-label="Zu Folie 1"></button>
+            <button type="button" data-carousel-dot data-overlay aria-label="Zu Folie 2"></button>
+            <button type="button" data-carousel-dot data-overlay aria-label="Zu Folie 3"></button>
+          </div>
+        </div>
+        <button type="button" class="btn shrink-0" data-variant="outline" data-size="icon" data-carousel-next aria-label="Weiter"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Punkte unterm Bild</span>
+    <div class="w-full max-w-md" role="region" aria-roledescription="Karussell" aria-label="Bildergalerie" data-carousel>
+      <div class="flex items-center gap-3">
+        <button type="button" class="btn shrink-0" data-variant="outline" data-size="icon" data-carousel-prev aria-label="Zurück"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+        <div class="relative min-w-0 flex-1">
+          <div class="no-scrollbar flex snap-x snap-mandatory overflow-x-auto" tabindex="0" data-carousel-viewport>
+            <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=800&h=450&fit=crop&q=80" alt="Arbeitsplatz mit Laptop" class="aspect-video w-full shrink-0 snap-start object-cover">
+            <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=450&fit=crop&q=80" alt="Schreibtisch von oben" class="aspect-video w-full shrink-0 snap-start object-cover">
+            <img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=800&h=450&fit=crop&q=80" alt="Modernes Büro" class="aspect-video w-full shrink-0 snap-start object-cover">
+          </div>
+        </div>
+        <button type="button" class="btn shrink-0" data-variant="outline" data-size="icon" data-carousel-next aria-label="Weiter"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+      </div>
+      <div class="mt-3 flex justify-center gap-2">
+        <button type="button" data-carousel-dot aria-label="Zu Folie 1"></button>
+        <button type="button" data-carousel-dot aria-label="Zu Folie 2"></button>
+        <button type="button" data-carousel-dot aria-label="Zu Folie 3"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ Layout-Varianten ============ -->
+  <div class="c22-example">
+    <span class="c22-example-label">Mehrere Bilder sichtbar (<code class="text-[11px]">basis-1/3</code>, sichtbare Punkte markiert)</span>
+    <div class="w-full max-w-lg" role="region" aria-roledescription="Karussell" aria-label="Bildergalerie" data-carousel>
+      <div class="flex items-center gap-3">
+        <button type="button" class="btn shrink-0" data-variant="outline" data-size="icon" data-carousel-prev aria-label="Zurück"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+        <div class="no-scrollbar -ml-3 flex min-w-0 flex-1 snap-x snap-mandatory overflow-x-auto" tabindex="0" data-carousel-viewport>
+          <div class="basis-1/3 shrink-0 snap-start pl-3"><img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=400&h=400&fit=crop&q=80" alt="Arbeitsplatz mit Laptop" class="aspect-square w-full object-cover"></div>
+          <div class="basis-1/3 shrink-0 snap-start pl-3"><img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400&h=400&fit=crop&q=80" alt="Schreibtisch von oben" class="aspect-square w-full object-cover"></div>
+          <div class="basis-1/3 shrink-0 snap-start pl-3"><img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=400&h=400&fit=crop&q=80" alt="Modernes Büro" class="aspect-square w-full object-cover"></div>
+          <div class="basis-1/3 shrink-0 snap-start pl-3"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop&crop=faces&q=80" alt="Mara" class="aspect-square w-full object-cover"></div>
+          <div class="basis-1/3 shrink-0 snap-start pl-3"><img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=faces&q=80" alt="Lena" class="aspect-square w-full object-cover"></div>
+        </div>
+        <button type="button" class="btn shrink-0" data-variant="outline" data-size="icon" data-carousel-next aria-label="Weiter"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+      </div>
+      <div class="mt-3 flex justify-center gap-2">
+        <button type="button" data-carousel-dot aria-label="Zu Folie 1"></button>
+        <button type="button" data-carousel-dot aria-label="Zu Folie 2"></button>
+        <button type="button" data-carousel-dot aria-label="Zu Folie 3"></button>
+        <button type="button" data-carousel-dot aria-label="Zu Folie 4"></button>
+        <button type="button" data-carousel-dot aria-label="Zu Folie 5"></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Vertikal mit Bildern — 3 sichtbar, Pfeile außerhalb</span>
+    <div class="flex w-full max-w-xs flex-col items-center gap-3" role="region" aria-roledescription="Karussell" aria-label="Bildergalerie" data-carousel="vertical">
+      <button type="button" class="btn shrink-0" data-variant="outline" data-size="icon" data-carousel-prev aria-label="Nach oben"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg></button>
+      <div class="no-scrollbar flex h-[312px] w-full snap-y snap-mandatory flex-col gap-3 overflow-y-auto" tabindex="0" data-carousel-viewport>
+        <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=640&h=200&fit=crop&q=80" alt="Arbeitsplatz mit Laptop" class="h-24 w-full shrink-0 snap-start object-cover">
+        <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=640&h=200&fit=crop&q=80" alt="Schreibtisch von oben" class="h-24 w-full shrink-0 snap-start object-cover">
+        <img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=640&h=200&fit=crop&q=80" alt="Modernes Büro" class="h-24 w-full shrink-0 snap-start object-cover">
+        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=640&h=200&fit=crop&crop=faces&q=80" alt="Mara" class="h-24 w-full shrink-0 snap-start object-cover">
+        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=640&h=200&fit=crop&crop=faces&q=80" alt="Lena" class="h-24 w-full shrink-0 snap-start object-cover">
+      </div>
+      <button type="button" class="btn shrink-0" data-variant="outline" data-size="icon" data-carousel-next aria-label="Nach unten"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+    </div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Autoplay (<code class="text-[11px]">data-carousel-autoplay="3000"</code> · Pause bei Hover)</span>
+    <div class="w-full max-w-md" role="region" aria-roledescription="Karussell" aria-label="Bildergalerie" data-carousel data-carousel-autoplay="3000">
+      <div class="relative">
+        <div class="no-scrollbar flex snap-x snap-mandatory overflow-x-auto" tabindex="0" data-carousel-viewport>
+          <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=800&h=450&fit=crop&q=80" alt="Arbeitsplatz mit Laptop" class="aspect-video w-full shrink-0 snap-start object-cover">
+          <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=450&fit=crop&q=80" alt="Schreibtisch von oben" class="aspect-video w-full shrink-0 snap-start object-cover">
+          <img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=800&h=450&fit=crop&q=80" alt="Modernes Büro" class="aspect-video w-full shrink-0 snap-start object-cover">
+        </div>
+        <div class="absolute inset-x-0 bottom-3 flex justify-center gap-2">
+          <button type="button" data-carousel-dot data-overlay aria-label="Zu Folie 1"></button>
+          <button type="button" data-carousel-dot data-overlay aria-label="Zu Folie 2"></button>
+          <button type="button" data-carousel-dot data-overlay aria-label="Zu Folie 3"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Quadratisch — 1 Bild je Quadrat (<code class="text-[11px]">aspect-square object-cover</code>)</span>
+    <div class="w-full max-w-xs" role="region" aria-roledescription="Karussell" aria-label="Bildergalerie" data-carousel>
+      <div class="relative">
+        <div class="no-scrollbar flex snap-x snap-mandatory overflow-x-auto" tabindex="0" data-carousel-viewport>
+          <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=600&h=600&fit=crop&q=80" alt="Arbeitsplatz mit Laptop" class="aspect-square w-full shrink-0 snap-start object-cover">
+          <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&h=600&fit=crop&q=80" alt="Schreibtisch von oben" class="aspect-square w-full shrink-0 snap-start object-cover">
+          <img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=600&h=600&fit=crop&q=80" alt="Modernes Büro" class="aspect-square w-full shrink-0 snap-start object-cover">
+        </div>
+        <button type="button" data-carousel-arrow="prev" data-carousel-prev aria-label="Zurück"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+        <button type="button" data-carousel-arrow="next" data-carousel-next aria-label="Weiter"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Originalformat im Quadrat (quer/hoch werden eingepasst, <code class="text-[11px]">object-contain</code>)</span>
+    <div class="w-full max-w-xs" role="region" aria-roledescription="Karussell" aria-label="Bildergalerie" data-carousel>
+      <div class="relative">
+        <div class="no-scrollbar flex snap-x snap-mandatory overflow-x-auto" tabindex="0" data-carousel-viewport>
+          <div class="flex aspect-square w-full shrink-0 snap-start items-center justify-center"><img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=600&h=400&fit=crop&q=80" alt="Querformat" class="max-h-full max-w-full object-contain"></div>
+          <div class="flex aspect-square w-full shrink-0 snap-start items-center justify-center"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=600&fit=crop&crop=faces&q=80" alt="Hochformat" class="max-h-full max-w-full object-contain"></div>
+          <div class="flex aspect-square w-full shrink-0 snap-start items-center justify-center"><img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=500&h=500&fit=crop&q=80" alt="Quadratisch" class="max-h-full max-w-full object-contain"></div>
+        </div>
+        <button type="button" data-carousel-arrow="prev" data-carousel-prev aria-label="Zurück"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+        <button type="button" data-carousel-arrow="next" data-carousel-next aria-label="Weiter"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+      </div>
+    </div>
+  </div>
+
   <div class="c22-example">
     <span class="c22-example-label">Inhalts-Karten (Zitate)</span>
-    <div class="relative w-full max-w-lg">
-      <div class="scrollbar-sm -ml-4 flex snap-x snap-mandatory overflow-x-auto pb-2" tabindex="0">
+    <div class="w-full max-w-lg" data-carousel>
+      <div class="no-scrollbar -ml-4 flex snap-x snap-mandatory overflow-x-auto" tabindex="0" data-carousel-viewport>
         <div class="basis-full shrink-0 snap-start pl-4 sm:basis-1/2">
           <div class="flex h-full flex-col gap-3 rounded-lg border p-4">
             <p class="text-sm">„Endlich ein Design-System, das sich nicht wie ein Framework anfühlt."</p>
@@ -78,4 +244,5 @@
       </div>
     </div>
   </div>
+
 </div>

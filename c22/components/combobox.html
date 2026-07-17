@@ -1,12 +1,10 @@
-<!-- basecoat: Combobox (.combobox) = Text-Input + gefilterte Popover-Listbox. role=option/group/heading/separator wie Select; data-label/data-filter für Zusatzinfo/Suchtext bei Custom Items; Mehrfachauswahl über aria-multiselectable="true" (JS wrappt das Input automatisch in .combobox-chips); data-clear zeigt einen Löschen-Button neben dem Trigger. -->
+<!-- basecoat: Combobox (.combobox) = Text-Input + gefilterte Popover-Listbox. role=option/group/heading/separator wie Select; data-label/data-filter für Zusatzinfo/Suchtext bei Custom Items; Mehrfachauswahl über aria-multiselectable="true" (JS wrappt das Input automatisch in .combobox-chips); data-clear zeigt einen Löschen-Button neben dem Trigger; data-auto-highlight="true" wählt den ersten Treffer beim Tippen vor. Der Trigger-Chevron ist die absolut positionierte .combobox-trigger-icon (direktes .combobox-Kind, NICHT in eine .input-group gewickelt); ein führendes Icon kommt per .input-group + data-align="inline-start". -->
 <div class="c22-examples">
   <div class="c22-example">
     <span class="c22-example-label">Standard</span>
     <div class="combobox w-full max-w-xs" id="c22-cb-std">
-      <div class="input-group">
-        <input type="text" class="input" id="c22-cb-std-input" role="combobox" autocomplete="off" spellcheck="false" aria-autocomplete="list" aria-expanded="false" aria-controls="c22-cb-std-listbox" placeholder="Framework suchen …">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="combobox-trigger-icon"><path d="m6 9 6 6 6-6"/></svg>
-      </div>
+      <input type="text" class="input" id="c22-cb-std-input" role="combobox" autocomplete="off" spellcheck="false" aria-autocomplete="list" aria-expanded="false" aria-controls="c22-cb-std-listbox" placeholder="Framework suchen …">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="combobox-trigger-icon"><path d="m6 9 6 6 6-6"/></svg>
       <div id="c22-cb-std-popover" data-popover aria-hidden="true">
         <div role="listbox" id="c22-cb-std-listbox" aria-orientation="vertical" aria-labelledby="c22-cb-std-input" data-empty="Keine Treffer.">
           <div role="option" data-value="next">Next.js</div>
@@ -69,8 +67,25 @@
     </div>
   </div>
   <div class="c22-example">
+    <span class="c22-example-label">Auto-Highlight — erster Treffer vorgewählt (<code class="text-[11px]">data-auto-highlight="true"</code>)</span>
+    <div class="combobox w-full max-w-xs" id="c22-cb-auto" data-auto-highlight="true">
+      <input type="text" class="input" id="c22-cb-auto-input" role="combobox" autocomplete="off" spellcheck="false" aria-autocomplete="list" aria-expanded="false" aria-controls="c22-cb-auto-listbox" placeholder="Stadt suchen …">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="combobox-trigger-icon"><path d="m6 9 6 6 6-6"/></svg>
+      <div id="c22-cb-auto-popover" data-popover aria-hidden="true">
+        <div role="listbox" id="c22-cb-auto-listbox" aria-orientation="vertical" aria-labelledby="c22-cb-auto-input" data-empty="Keine Stadt gefunden.">
+          <div role="option" data-value="berlin">Berlin</div>
+          <div role="option" data-value="hamburg">Hamburg</div>
+          <div role="option" data-value="muenchen">München</div>
+          <div role="option" data-value="koeln">Köln</div>
+          <div role="option" data-value="frankfurt">Frankfurt</div>
+        </div>
+      </div>
+      <input type="hidden" name="c22-cb-auto-value" value="">
+    </div>
+  </div>
+  <div class="c22-example">
     <span class="c22-example-label">Mehrfachauswahl (Chips)</span>
-    <div class="combobox w-full max-w-xs" id="c22-cb-multi" data-auto-highlight="true">
+    <div class="combobox w-full max-w-xs" id="c22-cb-multi">
       <input type="text" role="combobox" id="c22-cb-multi-input" autocomplete="off" spellcheck="false" aria-autocomplete="list" aria-expanded="false" aria-controls="c22-cb-multi-listbox" placeholder="Sprachen wählen …">
       <div id="c22-cb-multi-popover" data-popover aria-hidden="true">
         <div role="listbox" id="c22-cb-multi-listbox" aria-orientation="vertical" aria-multiselectable="true" aria-labelledby="c22-cb-multi-input" data-empty="Keine Sprache gefunden.">
@@ -91,7 +106,7 @@
         <input type="text" role="combobox" id="c22-cb-clear-input" autocomplete="off" spellcheck="false" aria-autocomplete="list" aria-expanded="false" aria-controls="c22-cb-clear-listbox" placeholder="Priorität wählen">
         <span role="group" data-align="inline-end">
           <button type="button" data-clear aria-label="Auswahl löschen"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
-          <button type="button" class="btn" data-variant="ghost" data-size="icon-xs" aria-label="Optionen öffnen" aria-haspopup="listbox" aria-expanded="false" aria-controls="c22-cb-clear-listbox"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+          <button type="button" class="btn" data-variant="ghost" data-size="icon-xs" aria-label="Optionen öffnen" aria-haspopup="listbox" aria-expanded="false" aria-controls="c22-cb-clear-listbox"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 text-muted-foreground opacity-50"><path d="m6 9 6 6 6-6"/></svg></button>
         </span>
       </div>
       <div id="c22-cb-clear-popover" data-popover aria-hidden="true">
@@ -106,13 +121,31 @@
     </div>
   </div>
   <div class="c22-example">
+    <span class="c22-example-label">Mit Suchsymbol (Input-Group, führende Lupe)</span>
+    <div class="combobox w-full max-w-xs" id="c22-cb-search">
+      <div class="input-group">
+        <span data-align="inline-start" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
+        <input type="text" id="c22-cb-search-input" role="combobox" autocomplete="off" spellcheck="false" aria-autocomplete="list" aria-expanded="false" aria-controls="c22-cb-search-listbox" placeholder="Framework suchen …">
+        <span data-align="inline-end" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 opacity-50"><path d="m6 9 6 6 6-6"/></svg></span>
+      </div>
+      <div id="c22-cb-search-popover" data-popover aria-hidden="true">
+        <div role="listbox" id="c22-cb-search-listbox" aria-orientation="vertical" aria-labelledby="c22-cb-search-input" data-empty="Kein Treffer.">
+          <div role="option" data-value="next">Next.js</div>
+          <div role="option" data-value="svelte">SvelteKit</div>
+          <div role="option" data-value="nuxt">Nuxt.js</div>
+          <div role="option" data-value="remix">Remix</div>
+          <div role="option" data-value="astro">Astro</div>
+        </div>
+      </div>
+      <input type="hidden" name="c22-cb-search-value" value="">
+    </div>
+  </div>
+  <div class="c22-example">
     <span class="c22-example-label">Zustände (deaktiviert · ungültig)</span>
     <div class="flex w-full flex-wrap items-start justify-center gap-6">
       <div class="combobox w-full max-w-xs" id="c22-cb-disabled">
-        <div class="input-group">
-          <input type="text" class="input" id="c22-cb-disabled-input" role="combobox" autocomplete="off" spellcheck="false" aria-autocomplete="list" aria-expanded="false" aria-controls="c22-cb-disabled-listbox" placeholder="Deaktiviert" disabled>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="combobox-trigger-icon"><path d="m6 9 6 6 6-6"/></svg>
-        </div>
+        <input type="text" class="input" id="c22-cb-disabled-input" role="combobox" autocomplete="off" spellcheck="false" aria-autocomplete="list" aria-expanded="false" aria-controls="c22-cb-disabled-listbox" placeholder="Deaktiviert" disabled>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="combobox-trigger-icon"><path d="m6 9 6 6 6-6"/></svg>
         <div id="c22-cb-disabled-popover" data-popover aria-hidden="true">
           <div role="listbox" id="c22-cb-disabled-listbox" aria-orientation="vertical" aria-labelledby="c22-cb-disabled-input">
             <div role="option" data-value="next">Next.js</div>
@@ -122,10 +155,8 @@
         <input type="hidden" name="c22-cb-disabled-value" value="">
       </div>
       <div class="combobox w-full max-w-xs" id="c22-cb-invalid">
-        <div class="input-group">
-          <input type="text" class="input" id="c22-cb-invalid-input" role="combobox" autocomplete="off" spellcheck="false" aria-autocomplete="list" aria-expanded="false" aria-controls="c22-cb-invalid-listbox" aria-invalid="true" placeholder="Framework suchen …" value="COBOL">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="combobox-trigger-icon"><path d="m6 9 6 6 6-6"/></svg>
-        </div>
+        <input type="text" class="input" id="c22-cb-invalid-input" role="combobox" autocomplete="off" spellcheck="false" aria-autocomplete="list" aria-expanded="false" aria-controls="c22-cb-invalid-listbox" aria-invalid="true" placeholder="Framework suchen …" value="COBOL">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="combobox-trigger-icon"><path d="m6 9 6 6 6-6"/></svg>
         <div id="c22-cb-invalid-popover" data-popover aria-hidden="true">
           <div role="listbox" id="c22-cb-invalid-listbox" aria-orientation="vertical" aria-labelledby="c22-cb-invalid-input" data-empty="Kein Treffer.">
             <div role="option" data-value="next">Next.js</div>
