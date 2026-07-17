@@ -4,6 +4,27 @@
 (function () {
   'use strict';
 
+  // ---- Phosphor-Icons (zweite Icon-Bibliothek neben den Lucide-Inline-SVGs) --
+  // Subset in icons.js (window.C22_ICONS = {name: {gewicht: "<path …>"}}), MUSS vor c22.js
+  // eingebunden sein. Deklarativ: <span data-icon-ph="name" data-weight="thin|light|regular|
+  // bold|fill|duotone" class="size-4">, befüllt von init()/wirePhIcons(). Programmatisch:
+  // window.C22.phIcon(name, weight) -> SVG-String. Unbekannter Name/Gewicht: console.warn + leer,
+  // damit ein Tippfehler nicht die ganze Seite zerlegt.
+  var PH_WEIGHTS = ['thin', 'light', 'regular', 'bold', 'fill', 'duotone'];
+  function phIcon(name, weight) {
+    var set = window.C22_ICONS && window.C22_ICONS[name];
+    if (!set) { console.warn('C22.phIcon: unbekanntes Icon "' + name + '"'); return ''; }
+    var w = PH_WEIGHTS.indexOf(weight) >= 0 ? weight : 'regular';
+    var inner = set[w] || set.regular;
+    if (!inner) { console.warn('C22.phIcon: unbekanntes Gewicht "' + weight + '" bei "' + name + '"'); return ''; }
+    return '<svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">' + inner + '</svg>';
+  }
+  function wirePhIcons(root) {
+    (root || document).querySelectorAll('[data-icon-ph]').forEach(function (el) {
+      el.innerHTML = phIcon(el.dataset.iconPh, el.dataset.weight);
+    });
+  }
+
   // ---- Context-Menu (Basecoat hat kein Rechtsklick-JS) ---------------------
   // Markup:  <div class="context-menu" data-close="leave|leave-delay|manual">
   //            <div … oncontextmenu-Ziel …>Rechtsklick-Fläche</div>
@@ -726,6 +747,7 @@
   }
 
   function init(root) {
+    wirePhIcons(root);
     (root || document).querySelectorAll('.context-menu').forEach(wireContextMenu);
     (root || document).querySelectorAll('[data-calendar]').forEach(wireCalendar);
     (root || document).querySelectorAll('[data-carousel]').forEach(wireCarousel);
@@ -742,6 +764,7 @@
   window.C22.init = init;             // Context-Menu + Kalender + Carousel (für dynamisch nachgeladenes Markup)
   window.C22.initContextMenus = init;
   window.C22.wireChart = wireChart;   // einzelnes [data-chart]-Element gezielt verdrahten
+  window.C22.phIcon = phIcon;         // Phosphor-SVG als String: phIcon(name, gewicht)
 })();
 
 /* C22: Command-Palette ohne initiale Vorauswahl (weder eingebettet noch im Popover/Dialog).

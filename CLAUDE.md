@@ -48,6 +48,9 @@ badge (shields-style), or a control sitting on an arbitrary photo (carousel over
 legibility. Even then, express it as a **dedicated token** (the way chart series use `--chart-1…5`), not a
 literal `bg-blue-600`/`text-white` in the markup — so the exception is still one place to change.
 
+These conventions are not honour-system: the hygiene suite (`tests/test_conventions.py`) checks them
+**mechanically** — tokens over hex, the variant contract, and the rest — and must stay green before a push.
+
 ## State conventions (keep these identical across components)
 
 - **Hover / active in any menu or list** → `bg-accent` + `text-accent-foreground` (command, dropdown-menu,
@@ -61,6 +64,15 @@ literal `bg-blue-600`/`text-white` in the markup — so the exception is still o
 - **Command palette** opens **without** a pre-highlighted first row (handled once in `c22.js`).
 - **Combobox auto-highlight** is opt-in via `data-auto-highlight="true"` on the one variant that shows it —
   not the default.
+
+## Variant contract
+
+Variants and parts are selected by **attributes on the semantic class**, never by adding utility classes:
+`data-variant` (visual look, lowercase-kebab), `data-size`, `data-side`/`data-align`/`data-orientation`
+(position), `aria-*` + `data-state`/`data-invalid`/`data-disabled`/`data-selected` (state), and
+component-specific `data-*` (behaviour); parts of a component are semantic slots (`header`/`section`/
+`footer`/…) + `role=`, not extra classes. The full contract, its justified exceptions and the axes it
+rides on live in [`docs/theming.md`](docs/theming.md) — don't restate it here.
 
 ## Icons
 

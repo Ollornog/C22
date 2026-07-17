@@ -179,7 +179,9 @@
   }
 
   .context-menu [data-cm-panel] {
-    @apply bg-popover text-popover-foreground ring-foreground/10 z-[60] min-w-[8rem] w-max gap-0 overflow-x-hidden overflow-y-auto rounded-md p-1 shadow-md ring-1 outline-hidden;
+    @apply bg-popover text-popover-foreground ring-foreground/10 min-w-[8rem] w-max gap-0 overflow-x-hidden overflow-y-auto rounded-md p-1 shadow-md ring-1 outline-hidden;
+    /* Z-Leiter aus tokens.css statt nacktem z-[60]: Kontextmenü eine Stufe über dem Popover (50). */
+    z-index: var(--z-context);
   }
   /* Wurzelmenü: fest am Viewport positioniert (Koordinaten setzt c22.js), damit nur die
      Fensterkante zählt — nicht die Containergröße und kein overflow-Vorfahr. Untermenüs bleiben

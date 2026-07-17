@@ -60,6 +60,7 @@ COMPONENTS: list[tuple[str, bool, bool, bool, bool]] = [
     ("Empty", True, True, False, False),
     ("Field", True, True, False, False),
     ("Hover Card", False, True, True, False),
+    ("Icon", False, False, True, False),
     ("Input", True, True, False, False),
     ("Input Group", True, True, False, False),
     ("Input OTP", False, True, True, False),
@@ -166,7 +167,7 @@ _CAT_GROUPS = {
     "Formular": "input textarea label field checkbox radio-group switch select native-select combobox input-group input-otp slider",
     "Overlay": "dialog alert-dialog drawer sheet popover hover-card tooltip dropdown-menu context-menu menubar command",
     "Navigation": "breadcrumb pagination tabs navigation-menu sidebar",
-    "Anzeige": "table data-table card avatar accordion collapsible item empty separator aspect-ratio carousel chart calendar date-picker badge kbd progress skeleton spinner scroll-area marker resizable typography",
+    "Anzeige": "table data-table card avatar accordion collapsible item empty separator aspect-ratio carousel chart calendar date-picker badge kbd icon progress skeleton spinner scroll-area marker resizable typography",
     "Feedback": "alert toast sonner",
     "Chat": "bubble message message-scroller attachment",
     "Sonstiges": "direction theme-switcher",
@@ -257,6 +258,7 @@ def render() -> tuple[str, int]:
 <link rel="icon" type="image/png" href="../docs/logo.png">
 {pack_links}
 <script src="../c22/static/js/basecoat.all.min.js" defer></script>
+<script src="../c22/static/js/icons.js" defer></script>
 <script src="../c22/static/js/c22.js" defer></script>
 </head>
 <body class="bg-background text-foreground flex h-screen flex-col overflow-hidden">

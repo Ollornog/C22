@@ -6,6 +6,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — theming axes (phase A) and the Phosphor icon set
+
+- Five more token axes, each a documented override seam a future theme generator can drive
+  (see `docs/theming.md`, now fifteen axes plus the normative **variant contract**): icon stroke
+  width (`--icon-stroke`, scoped so chart lines stay untouched), shadows as runtime tokens
+  (`--shadow-2xs…2xl`; `shadow-md`/`shadow-lg` now resolve at runtime), motion
+  (`--default-transition-duration`/easing seam plus a global `prefers-reduced-motion` fallback),
+  heading weight (`--font-weight-heading`), and a named z-index ladder (`--z-popover`/`--z-context`)
+  replacing the last magic number.
+- The Phosphor icon subset (MIT) from C22 0.2.0 returns as the second icon library: 21 icons ×
+  6 weights in `c22/static/js/icons.js`, a declarative `data-icon-ph`/`data-weight` host filled by
+  `c22.js` (plus `window.C22.phIcon(name, weight)`), and a new **Icon** gallery component — the
+  gallery now shows 66 components. Weights double as the icon-weight axis for fill-based icons.
+
+### Added — convention hygiene suite
+
+- `tests/test_conventions.py` enforces the design-system contract mechanically over all
+  `c22/components/*.html` and the class strings in `c22/static/js/c22.js`: no literal colours in
+  markup, no Tailwind palette classes (tokens only), no arbitrary sizes (only the sanctioned
+  `text-[11px]`), a lowercase-hyphen `data-variant`/`-size`/`-align`/`-side` vocabulary, one `.kbd`
+  cap per key, and the presence of the token axes in `tokens.css` (`--font-heading`, `--chart-1…5`,
+  `--info`, `--overlay-control`). Auto-discovered by `run_all.py`.
+
+### Fixed — token/variant contract violations the suite surfaced
+
+- The badge `Info` variant now uses the `--info` token (`bg-info text-info-foreground
+  border-transparent`, solid like OK/Warnung) instead of literal `blue-*` palette classes.
+- Keyboard shortcuts in `menubar`, `input-group` and `empty` now render one `.kbd` cap per key
+  (e.g. `Strg` + `T`) instead of a single box with a space (`Strg T`).
+
 ### Changed — rebuilt on Basecoat + Tailwind CSS v4 (shadcn look)
 
 C22's own component CSS/JS is superseded by a vendored, pinned copy of
@@ -50,6 +80,12 @@ kept thin. Basecoat is vendored under `c22/vendor/basecoat/` (reproducible via
   instead of repeating the row/tile utility chains per entry.
 - A repo `CLAUDE.md` documenting the build-on-the-foundation (SPOT) rule, the foundation blocks, the
   token/state/icon/typography conventions, and how to add or change a component.
+- `docs/theming.md`: the theming concept — independent axes (style, base color, accent, chart
+  colors, heading font, base font, typography scale, icon library, radius, menu, menu accent, and
+  later density, shadows, motion and icon weight) that a future generator drives through tokens only. Phase A lands in this release: a `--font-heading` token
+  (headings follow it via one base rule; default = body font), the chart palette moved from hex to
+  oklch (same colours, generator-settable), and the documented override seam for the Tailwind v4
+  `--text-*` type-scale tokens.
 
 ## [0.2.0] - 2026-07-12
 

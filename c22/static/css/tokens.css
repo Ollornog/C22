@@ -18,6 +18,10 @@
 :root {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
 
+  /* Heading-Font-Achse (Generator, docs/theming.md): Überschriften laufen über --font-heading,
+   * Default = Fließtext-Font. Ein Theme/Generator setzt nur diese Variable um, alle h1–h6 folgen. */
+  --font-heading: var(--font-sans);
+
   /* Ampel-/Status-Farben — vega kennt nur destructive, kein success/warning. */
   --success: oklch(0.60 0.17 150);
   --success-foreground: oklch(0.98 0 0);
@@ -35,6 +39,89 @@
   --overlay-control: oklch(1 0 0);
   --overlay-shadow-dot: 0 1px 3px oklch(0 0 0 / 0.6);
   --overlay-shadow-arrow: drop-shadow(0 2px 6px oklch(0 0 0 / 0.7));
+
+  /* Chart-Palette in oklch statt der Hex-Werte aus dem Vendor (base.css ist sonst durchgehend oklch;
+   * die Hex-Blues waren die einzige Insel). Gleiche Farben (Tailwind blue-300/500/600/700/800), nur
+   * generator-setzbar im selben Farbraum wie alle anderen Tokens (docs/theming.md, Achse chart). */
+  --chart-1: oklch(0.809 0.096 251.813);
+  --chart-2: oklch(0.623 0.214 259.815);
+  --chart-3: oklch(0.546 0.245 262.881);
+  --chart-4: oklch(0.488 0.243 264.376);
+  --chart-5: oklch(0.424 0.199 265.638);
+
+  /* Icon-Strichstärke-Achse (docs/theming.md, Icon-Library): lucide-Icons tragen stroke-width="2"
+   * als Attribut; diese Variable legt eine einheitliche Strichstärke DARÜBER (Attribut wird von CSS
+   * überschrieben — genau der Sinn der Achse). Ein Generator setzt nur --icon-stroke; alle Icons
+   * folgen. Gescopt (siehe @layer base unten) NUR auf lucide-artige Inline-Icons, nie auf die von
+   * c22.js gezeichneten Chart-SVGs (die färben/stricheln über var(--chart-*)/var(--border), nicht
+   * über currentColor). */
+  --icon-stroke: 2;
+
+  /* Schatten als Runtime-Tokens (docs/theming.md): Tailwind v4 inlinet shadow-md/lg sonst als feste
+   * Werte in den Build. Hier die kompletten Tailwind-v4-Standardwerte als überschreibbarer Seam
+   * (ein Generator/Theme setzt nur diese Variablen um); via @theme inline unten referenzieren die
+   * genutzten Stufen (md, lg) diese Variablen statt fester Werte. Werte = Tailwind-v4-Defaults,
+   * daher optisch unverändert (rgb(0 0 0 / .1) == #0000001a). */
+  --shadow-2xs: 0 1px rgb(0 0 0 / 0.05);
+  --shadow-xs:  0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-sm:  0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-md:  0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg:  0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl:  0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+
+  /* Motion-Achse (docs/theming.md): Tailwind-v4-Transitions lesen die Dauer/Kurve über
+   * var(--tw-duration, var(--default-transition-duration)) bzw. …-timing-function. Diese beiden
+   * :root-Neusetzungen sind der sichtbare Override-Punkt (Werte = Tailwind-Defaults, daher
+   * unverändert): ein Theme/Generator dreht hier das Tempo/die Kurve der GESAMTEN UI. Der
+   * prefers-reduced-motion-Fallback steht als eigene Regel weiter unten. */
+  --default-transition-duration: 150ms;
+  --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Heading-Gewicht-Achse (docs/theming.md, Typo): Default-Fettung für Überschriften OHNE explizite
+   * font-*-Utility. Die h1–h6-Regel unten liegt in @layer base, daher gewinnen die im Markup
+   * gesetzten Utilities (font-extrabold/-semibold in typography.html) weiterhin je Ebene. */
+  --font-weight-heading: 600;
+
+  /* Z-Index-Leiter (Hygiene): benannte Stapelstufen statt nackter Magic-Numbers. --z-popover spiegelt
+   * die 50 aus Basecoat (Popover/Dropdown/Select), --z-context liegt eine Stufe darüber, damit ein
+   * Kontextmenü über einem offenen Popover erscheint. Genutzt in components.css (context-menu). */
+  --z-popover: 50;
+  --z-context: 60;
+}
+
+/* Heading-Font-/Gewicht-Achse: alle Überschriften folgen --font-heading und --font-weight-heading.
+ * @layer base, damit Utility-Klassen (font-mono, font-extrabold/-semibold …) im Einzelfall
+ * weiterhin gewinnen — typography.html setzt die Gewichte je Ebene explizit und behält so die Hand. */
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: var(--font-weight-heading);
+  }
+}
+
+/* Icon-Strichstärke-Achse: legt --icon-stroke auf die lucide-artigen Inline-Icons. Gescopt über die
+ * drei Kennattribute, die NUR echte Icons tragen (stroke="currentColor" + beide runden Enden) — die
+ * von c22.js gezeichneten Chart-SVGs stricheln über var(--chart-*)/var(--border) und matchen daher
+ * NICHT (ihre Linien bleiben unberührt). @layer base, damit bewusste Ausnahmen in @layer components
+ * gewinnen (z.B. [data-carousel-arrow] svg { stroke-width: 3 } — kräftiger Pfeil auf Fotos). */
+@layer base {
+  svg[stroke="currentColor"][stroke-linecap="round"][stroke-linejoin="round"] {
+    stroke-width: var(--icon-stroke);
+  }
+}
+
+/* Motion-Achse — Barrierefreiheit: Nutzer mit "Bewegung reduzieren" bekommen Transitions/Animationen
+ * auf ein Minimum. Universell (deckt auch die c22-shimmer-Animation aus components.css und die
+ * smooth-Scrolls der Carousels ab). Unlayered + !important, damit es über alle Layer/Utilities
+ * gewinnt. Nicht 0s, sondern ~0, damit einmalige transitionend/animationend-Events noch feuern. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* Als Tailwind-Farben verfügbar machen (bg-success, text-warning, bg-info, text-overlay-control, …). */
@@ -46,4 +133,18 @@
   --color-info: var(--info);
   --color-info-foreground: var(--info-foreground);
   --color-overlay-control: var(--overlay-control);
+  /* macht die Utility `font-heading` verfügbar (Nicht-h*-Elemente in Heading-Schrift). */
+  --font-heading: var(--font-heading);
+  /* Schatten-Utilities auf Runtime-Tokens umbiegen: `inline` gibt --shadow-md/-lg NICHT als
+   * :root-Variable aus, sondern inlinet den var()-Wert an den Nutzungsstellen — so emittiert
+   * .shadow-md/.shadow-lg (und jedes @apply shadow-md/-lg) `var(--shadow-md/-lg)` statt fester
+   * Pixelwerte. Nur die im Repo genutzten Stufen (md, lg); die restliche :root-Leiter ist Seam. */
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
 }
+
+/* Typografie-Skala als Achse (docs/theming.md): Tailwind v4 emittiert text-sm/text-xl … als
+ * font-size: var(--text-sm) usw. — die Skala ist also bereits var-basiert. Ein Generator
+ * überschreibt sie hier (Beispiel):
+ *   :root { --text-sm: 0.9rem; --text-sm--line-height: 1.5; … }
+ * Components tragen deshalb NIE rohe Größen (text-[13px]), nur Skala-Utilities. */
