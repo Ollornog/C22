@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import re
 import sys
+from html.parser import HTMLParser
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -23,7 +24,7 @@ KOMPONENTEN = sorted((ROOT / "c22" / "components").glob("*.html"))
 JS = ROOT / "c22" / "static" / "js" / "c22.js"
 TOKENS = ROOT / "c22" / "static" / "css" / "tokens.css"
 
-# Markup-Quellen (Regeln 1–5): Components + die Klassen-Strings im Behaviour-JS.
+# Markup-Quellen (Regeln 1–5 + 10): Components + die Klassen-Strings im Behaviour-JS.
 QUELLEN = KOMPONENTEN + [JS]
 
 
@@ -161,6 +162,195 @@ def r6_achsen_tokens() -> list[str]:
     return fehlend
 
 
+# ── Regel 7: kein width/height an IRGENDEINEM <svg> ──────────────────────────
+# Jedes Icon im Repo wird ausnahmslos per size-*-Klasse ODER per dimensionierendem
+# Vorfahren (Regel 8 garantiert genau das) gemessen — ein inline `width`/`height`
+# am <svg> ist damit toter, nur rückfallgefährdeter Ballast (CLAUDE.md „Icons —
+# Sizing"). Blanket: KEIN <svg> trägt ein width=/height=-Attribut. Zeilenweise
+# geprüft (svg-Öffnungs-Tags stehen im Repo je auf einer Zeile); der Lookbehind
+# schließt stroke-width/-height aus (der `-` bzw. ein Wortzeichen davor heißt:
+# kein eigenständiges Attribut).
+SVG_OPEN = re.compile(r"<svg\b")
+
+
+def r7_svg_masse() -> list[str]:
+    treffer: list[str] = []
+    for p in KOMPONENTEN:
+        for i, ln in enumerate(zeilen(p.read_text(encoding="utf-8")), 1):
+            for m in SVG_OPEN.finditer(ln):
+                ende = ln.find(">", m.start())
+                tag = ln[m.start():ende if ende != -1 else len(ln)]
+                for attr in ("width", "height"):
+                    if re.search(rf"(?<![\w-]){attr}\s*=", tag):
+                        treffer.append(f"{rel(p)}:{i}  <svg> trägt {attr}= "
+                                       f"— Icon wird per size-*/CSS gemessen, Attribut weg")
+    return treffer
+
+
+# ── Regel 8: 24px-Icon ohne size-* braucht einen dimensionierenden Vorfahren ──
+# Ein nacktes Lucide-<svg> rendert 24px und erschlägt danebenstehenden text-xs/-sm
+# (CLAUDE.md „Icons — Sizing"). Zulässig ohne size-*-Klasse ist es NUR, wenn ein
+# Vorfahre (oder das svg selbst) zu einem Kontext gehört, dessen Component-CSS die
+# Icon-Größe bereits setzt — sonst ist es ein echter Fund. Echte Verschachtelung
+# über html.parser (kein Zeilen-Raten), damit „im .btn" ≠ „irgendwo drunter" sauber
+# unterschieden wird.
+#
+# Whitelist = die Kontexte, in denen C22-CSS `svg { size }` setzt (Klasse als
+# Wort-Token, sonst greift `alert` fälschlich in `alert-dialog`):
+#   • .btn / .kbd / .badge            — Steuer-/Chip-CSS dimensioniert ihre Icons
+#   • .item-media / .avatar-badge     — Medien-Kachel bzw. Status-Punkt am Avatar
+#   • .alert / .select                — Alert-Icon-Spalte; Select-Trigger-Chevron
+#   • <figure>                        — .item/.card-Figur (bei .item NUR figure —
+#                                       <aside> NICHT, darum war item:120 ein Fund)
+#   • [data-carousel-arrow|-dot]      — Carousel-Pfeile/Punkte
+#   • combobox-trigger-icon           — Klasse sitzt am svg selbst (Trigger-Chevron)
+#   • .command + <header>             — die Such-Lupe im Command-Header
+#   • .input-group + [data-align]     — Icon-Slot im Input-Group-Rahmen
+#   • role^=menuitem / =option / =heading — Menü-/Options-/Rubrik-Icons
+#   • <summary> / .accordion / .collapsible — Aufklapp-Chevron
+_VOID = {"path", "circle", "rect", "line", "polyline", "polygon", "ellipse",
+         "br", "img", "input", "hr", "source", "meta", "use", "stop", "defs"}
+_CLASS_KONTEXTE = {"btn", "kbd", "badge", "item-media", "avatar-badge",
+                   "alert", "select", "accordion", "collapsible"}
+
+
+def _tokens(attrs: dict[str, str]) -> list[str]:
+    return (attrs.get("class") or "").split()
+
+
+def _dimensionierter_vorfahre(svg: dict[str, str],
+                              vorfahren: list[tuple[str, dict[str, str]]]) -> bool:
+    if "combobox-trigger-icon" in _tokens(svg):
+        return True
+    hat_command = any("command" in _tokens(a) for _, a in vorfahren)
+    hat_header = any(t == "header" for t, _ in vorfahren)
+    if hat_command and hat_header:
+        return True
+    hat_inputgroup = any("input-group" in _tokens(a) for _, a in vorfahren)
+    hat_dataalign = any("data-align" in a for _, a in vorfahren)
+    if hat_inputgroup and hat_dataalign:
+        return True
+    for t, a in vorfahren:
+        if t in ("figure", "summary"):
+            return True
+        if _CLASS_KONTEXTE & set(_tokens(a)):
+            return True
+        if "data-carousel-arrow" in a or "data-carousel-dot" in a:
+            return True
+        role = a.get("role", "")
+        if role.startswith("menuitem") or role in ("option", "heading"):
+            return True
+    return False
+
+
+class _IconParser(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.stack: list[tuple[str, dict[str, str]]] = []
+        self.funde: list[int] = []
+
+    def _pruefe(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        if tag != "svg":
+            return
+        d = {k: (v or "") for k, v in attrs}
+        if d.get("width") == "24" and "size-" not in d.get("class", ""):
+            if not _dimensionierter_vorfahre(d, self.stack):
+                self.funde.append(self.getpos()[0])
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        self._pruefe(tag, attrs)
+        if tag not in _VOID:
+            self.stack.append((tag, {k: (v or "") for k, v in attrs}))
+
+    def handle_startendtag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        self._pruefe(tag, attrs)
+
+    def handle_endtag(self, tag: str) -> None:
+        for i in range(len(self.stack) - 1, -1, -1):
+            if self.stack[i][0] == tag:
+                del self.stack[i:]
+                break
+
+
+def r8_icon_masse_vorfahre() -> list[str]:
+    treffer: list[str] = []
+    for p in KOMPONENTEN:
+        parser = _IconParser()
+        parser.feed(p.read_text(encoding="utf-8"))
+        for line in parser.funde:
+            treffer.append(f"{rel(p)}:{line}  24px-<svg> ohne size-*-Klasse und ohne "
+                           f"dimensionierenden Vorfahren — size-* setzen")
+    return treffer
+
+
+# ── Regel 9: keine Generierungs-Artefakte (Streuner-Tags) ────────────────────
+# Ein Partial endet mit dem </div> seiner .c22-examples. Verirrte </content>-/
+# </invoke>-/<content-Reste aus der HTML-Erzeugung sind kein gültiges Markup —
+# Regressionsnetz gegen genau diese Artefakte (Vorfall: Batch-Generierung ließ
+# solche Streuner am Dateiende zurück).
+STREUNER = re.compile(r"</?(?:content|invoke)\b")
+
+
+def r9_streuner_tags() -> list[str]:
+    treffer: list[str] = []
+    for p in KOMPONENTEN:
+        for i, ln in enumerate(zeilen(p.read_text(encoding="utf-8")), 1):
+            m = STREUNER.search(ln)
+            if m:
+                treffer.append(f"{rel(p)}:{i}  Streuner-Tag `{m.group(0)}` "
+                               f"— Generierungs-Artefakt, entfernen")
+    return treffer
+
+
+# ── Regel 10: kein aria-pressed:/aria-checked:-Arbitrary-Variant im Markup ───
+# Der Pressed/Checked-Look kommt aus der Foundation-Regel `.btn[aria-pressed='true']`
+# (bzw. `[aria-checked='true']`) in components.css — SPOT, an einer Stelle. Er darf
+# nicht mehr per Utility-Variante (`aria-pressed:bg-accent` …) je Component gestreut
+# werden. Das Attribut selbst (`aria-pressed="true"`) ist unberührt: davor steht ein
+# `=`, keine `:` — nur die Variante mit dem Doppelpunkt ist gemeint.
+ARIA_VARIANT = re.compile(r"\baria-(?:pressed|checked):")
+
+
+def r10_aria_variant_utilities() -> list[str]:
+    treffer: list[str] = []
+    for p in QUELLEN:
+        for i, ln in enumerate(zeilen(strip_kommentare(p.read_text(encoding="utf-8"))), 1):
+            for m in ARIA_VARIANT.finditer(ln):
+                treffer.append(f"{rel(p)}:{i}  Arbitrary-Variant `{m.group(0)}…` "
+                               f"— Pressed/Checked-Look kommt aus .btn[aria-pressed] "
+                               f"(components.css), nicht per Utility")
+    return treffer
+
+
+# ── Regel 11: jedes Lucide-Icon trägt seinen Namen (data-icon-lu) ────────────
+# Fundament der Achse „icon library" (docs/theming.md Achse 8, docs/icons.md): ein
+# Bibliothekswechsel zur Generierungszeit tauscht Icon-Markup anhand des NAMENS —
+# anonyme Pfade machen die Achse unbaubar. Lucide-artig = die drei Kennattribute
+# (stroke="currentColor" + stroke-linecap/linejoin="round", dieselbe Heuristik wie
+# tools/annotate-icons.py — das Werkzeug schreibt die Namen, diese Regel hält sie).
+# BEWUSST data-icon-lu, nicht data-icon: `data-icon` ist Basecoats Padding-Hinweis
+# (inline-start/inline-end) und bleibt unberührt. Nur Components — die SVG-Strings
+# in c22.js entstehen per Konkatenation (CAL_ICO) und sind von Hand benannt.
+LUCIDE_KENN = ('stroke="currentColor"', 'stroke-linecap="round"', 'stroke-linejoin="round"')
+ICON_LU = re.compile(r'data-icon-lu="([^"]*)"')
+
+
+def r11_lucide_namen() -> list[str]:
+    treffer: list[str] = []
+    for p in KOMPONENTEN:
+        for i, ln in enumerate(zeilen(p.read_text(encoding="utf-8")), 1):
+            for m in SVG_OPEN.finditer(ln):
+                ende = ln.find(">", m.start())
+                tag = ln[m.start():ende if ende != -1 else len(ln)]
+                if not all(k in tag for k in LUCIDE_KENN):
+                    continue
+                name = ICON_LU.search(tag)
+                if not name or not name.group(1).strip():
+                    treffer.append(f"{rel(p)}:{i}  Lucide-<svg> ohne data-icon-lu "
+                                   f"— tools/annotate-icons.py laufen lassen")
+    return treffer
+
+
 r = Report("Konventionen — Varianten-Vertrag & Tokens")
 r.check("Regel 1 — keine Literal-Farben im Markup", not (t := r1_literalfarben()), " | ".join(t[:4]))
 r.check("Regel 2 — keine Tailwind-Palette-Klassen", not (t := r2_palette_klassen()), " | ".join(t[:4]))
@@ -169,5 +359,14 @@ r.check("Regel 3 — keine willkürlichen Größen (nur text-[11px])",
 r.check("Regel 4 — Varianten-Vokabular ^[a-z0-9-]+$", not (t := r4_varianten_vokabular()), " | ".join(t[:4]))
 r.check("Regel 5 — kbd: eine Box je Taste", not (t := r5_kbd_vertrag()), " | ".join(t[:6]))
 r.check("Regel 6 — Achsen-Tokens in tokens.css vorhanden", not (t := r6_achsen_tokens()), " | ".join(t))
+r.check("Regel 7 — kein width/height an irgendeinem <svg>", not (t := r7_svg_masse()), " | ".join(t[:4]))
+r.check("Regel 8 — 24px-Icon ohne size-* braucht dimensionierenden Vorfahren",
+        not (t := r8_icon_masse_vorfahre()), " | ".join(t[:6]))
+r.check("Regel 9 — keine Streuner-Tags (</content>/</invoke>/<content)",
+        not (t := r9_streuner_tags()), " | ".join(t[:6]))
+r.check("Regel 10 — kein aria-pressed:/aria-checked:-Arbitrary-Variant im Markup",
+        not (t := r10_aria_variant_utilities()), " | ".join(t[:6]))
+r.check("Regel 11 — jedes Lucide-<svg> trägt ein nicht-leeres data-icon-lu",
+        not (t := r11_lucide_namen()), " | ".join(t[:6]))
 
 sys.exit(r.done())

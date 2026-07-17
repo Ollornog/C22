@@ -80,6 +80,11 @@ Lucide SVGs, uniform markup: `viewBox="0 0 24 24"`, `fill="none"`, `stroke="curr
 `stroke-width="2"`, `stroke-linecap="round"`, `stroke-linejoin="round"`. No filled icons unless the shape
 needs it, no off-convention stroke widths.
 
+**Every inline lucide icon carries its name**: `data-icon-lu="<lucide-name>"` (the foundation of the
+icon-library axis — see `docs/icons.md`). Adding an icon? Run `python3 tools/annotate-icons.py` (or set
+the name yourself); rule 11 of the hygiene suite fails on unnamed lucide-like SVGs. Don't confuse it with
+`data-icon="inline-start|inline-end"`, which is Basecoat's icon-padding hint, not a name.
+
 **Sizing — never nail it down inline where a class already governs it.** Inside `.btn`, omit
 `width`/`height`/`size-*`; the button scales its icon automatically. A **standalone** icon (not in `.btn`)
 must carry a `size-*` class (e.g. `size-4`, `size-3.5`) — without it the SVG renders at 24px and dwarfs

@@ -80,6 +80,13 @@ vendors, alongside inline lucide, the **Phosphor** subset (MIT) brought over fro
 `fill="currentColor"`). Like shadcn's `iconLibrary`, the *library switch* is an
 **install-/generation-time** decision (which set the emitted markup imports), **not** a runtime switch,
 and that switch stays a **later chapter** (Phase C) — only the vendoring happens now.
+The **foundation for that switch exists today**: every inline lucide icon carries its machine-readable
+name as `data-icon-lu="<lucide-name>"` (written/verified by
+[`tools/annotate-icons.py`](../tools/annotate-icons.py) against a pinned `lucide-static`; enforced by
+rule 11 of the hygiene suite), Phosphor is named via `data-icon-ph`. A generation-time tool swaps icon
+markup **by name** — anonymous paths would make the axis unbuildable. The cross-library name mapping
+lives in [`icons.md`](icons.md). (`data-icon` itself stays what Basecoat defines:
+`inline-start`/`inline-end` icon padding — a functional selector, not a name.)
 
 **9 · radius** — `--radius` with a derived scale. **Already present** (see below).
 

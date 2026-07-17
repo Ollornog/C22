@@ -20,6 +20,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `c22.js` (plus `window.C22.phIcon(name, weight)`), and a new **Icon** gallery component — the
   gallery now shows 66 components. Weights double as the icon-weight axis for fill-based icons.
 
+### Added — icon names (`data-icon-lu`), the foundation of the icon-library axis
+
+- Every inline lucide `<svg>` in the partials (419 across 51 files) now carries its machine-readable
+  name as `data-icon-lu="<lucide-name>"` — the prerequisite for the generation-time library switch
+  (axis 8): a tool can only swap icon markup by *name*. Names are the **canonical** lucide-static
+  1.25.0 ones (aliases like `x-circle`/`bar-chart-3` resolved to `circle-x`/`chart-column`); the
+  four icon strings in `c22.js` (calendar chevrons/nav) are named by hand. `data-icon` itself stays
+  Basecoat's `inline-start`/`inline-end` padding hint — untouched, hence the separate attribute.
+- `tools/annotate-icons.py`: repeatable annotator — downloads the pinned `lucide-static` npm tarball
+  to a cache outside the repo, builds a geometry signature per icon (normalised, sorted child
+  elements), matches every lucide-like `<svg>` in the partials and writes/corrects `data-icon-lu`
+  idempotently (second run: zero changes). Older redesigned lucide forms and the one custom glyph
+  (GitHub logo in `badge.html` → `data-icon-lu="github"`) live in a curated override table;
+  anything unmatched is reported with file:line instead of guessed.
+- `docs/icons.md`: the icon registry — the two-library situation, the semantic → lucide → Phosphor
+  name mapping for the 21 vendored Phosphor icons (lucide side verified against the pinned
+  download), the custom-icon list, and how the table grows. Suite rule 11 enforces that every
+  lucide-like `<svg>` carries a non-empty `data-icon-lu`.
+
 ### Added — convention hygiene suite
 
 - `tests/test_conventions.py` enforces the design-system contract mechanically over all
@@ -28,6 +47,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `text-[11px]`), a lowercase-hyphen `data-variant`/`-size`/`-align`/`-side` vocabulary, one `.kbd`
   cap per key, and the presence of the token axes in `tokens.css` (`--font-heading`, `--chart-1…5`,
   `--info`, `--overlay-control`). Auto-discovered by `run_all.py`.
+- Two icon-sizing rules extend the suite: no `width`/`height` on **any** `<svg>` in the partials
+  (blanket — every icon is sized by a `size-*` class or by its component CSS) and — via a real HTML
+  parser, not line-guessing — a 24px `<svg>` without a `size-*` class must sit under an ancestor whose
+  component CSS sets the icon size (whitelist: `.btn`, `.kbd`, `.badge`, `.item-media`, `.avatar-badge`,
+  `.alert`, `.select`, `<figure>`, carousel arrows/dots, `combobox-trigger-icon`, the `.command`
+  header, `.input-group` `data-align` slots, `role=menuitem`/`option`/`heading`, and
+  `<summary>`/`.accordion`/`.collapsible`) — for `.item` only `<figure>` counts, not `<aside>`.
+- Two regression rules close out the audit: no stray generation artifacts (`</content>`/`</invoke>`/
+  `<content`) in the partials, and no `aria-pressed:`/`aria-checked:` arbitrary-variant utilities in
+  markup (the pressed/checked look now comes from the `.btn[aria-pressed='true']` foundation rule).
 
 ### Fixed — token/variant contract violations the suite surfaced
 
@@ -35,6 +64,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   border-transparent`, solid like OK/Warnung) instead of literal `blue-*` palette classes.
 - Keyboard shortcuts in `menubar`, `input-group` and `empty` now render one `.kbd` cap per key
   (e.g. `Strg` + `T`) instead of a single box with a space (`Strg T`).
+- Icon sizing brought in line with the `.btn`/`size-*` convention: error micro-text in `radio-group`
+  and `switch` is now `text-destructive text-xs`; standalone 24px icons that dwarfed adjacent small
+  text got a `size-*` class (`hover-card` calendar → `size-3.5`; `item` link-row chevrons and the
+  `message` file-tile icon → `size-4`; `message` error micro-icon → `size-3.5`); and
+  `width="24" height="24"` was stripped from **every** `<svg>` root whose size is set otherwise (all
+  66 across the partials, incl. `.btn`, figure/media icons, `.alert`, carousel, the `.command` header
+  and the `toast` runtime-icon string), leaving `grep width="24"` at zero.
+- Final polish batch: stray `</content>`/`</invoke>` generation artifacts removed from `dropdown-menu`,
+  `collapsible` and `select`; the `.btn` dropdown-trigger chevrons in `data-table` and `input-group`
+  now carry `opacity-50` (the muted-50 canon `.select` triggers already get via CSS); the redundant
+  `text-muted-foreground` dropped from `select`'s chevrons (CSS already colours them); `sidebar`
+  `<details>` submenu links got `role="menuitem"` (matching the top level); and an ineffective
+  `data-active="true"` was removed from the `message-scroller` scroll-to-bottom `.btn`.
+
+### Changed — foundation/SPOT consolidation (component audit)
+
+- Toggle state is now one rule (`components.css`): `.btn[aria-pressed='true']`/`[aria-checked='true']`
+  → `bg-accent text-accent-foreground`, replacing ~35 inline `aria-pressed:…`/`aria-checked:…` chains
+  across `toggle`, `toggle-group` and `theme-switcher`.
+- `toggle-group`'s exclusive (single-select) groups are now `role="radiogroup"`/`role="radio"` +
+  `aria-checked` — a11y-correct like `theme-switcher`; multi-select groups keep `aria-pressed`.
+- `message-scroller` now uses the `.bubble` foundation (`muted` = received, default = sent via
+  `data-align="end"`) instead of raw `bg-muted`/`bg-primary … rounded-lg` chains — one bubble look
+  system-wide (rounded-2xl + tail).
+- New shared classes in `components.css` replace duplicated utility chains: `.hover-card` (the popover
+  surface, was 4× identical in `hover-card`), `.badge[data-variant='success'|'warning'|'info']`
+  (status chains → `data-variant` in `badge`, `data-table`, `item`, `table`, `message-scroller`),
+  and `.input-otp-slot` (~30 repeated OTP-cell chains).
+- `progress` icon tile → `.item-media`; `drawer` nav links → `.btn` `data-variant="ghost"`;
+  `direction` initials avatars → `.avatar`; `navigation-menu` active page now uses the `bg-accent`
+  state canon instead of `bg-muted`.
+
+### Fixed — missing `.separator` foundation and error micro-text canon
+
+- `.separator` (listed as a foundation in `CLAUDE.md`) had no CSS and lived as a repeated utility
+  chain in the markup — now a real class (`bg-border shrink-0` + `data-orientation` for thickness);
+  `separator.html` and its ad-hoc dividers use it.
+- Error micro-text canon `.field[data-invalid] > p[role='alert'] { text-xs }` — `select` and
+  `textarea` field errors now render at `text-xs` like the explicit `checkbox`/`radio-group`/`switch`
+  ones (colour already comes from Basecoat's `data-invalid` rule).
 
 ### Changed — rebuilt on Basecoat + Tailwind CSS v4 (shadcn look)
 

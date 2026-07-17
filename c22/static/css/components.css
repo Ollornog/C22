@@ -428,3 +428,71 @@
     @apply size-3.5;
   }
 }
+
+
+/* ============================================================
+ * Foundation-/SPOT-Refactors (Voll-Audit): Toggle-Zustand, Hover-Card-Fläche,
+ * Separator, Status-Badge-Varianten, Fehler-Mikrotext, OTP-Zelle.
+ * ============================================================ */
+@layer components {
+  /* Pressed/Checked-Kanon: ein gedrückter/gewählter Toggle (aria-pressed bzw.
+     aria-checked) trägt den Accent-Zustand. EINE Regel ersetzt ~35 Inline-Ketten
+     (aria-pressed:bg-accent …) in toggle/toggle-group/theme-switcher — beide
+     Toggle-Semantiken (Button-Toggle = aria-pressed, Radio = aria-checked) teilen
+     denselben Look, greifen auf denselben aria-Attributen, die das Demo-JS toggelt. */
+  .btn[aria-pressed='true'],
+  .btn[aria-checked='true'] {
+    @apply bg-accent text-accent-foreground;
+  }
+
+  /* Hover-Card-Fläche: das schwebende Popover-Panel (Farbe, Rahmen, Schatten,
+     Übergang) — in hover-card.html 4× identisch. Hier EINMAL; Positionierung,
+     Sichtbarkeit (invisible/opacity/translate/group-hover) und Padding (p-3/p-4)
+     bleiben als Utilities im Markup, weil sie je Auslöser/Seite variieren. */
+  .hover-card {
+    @apply bg-popover text-popover-foreground rounded-lg border shadow-md transition-all duration-150;
+  }
+
+  /* Separator-Fläche: generische Trennlinie (shadcn-Kanon, in CLAUDE.md als
+     Foundation gelistet, bisher ohne CSS). bg-border + Orientierung steuert
+     Dicke/Ausdehnung; Marge bzw. eine feste Höhe bleiben Utility im Markup. */
+  .separator {
+    @apply bg-border shrink-0;
+  }
+  .separator[data-orientation='horizontal'] {
+    @apply h-px w-full;
+  }
+  .separator[data-orientation='vertical'] {
+    @apply h-full w-px;
+  }
+
+  /* Status-Badge: Ampel-Varianten über data-variant statt der Inline-Kette
+     `bg-<token> text-<token>-foreground border-transparent`, die in
+     badge/data-table/item/table/message-scroller dutzendfach wiederholt war. */
+  .badge[data-variant='success'] {
+    @apply bg-success text-success-foreground border-transparent;
+  }
+  .badge[data-variant='warning'] {
+    @apply bg-warning text-warning-foreground border-transparent;
+  }
+  .badge[data-variant='info'] {
+    @apply bg-info text-info-foreground border-transparent;
+  }
+
+  /* Fehler-Mikrotext-Kanon: die Fehlermeldung eines ungültigen Felds ist
+     text-destructive text-xs. Die Farbe kommt schon aus Basecoats
+     .field[data-invalid]-Regel; hier nur die Größe, damit select/textarea denselben
+     kleinen Fehlertext zeigen wie die expliziten (checkbox/radio-group/switch). */
+  .field[data-invalid] > p[role='alert'] {
+    @apply text-xs;
+  }
+
+  /* OTP-Zelle: die quadratische Einmalcode-Zelle (size-10, zentriert, mono) — in
+     input-otp.html ~30× wiederholt. Zusätzlich zur .input-Basis: class="input input-otp-slot".
+     Selektor bewusst .input.input-otp-slot: die OTP-Felder tragen kein type-Attribut, greift
+     also Basecoats .input:not([type]) (Spezifität 0,2,0) und würde size-10 aus einer 0,1,0-Regel
+     schlagen — die Doppelklasse zieht gleich und gewinnt über die Quellreihenfolge. */
+  .input.input-otp-slot {
+    @apply size-10 text-center font-mono text-base;
+  }
+}

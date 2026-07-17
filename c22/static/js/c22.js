@@ -153,10 +153,12 @@
   var CAL_MONTHS = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
   var CAL_WEEKDAYS = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
   var CAL_ICO = 'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
-  var CAL_PREV = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" ' + CAL_ICO + '><path d="m15 18-6-6 6-6"/></svg>';
-  var CAL_NEXT = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" ' + CAL_ICO + '><path d="m9 18 6-6-6-6"/></svg>';
-  var CAL_DOWN = '<svg class="ms-1 opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" ' + CAL_ICO + '><path d="m6 9 6 6 6-6"/></svg>';
-  var CAL_TODAY = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="13" height="13" ' + CAL_ICO + '><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 2v4"/><path d="M16 2v4"/></svg>';
+  // data-icon-lu = Lucide-Name (Icon-Registry, docs/icons.md) — Strings hier von Hand benannt,
+  // tools/annotate-icons.py fasst nur statisches Markup in c22/components/*.html an.
+  var CAL_PREV = '<svg data-icon-lu="chevron-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" ' + CAL_ICO + '><path d="m15 18-6-6 6-6"/></svg>';
+  var CAL_NEXT = '<svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" ' + CAL_ICO + '><path d="m9 18 6-6-6-6"/></svg>';
+  var CAL_DOWN = '<svg data-icon-lu="chevron-down" class="ms-1 opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" ' + CAL_ICO + '><path d="m6 9 6 6 6-6"/></svg>';
+  var CAL_TODAY = '<svg data-icon-lu="calendar" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="13" height="13" ' + CAL_ICO + '><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 2v4"/><path d="M16 2v4"/></svg>';
   var CAL_LEGEND_BG = { destructive: 'bg-destructive', warning: 'bg-warning', success: 'bg-success', primary: 'bg-primary', accent: 'bg-accent', 'muted-foreground': 'bg-muted-foreground' };
 
   function calPad(n) { return (n < 10 ? '0' : '') + n; }
