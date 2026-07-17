@@ -1,0 +1,93 @@
+<!-- custom: Einmalcode-Eingabe aus einzelnen .input-Feldern (kein Basecoat-Bauteil, keine eigene CSS-Datei — nutzt die normale .input-Regel aus input.css). Gruppierung per Trennzeichen (SVG-Minus wie shadcns InputOTPSeparator) oder nahtlos über first/last-Radius + 1px-Overlap. Fehler via aria-invalid (automatisch rot, kein eigenes CSS nötig), Ziffern via inputmode="numeric" pattern="[0-9]*". Auto-Advance/Paste-Verteilung auf die Nachbarfelder ist App-Logik (JS), hier nur das statische Markup. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Standard (6-stellig, gruppiert mit Trennzeichen)</span>
+    <div class="flex items-center justify-center gap-2">
+      <input class="input size-10 text-center font-mono text-base" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" value="1" aria-label="Ziffer 1">
+      <input class="input size-10 text-center font-mono text-base" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" value="2" aria-label="Ziffer 2">
+      <input class="input size-10 text-center font-mono text-base" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" value="3" aria-label="Ziffer 3">
+      <span aria-hidden="true" class="text-muted-foreground"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4"><line x1="5" x2="19" y1="12" y2="12"/></svg></span>
+      <input class="input size-10 text-center font-mono text-base" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" aria-label="Ziffer 4">
+      <input class="input size-10 text-center font-mono text-base" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" aria-label="Ziffer 5">
+      <input class="input size-10 text-center font-mono text-base" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" aria-label="Ziffer 6">
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Verbunden (nahtlos, ohne Lücken)</span>
+    <div class="flex justify-center">
+      <input class="input relative -ms-px first:ms-0 size-10 rounded-none first:rounded-s-md last:rounded-e-md text-center font-mono text-base focus-visible:z-10" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" value="4" aria-label="Ziffer 1">
+      <input class="input relative -ms-px first:ms-0 size-10 rounded-none first:rounded-s-md last:rounded-e-md text-center font-mono text-base focus-visible:z-10" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" value="8" aria-label="Ziffer 2">
+      <input class="input relative -ms-px first:ms-0 size-10 rounded-none first:rounded-s-md last:rounded-e-md text-center font-mono text-base focus-visible:z-10" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" value="2" aria-label="Ziffer 3">
+      <input class="input relative -ms-px first:ms-0 size-10 rounded-none first:rounded-s-md last:rounded-e-md text-center font-mono text-base focus-visible:z-10" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" value="9" aria-label="Ziffer 4">
+      <input class="input relative -ms-px first:ms-0 size-10 rounded-none first:rounded-s-md last:rounded-e-md text-center font-mono text-base focus-visible:z-10" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" value="1" aria-label="Ziffer 5">
+      <input class="input relative -ms-px first:ms-0 size-10 rounded-none first:rounded-s-md last:rounded-e-md text-center font-mono text-base focus-visible:z-10" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" value="3" aria-label="Ziffer 6">
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">4-stellig (PIN, kompakt)</span>
+    <div class="flex items-center justify-center gap-2">
+      <input class="input size-10 text-center font-mono text-base" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" value="0" aria-label="Ziffer 1">
+      <input class="input size-10 text-center font-mono text-base" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" value="7" aria-label="Ziffer 2">
+      <input class="input size-10 text-center font-mono text-base" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" value="4" aria-label="Ziffer 3">
+      <input class="input size-10 text-center font-mono text-base" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" value="2" aria-label="Ziffer 4">
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Alphanumerisch (Einladungscode)</span>
+    <div class="flex items-center justify-center gap-2">
+      <input class="input size-10 text-center font-mono text-base uppercase" maxlength="1" inputmode="text" pattern="[A-Za-z0-9]" value="A" aria-label="Zeichen 1">
+      <input class="input size-10 text-center font-mono text-base uppercase" maxlength="1" inputmode="text" pattern="[A-Za-z0-9]" value="1" aria-label="Zeichen 2">
+      <input class="input size-10 text-center font-mono text-base uppercase" maxlength="1" inputmode="text" pattern="[A-Za-z0-9]" value="B" aria-label="Zeichen 3">
+      <input class="input size-10 text-center font-mono text-base uppercase" maxlength="1" inputmode="text" pattern="[A-Za-z0-9]" value="9" aria-label="Zeichen 4">
+      <input class="input size-10 text-center font-mono text-base uppercase" maxlength="1" inputmode="text" pattern="[A-Za-z0-9]" value="F" aria-label="Zeichen 5">
+      <input class="input size-10 text-center font-mono text-base uppercase" maxlength="1" inputmode="text" pattern="[A-Za-z0-9]" value="2" aria-label="Zeichen 6">
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Ungültiger Code (<code class="text-[11px]">aria-invalid</code>)</span>
+    <div class="field mx-auto max-w-sm items-center">
+      <div class="flex items-center justify-center gap-2">
+        <input class="input size-10 text-center font-mono text-base" maxlength="1" inputmode="numeric" pattern="[0-9]*" aria-invalid="true" value="5" aria-label="Ziffer 1">
+        <input class="input size-10 text-center font-mono text-base" maxlength="1" inputmode="numeric" pattern="[0-9]*" aria-invalid="true" value="5" aria-label="Ziffer 2">
+        <input class="input size-10 text-center font-mono text-base" maxlength="1" inputmode="numeric" pattern="[0-9]*" aria-invalid="true" value="5" aria-label="Ziffer 3">
+        <span aria-hidden="true" class="text-muted-foreground"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4"><line x1="5" x2="19" y1="12" y2="12"/></svg></span>
+        <input class="input size-10 text-center font-mono text-base" maxlength="1" inputmode="numeric" pattern="[0-9]*" aria-invalid="true" value="0" aria-label="Ziffer 4">
+        <input class="input size-10 text-center font-mono text-base" maxlength="1" inputmode="numeric" pattern="[0-9]*" aria-invalid="true" value="0" aria-label="Ziffer 5">
+        <input class="input size-10 text-center font-mono text-base" maxlength="1" inputmode="numeric" pattern="[0-9]*" aria-invalid="true" value="0" aria-label="Ziffer 6">
+      </div>
+      <p role="alert" class="text-destructive text-center text-sm">Der Code ist falsch oder abgelaufen.</p>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Deaktiviert</span>
+    <div class="flex items-center justify-center gap-2">
+      <input class="input size-10 text-center font-mono text-base" maxlength="1" inputmode="numeric" pattern="[0-9]*" value="1" disabled aria-label="Ziffer 1">
+      <input class="input size-10 text-center font-mono text-base" maxlength="1" inputmode="numeric" pattern="[0-9]*" value="2" disabled aria-label="Ziffer 2">
+      <input class="input size-10 text-center font-mono text-base" maxlength="1" inputmode="numeric" pattern="[0-9]*" value="3" disabled aria-label="Ziffer 3">
+      <span aria-hidden="true" class="text-muted-foreground"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4"><line x1="5" x2="19" y1="12" y2="12"/></svg></span>
+      <input class="input size-10 text-center font-mono text-base" maxlength="1" inputmode="numeric" pattern="[0-9]*" value="4" disabled aria-label="Ziffer 4">
+      <input class="input size-10 text-center font-mono text-base" maxlength="1" inputmode="numeric" pattern="[0-9]*" value="5" disabled aria-label="Ziffer 5">
+      <input class="input size-10 text-center font-mono text-base" maxlength="1" inputmode="numeric" pattern="[0-9]*" value="6" disabled aria-label="Ziffer 6">
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Vollständiges Formular (Label, Hilfetext, Aktionen)</span>
+    <div class="field mx-auto w-full max-w-sm items-center text-center">
+      <label class="label" for="otp-mail">Bestätigungscode</label>
+      <p>Wir haben einen 6-stelligen Code an deine E-Mail gesendet.</p>
+      <div class="flex items-center justify-center gap-2">
+        <input id="otp-mail" class="input size-10 text-center font-mono text-base" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" aria-label="Ziffer 1">
+        <input class="input size-10 text-center font-mono text-base" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" aria-label="Ziffer 2">
+        <input class="input size-10 text-center font-mono text-base" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" aria-label="Ziffer 3">
+        <span aria-hidden="true" class="text-muted-foreground"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4"><line x1="5" x2="19" y1="12" y2="12"/></svg></span>
+        <input class="input size-10 text-center font-mono text-base" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" aria-label="Ziffer 4">
+        <input class="input size-10 text-center font-mono text-base" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" aria-label="Ziffer 5">
+        <input class="input size-10 text-center font-mono text-base" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" aria-label="Ziffer 6">
+      </div>
+      <div class="flex items-center justify-center gap-3">
+        <button type="button" class="btn">Code bestätigen</button>
+        <button type="button" class="btn" data-variant="link">Code erneut senden</button>
+      </div>
+    </div>
+  </div>
+</div>

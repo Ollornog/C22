@@ -1,0 +1,50 @@
+<!-- shadcn/custom: Gruppe von Umschalt-Buttons auf Basis von .button-group + aria-pressed. "single" = genau ein Element aktiv (Radio-Verhalten), "multiple" = unabhängig voneinander umschaltbar. Basecoat selbst kennt keine eigene Toggle-Group-CSS-Datei — das Aussehen kommt aus .button-group + .btn[data-variant="outline"]. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Standard (Einzelauswahl, Radio-Verhalten)</span>
+    <div class="button-group" role="group" aria-label="Textausrichtung">
+      <button type="button" class="btn aria-pressed:bg-accent aria-pressed:text-accent-foreground" data-variant="outline" aria-pressed="true" onclick="this.closest('.button-group').querySelectorAll('[aria-pressed]').forEach(b=>b.setAttribute('aria-pressed','false'));this.setAttribute('aria-pressed','true')">Links</button>
+      <button type="button" class="btn aria-pressed:bg-accent aria-pressed:text-accent-foreground" data-variant="outline" aria-pressed="false" onclick="this.closest('.button-group').querySelectorAll('[aria-pressed]').forEach(b=>b.setAttribute('aria-pressed','false'));this.setAttribute('aria-pressed','true')">Mitte</button>
+      <button type="button" class="btn aria-pressed:bg-accent aria-pressed:text-accent-foreground" data-variant="outline" aria-pressed="false" onclick="this.closest('.button-group').querySelectorAll('[aria-pressed]').forEach(b=>b.setAttribute('aria-pressed','false'));this.setAttribute('aria-pressed','true')">Rechts</button>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Mehrfachauswahl (jedes Element unabhängig)</span>
+    <div class="button-group" role="group" aria-label="Textformatierung">
+      <button type="button" class="btn aria-pressed:bg-accent aria-pressed:text-accent-foreground" data-variant="outline" data-size="icon" aria-pressed="true" aria-label="Fett" onclick="this.setAttribute('aria-pressed', this.getAttribute('aria-pressed')==='true'?'false':'true')"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12h9a4 4 0 0 1 0 8H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h7a4 4 0 0 1 0 8"/></svg></button>
+      <button type="button" class="btn aria-pressed:bg-accent aria-pressed:text-accent-foreground" data-variant="outline" data-size="icon" aria-pressed="true" aria-label="Kursiv" onclick="this.setAttribute('aria-pressed', this.getAttribute('aria-pressed')==='true'?'false':'true')"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" x2="10" y1="4" y2="4"/><line x1="14" x2="5" y1="20" y2="20"/><line x1="15" x2="9" y1="4" y2="20"/></svg></button>
+      <button type="button" class="btn aria-pressed:bg-accent aria-pressed:text-accent-foreground" data-variant="outline" data-size="icon" aria-pressed="false" aria-label="Unterstrichen" onclick="this.setAttribute('aria-pressed', this.getAttribute('aria-pressed')==='true'?'false':'true')"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4v6a6 6 0 0 0 12 0V4"/><line x1="4" x2="20" y1="20" y2="20"/></svg></button>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Größen (<code class="text-[11px]">data-size</code>)</span>
+    <div class="flex flex-wrap items-center justify-center gap-4">
+      <div class="button-group" role="group" aria-label="Zeitraum, klein">
+        <button type="button" class="btn aria-pressed:bg-accent aria-pressed:text-accent-foreground" data-variant="outline" data-size="sm" aria-pressed="true" onclick="this.closest('.button-group').querySelectorAll('[aria-pressed]').forEach(b=>b.setAttribute('aria-pressed','false'));this.setAttribute('aria-pressed','true')">Tag</button>
+        <button type="button" class="btn aria-pressed:bg-accent aria-pressed:text-accent-foreground" data-variant="outline" data-size="sm" aria-pressed="false" onclick="this.closest('.button-group').querySelectorAll('[aria-pressed]').forEach(b=>b.setAttribute('aria-pressed','false'));this.setAttribute('aria-pressed','true')">Woche</button>
+        <button type="button" class="btn aria-pressed:bg-accent aria-pressed:text-accent-foreground" data-variant="outline" data-size="sm" aria-pressed="false" onclick="this.closest('.button-group').querySelectorAll('[aria-pressed]').forEach(b=>b.setAttribute('aria-pressed','false'));this.setAttribute('aria-pressed','true')">Monat</button>
+      </div>
+      <div class="button-group" role="group" aria-label="Zeitraum, groß">
+        <button type="button" class="btn aria-pressed:bg-accent aria-pressed:text-accent-foreground" data-variant="outline" data-size="lg" aria-pressed="true" onclick="this.closest('.button-group').querySelectorAll('[aria-pressed]').forEach(b=>b.setAttribute('aria-pressed','false'));this.setAttribute('aria-pressed','true')">Tag</button>
+        <button type="button" class="btn aria-pressed:bg-accent aria-pressed:text-accent-foreground" data-variant="outline" data-size="lg" aria-pressed="false" onclick="this.closest('.button-group').querySelectorAll('[aria-pressed]').forEach(b=>b.setAttribute('aria-pressed','false'));this.setAttribute('aria-pressed','true')">Woche</button>
+        <button type="button" class="btn aria-pressed:bg-accent aria-pressed:text-accent-foreground" data-variant="outline" data-size="lg" aria-pressed="false" onclick="this.closest('.button-group').querySelectorAll('[aria-pressed]').forEach(b=>b.setAttribute('aria-pressed','false'));this.setAttribute('aria-pressed','true')">Monat</button>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Vertikal (<code class="text-[11px]">data-orientation="vertical"</code>)</span>
+    <div class="button-group" role="group" aria-label="Ansicht" data-orientation="vertical">
+      <button type="button" class="btn aria-pressed:bg-accent aria-pressed:text-accent-foreground" data-variant="outline" data-size="icon" aria-pressed="true" aria-label="Liste" onclick="this.closest('.button-group').querySelectorAll('[aria-pressed]').forEach(b=>b.setAttribute('aria-pressed','false'));this.setAttribute('aria-pressed','true')"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg></button>
+      <button type="button" class="btn aria-pressed:bg-accent aria-pressed:text-accent-foreground" data-variant="outline" data-size="icon" aria-pressed="false" aria-label="Raster" onclick="this.closest('.button-group').querySelectorAll('[aria-pressed]').forEach(b=>b.setAttribute('aria-pressed','false'));this.setAttribute('aria-pressed','true')"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg></button>
+      <button type="button" class="btn aria-pressed:bg-accent aria-pressed:text-accent-foreground" data-variant="outline" data-size="icon" aria-pressed="false" aria-label="Kanban" onclick="this.closest('.button-group').querySelectorAll('[aria-pressed]').forEach(b=>b.setAttribute('aria-pressed','false'));this.setAttribute('aria-pressed','true')"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path d="M15 3v18"/></svg></button>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Mit deaktiviertem Element</span>
+    <div class="button-group" role="group" aria-label="Sichtbarkeit">
+      <button type="button" class="btn aria-pressed:bg-accent aria-pressed:text-accent-foreground" data-variant="outline" aria-pressed="true" onclick="this.closest('.button-group').querySelectorAll('[aria-pressed]:not([disabled])').forEach(b=>b.setAttribute('aria-pressed','false'));this.setAttribute('aria-pressed','true')">Öffentlich</button>
+      <button type="button" class="btn aria-pressed:bg-accent aria-pressed:text-accent-foreground" data-variant="outline" aria-pressed="false" onclick="this.closest('.button-group').querySelectorAll('[aria-pressed]:not([disabled])').forEach(b=>b.setAttribute('aria-pressed','false'));this.setAttribute('aria-pressed','true')">Team</button>
+      <button type="button" class="btn aria-pressed:bg-accent aria-pressed:text-accent-foreground" data-variant="outline" aria-pressed="false" disabled title="Nur mit Enterprise-Tarif verfügbar">Privat</button>
+    </div>
+  </div>
+</div>

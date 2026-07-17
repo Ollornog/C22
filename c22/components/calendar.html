@@ -1,0 +1,43 @@
+<!-- custom: Monatskalender — kein Basecoat-Vendor-CSS (Basecoat liefert keine Calendar-Component); shadcn baut auf react-day-picker. Hier INTERAKTIV über c22.js: ein <div data-calendar …> je Beispiel, alles über data-*-Optionen (mode, months, dropdown, abbrev, today, weekend, holidays, disabled). c22.js rendert Kopf+Raster, blättert, wählt Tag/Bereich (auch über 2 Monate), feste Höhe (immer 6 Zeilen), "Heute"-Sprung in der 6. Zeile. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Einzelauswahl</span>
+    <div data-calendar data-mode="single" data-month="2026-07" data-selected="2026-07-15" class="w-fit rounded-lg border p-3"></div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Heute fett statt umrandet</span>
+    <div data-calendar data-mode="single" data-today="bold" data-month="2026-07" data-selected="2026-07-15" class="w-fit rounded-lg border p-3"></div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Bereich</span>
+    <div data-calendar data-mode="range" data-month="2026-07" data-selected="2026-07-12/2026-07-19" class="w-fit rounded-lg border p-3"></div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Bereich über 2 Monate</span>
+    <div data-calendar data-mode="range" data-months="2" data-month="2026-07" data-selected="2026-07-22/2026-08-05" class="w-fit rounded-lg border p-3"></div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Monat/Jahr per Dropdown</span>
+    <div data-calendar data-mode="single" data-dropdown data-month="2026-07" data-selected="2026-07-15" class="w-fit rounded-lg border p-3"></div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Kompakter Kopf (Monat 3-stellig)</span>
+    <div data-calendar data-mode="single" data-abbrev data-month="2026-07" data-selected="2026-07-15" class="w-fit rounded-lg border p-3"></div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Deaktivierte Tage (Wochenenden)</span>
+    <div data-calendar data-mode="single" data-disabled="weekends" data-month="2026-07" data-selected="2026-07-15" class="w-fit rounded-lg border p-3"></div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Wochenende fett</span>
+    <div data-calendar data-mode="single" data-weekend="bold" data-month="2026-07" data-selected="2026-07-15" class="w-fit rounded-lg border p-3"></div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Wochenende farbig</span>
+    <div data-calendar data-mode="single" data-weekend="color" data-month="2026-07" data-selected="2026-07-15" class="w-fit rounded-lg border p-3"></div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Feiertage &amp; Wochenende (mehrfarbig)</span>
+    <div data-calendar data-mode="single" data-weekend="color" data-holidays="2026-07-01,2026-07-17" data-legend="destructive:Wochenende,warning:Feiertag" data-month="2026-07" data-selected="2026-07-15" class="w-fit rounded-lg border p-3"></div>
+  </div>
+</div>

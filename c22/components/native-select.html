@@ -1,0 +1,77 @@
+<!-- basecoat: Native Select (.select auf <select>). Echtes Browser-Dropdown, kein Custom-Panel — Pfeil kommt automatisch (bg-image), Zustände über native Attribute (disabled/aria-invalid) + optional .field-Wrapper für Label/Hilfetext. data-size="sm" für kompakt. Auch als Kind einer .input-group (input-group.html) einsetzbar, gleiche .select-Klasse. dir="rtl" spiegelt den Pfeil automatisch nach links. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Standard</span>
+    <select class="select w-full max-w-xs">
+      <option>Deutschland</option><option>Österreich</option><option>Schweiz</option>
+    </select>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Größen (Standard · Klein <code class="text-[11px]">data-size="sm"</code>)</span>
+    <div class="flex flex-wrap items-center justify-center gap-3">
+      <select class="select w-full max-w-xs">
+        <option>Deutschland</option><option>Österreich</option><option>Schweiz</option>
+      </select>
+      <select class="select w-full max-w-xs" data-size="sm">
+        <option>Deutschland</option><option>Österreich</option><option>Schweiz</option>
+      </select>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Optgruppen</span>
+    <select class="select w-full max-w-xs">
+      <option value="">Lebensmittel wählen …</option>
+      <optgroup label="Obst">
+        <option>Apfel</option>
+        <option>Banane</option>
+      </optgroup>
+      <optgroup label="Gemüse">
+        <option>Karotte</option>
+        <option>Brokkoli</option>
+      </optgroup>
+    </select>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">In einem Feld (Label · Hilfetext)</span>
+    <div class="field w-full max-w-xs" role="group">
+      <label for="c22-native-select-country">Land</label>
+      <select class="select" id="c22-native-select-country">
+        <option>Deutschland</option><option>Österreich</option><option>Schweiz</option>
+      </select>
+      <p>Bestimmt Sprache und Währung deines Kontos.</p>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Zustände (Deaktiviert · Ungültig)</span>
+    <div class="flex w-full max-w-xs flex-col gap-6">
+      <select class="select w-full" disabled>
+        <option>Deutschland</option>
+      </select>
+      <div class="field" role="group" data-invalid="true">
+        <label for="c22-native-select-invalid">Land</label>
+        <select class="select" id="c22-native-select-invalid" aria-invalid="true" aria-describedby="c22-native-select-invalid-err">
+          <option value="">Bitte wählen …</option>
+          <option>Deutschland</option><option>Österreich</option><option>Schweiz</option>
+        </select>
+        <p id="c22-native-select-invalid-err" role="alert">Bitte ein Land auswählen.</p>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">In einer Input-Gruppe (Vorwahl + Nummer)</span>
+    <div class="input-group w-full max-w-xs">
+      <select class="select" data-size="sm" aria-label="Vorwahl">
+        <option>+49</option>
+        <option>+43</option>
+        <option>+41</option>
+      </select>
+      <input class="input" type="tel" placeholder="151 23456789">
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Rechts-nach-links (<code class="text-[11px]">dir="rtl"</code>, Pfeil spiegelt)</span>
+    <select class="select w-full max-w-xs" dir="rtl">
+      <option>Deutschland</option><option>Österreich</option><option>Schweiz</option>
+    </select>
+  </div>
+</div>

@@ -1,149 +1,34 @@
-/* ============================================================
-   C22 · tokens.css — Design-Tokens (Werte, keine Struktur).
-   Palette: warmes Papier, Rosé-Akzent, Serif-Display.
-   Drei Modi über data-theme (NICHT light-dark(): hell/ambient/dunkel).
-   hell & ambient teilen die helle Palette — Unterschied nur der Glow.
-   ============================================================ */
+/* C22 tokens — a thin layer on top of Basecoat's vega theme.
+ *
+ * NOTE: the old C22 token/axis work (data-theme hell/ambient/dunkel, size, radius,
+ * icon-weight) is intentionally NOT revived here (PO 2026-07-15). This file holds
+ * only what the shadcn/Basecoat look needs on top of vega:
+ *   - the embedded web font (so we don't fall back to monospace)
+ *   - the status colours (green/amber/red) that Basecoat/vega lacks
+ */
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("../fonts/inter.woff2") format("woff2");
+}
 
 :root {
-  /* --- Schrift ---
-     Zwischenstand: eine real vorhandene Sans zuerst, damit webshot/CI-Container
-     (wo `system-ui` auf Monospace fällt) WYSIWYG rendern. Finale Wahl — System-Stack
-     vs. eingebettete Web-Font — ist noch offen (Musterbuch-Feedback). */
-  --sans: "Liberation Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", Arial, sans-serif;
-  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
 
-  /* --- Palette (hell = Default; ambient teilt sie) --- */
-  --paper: #f6f1ec;
-  --card:  #fbf8f4;
-  --chip:  #efe7de;
-  --ink:   #2b2a3a;
-  --muted: #6f6a7d;
-  --faint: #857f92;
-  --line:  #e6ddd4;
-
-  --accent:      #b0566f;
-  --accent-ink:  #ffffff;
-  --accent-soft: color-mix(in oklab, var(--accent) 14%, var(--card));
-
-  /* Knöpfe: dunkle Tinte, nicht der Akzent (Kontrast) */
-  --btn:     #2b2a3a;
-  --btn-ink: #ffffff;
-
-  /* Status / Meldungsarten (SPOT — je Art ein Token, genutzt von Banner/Toast/Popup/Historie) */
-  --ok:   #2f7d4f;
-  --warn: #8a5a1e;
-  --bad:  #d22f3a;   /* klares Rot (war bordeaux #a12048) */
-  --info: #2f74c0;   /* Blau — hebt Info von Akzent ab */
-  --status:   #586173;        /* Statusmeldung — neutrales Slate */
-  --app:      #6d54c8;        /* App-Meldung — Violett */
-  --progress: var(--info);    /* Fortschritt — wie Info (blau); konventionell für „läuft gerade" */
-
-  /* --- Form --- */
-  /* Rundung — FLEXIBEL über einen Skalenfaktor statt fester Stufen:
-     --radius-scale = 0 → eckig, 1 → normal, >1 → runder (beliebiger Wert, „Prozent" = /100).
-     Optional je Ecke über --rc-tl/tr/br/bl (Faktor, nur --radius). Ein Wert steuert die ganze UI. */
-  --radius-scale: 1;
-  --rc-tl: 1; --rc-tr: 1; --rc-br: 1; --rc-bl: 1;
-  --radius-s: calc(10px * var(--radius-scale));
-  --radius-l: calc(20px * var(--radius-scale));
-  /* Pillen/Buttons/Wechsler: STUFENLOS statt binär. 999px·scale wäre bei jedem scale>0 volle Kapsel
-     (nur scale 0 = eckig) → kein Zwischen. 1.5rem·scale gibt echte Abstufung: bei scale 1 ist es für
-     normalhohe Controls Kapsel, darunter graduell gerundet, bei 0 eckig. So regelt die %-Zahl ALLES. */
-  --radius-pill: calc(1.5rem * var(--radius-scale));
-  --radius:   calc(14px * var(--radius-scale) * var(--rc-tl))
-              calc(14px * var(--radius-scale) * var(--rc-tr))
-              calc(14px * var(--radius-scale) * var(--rc-br))
-              calc(14px * var(--radius-scale) * var(--rc-bl));
-  --shadow:   0 18px 40px rgb(43 42 58 / 0.10);
-  --shadow-s: 0 6px 18px rgb(43 42 58 / 0.07);
-  --ring:     color-mix(in oklab, var(--accent) 55%, transparent);
-  --hover:    color-mix(in oklab, var(--ink) 9%, transparent);   /* theme-adaptiv: dunkelt hell, hellt dunkel */
-  --raised:   var(--card);   /* hervorgehobene Fläche (Umschalter-Daumen) — hell genug ggü. --chip */
-
-  /* Fokus & State-Layer (SPOT — EIN Ring + EINE Deckkraft-Skala für ALLE Bedienelemente).
-     State-Layer nutzt currentColor: hellt gefüllte Knöpfe (weißer Text) auf, tont Ghost/Text
-     (dunkle Tinte) ab — automatisch kontrastrichtig, weil die Textfarbe ohnehin zum Grund passt. */
-  --focus-w:      2px;
-  --focus-offset: 3px;
-  --focus-col:    color-mix(in oklab, var(--accent) 78%, transparent);
-  --state-hover:  .12;
-  --state-press:  .18;
-
-  /* Bewegung (Top-App-Recherche, deep-research/2026-07-11_toast-microinteraction-patterns.md) */
-  --ease-out:    cubic-bezier(0.23, 1, 0.32, 1);
-  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
-  --dur-enter:   300ms;
-  --dur-exit:    180ms;   /* Exit schneller als Enter */
-  --blur:     8px;
-  --glow:     none;
-
-  /* --- Abstands-Skala --- */
-  --sp-1: .375rem; --sp-2: .625rem; --sp-3: 1rem;
-  --sp-4: 1.5rem;  --sp-5: 2.5rem;  --sp-6: 4rem;
-
-  /* --- Fluide Typo-Skala (clamp) --- */
-  --step--1: clamp(.82rem, .8rem + .1vw, .9rem);
-  --step-0:  clamp(1rem, .96rem + .2vw, 1.1rem);
-  --step-1:  clamp(1.2rem, 1.12rem + .4vw, 1.45rem);
-  --step-2:  clamp(1.5rem, 1.35rem + .75vw, 2rem);
-  --step-3:  clamp(2rem, 1.7rem + 1.5vw, 3rem);
-  --step-4:  clamp(2.6rem, 2rem + 3vw, 4.2rem);
-
-  --measure: 66ch;
+  /* Ampel-/Status-Farben — vega kennt nur destructive, kein success/warning. */
+  --success: oklch(0.60 0.17 150);
+  --success-foreground: oklch(0.98 0 0);
+  --warning: oklch(0.79 0.16 78);
+  --warning-foreground: oklch(0.28 0.07 47);
 }
 
-/* hell = Default (glow bleibt none) — expliziter Selektor für den Umschalter */
-:root[data-theme="hell"] { --glow: none; }
-
-/* ambient = helle Palette + Rosé-Glow */
-:root[data-theme="ambient"] {
-  --glow: radial-gradient(1100px 640px at 50% -10%,
-          rgba(176, 86, 111, 0.13), transparent 62%);
-}
-
-/* --- Größe / Dichte (S/M/L) — skaliert die ganze UI über die Root-Schrift,
-   weil alle Bausteine in rem/em rechnen. --- */
-:root[data-size="s"] { font-size: 93.75%; }   /* 15px */
-:root[data-size="m"] { font-size: 100%; }      /* 16px (Default) */
-:root[data-size="l"] { font-size: 112.5%; }    /* 18px */
-
-/* --- Form / Ecken — dritte Achse neben Theme (Farbe) und Größe. Mechanik bleibt gleich, nur der
-   LOOK der Boxen ändert sich. Steuerung über den FLEXIBLEN --radius-scale (beliebiger Wert);
-   data-shape sind nur benannte Kurzwahlen. Auch Pillen/Buttons/Wechsler skalieren mit (--radius-pill). --- */
-:root[data-shape="eckig"]  { --radius-scale: 0; }
-:root[data-shape="normal"] { --radius-scale: 1; }     /* = Default */
-:root[data-shape="rund"]   { --radius-scale: 1.7; }
-
-/* dunkel = dunkle Palette (deckend), Status aufgehellt, eigener Glow */
-:root[data-theme="dunkel"] {
-  --paper: #1a1922;
-  --card:  #221f2c;
-  --chip:  #2a2735;
-  --ink:   #ece9f2;
-  --muted: #a49eb4;
-  --faint: #8b8598;
-  --line:  #322c3a;
-  --raised: #383443;   /* heller als --chip → aktiver Umschalter-Daumen sticht hervor */
-
-  --accent:      #e0919c;
-  --accent-ink:  #1a1922;
-  --accent-soft: color-mix(in oklab, var(--accent) 18%, var(--card));
-
-  --btn:     #ece9f2;
-  --btn-ink: #1a1922;
-
-  --ok:   #6cc48f;
-  --warn: #d6a45e;
-  --bad:  #ff6b74;   /* hellrot im Dunkeln */
-  --info: #63b3ed;   /* hellblau im Dunkeln */
-  --status: #9aa4b8;   /* Slate, aufgehellt */
-  --app:    #a99bf0;   /* Violett, aufgehellt */
-  /* --progress erbt var(--info) aus :root → nutzt automatisch das dunkle Info-Blau */
-
-  --shadow:   0 20px 50px rgb(0 0 0 / 0.45);
-  --shadow-s: 0 8px 22px rgb(0 0 0 / 0.35);
-  --blur:     14px;
-  --glow: radial-gradient(1100px 640px at 70% -8%,
-          rgba(224, 145, 156, 0.15), transparent 65%);
+/* Als Tailwind-Farben verfügbar machen (bg-success, text-warning, …). */
+@theme inline {
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
 }

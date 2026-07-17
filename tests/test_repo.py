@@ -47,10 +47,17 @@ r.check(f"keine private Infrastruktur ({n_muster} Muster + {n_namen} Namen)",
         not treffer, " | ".join(sorted(set(treffer))[:4]))
 
 # ---- Nur neutrale Beispieladressen (+ Pflicht-Attributionen: flaticon.com fürs README-Logo,
-#      phosphoricons.com für den Phosphor-Icon-Subset (MIT), selfh.st für die App-Logos (CC BY 4.0))
+#      phosphoricons.com für den Phosphor-Icon-Subset (MIT), selfh.st für die App-Logos (CC BY 4.0),
+#      unsplash.com als Quelle der Beispielbilder in der Component-Galerie)
 adressen = hygiene.pruefe_adressen(str(ROOT), DATEIEN, POLICY,
                                    zusaetzliche_hosts=[r"(www\.)?flaticon\.com", r"img\.shields\.io",
-                                                       r"phosphoricons\.com", r"selfh\.st"])
+                                                       r"phosphoricons\.com", r"selfh\.st",
+                                                       r"(images\.)?unsplash\.com",
+                                                       r"basecoatui\.com", r"ui\.shadcn\.com",
+                                                       r"registry\.npmjs\.org"])
+# Vendored Basecoat (c22/vendor/) ist Upstream verbatim — es darf seine eigenen Ökosystem-Domains
+# (tailwindcss.com) nennen; die Beispieladress-Regel gilt nur für UNSEREN Code.
+adressen = [a for a in adressen if not a.startswith("c22/vendor/")]
 r.check("nur neutrale Beispieladressen", not adressen, " | ".join(sorted(set(adressen))[:4]))
 
 # ---- Version steht überall gleich
@@ -62,6 +69,9 @@ r.check(f"Version {version}: pyproject, CHANGELOG und SemVer stimmen",
 
 # ---- Keine Artefakte, keine Geheimnisse
 artefakte = hygiene.pruefe_artefakte(DATEIEN, POLICY)
+# Vendored Fremdcode unter c22/vendor/ ist absichtlich eingecheckt (nicht UNSER Build-Output):
+# der dist/-Ordner ist Basecoats eigene Paketstruktur, kein generiertes Artefakt dieses Repos.
+artefakte = [a for a in artefakte if not a.startswith("c22/vendor/")]
 r.check("keine generierten Artefakte versioniert", not artefakte, " | ".join(artefakte[:3]))
 r.check("kein Datenverzeichnis oder .venv versioniert",
         not [f for f in DATEIEN if f.startswith("data/") or f.startswith(".venv/")])

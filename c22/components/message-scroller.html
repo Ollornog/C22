@@ -1,0 +1,114 @@
+<!-- custom (Basecoat .scrollbar/.scrollbar-sm + Bubble/Avatar-Bausteine; shadcn-Referenz "base/message-scroller": Autoscroll, Scroll-Anchor, Scroll-to-Bottom-Button, Verlauf nachladen): scrollbarer Nachrichtenverlauf für Chat-Oberflächen. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Standard (Verlauf mit Avataren, Datums-Trenner)</span>
+    <div class="scrollbar flex h-80 w-full max-w-md flex-col gap-3 overflow-y-auto rounded-lg border p-4" role="log" aria-label="Nachrichten" aria-relevant="additions" tabindex="0">
+      <div class="text-muted-foreground -mt-1 flex justify-center pb-1 text-xs">
+        <span class="bg-background rounded-full border px-2 py-0.5">Heute</span>
+      </div>
+      <div class="flex gap-2">
+        <span class="avatar" data-size="sm"><span>AK</span></span>
+        <div class="bg-muted w-fit rounded-lg px-3 py-2 text-sm">Moin! Ist C22 fertig?</div>
+      </div>
+      <div class="ml-auto"><div class="bg-primary text-primary-foreground w-fit rounded-lg px-3 py-2 text-sm">Gleich — letzte Components.</div></div>
+      <div class="flex gap-2">
+        <span class="avatar" data-size="sm"><span>AK</span></span>
+        <div class="bg-muted w-fit rounded-lg px-3 py-2 text-sm">Wie viele noch?</div>
+      </div>
+      <div class="ml-auto"><div class="bg-primary text-primary-foreground w-fit rounded-lg px-3 py-2 text-sm">Zwei.</div></div>
+      <div class="flex gap-2">
+        <span class="avatar" data-size="sm"><span>AK</span></span>
+        <div class="bg-muted w-fit rounded-lg px-3 py-2 text-sm">Und Dark-Mode?</div>
+      </div>
+      <div class="ml-auto"><div class="bg-primary text-primary-foreground w-fit rounded-lg px-3 py-2 text-sm">Läuft über den Theme Switcher.</div></div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Mit „Neue Nachrichten"-Button (Scroll-to-Bottom + Badge)</span>
+    <div class="relative w-full max-w-md">
+      <div class="scrollbar flex h-72 w-full flex-col gap-3 overflow-y-auto rounded-lg border p-4">
+        <div class="flex gap-2">
+          <span class="avatar" data-size="sm"><span>AK</span></span>
+          <div class="bg-muted w-fit rounded-lg px-3 py-2 text-sm">Ich schau mir gleich die Galerie an.</div>
+        </div>
+        <div class="ml-auto"><div class="bg-primary text-primary-foreground w-fit rounded-lg px-3 py-2 text-sm">Gute Idee.</div></div>
+        <div class="flex gap-2">
+          <span class="avatar" data-size="sm"><span>AK</span></span>
+          <div class="bg-muted w-fit rounded-lg px-3 py-2 text-sm">Sieht schon richtig gut aus!</div>
+        </div>
+        <div class="ml-auto"><div class="bg-primary text-primary-foreground w-fit rounded-lg px-3 py-2 text-sm">Danke!</div></div>
+      </div>
+      <button type="button" class="btn text-foreground bg-background/95 absolute bottom-3 left-1/2 -translate-x-1/2 gap-1.5 rounded-full border px-3 py-1.5 text-xs shadow-md backdrop-blur-sm" data-variant="ghost" data-active="true" aria-label="Zu neuen Nachrichten springen, 3 ungelesen">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
+        Neue Nachrichten
+        <span class="badge min-w-5 justify-center px-1.5" data-variant="destructive">3</span>
+      </button>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Live-Modus (Autoscroll, Antwort wird verankert nachgeführt)</span>
+    <div class="relative w-full max-w-md">
+      <div class="scrollbar flex h-72 w-full flex-col gap-3 overflow-y-auto rounded-lg border p-4" data-autoscrolling="true">
+        <div class="flex gap-2">
+          <span class="avatar" data-size="sm"><span>AK</span></span>
+          <div class="bg-muted w-fit rounded-lg px-3 py-2 text-sm">Fasst du mir die drei Varianten kurz zusammen?</div>
+        </div>
+        <div class="flex gap-2">
+          <span class="avatar" data-size="sm"><span>KI</span></span>
+          <div class="flex flex-col gap-1">
+            <span class="text-sm font-medium">Assistent</span>
+            <div class="bg-muted w-fit rounded-lg px-3 py-2 text-sm">Basierend auf den Daten empfehle ich zuerst die Standard-Variante<span class="animate-pulse">▌</span></div>
+          </div>
+        </div>
+      </div>
+      <span class="badge bg-success text-success-foreground absolute top-3 right-3 gap-1.5 border-transparent">
+        <span class="relative flex size-1.5">
+          <span class="bg-success-foreground/60 absolute inline-flex size-full animate-ping rounded-full"></span>
+          <span class="bg-success-foreground relative inline-flex size-1.5 rounded-full"></span>
+        </span>
+        Live
+      </span>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Verlauf laden (Sticky-Kopf, ältere Nachrichten nachladen)</span>
+    <div class="scrollbar flex h-72 w-full max-w-md flex-col overflow-y-auto rounded-lg border">
+      <div class="bg-background/90 sticky top-0 z-10 flex justify-center border-b py-2 backdrop-blur-sm">
+        <button type="button" class="btn gap-1.5 text-xs" data-variant="ghost" data-size="sm">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
+          Frühere Nachrichten laden
+        </button>
+      </div>
+      <div class="flex flex-col gap-3 p-4">
+        <div class="flex gap-2">
+          <span class="avatar" data-size="sm"><span>AK</span></span>
+          <div class="bg-muted w-fit rounded-lg px-3 py-2 text-sm">Kannst du die Galerie schon teilen?</div>
+        </div>
+        <div class="ml-auto"><div class="bg-primary text-primary-foreground w-fit rounded-lg px-3 py-2 text-sm">Klar, kommt gleich!</div></div>
+        <div class="flex gap-2">
+          <span class="avatar" data-size="sm"><span>AK</span></span>
+          <div class="bg-muted w-fit rounded-lg px-3 py-2 text-sm">Perfekt, danke dir.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Kompakt (<code class="text-[11px]">.scrollbar-sm</code>, dichter)</span>
+    <div class="scrollbar-sm flex h-56 w-full max-w-sm flex-col gap-2 overflow-y-auto rounded-lg border p-3">
+      <div class="flex gap-1.5">
+        <span class="avatar" data-size="sm"><span>AK</span></span>
+        <div class="bg-muted w-fit rounded-lg px-2.5 py-1.5 text-xs">Kurz und knapp?</div>
+      </div>
+      <div class="ml-auto"><div class="bg-primary text-primary-foreground w-fit rounded-lg px-2.5 py-1.5 text-xs">Passt.</div></div>
+      <div class="flex gap-1.5">
+        <span class="avatar" data-size="sm"><span>AK</span></span>
+        <div class="bg-muted w-fit rounded-lg px-2.5 py-1.5 text-xs">Und schmaler Rahmen?</div>
+      </div>
+      <div class="ml-auto"><div class="bg-primary text-primary-foreground w-fit rounded-lg px-2.5 py-1.5 text-xs">Ja, für Seitenleisten.</div></div>
+      <div class="flex gap-1.5">
+        <span class="avatar" data-size="sm"><span>AK</span></span>
+        <div class="bg-muted w-fit rounded-lg px-2.5 py-1.5 text-xs">Top, dann so.</div>
+      </div>
+    </div>
+  </div>
+</div>

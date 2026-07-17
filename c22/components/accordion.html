@@ -1,0 +1,59 @@
+<!-- basecoat: Accordion. Exklusiv per Default (JS schließt Geschwister); data-multiple = mehrere offen. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Standard (exklusiv — nur eines offen)</span>
+    <div class="accordion w-full max-w-md">
+      <details open><summary>Ist es barrierefrei?<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary><div>Ja — folgt dem WAI-ARIA-Muster.</div></details>
+      <details><summary>Im shadcn-Look?<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary><div>Ja, über Basecoat + C22-Tokens.</div></details>
+      <details><summary>Anpassbar?<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary><div>Ja — kanonisches HTML für jede Engine.</div></details>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Mehrere offen (<code class="text-[11px]">data-multiple</code>)</span>
+    <div class="accordion w-full max-w-md" data-multiple>
+      <details open><summary>Erster Punkt<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary><div>Bleibt offen, auch wenn du andere öffnest.</div></details>
+      <details open><summary>Zweiter Punkt<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary><div>Mehrere gleichzeitig geöffnet — kein Schließen der Geschwister.</div></details>
+      <details><summary>Dritter Punkt<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary><div>Öffnen fügt hinzu, statt zu ersetzen.</div></details>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Deaktivierter Punkt (<code class="text-[11px]">data-disabled="true"</code>)</span>
+    <div class="accordion w-full max-w-md">
+      <details open><summary>Aktiv<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary><div>Normal bedienbar.</div></details>
+      <details data-disabled="true"><summary aria-disabled="true">Gesperrt<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary><div>Lässt sich nicht öffnen.</div></details>
+      <details><summary>Aktiv<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary><div>Wieder normal bedienbar.</div></details>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Rahmen (<code class="text-[11px]">data-variant="bordered"</code>)</span>
+    <div class="accordion w-full max-w-md" data-variant="bordered">
+      <details open><summary>Versand<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary><div>Lieferung in 2–4 Werktagen.</div></details>
+      <details><summary>Rückgabe<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary><div>30 Tage kostenlos.</div></details>
+      <details><summary>Garantie<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary><div>2 Jahre auf alle Produkte.</div></details>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Als Karten (<code class="text-[11px]">data-variant="card"</code>)</span>
+    <div class="accordion w-full max-w-md" data-variant="card">
+      <details open><summary>Grundlagen<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary><div>Jeder Punkt eine eigene Karte.</div></details>
+      <details><summary>Vertiefung<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary><div>Mit Abstand zwischen den Karten.</div></details>
+      <details><summary>Abschluss<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary><div>Klar gruppierte Blöcke.</div></details>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">In einer Karte (Accordion in einem <code class="text-[11px]">.card</code>)</span>
+    <div class="card w-full max-w-md">
+      <header>
+        <h2>Abo &amp; Abrechnung</h2>
+        <p>Häufige Fragen zu Konto, Tarifen, Zahlungen und Kündigung.</p>
+      </header>
+      <section>
+        <div class="accordion">
+          <details open><summary>Welche Tarife bietet ihr an?<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary><div>Drei Tarife: Starter (9 €/Monat), Professional (29 €/Monat) und Enterprise (99 €/Monat). Jeder Tarif bringt mehr Speicher, API-Zugriff, Prioritäts-Support und Team-Funktionen.</div></details>
+          <details><summary>Wie funktioniert die Abrechnung?<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary><div>Die Abrechnung erfolgt zu Beginn jedes Abrechnungszyklus.</div></details>
+          <details><summary>Wie kündige ich mein Abo?<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary><div>Über die Abrechnungseinstellungen. Dein Tarif bleibt bis zum Ende des laufenden Zyklus aktiv.</div></details>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>

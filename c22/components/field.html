@@ -1,0 +1,112 @@
+<!-- basecoat: Field (.field, role="group") = Label+Control+Text-Wrapper; data-invalid/data-disabled steuern Farbe/Opazität automatisch. data-orientation="horizontal" legt Label+Control nebeneinander; data-orientation="responsive" braucht einen @container-Vorfahren (ein [role=group], direkt unter .fieldset/.field) und schaltet erst ab dessen mittlerer Breite auf horizontal. .fieldset + legend[data-variant=label|legend] gruppiert mehrere Felder; .field-separator trennt Abschnitte ("oder"). -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Standard (Label · Eingabe · Hilfetext)</span>
+    <div class="field w-full max-w-sm" role="group">
+      <label for="c22-field-name">Name</label>
+      <input class="input" type="text" id="c22-field-name" placeholder="Vor- und Nachname">
+      <p>Wird auf deinem Profil angezeigt.</p>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Zustände (Ungültig · Deaktiviert)</span>
+    <div class="flex w-full max-w-sm flex-col gap-6">
+      <div class="field" role="group" data-invalid="true">
+        <label for="c22-field-mail">E-Mail</label>
+        <input class="input" type="email" id="c22-field-mail" aria-invalid="true" aria-describedby="c22-field-mail-err" value="ungültig">
+        <p id="c22-field-mail-err" role="alert">Bitte eine gültige E-Mail-Adresse eingeben.</p>
+      </div>
+      <div class="field" role="group" data-disabled="true">
+        <label for="c22-field-plan">Tarif</label>
+        <input class="input" type="text" id="c22-field-plan" value="Enterprise" disabled>
+        <p>Wird zentral verwaltet — hier nicht änderbar.</p>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Horizontal (<code class="text-[11px]">data-orientation="horizontal"</code>)</span>
+    <div class="flex w-full max-w-md flex-col gap-4">
+      <div class="field" role="group" data-orientation="horizontal">
+        <label for="c22-field-lang">Sprache</label>
+        <select class="select" id="c22-field-lang">
+          <option>Deutsch</option><option>Englisch</option><option>Französisch</option>
+        </select>
+      </div>
+      <div class="field" role="group" data-orientation="horizontal">
+        <label for="c22-field-qty">Menge</label>
+        <input class="input" type="number" id="c22-field-qty" value="1" min="1" max="10">
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Responsiv (<code class="text-[11px]">data-orientation="responsive"</code> — ab mittlerer Containerbreite nebeneinander, darunter gestapelt)</span>
+    <fieldset class="fieldset w-full max-w-xl">
+      <legend data-variant="label">Adresse</legend>
+      <div role="group" aria-label="Adressfelder">
+        <div class="field" role="group" data-orientation="responsive">
+          <label for="c22-field-street">Straße &amp; Hausnummer</label>
+          <input class="input" type="text" id="c22-field-street" placeholder="Musterstraße 1">
+        </div>
+        <div class="field" role="group" data-orientation="responsive">
+          <label for="c22-field-zip">PLZ &amp; Ort</label>
+          <input class="input" type="text" id="c22-field-zip" placeholder="12345 Musterstadt">
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Fieldset mit mehreren Feldern (Gruppe mit Legende)</span>
+    <fieldset class="fieldset w-full max-w-sm">
+      <legend>Profil</legend>
+      <p>Diese Angaben sind für andere Mitglieder sichtbar.</p>
+      <div role="group" aria-label="Profilfelder">
+        <div class="field" role="group">
+          <label for="c22-field-fullname">Vollständiger Name</label>
+          <input class="input" type="text" id="c22-field-fullname" placeholder="Mara Beispiel">
+        </div>
+        <div class="field" role="group">
+          <label for="c22-field-username">Benutzername</label>
+          <input class="input" type="text" id="c22-field-username" placeholder="mara">
+          <p>Nur Kleinbuchstaben, Zahlen und Bindestriche.</p>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Getrennt durch Field-Separator ("oder")</span>
+    <fieldset class="fieldset w-full max-w-sm">
+      <div class="field" role="group">
+        <label for="c22-field-sep-mail">E-Mail</label>
+        <input class="input" type="email" id="c22-field-sep-mail" placeholder="mara@example.com">
+      </div>
+      <div class="field-separator"><hr role="separator"><span>oder</span></div>
+      <button type="button" class="btn w-full" data-variant="outline">Mit Single-Sign-on fortfahren</button>
+    </fieldset>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">In einer Karte (komplettes Formular)</span>
+    <div class="card w-full max-w-sm">
+      <header>
+        <h3 class="card-title">Konto erstellen</h3>
+        <p class="card-description">Schon dabei? <a href="#" class="underline underline-offset-4">Anmelden</a></p>
+      </header>
+      <section>
+        <fieldset class="fieldset">
+          <div class="field" role="group">
+            <label for="c22-field-card-name">Name</label>
+            <input class="input" type="text" id="c22-field-card-name" placeholder="Mara Beispiel">
+          </div>
+          <div class="field" role="group">
+            <label for="c22-field-card-mail">E-Mail</label>
+            <input class="input" type="email" id="c22-field-card-mail" placeholder="mara@example.com">
+          </div>
+          <div class="field-separator"><hr role="separator"><span>oder</span></div>
+          <button type="button" class="btn w-full" data-variant="outline">Mit Google fortfahren</button>
+        </fieldset>
+      </section>
+      <footer>
+        <button type="button" class="btn w-full">Konto erstellen</button>
+      </footer>
+    </div>
+  </div>
+</div>

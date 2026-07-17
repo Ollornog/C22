@@ -1,0 +1,69 @@
+<!-- basecoat: Avatar (.avatar) = Bild + Fallback-Kürzel. data-size sm/lg, data-shape rounded/square (C22), .avatar-badge, .avatar-group. Beispielbilder: Unsplash. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Kürzel-Fallback (sm · default · lg)</span>
+    <div class="flex items-center gap-4">
+      <span class="avatar" data-size="sm"><span>DB</span></span>
+      <span class="avatar"><span>DB</span></span>
+      <span class="avatar" data-size="lg"><span>DB</span></span>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Bild (sm · default · lg)</span>
+    <div class="flex items-center gap-4">
+      <span class="avatar" data-size="sm"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop&crop=faces&q=80" alt="Mara"><span>MA</span></span>
+      <span class="avatar"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop&crop=faces&q=80" alt="Jonas"><span>JO</span></span>
+      <span class="avatar" data-size="lg"><img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=96&h=96&fit=crop&crop=faces&q=80" alt="Lena"><span>LE</span></span>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Formen (Kreis · semi-eckig <code class="text-[11px]">data-shape="rounded"</code> · eckig <code class="text-[11px]">square</code>)</span>
+    <div class="flex items-center gap-5">
+      <span class="avatar" data-size="lg"><img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=96&h=96&fit=crop&crop=faces&q=80" alt="Tim"><span>TI</span></span>
+      <span class="avatar" data-size="lg" data-shape="rounded"><img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=96&h=96&fit=crop&crop=faces&q=80" alt="Tim"><span>TI</span></span>
+      <span class="avatar" data-size="lg" data-shape="square"><img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=96&h=96&fit=crop&crop=faces&q=80" alt="Tim"><span>TI</span></span>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Semi-eckig als Kürzel (sm · default · lg)</span>
+    <div class="flex items-center gap-4">
+      <span class="avatar" data-shape="rounded" data-size="sm"><span>DB</span></span>
+      <span class="avatar" data-shape="rounded"><span>AK</span></span>
+      <span class="avatar" data-shape="rounded" data-size="lg"><span>ML</span></span>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Badge (Status-Punkt · Icon)</span>
+    <div class="flex items-center gap-5">
+      <span class="avatar" data-size="lg"><img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=96&h=96&fit=crop&crop=faces&q=80" alt="Sara"><span>SA</span><span class="avatar-badge bg-success"></span></span>
+      <span class="avatar" data-size="lg"><span>AK</span><span class="avatar-badge bg-muted-foreground"></span></span>
+      <span class="avatar" data-size="lg"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=96&h=96&fit=crop&crop=faces&q=80" alt="Jonas"><span>JO</span><span class="avatar-badge"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span></span>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Gruppe (gestapelt + Zähler)</span>
+    <div class="avatar-group flex">
+      <span class="avatar"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop&crop=faces&q=80" alt=""><span>MA</span></span>
+      <span class="avatar"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop&crop=faces&q=80" alt=""><span>JO</span></span>
+      <span class="avatar"><img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=faces&q=80" alt=""><span>LE</span></span>
+      <span class="avatar"><span>AK</span></span>
+      <span data-count>+3</span>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Als Dropdown-Auslöser (Konto-Menü)</span>
+    <div class="dropdown-menu" id="c22-av-dd">
+      <button type="button" class="avatar" data-size="lg" id="c22-av-dd-trigger" aria-haspopup="menu" aria-controls="c22-av-dd-menu" aria-expanded="false"><img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=96&h=96&fit=crop&crop=faces&q=80" alt="Sara Nowak"><span>SA</span></button>
+      <div id="c22-av-dd-popover" data-popover aria-hidden="true">
+        <div role="menu" id="c22-av-dd-menu" aria-labelledby="c22-av-dd-trigger">
+          <div role="group" aria-labelledby="c22-av-dd-h"><div role="heading" id="c22-av-dd-h" class="flex flex-col"><span class="text-sm font-medium">Sara Nowak</span><span class="text-muted-foreground text-xs font-normal">sara@example.com</span></div>
+            <button type="button" role="menuitem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profil</button>
+            <button type="button" role="menuitem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>Einstellungen</button>
+          </div>
+          <hr role="separator">
+          <button type="button" role="menuitem" data-variant="destructive"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>Abmelden</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

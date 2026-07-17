@@ -1,0 +1,46 @@
+<!-- basecoat: Label (.label). Für Formularfelder das .field-Muster nutzen (field.html) — dieses Partial zeigt die Label-Klasse selbst: verknüpft per for/id, umschließt eine Checkbox, deaktiviert über data-disabled am Elternelement (in-data-[disabled=true]:opacity-50) und in Rechts-nach-links-Kontexten. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Standard (mit Textfeld verknüpft)</span>
+    <div class="flex w-full max-w-sm flex-col gap-3">
+      <label class="label" for="lbl-std">E-Mail-Adresse</label>
+      <input class="input" type="email" id="lbl-std" placeholder="name@example.com">
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Pflichtfeld (Kennzeichnung mit *)</span>
+    <div class="flex w-full max-w-sm flex-col gap-3">
+      <label class="label" for="lbl-required">Firmenname<span class="text-destructive" aria-hidden="true">*</span></label>
+      <input class="input" type="text" id="lbl-required" placeholder="Muster GmbH" required aria-required="true">
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Mit zugeordneter Checkbox</span>
+    <label class="label" for="lbl-chk">
+      <input class="input" type="checkbox" id="lbl-chk" checked>
+      Nutzungsbedingungen akzeptieren
+    </label>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Deaktiviert</span>
+    <div class="flex w-full max-w-sm flex-col gap-3" data-disabled="true">
+      <label class="label" for="lbl-disabled">Firmenname</label>
+      <input class="input" type="text" id="lbl-disabled" placeholder="Gesperrt" disabled>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Beschreibung (im Feld)</span>
+    <div role="group" class="field w-full max-w-sm">
+      <label for="lbl-desc">Anzeigename</label>
+      <input class="input" type="text" id="lbl-desc" placeholder="z. B. maxmuster" aria-describedby="lbl-desc-hint">
+      <p id="lbl-desc-hint">Wird auf deinem öffentlichen Profil sichtbar.</p>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Rechts-nach-links (RTL)</span>
+    <div class="flex w-full max-w-sm flex-col gap-3" dir="rtl">
+      <label class="label" for="lbl-rtl">البريد الإلكتروني</label>
+      <input class="input" type="email" id="lbl-rtl" placeholder="name@example.com">
+    </div>
+  </div>
+</div>

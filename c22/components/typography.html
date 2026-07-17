@@ -1,0 +1,86 @@
+<!-- custom: Typography. Kein Basecoat-Bauteil (kein .css unter vendor/), reine Tailwind-Utilities auf semantischem HTML — deckungsgleich mit shadcns klassischen Typography-Klassen (scroll-m-20/tracking-tight/leading-7). Tabelle nutzt die vorhandenen .table-container/.table-Klassen aus dem Table-Bauteil. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Artikel (h1–h4 · Absatz · Zitat · Liste)</span>
+    <div class="flex w-full max-w-2xl flex-col gap-4">
+      <h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight">Die Verwaltung der Königsschatzkammer</h1>
+      <p class="text-muted-foreground text-xl leading-7">Ein Leitfaden für angehende Schatzmeister zu Buchführung, Prüfungen und dem gelegentlichen Drachen.</p>
+      <h2 class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">Einführung</h2>
+      <p class="leading-7">Als König Ludwig der Weise vor einem Jahrhundert den Thron bestieg, war eines seiner ersten Dekrete die Einsetzung eines Schatzmeisters — ein Amt, das sich als <em>überraschend</em> aufwendig herausstellte. Details finden sich in der <a href="#" class="font-medium underline underline-offset-4">offiziellen Chronik</a>, inklusive einer Klausel zu <strong>Drachengold</strong> und einer Randnotiz zu <code class="bg-muted relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">§ 12 Abs. 3</code>.</p>
+      <blockquote class="text-muted-foreground mt-2 border-l-2 pl-6 italic">„Ein leeres Schatzhaus lehrt mehr über Herrschaft als ein volles."</blockquote>
+      <h3 class="scroll-m-20 text-2xl font-semibold tracking-tight">Pflichten des Amtes</h3>
+      <p class="leading-7">Zu den täglichen Aufgaben zählen unter anderem:</p>
+      <ul class="my-2 ml-6 list-disc text-sm [&>li]:mt-1">
+        <li>Führen des Hauptbuchs in doppelter Ausfertigung</li>
+        <li>Monatliche Prüfung der Zollkammern</li>
+        <li>Verwahrung der Siegel und Schlüssel</li>
+      </ul>
+      <h4 class="scroll-m-20 text-xl font-semibold tracking-tight">Ausnahmeregelungen</h4>
+      <p class="leading-7">In Kriegszeiten kann der Regent die Prüfpflicht per Erlass aussetzen.</p>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Textgrößen (Lead · Groß · Klein · Gedämpft)</span>
+    <div class="flex w-full max-w-lg flex-col gap-3">
+      <p class="text-muted-foreground text-xl">Ein einleitender Lead-Absatz, der den folgenden Abschnitt zusammenfasst.</p>
+      <div class="text-lg font-semibold">Ein groß und kräftig gesetzter Textabschnitt.</div>
+      <small class="text-sm leading-none font-medium">Eine klein und fett gesetzte Nebeninformation.</small>
+      <p class="text-muted-foreground text-sm">Ein gedämpfter Hinweistext, etwa für Formularhilfen oder Fußnoten.</p>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Listen (Aufzählung · Nummeriert · Verschachtelt)</span>
+    <div class="flex w-full max-w-md flex-col gap-4 sm:flex-row sm:justify-center">
+      <ul class="ml-6 list-disc text-sm [&>li]:mt-1">
+        <li>Erster Listenpunkt</li>
+        <li>Zweiter Listenpunkt</li>
+        <li>Dritter Listenpunkt</li>
+      </ul>
+      <ol class="ml-6 list-decimal text-sm [&>li]:mt-1">
+        <li>Zutaten bereitstellen</li>
+        <li>Teig zubereiten
+          <ol class="ml-6 list-[lower-alpha] [&>li]:mt-1">
+            <li>Mehl abwiegen</li>
+            <li>Flüssigkeit einrühren</li>
+          </ol>
+        </li>
+        <li>Im Ofen backen</li>
+      </ol>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Tabelle</span>
+    <div class="table-container w-full max-w-md">
+      <table class="table text-sm">
+        <thead>
+          <tr>
+            <th>König</th>
+            <th>Regierungszeit</th>
+            <th class="text-end">Schatzstand</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="font-medium">Ludwig der Weise</td>
+            <td>412–458</td>
+            <td class="text-end tabular-nums">240.000 Goldstücke</td>
+          </tr>
+          <tr>
+            <td class="font-medium">Berta die Gerechte</td>
+            <td>458–491</td>
+            <td class="text-end tabular-nums">310.000 Goldstücke</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Codeblock (mehrzeilig)</span>
+    <pre class="bg-muted w-full max-w-md overflow-x-auto rounded-lg p-4 text-sm"><code class="font-mono">function schatzkammer() {
+  return {
+    gold: 240000,
+    siegel: true,
+  };
+}</code></pre>
+  </div>
+</div>

@@ -1,0 +1,57 @@
+<!-- basecoat: Textarea (.textarea). field-sizing-content lässt sie mit dem Inhalt wachsen (min-h-16). Fehlerzustand über aria-invalid="true" (kein eigenes CSS nötig); Label/Hilfetext über das field-Muster (field.html). -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Standard</span>
+    <textarea class="textarea w-full max-w-sm" rows="4" placeholder="Nachricht eingeben …"></textarea>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Zustände (Deaktiviert · Schreibgeschützt · Ungültig)</span>
+    <div class="flex w-full max-w-sm flex-col gap-3">
+      <textarea class="textarea" rows="3" placeholder="Deaktiviert" disabled></textarea>
+      <textarea class="textarea" rows="3" readonly>Dieser Text ist nur lesbar.</textarea>
+      <textarea class="textarea" rows="3" aria-invalid="true">zu kurz</textarea>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Label &amp; Hilfetext (Field-Muster)</span>
+    <div class="field w-full max-w-sm" role="group">
+      <label for="c22-ta-bio">Über mich</label>
+      <textarea class="textarea" id="c22-ta-bio" rows="4" placeholder="Erzähl kurz etwas über dich …"></textarea>
+      <p>Wird auf deinem öffentlichen Profil angezeigt.</p>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Ungültig mit Fehlermeldung (Field-Muster)</span>
+    <div class="field w-full max-w-sm" role="group" data-invalid="true">
+      <label for="c22-ta-feedback">Feedback</label>
+      <textarea class="textarea" id="c22-ta-feedback" rows="3" aria-invalid="true" aria-describedby="c22-ta-feedback-err">k</textarea>
+      <p id="c22-ta-feedback-err" role="alert">Bitte mindestens 10 Zeichen eingeben.</p>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Zeichen-Zähler</span>
+    <div class="field w-full max-w-sm" role="group">
+      <label for="c22-ta-kurz">Kurzbeschreibung</label>
+      <textarea class="textarea" id="c22-ta-kurz" rows="3" maxlength="200" placeholder="Kurz beschreiben …">Dieses Werkzeug spart mir jeden Tag Zeit.</textarea>
+      <p class="text-end">41/200</p>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Senden-Button</span>
+    <div class="flex w-full max-w-sm flex-col gap-3">
+      <div class="field" role="group">
+        <label for="c22-ta-send" class="sr-only">Nachricht</label>
+        <textarea class="textarea" id="c22-ta-send" rows="3" placeholder="Schreib eine Nachricht …"></textarea>
+      </div>
+      <button type="button" class="btn self-end" data-size="sm">Senden<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></button>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Nicht größenveränderbar (<code class="text-[11px]">resize-none</code>)</span>
+    <textarea class="textarea resize-none w-full max-w-sm" rows="4" placeholder="Feste Höhe, kein Ziehgriff …"></textarea>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Rechts-nach-links (arabisch)</span>
+    <textarea class="textarea w-full max-w-sm" rows="3" dir="rtl" placeholder="اكتب رسالتك هنا …"></textarea>
+  </div>
+</div>

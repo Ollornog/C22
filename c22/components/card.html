@@ -1,0 +1,115 @@
+<!-- basecoat: Card (.card) = header > (Titel/Beschreibung/.card-action) + section + footer. data-size="sm" kompakt, data-variant="ghost"/"elevated" (C22). .border-b/.border-t schalten Trennlinien inkl. Innenabstand frei. Beispielbilder: Unsplash. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Standard (Titel · Beschreibung · Aktion · Formular · Footer)</span>
+    <div class="card w-full max-w-sm">
+      <header>
+        <h3 class="card-title">Anmelden</h3>
+        <p class="card-description">E-Mail eingeben, um dich anzumelden.</p>
+        <div class="card-action"><button type="button" class="btn" data-variant="link">Registrieren</button></div>
+      </header>
+      <section>
+        <form class="grid gap-6">
+          <div class="grid gap-2">
+            <label class="label" for="c22-card-email">E-Mail</label>
+            <input class="input" type="email" id="c22-card-email" placeholder="mara@example.com" required>
+          </div>
+          <div class="grid gap-2">
+            <div class="flex items-center">
+              <label class="label" for="c22-card-pw">Passwort</label>
+              <a href="#" class="ms-auto text-sm underline-offset-4 hover:underline">Passwort vergessen?</a>
+            </div>
+            <input class="input" type="password" id="c22-card-pw" required>
+          </div>
+        </form>
+      </section>
+      <footer class="flex-col gap-2">
+        <button type="button" class="btn w-full">Anmelden</button>
+        <button type="button" class="btn w-full" data-variant="outline">Mit Google anmelden</button>
+      </footer>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Bild (Bild oben, Badge als Aktion)</span>
+    <div class="card w-72">
+      <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=400&h=225&fit=crop&q=80" alt="Konferenzraum" class="aspect-video w-full object-cover">
+      <header>
+        <h3 class="card-title">Design-Systeme-Meetup</h3>
+        <p class="card-description">Praxisvortrag zu Component-APIs, Barrierefreiheit und schnellerem Shippen.</p>
+        <div class="card-action"><span class="badge" data-variant="secondary">Featured</span></div>
+      </header>
+      <footer>
+        <button type="button" class="btn w-full">Zur Veranstaltung</button>
+      </footer>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Ausführungen (Standard mit Rahmen · <code class="text-[11px]">data-variant="ghost"</code> ohne Rahmen · <code class="text-[11px]">data-variant="elevated"</code> stärkerer Schatten)</span>
+    <div class="flex flex-wrap justify-center gap-4">
+      <div class="card w-56">
+        <header>
+          <h3 class="card-title">Standard</h3>
+          <p class="card-description">Rahmen + feiner Schatten.</p>
+        </header>
+        <section class="text-muted-foreground text-sm">Der Default.</section>
+      </div>
+      <div class="card w-56" data-variant="ghost">
+        <header>
+          <h3 class="card-title">Ghost</h3>
+          <p class="card-description">Ohne Rahmen/Schatten.</p>
+        </header>
+        <section class="text-muted-foreground text-sm">Für flache Layouts.</section>
+      </div>
+      <div class="card w-56" data-variant="elevated">
+        <header>
+          <h3 class="card-title">Elevated</h3>
+          <p class="card-description">Stärkerer Schatten.</p>
+        </header>
+        <section class="text-muted-foreground text-sm">Hebt sich stärker ab.</section>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Größen (Standard · <code class="text-[11px]">data-size="sm"</code>)</span>
+    <div class="flex flex-wrap items-start justify-center gap-4">
+      <div class="card w-64">
+        <header>
+          <h3 class="card-title">Standard</h3>
+          <p class="card-description">Normaler Innenabstand.</p>
+        </header>
+        <section class="text-muted-foreground text-sm">gap-6 · py-6 · px-6.</section>
+      </div>
+      <div class="card w-64" data-size="sm">
+        <header>
+          <h3 class="card-title">Kompakt</h3>
+          <p class="card-description">Kleinerer Innenabstand.</p>
+        </header>
+        <section class="text-muted-foreground text-sm">gap-4 · py-4 · px-4.</section>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Trennlinien (<code class="text-[11px]">.border-b</code>/<code class="text-[11px]">.border-t</code>) + Menü + randlos scrollender Mittelbereich (<code class="text-[11px]">-mx-6</code>, <code class="text-[11px]">max-h-48 overflow-y-scroll</code>)</span>
+    <div class="card w-full max-w-sm">
+      <header class="border-b">
+        <h3 class="card-title">Team-Einstellungen</h3>
+        <p class="card-description">Zugriff und Benachrichtigungen verwalten.</p>
+        <div class="card-action">
+          <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Weitere Optionen"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg></button>
+        </div>
+      </header>
+      <section class="-mt-6 -mb-6">
+        <div class="-mx-6 max-h-48 space-y-4 overflow-y-scroll bg-muted/50 px-6 py-4 text-sm leading-relaxed">
+          <p>Diese Bedingungen regeln deine Nutzung des Arbeitsbereichs, einschließlich des Zugriffs auf geteilte Dokumente, Projektdateien und Werkzeuge zur Zusammenarbeit.</p>
+          <p>Du bist für die von dir hochgeladenen Inhalte verantwortlich und dafür, dass dein Team die passenden Berechtigungen zum Ansehen oder Bearbeiten besitzt.</p>
+          <p>Wir können Funktionen oder Grenzen anpassen, während sich der Dienst weiterentwickelt. Wenn solche Änderungen deinen Arbeitsablauf wesentlich betreffen, benachrichtigen wir die Administratoren deines Arbeitsbereichs.</p>
+          <p>Indem du fortfährst, stimmst du zu, deine Zugangsdaten sicher aufzubewahren und die Richtlinien deiner Organisation zur akzeptablen Nutzung einzuhalten.</p>
+        </div>
+      </section>
+      <footer class="border-t justify-end gap-2">
+        <button type="button" class="btn" data-variant="outline">Abbrechen</button>
+        <button type="button" class="btn">Speichern</button>
+      </footer>
+    </div>
+  </div>
+</div>

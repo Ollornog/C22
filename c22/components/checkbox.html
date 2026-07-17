@@ -1,0 +1,95 @@
+<!-- basecoat: Checkbox (natives input[type=checkbox] + Basecoat-CSS, kein JS). .field[role=group][data-orientation=horizontal] = Input+Label nebeneinander; <section> darin = mit Beschreibung/Fehlertext (aria-describedby); .field > label(> input) = Karte, automatisch hervorgehoben bei Auswahl (has-checked); fieldset + [data-slot=checkbox-group] = Gruppe mit engerem Abstand. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Standard (unmarkiert · markiert · deaktiviert)</span>
+    <div class="flex flex-col gap-3">
+      <div role="group" class="field" data-orientation="horizontal">
+        <input class="input" type="checkbox" id="chk-std-1">
+        <label for="chk-std-1">Newsletter abonnieren</label>
+      </div>
+      <div role="group" class="field" data-orientation="horizontal">
+        <input class="input" type="checkbox" id="chk-std-2" checked>
+        <label for="chk-std-2">Automatische Updates</label>
+      </div>
+      <div role="group" class="field" data-orientation="horizontal" data-disabled="true">
+        <input class="input" type="checkbox" id="chk-std-3" disabled>
+        <label for="chk-std-3">Beta-Funktionen (gesperrt)</label>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Beschreibung</span>
+    <div class="flex w-full max-w-sm flex-col gap-4">
+      <div role="group" class="field" data-orientation="horizontal">
+        <input class="input" type="checkbox" id="chk-desc-1" checked aria-describedby="chk-desc-1-hint">
+        <section>
+          <label for="chk-desc-1">Nutzungsbedingungen akzeptieren</label>
+          <p id="chk-desc-1-hint">Mit dem Haken stimmst du unseren Nutzungsbedingungen und der Datenschutzerklärung zu.</p>
+        </section>
+      </div>
+      <div role="group" class="field" data-orientation="horizontal">
+        <input class="input" type="checkbox" id="chk-desc-2" aria-describedby="chk-desc-2-hint">
+        <section>
+          <label for="chk-desc-2">Für Produkt-Updates anmelden</label>
+          <p id="chk-desc-2-hint">Gelegentliche E-Mails zu neuen Funktionen, kein Spam.</p>
+        </section>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Als Karte (Rahmen, hervorgehoben bei Auswahl)</span>
+    <div class="flex w-full max-w-sm flex-col gap-3">
+      <div class="field">
+        <label class="label items-start gap-3">
+          <input class="input mt-0.5" type="checkbox" checked>
+          <span class="flex flex-col gap-1">
+            <span class="text-sm font-medium">E-Mail-Benachrichtigungen</span>
+            <span class="text-muted-foreground text-sm font-normal">Erhalte eine Mail bei neuen Kommentaren.</span>
+          </span>
+        </label>
+      </div>
+      <div class="field">
+        <label class="label items-start gap-3">
+          <input class="input mt-0.5" type="checkbox">
+          <span class="flex flex-col gap-1">
+            <span class="text-sm font-medium">Push-Benachrichtigungen</span>
+            <span class="text-muted-foreground text-sm font-normal">Direkt aufs Gerät, auch offline.</span>
+          </span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Ungültig (Pflichtfeld nicht bestätigt)</span>
+    <div class="w-full max-w-sm">
+      <div role="group" class="field" data-orientation="horizontal" data-invalid="true">
+        <input class="input" type="checkbox" id="chk-inv-1" aria-invalid="true" aria-describedby="chk-inv-1-err">
+        <section>
+          <label for="chk-inv-1">Ich akzeptiere die AGB</label>
+          <p id="chk-inv-1-err" class="text-destructive text-xs">Pflichtfeld — bitte bestätigen, um fortzufahren.</p>
+        </section>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Gruppe (Fieldset mit Legende)</span>
+    <fieldset class="fieldset w-full max-w-sm">
+      <legend data-variant="label">Benachrichtigungen</legend>
+      <p>Wähle, worüber wir dich informieren dürfen.</p>
+      <div role="group" aria-label="Benachrichtigungen" data-slot="checkbox-group">
+        <div role="group" class="field" data-orientation="horizontal">
+          <input class="input" type="checkbox" id="chk-grp-1" checked>
+          <label for="chk-grp-1" class="font-normal">Produkt-Updates</label>
+        </div>
+        <div role="group" class="field" data-orientation="horizontal">
+          <input class="input" type="checkbox" id="chk-grp-2" checked>
+          <label for="chk-grp-2" class="font-normal">Sicherheitshinweise</label>
+        </div>
+        <div role="group" class="field" data-orientation="horizontal">
+          <input class="input" type="checkbox" id="chk-grp-3">
+          <label for="chk-grp-3" class="font-normal">Marketing &amp; Angebote</label>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+</div>
