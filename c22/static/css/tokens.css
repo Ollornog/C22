@@ -23,12 +23,27 @@
   --success-foreground: oklch(0.98 0 0);
   --warning: oklch(0.79 0.16 78);
   --warning-foreground: oklch(0.28 0.07 47);
+
+  /* Info-/Marken-Blau für gefüllte Shields-artige Badges (version/license/stars). Blau/weiß trägt in
+     beiden Themes, deshalb kein separater Dark-Wert nötig — aber als Token, nicht als bg-blue-600. */
+  --info: oklch(0.55 0.21 255);
+  --info-foreground: oklch(0.99 0 0);
+
+  /* Steuerelemente ÜBER beliebigen Medien (Bild-Overlays, z.B. Carousel-Pfeile/-Punkte): bewusst
+     theme-UNabhängig, aber zentral (SPOT) — immer helle Kontrolle + Schatten, damit sie auf hellem wie
+     dunklem Bildinhalt lesbar bleibt. Genau der Fall "Component soll Theme/Schwarz-Weiß NICHT nutzen". */
+  --overlay-control: oklch(1 0 0);
+  --overlay-shadow-dot: 0 1px 3px oklch(0 0 0 / 0.6);
+  --overlay-shadow-arrow: drop-shadow(0 2px 6px oklch(0 0 0 / 0.7));
 }
 
-/* Als Tailwind-Farben verfügbar machen (bg-success, text-warning, …). */
+/* Als Tailwind-Farben verfügbar machen (bg-success, text-warning, bg-info, text-overlay-control, …). */
 @theme inline {
   --color-success: var(--success);
   --color-success-foreground: var(--success-foreground);
   --color-warning: var(--warning);
   --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-overlay-control: var(--overlay-control);
 }

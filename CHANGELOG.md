@@ -39,6 +39,17 @@ kept thin. Basecoat is vendored under `c22/vendor/basecoat/` (reproducible via
   with a check like a selected `select` option instead of a filled row. The command palette gains
   popover- and dialog-triggered variants plus a scrollable list, and opens without a pre-highlighted
   first row. Combobox `auto-highlight` is limited to its dedicated variant.
+- Consistency pass across components 1–20: keyboard shortcuts in `context-menu` render as one `.kbd`
+  key-cap per key (was a single combined box); `alert` gains a token-based `data-variant="warning"`
+  instead of hardcoded `amber-*`; shields-style split badges use a new `--info` token instead of
+  `bg-blue-600`; carousel photo-overlay controls use new `--overlay-control`/`--overlay-shadow-*` tokens
+  instead of literal white/black — the sanctioned way to keep a deliberately theme-independent colour a
+  token; the breadcrumb dropdown trigger inherits the `.breadcrumb` link hover via a shared rule; the
+  calendar trigger chevron and an avatar check-icon follow the icon conventions (opacity-50, stroke-2).
+- `attachment` is rebuilt on the `.item` row primitive plus a shared `.item-media` icon-tile class,
+  instead of repeating the row/tile utility chains per entry.
+- A repo `CLAUDE.md` documenting the build-on-the-foundation (SPOT) rule, the foundation blocks, the
+  token/state/icon/typography conventions, and how to add or change a component.
 
 ## [0.2.0] - 2026-07-12
 

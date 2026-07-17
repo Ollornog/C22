@@ -134,7 +134,7 @@
   var CAL_ICO = 'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
   var CAL_PREV = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" ' + CAL_ICO + '><path d="m15 18-6-6 6-6"/></svg>';
   var CAL_NEXT = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" ' + CAL_ICO + '><path d="m9 18 6-6-6-6"/></svg>';
-  var CAL_DOWN = '<svg class="ms-1 opacity-60" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" ' + CAL_ICO + '><path d="m6 9 6 6 6-6"/></svg>';
+  var CAL_DOWN = '<svg class="ms-1 opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" ' + CAL_ICO + '><path d="m6 9 6 6 6-6"/></svg>';
   var CAL_TODAY = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="13" height="13" ' + CAL_ICO + '><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 2v4"/><path d="M16 2v4"/></svg>';
   var CAL_LEGEND_BG = { destructive: 'bg-destructive', warning: 'bg-warning', success: 'bg-success', primary: 'bg-primary', accent: 'bg-accent', 'muted-foreground': 'bg-muted-foreground' };
 

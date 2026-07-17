@@ -261,8 +261,8 @@
   [data-carousel-dot] { @apply bg-muted-foreground/30 size-2 shrink-0 cursor-pointer rounded-full transition-colors; }
   [data-carousel-dot]:hover { @apply bg-muted-foreground; }
   [data-carousel-dot][aria-current='true'] { @apply bg-foreground; }
-  [data-carousel-dot][data-overlay] { @apply bg-white/60; box-shadow: 0 1px 3px rgb(0 0 0 / 0.6); }
-  [data-carousel-dot][data-overlay]:hover, [data-carousel-dot][data-overlay][aria-current='true'] { @apply bg-white; }
+  [data-carousel-dot][data-overlay] { @apply bg-overlay-control/60; box-shadow: var(--overlay-shadow-dot); }
+  [data-carousel-dot][data-overlay]:hover, [data-carousel-dot][data-overlay][aria-current='true'] { @apply bg-overlay-control; }
 
   /* "x von y"-Zähler (von c22.js gefüllt). */
   [data-carousel-counter] { @apply text-muted-foreground text-sm tabular-nums; }
@@ -271,11 +271,11 @@
      VIERTEL des Bildes ist die Klickzone. Weiß + kräftiger Schlagschatten für Lesbarkeit auf jedem
      Foto. Ausgegraut (am Rand) = dünnerer Pfeil, kein Schatten. */
   [data-carousel-arrow] {
-    @apply absolute inset-y-0 z-10 flex w-1/4 cursor-pointer items-center text-white/90 transition;
-    filter: drop-shadow(0 2px 6px rgb(0 0 0 / 0.7));
+    @apply absolute inset-y-0 z-10 flex w-1/4 cursor-pointer items-center text-overlay-control/90 transition;
+    filter: var(--overlay-shadow-arrow);
   }
   [data-carousel-arrow] svg { width: 2rem; height: 2rem; stroke-width: 3; }
-  [data-carousel-arrow]:hover:not(:disabled) { @apply text-white; }
+  [data-carousel-arrow]:hover:not(:disabled) { @apply text-overlay-control; }
   [data-carousel-arrow]:disabled { @apply cursor-default opacity-40; filter: none; }
   [data-carousel-arrow]:disabled svg { stroke-width: 2; }
   [data-carousel-arrow='prev'] { @apply left-0 justify-start ps-3; }
@@ -390,5 +390,39 @@
     background-repeat: no-repeat;
     background-size: 0.875rem;
     @apply font-medium;
+  }
+
+  /* Breadcrumb-Trigger als <button> (Dropdown) erbt die Link-Optik von .breadcrumb a — der
+     Vendor-Selektor trifft nur Anker, deshalb hier für Buttons gespiegelt statt inline nachgebaut. */
+  .breadcrumb button { @apply transition-colors; }
+  .breadcrumb button:hover { @apply text-foreground; }
+
+  /* Alert-Warnung über das --warning-Token statt hartkodierter amber-Utilities (dark-fähig, SPOT):
+     getönter Grund + kräftiges Warn-Icon; Titel/Text bleiben in der normalen Vordergrundfarbe, weil
+     --warning eine helle Füllfarbe ist und als Fließtext zu blass wäre. Aufbau analog zu destructive. */
+  .alert[data-variant='warning'] { @apply border-warning/40 bg-warning/10; }
+  .alert[data-variant='warning'] > svg { color: var(--warning); }
+
+  /* Item-Media: getönte quadratische Icon-Kachel als Inhalt eines .item > figure. Basecoats
+     .item > figure zentriert nur ein blankes Icon; die getönte Kachel (bg-muted, rounded-md)
+     wird in vielen Zeilenlisten gebraucht (Datei-/Status-Icons) — hier EINMAL definiert statt
+     pro Component/Zeile mit einer rohen Utility-Kette nachgebaut. figure enthält dann ein
+     <span class="item-media"> statt eines blanken <svg>, deshalb greift Basecoats
+     "figure:has(>svg:only-child)"-Autosizing nicht — die Kachel bringt ihre eigene
+     Größenabstufung passend zu .item[data-size] mit. */
+  .item-media {
+    @apply bg-muted grid size-9 shrink-0 place-items-center rounded-md;
+  }
+  .item-media > svg:not([class*='size-']) {
+    @apply size-4;
+  }
+  .item[data-size='sm'] .item-media {
+    @apply size-8;
+  }
+  .item[data-size='xs'] .item-media {
+    @apply size-6;
+  }
+  .item[data-size='xs'] .item-media > svg:not([class*='size-']) {
+    @apply size-3.5;
   }
 }
