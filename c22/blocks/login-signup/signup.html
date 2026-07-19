@@ -1,0 +1,78 @@
+<!-- c22-title: Registrierung -->
+<!-- custom: Signup-Block, komponiert aus Foundation-Bausteinen (card + field/label/input + checkbox + alert + btn).
+     Echtes <form>-Markup mit label/for + autocomplete (name/email/new-password); Passwort-Hinweistext via
+     aria-describedby. Zweite Variante zeigt den zweistufigen Ablauf (Alert data-variant="info":
+     E-Mail-Bestätigung folgt). -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Registrierungs-Karte (Name · E-Mail · Passwort mit Hinweis · AGB-Checkbox)</span>
+    <form class="card w-full max-w-sm" method="post" action="#">
+      <header>
+        <h3 class="card-title">Konto erstellen</h3>
+        <p class="card-description">Schon dabei? <a href="#" class="underline underline-offset-4">Anmelden</a></p>
+      </header>
+      <section class="grid gap-6">
+        <div class="field" role="group">
+          <label for="c22-blk-su-a-name">Name</label>
+          <input class="input" type="text" id="c22-blk-su-a-name" name="name" placeholder="Vor- und Nachname" autocomplete="name" required>
+        </div>
+        <div class="field" role="group">
+          <label for="c22-blk-su-a-mail">E-Mail</label>
+          <input class="input" type="email" id="c22-blk-su-a-mail" name="email" placeholder="mara@example.com" autocomplete="email" required>
+        </div>
+        <div class="field" role="group">
+          <label for="c22-blk-su-a-pw">Passwort</label>
+          <input class="input" type="password" id="c22-blk-su-a-pw" name="password" autocomplete="new-password" aria-describedby="c22-blk-su-a-pw-hint" minlength="8" required>
+          <p id="c22-blk-su-a-pw-hint">Mindestens 8 Zeichen, mit Zahl und Sonderzeichen.</p>
+        </div>
+        <div role="group" class="field" data-orientation="horizontal">
+          <input class="input" type="checkbox" id="c22-blk-su-a-agb" name="terms" required aria-describedby="c22-blk-su-a-agb-hint">
+          <section>
+            <label for="c22-blk-su-a-agb">Ich akzeptiere die AGB</label>
+            <p id="c22-blk-su-a-agb-hint">Mit dem Haken stimmst du den <a href="#" class="underline underline-offset-4">AGB</a> und der <a href="#" class="underline underline-offset-4">Datenschutzerklärung</a> zu.</p>
+          </section>
+        </div>
+      </section>
+      <footer class="flex-col gap-2">
+        <button type="submit" class="btn w-full">Konto erstellen</button>
+      </footer>
+    </form>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Zweistufig (Hinweis: nach dem Absenden folgt die E-Mail-Bestätigung)</span>
+    <form class="card w-full max-w-sm" method="post" action="#">
+      <header>
+        <h3 class="card-title">Konto erstellen</h3>
+        <p class="card-description">Schritt 1 von 2 — danach bestätigst du deine E-Mail-Adresse.</p>
+      </header>
+      <section class="grid gap-6">
+        <div class="alert" data-variant="info">
+          <svg data-icon-lu="mail" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+          <h2>Bestätigung folgt</h2>
+          <section>Nach dem Absenden senden wir dir einen Bestätigungslink. Erst mit dem Klick darauf ist dein Konto aktiv.</section>
+        </div>
+        <div class="field" role="group">
+          <label for="c22-blk-su-b-name">Name</label>
+          <input class="input" type="text" id="c22-blk-su-b-name" name="name" placeholder="Vor- und Nachname" autocomplete="name" required>
+        </div>
+        <div class="field" role="group">
+          <label for="c22-blk-su-b-mail">E-Mail</label>
+          <input class="input" type="email" id="c22-blk-su-b-mail" name="email" placeholder="mara@example.com" autocomplete="email" aria-describedby="c22-blk-su-b-mail-hint" required>
+          <p id="c22-blk-su-b-mail-hint">An diese Adresse geht der Bestätigungslink.</p>
+        </div>
+        <div class="field" role="group">
+          <label for="c22-blk-su-b-pw">Passwort</label>
+          <input class="input" type="password" id="c22-blk-su-b-pw" name="password" autocomplete="new-password" aria-describedby="c22-blk-su-b-pw-hint" minlength="8" required>
+          <p id="c22-blk-su-b-pw-hint">Mindestens 8 Zeichen, mit Zahl und Sonderzeichen.</p>
+        </div>
+        <div role="group" class="field" data-orientation="horizontal">
+          <input class="input" type="checkbox" id="c22-blk-su-b-agb" name="terms" required>
+          <label for="c22-blk-su-b-agb" class="font-normal">Ich akzeptiere die <a href="#" class="underline underline-offset-4">AGB</a></label>
+        </div>
+      </section>
+      <footer class="flex-col gap-2">
+        <button type="submit" class="btn w-full">Weiter — Bestätigungslink anfordern</button>
+      </footer>
+    </form>
+  </div>
+</div>

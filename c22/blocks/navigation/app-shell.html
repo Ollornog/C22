@@ -1,0 +1,137 @@
+<!-- c22-title: App-Gerüst (Shell) -->
+<!-- C22-custom: komplettes App-Seitengerüst aus Bordmitteln — Titelleiste (Marke + Nav-Punkte als .btn ghost/sm
+     wie in navigation-menu.html, Suchfeld .input, .avatar) + darunter die kanonische C22-Sidebar (.sidebar,
+     Markup wie components/sidebar.html: Gruppen, Zähler-Badges, aria-current) + Inhaltsbereich mit Platzhalter-
+     Karten (.card). Die Sidebar-nav ist position:fixed — der transform-gpu-Wrapper der ZWEITEN Zeile bändigt
+     sie (Containing-Block-Trick), damit die Titelleiste frei bleibt. Toggle über die von sidebar.js
+     registrierte .toggle()-API. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Komplett (Titelleiste · Sidebar mit Gruppen/Zählern · Inhaltsbereich mit Karten)</span>
+    <div class="flex h-128 w-full flex-col overflow-hidden rounded-lg border bg-background">
+      <header class="flex shrink-0 items-center gap-3 border-b bg-card px-4 py-2">
+        <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Navigation umschalten" onclick="document.getElementById('c22-blk-shell-sb')?.toggle()"><svg data-icon-lu="panel-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg></button>
+        <a href="#" class="flex items-center gap-2 text-base font-bold">
+          <span class="size-3.5 rounded-sm bg-primary" aria-hidden="true"></span> Acme
+        </a>
+        <nav class="ms-2 flex items-center gap-1" aria-label="Hauptbereiche">
+          <a href="#" class="btn bg-accent text-accent-foreground" data-variant="ghost" data-size="sm" aria-current="page">Übersicht</a>
+          <a href="#" class="btn" data-variant="ghost" data-size="sm">Projekte</a>
+          <a href="#" class="btn" data-variant="ghost" data-size="sm">Aufgaben</a>
+          <a href="#" class="btn" data-variant="ghost" data-size="sm">Berichte</a>
+        </nav>
+        <div class="ms-auto flex items-center gap-3">
+          <input type="search" class="input hidden w-56 lg:block" placeholder="Suchen …" aria-label="Suchen">
+          <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Benachrichtigungen"><svg data-icon-lu="bell" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg></button>
+          <span class="avatar" data-size="sm"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop&crop=faces&q=80" alt="Mara Schmidt"><span>MS</span></span>
+        </div>
+      </header>
+      <div class="relative flex flex-1 transform-gpu overflow-hidden" style="--sidebar-width: 15rem">
+        <aside id="c22-blk-shell-sb" class="sidebar" data-side="left" aria-hidden="false">
+          <nav aria-label="Hauptnavigation">
+            <section>
+              <div role="group" aria-labelledby="c22-blk-shell-h1">
+                <div role="heading" id="c22-blk-shell-h1">Arbeitsbereich</div>
+                <ul>
+                  <li><a role="menuitem" href="#" aria-current="page"><svg data-icon-lu="layout-dashboard" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg><span>Übersicht</span></a></li>
+                  <li><a role="menuitem" href="#"><svg data-icon-lu="folder" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.91 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg><span>Projekte</span><span class="badge ms-auto min-w-5 justify-center px-1.5" data-variant="secondary">8</span></a></li>
+                  <li><a role="menuitem" href="#"><svg data-icon-lu="inbox" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg><span>Vorgänge</span><span class="badge ms-auto min-w-5 justify-center px-1.5" data-variant="destructive">12</span></a></li>
+                  <li><a role="menuitem" href="#"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Dokumente</span></a></li>
+                  <li><a role="menuitem" href="#"><svg data-icon-lu="message-square" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>Nachrichten</span><span class="badge ms-auto min-w-5 justify-center px-1.5" data-variant="secondary">3</span></a></li>
+                </ul>
+              </div>
+              <div role="group" aria-labelledby="c22-blk-shell-h2">
+                <div role="heading" id="c22-blk-shell-h2">Verwaltung</div>
+                <ul>
+                  <li><a role="menuitem" href="#"><svg data-icon-lu="users" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Team</span></a></li>
+                  <li><a role="menuitem" href="#"><svg data-icon-lu="settings" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg><span>Einstellungen</span></a></li>
+                </ul>
+              </div>
+            </section>
+            <footer>
+              <div class="flex items-center gap-2 px-2 py-1">
+                <span class="avatar" data-size="sm"><span>MS</span></span>
+                <span class="grid leading-tight"><span class="text-sm font-medium">Mara Schmidt</span><span class="text-muted-foreground text-xs">m.schmidt@example.com</span></span>
+              </div>
+            </footer>
+          </nav>
+        </aside>
+        <main class="ms-60 flex-1 overflow-y-auto p-6">
+          <h1 class="text-lg font-semibold">Übersicht</h1>
+          <p class="text-muted-foreground mt-1 text-sm">Willkommen zurück — hier ist der Stand deines Arbeitsbereichs.</p>
+          <div class="mt-4 grid gap-4 md:grid-cols-3">
+            <div class="card" data-size="sm">
+              <header>
+                <h3 class="card-title">Offene Vorgänge</h3>
+                <p class="card-description">Über alle Projekte</p>
+              </header>
+              <section class="text-2xl font-semibold">12</section>
+            </div>
+            <div class="card" data-size="sm">
+              <header>
+                <h3 class="card-title">Aktive Projekte</h3>
+                <p class="card-description">Davon 2 in Prüfung</p>
+              </header>
+              <section class="text-2xl font-semibold">8</section>
+            </div>
+            <div class="card" data-size="sm">
+              <header>
+                <h3 class="card-title">Teammitglieder</h3>
+                <p class="card-description">3 zuletzt aktiv</p>
+              </header>
+              <section class="text-2xl font-semibold">15</section>
+            </div>
+          </div>
+          <div class="card mt-4" data-size="sm">
+            <header class="border-b">
+              <h3 class="card-title">Zuletzt geändert</h3>
+              <p class="card-description">Die jüngsten Änderungen im Arbeitsbereich.</p>
+            </header>
+            <section class="grid gap-3 text-sm">
+              <div class="flex items-center justify-between gap-3"><span>Projektplan Q3 überarbeitet</span><span class="text-muted-foreground shrink-0 text-xs">vor 2 Stunden</span></div>
+              <div class="flex items-center justify-between gap-3"><span>Angebot für Kunde A freigegeben</span><span class="text-muted-foreground shrink-0 text-xs">vor 5 Stunden</span></div>
+              <div class="flex items-center justify-between gap-3"><span>Größenübersicht der Lagerflächen aktualisiert</span><span class="text-muted-foreground shrink-0 text-xs">gestern</span></div>
+            </section>
+          </div>
+        </main>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Ohne Sidebar (nur Titelleiste über dem Inhalt)</span>
+    <div class="flex h-96 w-full flex-col overflow-hidden rounded-lg border bg-background">
+      <header class="flex shrink-0 items-center gap-3 border-b bg-card px-4 py-2">
+        <a href="#" class="flex items-center gap-2 text-base font-bold">
+          <span class="size-3.5 rounded-sm bg-primary" aria-hidden="true"></span> Acme
+        </a>
+        <nav class="ms-2 flex items-center gap-1" aria-label="Hauptbereiche">
+          <a href="#" class="btn" data-variant="ghost" data-size="sm">Übersicht</a>
+          <a href="#" class="btn bg-accent text-accent-foreground" data-variant="ghost" data-size="sm" aria-current="page">Projekte</a>
+          <a href="#" class="btn" data-variant="ghost" data-size="sm">Berichte</a>
+        </nav>
+        <div class="ms-auto flex items-center gap-3">
+          <input type="search" class="input hidden w-56 lg:block" placeholder="Suchen …" aria-label="Suchen">
+          <span class="avatar" data-size="sm"><span>JT</span></span>
+        </div>
+      </header>
+      <main class="flex-1 overflow-y-auto p-6">
+        <h1 class="text-lg font-semibold">Projekte</h1>
+        <p class="text-muted-foreground mt-1 text-sm">Ohne Sidebar trägt die Titelleiste die ganze Navigation — gut für flache Apps mit wenigen Bereichen.</p>
+        <div class="mt-4 grid gap-4 md:grid-cols-2">
+          <div class="card" data-size="sm">
+            <header>
+              <h3 class="card-title">Website-Relaunch</h3>
+              <p class="card-description">7 offene Aufgaben · Fällig am 28.07.</p>
+            </header>
+          </div>
+          <div class="card" data-size="sm">
+            <header>
+              <h3 class="card-title">Frühjahrs-Kampagne</h3>
+              <p class="card-description">Abgeschlossen · Rückblick verfügbar</p>
+            </header>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+</div>

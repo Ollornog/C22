@@ -1,0 +1,24 @@
+<!-- c22-title: Flächendiagramm -->
+<!-- custom: ein <div data-chart='{…}'> je Chart, gerendert von c22.js (wireChart); Farben nur über die
+     Tokens --chart-1…5. Fläche = "area": true auf einem Linien-Typ ("line"/"smooth"). ENGINE-GRENZE:
+     die Füllung wird nur bei GENAU EINER Serie gezeichnet (und nie bei type "step"); gestapelte
+     Flächen gibt es nicht. Die Stapel-Variante nutzt deshalb ehrlich das nächstmögliche Muster —
+     gestapelte Balken (type "stacked") — statt einer nachgebauten Flächen-Stapelung. -->
+<div class="c22-examples">
+
+  <div class="c22-example">
+    <span class="c22-example-label">Fläche — linear (<code class="text-[11px]">type: "line"</code>, <code class="text-[11px]">area: true</code>)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"line","area":true,"unit":" €","labels":["Jan","Feb","Mär","Apr","Mai","Jun"],"series":[{"name":"Umsatz","data":[5200,6100,5800,7400,6900,8200]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Fläche — weiche Kurve mit Achse (<code class="text-[11px]">type: "smooth"</code>, <code class="text-[11px]">area: true</code>, <code class="text-[11px]">axis: true</code>)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"smooth","area":true,"axis":true,"max":1000,"unit":" Anmeldungen","labels":["Mo","Di","Mi","Do","Fr","Sa","So"],"series":[{"name":"Anmeldungen","color":"chart-2","data":[340,520,610,580,720,880,640]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Gestapelt — gestapelte Flächen nicht verfügbar; nächstes Muster: gestapelte Balken (<code class="text-[11px]">type: "stacked"</code>, <code class="text-[11px]">legend: true</code>)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"stacked","legend":true,"unit":" €","labels":["Jan","Feb","Mär","Apr","Mai","Jun"],"series":[{"name":"Abos","data":[2400,2600,2900,3100,3300,3600]},{"name":"Einzelkäufe","data":[1500,1700,1600,1900,1800,2100]},{"name":"Schulungen","data":[700,800,900,900,1100,1200]}]}'></div>
+  </div>
+
+</div>

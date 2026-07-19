@@ -20,7 +20,14 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from _kit.report import Report  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
-KOMPONENTEN = sorted((ROOT / "c22" / "components").glob("*.html"))
+# Geltungsbereich: Components + die Seiten-Verzeichnisse der Galerie
+# (Blocks/Charts/Typeset) — dieselben Konventionen gelten überall.
+KOMPONENTEN = sorted([
+    *(ROOT / "c22" / "components").glob("*.html"),
+    *(ROOT / "c22" / "blocks").glob("*/*.html"),
+    *(ROOT / "c22" / "charts").glob("*.html"),
+    *(ROOT / "c22" / "typeset").glob("*.html"),
+])
 JS = ROOT / "c22" / "static" / "js" / "c22.js"
 TOKENS = ROOT / "c22" / "static" / "css" / "tokens.css"
 

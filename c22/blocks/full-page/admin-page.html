@@ -1,0 +1,245 @@
+<!-- c22-title: Verwaltungsseite -->
+<!-- C22-custom: Kompletter Verwaltungsseiten-Block aus Bordmitteln — kanonische .sidebar (App-Chrome, Toggle via sidebar.js-API),
+     Titelleiste (Toggle + Suche + Benachrichtigungen + Avatar), Kennzahl-Karten (.card data-size="sm", Trend als .badge),
+     Tabelle (.table im scrollenden .table-container, thead sticky top-0 auf bg-background — klebt beim Scrollen der Datenzone)
+     und die kanonische Paginierung aus pagination.html (Am-Rand-Form: Zurück unsichtbar statt ausgegraut, nichts springt).
+     Demo-Rahmen: transform-gpu-Wrapper bändigt das fixed-Sidebar-Kind (Containing-Block-Trick wie in sidebar.html). -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Bestellverwaltung (Titelleiste · Sidebar · Kennzahlen · Tabelle mit sticky Kopf · Paginierung)</span>
+    <div class="relative flex h-128 w-full transform-gpu overflow-hidden rounded-lg border" style="--sidebar-width: 15rem">
+      <aside id="c22-fp-a-sb" class="sidebar" data-side="left" aria-hidden="false">
+        <nav aria-label="Hauptnavigation">
+          <header>
+            <ul>
+              <li>
+                <button type="button" role="menuitem" data-size="lg">
+                  <span class="bg-primary text-primary-foreground flex size-8 shrink-0 items-center justify-center rounded-lg">
+                    <svg data-icon-lu="building-2" class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/></svg>
+                  </span>
+                  <span class="grid leading-tight"><span class="font-semibold">Acme GmbH</span><span class="text-muted-foreground text-xs">Verwaltung</span></span>
+                  <svg data-icon-lu="chevrons-up-down" class="ms-auto size-4 opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg>
+                </button>
+              </li>
+            </ul>
+          </header>
+          <section>
+            <div role="group" aria-labelledby="c22-fp-a-h1">
+              <div role="heading" id="c22-fp-a-h1">Verwaltung</div>
+              <ul>
+                <li><a role="menuitem" href="#"><svg data-icon-lu="layout-dashboard" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg><span>Übersicht</span></a></li>
+                <li><a role="menuitem" href="#" aria-current="page"><svg data-icon-lu="shopping-cart" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg><span>Bestellungen</span><span class="badge ms-auto min-w-5 justify-center px-1.5" data-variant="secondary">37</span></a></li>
+                <li><a role="menuitem" href="#"><svg data-icon-lu="package" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><path d="m3.3 7 8.7 5 8.7-5"/></svg><span>Produkte</span></a></li>
+                <li><a role="menuitem" href="#"><svg data-icon-lu="users" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Kunden</span></a></li>
+                <li><a role="menuitem" href="#"><svg data-icon-lu="chart-column" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg><span>Berichte</span></a></li>
+              </ul>
+            </div>
+            <div role="group" aria-labelledby="c22-fp-a-h2">
+              <div role="heading" id="c22-fp-a-h2">Konto</div>
+              <ul>
+                <li><a role="menuitem" href="#"><svg data-icon-lu="settings" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg><span>Einstellungen</span></a></li>
+                <li><a role="menuitem" href="#"><svg data-icon-lu="log-out" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg><span>Abmelden</span></a></li>
+              </ul>
+            </div>
+          </section>
+          <footer>
+            <ul>
+              <li>
+                <button type="button" role="menuitem" data-size="lg">
+                  <span class="avatar" data-size="sm"><span>MS</span></span>
+                  <span class="grid leading-tight"><span class="font-semibold">Mara Schmidt</span><span class="text-muted-foreground text-xs">m.schmidt@example.com</span></span>
+                  <svg data-icon-lu="chevrons-up-down" class="ms-auto size-4 opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg>
+                </button>
+              </li>
+            </ul>
+          </footer>
+        </nav>
+      </aside>
+      <div class="ms-60 flex min-w-0 flex-1 flex-col">
+        <header class="flex shrink-0 items-center gap-2 border-b px-4 py-2">
+          <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Sidebar umschalten" onclick="document.getElementById('c22-fp-a-sb')?.toggle()"><svg data-icon-lu="panel-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg></button>
+          <span class="text-sm font-medium">Bestellungen</span>
+          <div class="ms-auto flex items-center gap-2">
+            <input class="input h-8 w-56" type="search" placeholder="Suchen …" aria-label="Bestellungen durchsuchen">
+            <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Benachrichtigungen"><svg data-icon-lu="bell" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg></button>
+            <span class="avatar" data-size="sm"><span>MS</span></span>
+          </div>
+        </header>
+        <main class="flex flex-1 flex-col gap-6 overflow-y-auto p-6">
+          <div class="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <h2 class="text-lg font-semibold">Bestellungen</h2>
+              <p class="text-muted-foreground text-sm">Alle Bestellungen der Acme GmbH — Stand heute, 09:30 Uhr.</p>
+            </div>
+            <button type="button" class="btn"><svg data-icon-lu="plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>Neue Bestellung</button>
+          </div>
+          <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <div class="card" data-size="sm">
+              <header>
+                <h3 class="card-title">Umsatz (Monat)</h3>
+                <div class="card-action"><span class="badge" data-variant="success">+12,4 %</span></div>
+              </header>
+              <section>
+                <div class="text-2xl font-semibold tabular-nums">48.560,00 €</div>
+                <p class="text-muted-foreground mt-1 text-xs">gegenüber 43.210,00 € im Vormonat</p>
+              </section>
+            </div>
+            <div class="card" data-size="sm">
+              <header>
+                <h3 class="card-title">Offene Bestellungen</h3>
+                <div class="card-action"><span class="badge" data-variant="warning">9 überfällig</span></div>
+              </header>
+              <section>
+                <div class="text-2xl font-semibold tabular-nums">37</div>
+                <p class="text-muted-foreground mt-1 text-xs">davon 12 wartend auf Zahlung</p>
+              </section>
+            </div>
+            <div class="card" data-size="sm">
+              <header>
+                <h3 class="card-title">Neue Kunden</h3>
+                <div class="card-action"><span class="badge" data-variant="info">+3 diese Woche</span></div>
+              </header>
+              <section>
+                <div class="text-2xl font-semibold tabular-nums">18</div>
+                <p class="text-muted-foreground mt-1 text-xs">seit Monatsbeginn registriert</p>
+              </section>
+            </div>
+            <div class="card" data-size="sm">
+              <header>
+                <h3 class="card-title">Retourenquote</h3>
+                <div class="card-action"><span class="badge" data-variant="success">−0,6 %</span></div>
+              </header>
+              <section>
+                <div class="text-2xl font-semibold tabular-nums">2,4 %</div>
+                <p class="text-muted-foreground mt-1 text-xs">rollierend über 30 Tage</p>
+              </section>
+            </div>
+          </div>
+          <div class="table-container max-h-96 overflow-y-auto rounded-md border">
+            <table class="table">
+              <thead class="bg-background sticky top-0 z-10">
+                <tr>
+                  <th>Bestellung</th>
+                  <th>Kunde</th>
+                  <th>Status</th>
+                  <th>Datum</th>
+                  <th class="text-end">Betrag</th>
+                  <th class="w-px"><span class="sr-only">Aktionen</span></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="font-medium">BE-2043</td>
+                  <td>Lena Krüger</td>
+                  <td><span class="badge" data-variant="success">Bezahlt</span></td>
+                  <td>18.07.2026</td>
+                  <td class="text-end tabular-nums">1.240,00 €</td>
+                  <td><button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Aktionen für BE-2043"><svg data-icon-lu="ellipsis-vertical" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
+                </tr>
+                <tr>
+                  <td class="font-medium">BE-2042</td>
+                  <td>Jonas Weber</td>
+                  <td><span class="badge" data-variant="secondary">Offen</span></td>
+                  <td>18.07.2026</td>
+                  <td class="text-end tabular-nums">320,50 €</td>
+                  <td><button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Aktionen für BE-2042"><svg data-icon-lu="ellipsis-vertical" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
+                </tr>
+                <tr>
+                  <td class="font-medium">BE-2041</td>
+                  <td>Mara Albrecht</td>
+                  <td><span class="badge" data-variant="info">In Bearbeitung</span></td>
+                  <td>17.07.2026</td>
+                  <td class="text-end tabular-nums">89,90 €</td>
+                  <td><button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Aktionen für BE-2041"><svg data-icon-lu="ellipsis-vertical" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
+                </tr>
+                <tr>
+                  <td class="font-medium">BE-2040</td>
+                  <td>Tim Fischer</td>
+                  <td><span class="badge" data-variant="success">Bezahlt</span></td>
+                  <td>17.07.2026</td>
+                  <td class="text-end tabular-nums">2.030,00 €</td>
+                  <td><button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Aktionen für BE-2040"><svg data-icon-lu="ellipsis-vertical" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
+                </tr>
+                <tr>
+                  <td class="font-medium">BE-2039</td>
+                  <td>Nora Fink</td>
+                  <td><span class="badge" data-variant="warning">Wartet auf Zahlung</span></td>
+                  <td>16.07.2026</td>
+                  <td class="text-end tabular-nums">540,00 €</td>
+                  <td><button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Aktionen für BE-2039"><svg data-icon-lu="ellipsis-vertical" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
+                </tr>
+                <tr>
+                  <td class="font-medium">BE-2038</td>
+                  <td>Leyla Aksoy</td>
+                  <td><span class="badge" data-variant="success">Bezahlt</span></td>
+                  <td>16.07.2026</td>
+                  <td class="text-end tabular-nums">178,25 €</td>
+                  <td><button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Aktionen für BE-2038"><svg data-icon-lu="ellipsis-vertical" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
+                </tr>
+                <tr>
+                  <td class="font-medium">BE-2037</td>
+                  <td>Timo Brandt</td>
+                  <td><span class="badge" data-variant="destructive">Storniert</span></td>
+                  <td>15.07.2026</td>
+                  <td class="text-end tabular-nums">65,00 €</td>
+                  <td><button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Aktionen für BE-2037"><svg data-icon-lu="ellipsis-vertical" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
+                </tr>
+                <tr>
+                  <td class="font-medium">BE-2036</td>
+                  <td>Ida Hoffmann</td>
+                  <td><span class="badge" data-variant="success">Bezahlt</span></td>
+                  <td>15.07.2026</td>
+                  <td class="text-end tabular-nums">899,00 €</td>
+                  <td><button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Aktionen für BE-2036"><svg data-icon-lu="ellipsis-vertical" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
+                </tr>
+                <tr>
+                  <td class="font-medium">BE-2035</td>
+                  <td>Jan Petersen</td>
+                  <td><span class="badge" data-variant="secondary">Offen</span></td>
+                  <td>14.07.2026</td>
+                  <td class="text-end tabular-nums">412,80 €</td>
+                  <td><button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Aktionen für BE-2035"><svg data-icon-lu="ellipsis-vertical" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
+                </tr>
+                <tr>
+                  <td class="font-medium">BE-2034</td>
+                  <td>Eva Lorenz</td>
+                  <td><span class="badge" data-variant="success">Bezahlt</span></td>
+                  <td>14.07.2026</td>
+                  <td class="text-end tabular-nums">1.575,40 €</td>
+                  <td><button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Aktionen für BE-2034"><svg data-icon-lu="ellipsis-vertical" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <p class="text-muted-foreground text-sm">Bestellungen 1–10 von 128</p>
+            <nav role="navigation" aria-label="Seitennavigation" data-pagination class="flex">
+              <ul class="flex flex-row items-center gap-1">
+                <li>
+                  <button type="button" class="btn invisible" data-variant="ghost" tabindex="-1">
+                    <svg data-icon-lu="chevron-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                    Zurück
+                  </button>
+                </li>
+                <li><a href="#" class="btn" data-variant="outline" data-size="icon" aria-current="page">1</a></li>
+                <li><a href="#" class="btn" data-variant="ghost" data-size="icon">2</a></li>
+                <li><a href="#" class="btn" data-variant="ghost" data-size="icon">3</a></li>
+                <li data-pg-ellipsis>
+                  <span class="btn text-muted-foreground pointer-events-none" data-variant="ghost" data-size="icon" aria-hidden="true">…</span>
+                  <span class="sr-only">Weitere Seiten</span>
+                </li>
+                <li><a href="#" class="btn" data-variant="ghost" data-size="icon">13</a></li>
+                <li>
+                  <a href="#" class="btn" data-variant="ghost">
+                    Weiter
+                    <svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </main>
+      </div>
+    </div>
+  </div>
+</div>

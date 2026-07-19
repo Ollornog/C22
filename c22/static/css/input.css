@@ -27,4 +27,7 @@
 
 /* Scan the canonical component HTML and the gallery for utility classes. */
 @source "../../components/**/*.html";
+@source "../../blocks/**/*.html";
+@source "../../charts/**/*.html";
+@source "../../typeset/**/*.html";
 @source "../../../gallery/**/*.html";
