@@ -1,0 +1,22 @@
+<!-- c22-title: Liniendiagramm -->
+<!-- custom: ein <div data-chart='{…}'> je Chart, gerendert von c22.js (wireChart). Serienfarben kommen
+     automatisch aus den Tokens --chart-1…5 (Reihenfolge = Serienreihenfolge, überschreibbar per
+     "color":"chart-N"); Legende via "legend": true, Werte-Einheit via "unit". -->
+<div class="c22-examples">
+
+  <div class="c22-example">
+    <span class="c22-example-label">Zwei Serien mit Legende (<code class="text-[11px]">type: "lines"</code>, <code class="text-[11px]">legend: true</code>)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"lines","legend":true,"unit":" Stück","labels":["Jan","Feb","Mär","Apr","Mai","Jun"],"series":[{"name":"Filiale Nord","data":[320,410,380,520,470,560]},{"name":"Filiale Süd","data":[280,300,360,340,430,480]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Y-Achse und fester Skala (<code class="text-[11px]">axis: true</code>, <code class="text-[11px]">max: 600</code>)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"lines","legend":true,"axis":true,"max":600,"unit":" Stück","labels":["Jan","Feb","Mär","Apr","Mai","Jun"],"series":[{"name":"Filiale Nord","data":[320,410,380,520,470,560]},{"name":"Filiale Süd","data":[280,300,360,340,430,480]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Weiche Kurven (<code class="text-[11px]">type: "smooth"</code>) mit Token-Wahl je Serie (<code class="text-[11px]">"color": "chart-4"</code>/<code class="text-[11px]">"chart-5"</code>)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"smooth","legend":true,"unit":" °C","labels":["Mo","Di","Mi","Do","Fr","Sa","So"],"series":[{"name":"Höchstwert","color":"chart-4","data":[18,21,24,22,19,23,25]},{"name":"Tiefstwert","color":"chart-5","data":[9,11,13,12,10,12,14]}]}'></div>
+  </div>
+
+</div>

@@ -119,20 +119,33 @@ sanctioned literal size is `<code class="text-[11px]">` inside example labels.
 
 ```
 c22/components/*.html   canonical HTML partials — one file per component, variants via the c22-examples pattern
+c22/blocks/<cat>/*.html Blocks — larger compositions, grouped by category directory
+                        (navigation / full-page / login-signup / tables); first line
+                        <!-- c22-title: … --> names the entry, otherwise the filename does
+c22/charts/*.html       chart patterns (one file per chart type, --chart-1…5 tokens only)
+c22/typeset/*.html      typography in context (typeset page; base for the future typeset generator)
 c22/static/css/
   tokens.css            the token definitions (the look)
   components.css        shared C22 rules (@layer components) — the SPOT home for anything cross-component
+  packs/<name>.css      OWN style packs = pure token overrides riding on the vega shape
+                        (de-monolithisation phase B; e.g. packs/spica.css — brand blue)
   input.css             Tailwind entry (imports vendored basecoat + tokens + components)
   c22-<pack>.css        compiled output per style pack (generated — do not hand-edit)
 c22/static/js/c22.js    minimal own behaviour (context menu, interactive calendar/carousel/chart, palette tweaks)
 c22/vendor/basecoat/    vendored, pinned Basecoat (reproduce via scripts/vendor-basecoat.sh) — do not edit
-gallery/build.py        builds gallery/index.html from the component list; numbers per component, letters per variant
+gallery/build.py        builds the gallery PAGES (index/blocks/charts/typeset.html, shadcn-style):
+                        components from the COMPONENTS list; blocks/charts/typeset are discovered
+                        by directory scan — no central registry for them
 ```
 
-## Changing or adding a component
+## Changing or adding a component / block / chart / typeset entry
 
 1. Edit the partial in `c22/components/`. New component → add it to the `COMPONENTS` list in `gallery/build.py`
    and give it variants using the existing `c22-examples` / `c22-example` pattern.
+   New **block/chart/typeset** entry → just drop an `.html` file into the right directory
+   (`c22/blocks/<category>/`, `c22/charts/`, `c22/typeset/`) with a `<!-- c22-title: … -->` first line —
+   the gallery discovers it on rebuild. New block CATEGORY → extend `BLOCK_KATEGORIEN` in `gallery/build.py`.
+   All conventions below apply to those directories too (the hygiene suite scans them).
 2. Rebuild the gallery (`scripts/build-gallery.sh`) and **look at it** (screenshot or browser, light *and*
    dark) before deciding it's done — don't build UI blind.
 3. Any styling that more than one component needs goes into `components.css` (or a token), not copied inline.

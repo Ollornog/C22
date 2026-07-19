@@ -1,0 +1,24 @@
+<!-- c22-title: Balkendiagramm -->
+<!-- custom: ein <div data-chart='{…}'> je Chart, gerendert von c22.js (wireChart); Farben nur über die
+     Tokens --chart-1…5. ENGINE-GRENZE: wireChart kennt nur vertikale Balken (type "bar"/"bars"/
+     "stacked") — eine horizontale Ausrichtung gibt es (noch) nicht. Die letzte Variante zeigt deshalb
+     ehrlich das nächstmögliche Muster (vertikal mit ablesbarer Achse) statt einer nachgebauten
+     Horizontal-Optik. -->
+<div class="c22-examples">
+
+  <div class="c22-example">
+    <span class="c22-example-label">Vertikal — eine Serie (<code class="text-[11px]">type: "bar"</code>)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"bar","unit":" Bestellungen","labels":["Jan","Feb","Mär","Apr","Mai","Jun"],"series":[{"name":"Bestellungen","data":[420,510,470,640,580,710]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Vertikal — gruppiert mit Legende (<code class="text-[11px]">type: "bars"</code>, <code class="text-[11px]">legend: true</code>)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"bars","legend":true,"unit":" Stück","labels":["Q1","Q2","Q3","Q4"],"series":[{"name":"Bücher","data":[240,310,280,390]},{"name":"Zubehör","data":[160,210,190,260]},{"name":"Geschenke","data":[90,120,140,200]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Horizontal — von der Engine nicht unterstützt; nächstes Muster: vertikal mit Achse (<code class="text-[11px]">axis: true</code>, <code class="text-[11px]">max: 800</code>)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"bar","axis":true,"max":800,"unit":" Bestellungen","labels":["Jan","Feb","Mär","Apr","Mai","Jun"],"series":[{"name":"Bestellungen","data":[420,510,470,640,580,710]}]}'></div>
+  </div>
+
+</div>

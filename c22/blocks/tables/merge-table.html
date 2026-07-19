@@ -1,0 +1,168 @@
+<!-- c22-title: Tabelle mit verschmelzenden Gruppenspalten -->
+<!-- C22-custom: Gruppierung über SPALTEN statt Gruppenkopf-Zeilen: die Tabelle steht auf
+     border-separate/border-spacing-0 (damit zeichnen die ZELLEN die Linien, nicht die tr),
+     jede Folgezeile trägt border-t je Zelle — in der Gruppenspalte nur bei einem NEUEN
+     Gruppenwert als border-border, sonst border-transparent + leere Zelle. So verschmelzen
+     aufeinanderfolgende Zeilen mit gleichem Wert optisch zu einem Block. Der Kopf bekommt
+     sein border-b deshalb direkt auf den th. Auswahl-/Aktionsleiste = statisches Markup
+     (sticky bottom im Scroll-Container), Muster wie die Bulk-Leiste der Data Table. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Auswahl (Checkbox-Spalte + sticky Aktionsleiste) — Gruppenspalten Standort/Bereich verschmelzen: Folgezeilen mit <code class="text-[11px]">border-transparent</code></span>
+    <div class="relative max-h-96 w-full overflow-y-auto rounded-md border">
+      <table class="table border-separate border-spacing-0 text-sm">
+        <thead>
+          <tr class="text-muted-foreground text-left">
+            <th class="bg-background sticky top-0 z-10 w-px border-b ps-3 pe-1 py-2"><input class="input" type="checkbox" aria-label="Alle auswählen"></th>
+            <th class="bg-background sticky top-0 z-10 border-b">Standort</th>
+            <th class="bg-background sticky top-0 z-10 border-b">Bereich</th>
+            <th class="bg-background sticky top-0 z-10 border-b">Objekt</th>
+            <th class="bg-background sticky top-0 z-10 border-b">Kategorie</th>
+            <th class="bg-background sticky top-0 z-10 border-b" data-type="number">Nächster Termin</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="w-px ps-3 pe-1 py-2 align-top"><input class="input" type="checkbox" aria-label="Materiallager auswählen"></td>
+            <td class="align-top font-medium"><span>Werk Nord</span></td>
+            <td class="align-top font-medium"><span>Halle A</span></td>
+            <td class="align-top"><span class="font-medium">Materiallager</span><div class="text-muted-foreground text-xs">OBJ-0141</div></td>
+            <td class="align-top">Lagerfläche</td>
+            <td class="align-top" data-type="number">03.03.2026</td>
+          </tr>
+          <tr data-state="selected">
+            <td class="border-border w-px border-t ps-3 pe-1 py-2 align-top"><input class="input" type="checkbox" checked aria-label="Montagelinie 1 auswählen"></td>
+            <td class="border-transparent border-t align-top font-medium"></td>
+            <td class="border-transparent border-t align-top font-medium"></td>
+            <td class="border-border border-t align-top"><span class="font-medium">Montagelinie 1</span><div class="text-muted-foreground text-xs">OBJ-0142</div></td>
+            <td class="border-border border-t align-top">Fertigung</td>
+            <td class="border-border border-t align-top" data-type="number">12.03.2026</td>
+          </tr>
+          <tr data-state="selected">
+            <td class="border-border w-px border-t ps-3 pe-1 py-2 align-top"><input class="input" type="checkbox" checked aria-label="Teamleitung auswählen"></td>
+            <td class="border-transparent border-t align-top font-medium"></td>
+            <td class="border-border border-t align-top font-medium"><span>Halle B</span></td>
+            <td class="border-border border-t align-top"><span class="font-medium">Teamleitung</span><div class="text-muted-foreground text-xs">OBJ-0177</div></td>
+            <td class="border-border border-t align-top">Büro</td>
+            <td class="border-border border-t align-top" data-type="number">28.02.2026</td>
+          </tr>
+          <tr>
+            <td class="border-border w-px border-t ps-3 pe-1 py-2 align-top"><input class="input" type="checkbox" aria-label="Besprechungsraum auswählen"></td>
+            <td class="border-transparent border-t align-top font-medium"></td>
+            <td class="border-transparent border-t align-top font-medium"></td>
+            <td class="border-border border-t align-top"><span class="font-medium">Besprechungsraum</span><div class="text-muted-foreground text-xs">OBJ-0178</div></td>
+            <td class="border-border border-t align-top">Büro</td>
+            <td class="border-border border-t align-top" data-type="number">15.04.2026</td>
+          </tr>
+          <tr data-state="selected">
+            <td class="border-border w-px border-t ps-3 pe-1 py-2 align-top"><input class="input" type="checkbox" checked aria-label="Empfang auswählen"></td>
+            <td class="border-border border-t align-top font-medium"><span>Werk Süd</span></td>
+            <td class="border-border border-t align-top font-medium"><span>Verwaltung</span></td>
+            <td class="border-border border-t align-top"><span class="font-medium">Empfang</span><div class="text-muted-foreground text-xs">OBJ-0210</div></td>
+            <td class="border-border border-t align-top">Büro</td>
+            <td class="border-border border-t align-top" data-type="number">09.03.2026</td>
+          </tr>
+          <tr>
+            <td class="border-border w-px border-t ps-3 pe-1 py-2 align-top"><input class="input" type="checkbox" aria-label="Archiv auswählen"></td>
+            <td class="border-transparent border-t align-top font-medium"></td>
+            <td class="border-transparent border-t align-top font-medium"></td>
+            <td class="border-border border-t align-top"><span class="font-medium">Archiv</span><div class="text-muted-foreground text-xs">OBJ-0211</div></td>
+            <td class="border-border border-t align-top">Lagerfläche</td>
+            <td class="border-border border-t align-top" data-type="number">22.05.2026</td>
+          </tr>
+          <tr>
+            <td class="border-border w-px border-t ps-3 pe-1 py-2 align-top"><input class="input" type="checkbox" aria-label="Serverraum auswählen"></td>
+            <td class="border-transparent border-t align-top font-medium"></td>
+            <td class="border-border border-t align-top font-medium"><span>Technikzentrale</span></td>
+            <td class="border-border border-t align-top"><span class="font-medium">Serverraum</span><div class="text-muted-foreground text-xs">OBJ-0230</div></td>
+            <td class="border-border border-t align-top">Technik</td>
+            <td class="border-border border-t align-top" data-type="number">01.03.2026</td>
+          </tr>
+          <tr>
+            <td class="border-border w-px border-t ps-3 pe-1 py-2 align-top"><input class="input" type="checkbox" aria-label="Lüftungszentrale auswählen"></td>
+            <td class="border-transparent border-t align-top font-medium"></td>
+            <td class="border-transparent border-t align-top font-medium"></td>
+            <td class="border-border border-t align-top"><span class="font-medium">Lüftungszentrale</span><div class="text-muted-foreground text-xs">OBJ-0231</div></td>
+            <td class="border-border border-t align-top">Technik</td>
+            <td class="border-border border-t align-top" data-type="number">18.06.2026</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="bg-card sticky bottom-4 mx-4 mb-4 flex flex-wrap items-center gap-2 rounded-lg border px-4 py-2.5 shadow-lg">
+        <span class="me-2 text-sm font-semibold">3 ausgewählt</span>
+        <button type="button" class="btn" data-size="sm">Exportieren</button>
+        <button type="button" class="btn" data-variant="outline" data-size="sm">Verschieben</button>
+        <button type="button" class="btn" data-variant="outline" data-size="sm">Archivieren</button>
+        <button type="button" class="btn ms-auto" data-variant="ghost" data-size="sm">Auswahl aufheben</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Ohne Auswahl, mit Status-Badges (<code class="text-[11px]">data-variant="success/warning/destructive"</code>) — gleiche verschmelzende Gruppenspalten</span>
+    <div class="table-container w-full rounded-md border">
+      <table class="table border-separate border-spacing-0 text-sm">
+        <thead>
+          <tr class="text-muted-foreground text-left">
+            <th class="border-b">Standort</th>
+            <th class="border-b">Bereich</th>
+            <th class="border-b">Objekt</th>
+            <th class="border-b">Status</th>
+            <th class="border-b" data-type="number">Nächster Termin</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="align-top font-medium"><span>Werk Nord</span></td>
+            <td class="align-top font-medium"><span>Halle A</span></td>
+            <td class="align-top font-medium">Materiallager</td>
+            <td class="align-top"><span class="badge" data-variant="success">Betriebsbereit</span></td>
+            <td class="align-top" data-type="number">03.03.2026</td>
+          </tr>
+          <tr>
+            <td class="border-transparent border-t align-top font-medium"></td>
+            <td class="border-transparent border-t align-top font-medium"></td>
+            <td class="border-border border-t align-top font-medium">Montagelinie 1</td>
+            <td class="border-border border-t align-top"><span class="badge" data-variant="warning">Wartung fällig</span></td>
+            <td class="border-border border-t align-top" data-type="number">12.03.2026</td>
+          </tr>
+          <tr>
+            <td class="border-transparent border-t align-top font-medium"></td>
+            <td class="border-border border-t align-top font-medium"><span>Halle B</span></td>
+            <td class="border-border border-t align-top font-medium">Teamleitung</td>
+            <td class="border-border border-t align-top"><span class="badge" data-variant="success">Betriebsbereit</span></td>
+            <td class="border-border border-t align-top" data-type="number">28.02.2026</td>
+          </tr>
+          <tr>
+            <td class="border-transparent border-t align-top font-medium"></td>
+            <td class="border-transparent border-t align-top font-medium"></td>
+            <td class="border-border border-t align-top font-medium">Besprechungsraum</td>
+            <td class="border-border border-t align-top"><span class="badge" data-variant="destructive">Störung</span></td>
+            <td class="border-border border-t align-top" data-type="number">15.04.2026</td>
+          </tr>
+          <tr>
+            <td class="border-border border-t align-top font-medium"><span>Werk Süd</span></td>
+            <td class="border-border border-t align-top font-medium"><span>Verwaltung</span></td>
+            <td class="border-border border-t align-top font-medium">Empfang</td>
+            <td class="border-border border-t align-top"><span class="badge" data-variant="success">Betriebsbereit</span></td>
+            <td class="border-border border-t align-top" data-type="number">09.03.2026</td>
+          </tr>
+          <tr>
+            <td class="border-transparent border-t align-top font-medium"></td>
+            <td class="border-transparent border-t align-top font-medium"></td>
+            <td class="border-border border-t align-top font-medium">Archiv</td>
+            <td class="border-border border-t align-top"><span class="badge" data-variant="warning">Wartung fällig</span></td>
+            <td class="border-border border-t align-top" data-type="number">22.05.2026</td>
+          </tr>
+          <tr>
+            <td class="border-transparent border-t align-top font-medium"></td>
+            <td class="border-border border-t align-top font-medium"><span>Technikzentrale</span></td>
+            <td class="border-border border-t align-top font-medium">Serverraum</td>
+            <td class="border-border border-t align-top"><span class="badge" data-variant="success">Betriebsbereit</span></td>
+            <td class="border-border border-t align-top" data-type="number">01.03.2026</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,84 @@
+/* C22 Marken-Pack „Spica" — reine TOKEN-Schicht über dem vega-Pack.
+ *
+ * Was das ist: ein Marken-Pack (blauer Stern Spica) (sattes Blau, Basis #3B82F6),
+ * Teil der Pack-Entmonolithisierung Phase B. Es enthält AUSSCHLIESSLICH Custom
+ * Properties (keine Component-Regeln, kein @apply) und färbt nur Marke/Akzente um:
+ * primary, ring, accent, sidebar-primary/-ring, chart-Palette. Neutrale Flächen
+ * (background/card/border/muted …) bleiben unangetastet — die kommen weiter aus
+ * base.css/vega.
+ *
+ * Laden: in input.css als LETZTER Import hinter dem vega-Pack einhängen —
+ *   @import "../../vendor/basecoat/dist/styles/vega.css" layer(vendor);
+ *   …
+ *   @import "./packs/spica.css";
+ * Gleiche Selektoren (:root / .dark) wie der Vendor (base.css); weil später
+ * importiert, gewinnt dieses Pack im Spezifitäts-Gleichstand.
+ *
+ * Farbwerte: durchgehend oklch (wie base.css/tokens.css). Abstufungen sind aus dem
+ * Marken-Blau #3B82F6 (Tailwind blue-500 ≈ oklch(0.623 0.214 259.815)) über die
+ * Tailwind-v4-Blau-Leiter abgeleitet; die Hex-Herkunft steht je Wert im Kommentar.
+ */
+
+:root {
+  /* PRIMARY — Marken-Blau, aber eine Stufe DUNKLER als die Basis (#2563EB, blue-600):
+     Weiß auf #3B82F6 erreicht nur ~3.7:1 (reicht für UI/Large Text, nicht für normale
+     Button-Labels) — auf #2563EB liest Weiß mit ~5.2:1 (WCAG-AA-Gedanke). Das reine
+     Marken-Blau #3B82F6 bleibt trotzdem prominent: als --chart-1, als --ring und als
+     Dark-Primary. */
+  --primary: oklch(0.546 0.245 262.881);            /* #2563EB (blue-600) */
+  --primary-foreground: oklch(0.985 0 0);           /* ~#FAFAFA — weiß liest auf blue-600 (~5.2:1) */
+
+  /* RING — Fokusring im reinen Marken-Blau (auffällig, aber kein Textkontrast nötig). */
+  --ring: oklch(0.623 0.214 259.815);               /* #3B82F6 (blue-500, Marken-Basis) */
+
+  /* ACCENT — Hover-/Auswahlton: sehr helles Blau statt vega-Neutralgrau, dazu ein
+     tiefes Blau als Foreground (dunkles Blau auf blue-50 liest deutlich >7:1). */
+  --accent: oklch(0.97 0.014 254.604);              /* #EFF6FF (blue-50) */
+  --accent-foreground: oklch(0.379 0.146 265.522);  /* #1E3A8A (blue-900) */
+
+  /* SIDEBAR — base.css definiert eigene Sidebar-Tokens (geprüft: --sidebar-primary,
+     --sidebar-primary-foreground, --sidebar-ring existieren dort) → gleiche Marke wie
+     primary/ring, damit Sidebar-Aktivzustand und Fokus zur restlichen UI passen. */
+  --sidebar-primary: oklch(0.546 0.245 262.881);    /* #2563EB (blue-600, wie --primary) */
+  --sidebar-ring: oklch(0.623 0.214 259.815);       /* #3B82F6 (blue-500, wie --ring) */
+
+  /* CHARTS — chart-1 = das Marken-Blau selbst; 2–5 harmonisch dazu als kühle
+     Nachbar-Töne (sky/indigo/teal/violet, alle Tailwind-500er-Stufe → gleiche
+     Helligkeitsklasse, untereinander unterscheidbar statt reine Blau-Rampe). */
+  --chart-1: oklch(0.623 0.214 259.815);            /* #3B82F6 (blue-500, Marken-Basis) */
+  --chart-2: oklch(0.685 0.169 237.323);            /* #0EA5E9 (sky-500) */
+  --chart-3: oklch(0.585 0.233 277.117);            /* #6366F1 (indigo-500) */
+  --chart-4: oklch(0.704 0.140 182.503);            /* #14B8A6 (teal-500) */
+  --chart-5: oklch(0.606 0.250 292.717);            /* #8B5CF6 (violet-500) */
+}
+
+.dark {
+  /* PRIMARY — im Dark HELLER und ENTSÄTTIGTER als das Light-Primary (blue-500 statt
+     blue-600: L 0.623 > 0.546, Chroma 0.214 < 0.245), damit die Fläche auf dunklem
+     Grund leuchtet statt zu versumpfen. Weiß trüge darauf nur ~3.7:1, deshalb kippt
+     der Foreground auf ein sehr dunkles Blau-Grau (~4.9:1). */
+  --primary: oklch(0.623 0.214 259.815);            /* #3B82F6 (blue-500, Marken-Basis) */
+  --primary-foreground: oklch(0.208 0.042 265.755); /* #0F172A (slate-900) — liest auf blue-500 */
+
+  /* RING — noch eine Stufe heller/entsättigter, sichtbar auf dunklen Flächen. */
+  --ring: oklch(0.707 0.165 254.624);               /* #60A5FA (blue-400) */
+
+  /* ACCENT — Hover-Ton als DUNKLES Blau (Gegenstück zu blue-50 im Light), Foreground
+     helles Blau statt Grau (blue-200 auf blue-950 liest deutlich >7:1). */
+  --accent: oklch(0.282 0.091 267.935);             /* #172554 (blue-950) */
+  --accent-foreground: oklch(0.882 0.059 254.128);  /* #BFDBFE (blue-200) */
+
+  /* SIDEBAR — analog zu primary/ring oben; base.css setzt im .dark einen weißen
+     --sidebar-primary-foreground, der auf blue-500 nicht mehr trägt → mit umstellen. */
+  --sidebar-primary: oklch(0.623 0.214 259.815);    /* #3B82F6 (blue-500, wie --primary dark) */
+  --sidebar-primary-foreground: oklch(0.208 0.042 265.755); /* #0F172A (slate-900, wie --primary-foreground dark) */
+  --sidebar-ring: oklch(0.707 0.165 254.624);       /* #60A5FA (blue-400, wie --ring dark) */
+
+  /* CHARTS — gleiche Palette wie im Light (500er-Stufen tragen auf hellem wie dunklem
+     Grund; base.css hält seine Chart-Werte ebenfalls theme-gleich). */
+  --chart-1: oklch(0.623 0.214 259.815);            /* #3B82F6 (blue-500, Marken-Basis) */
+  --chart-2: oklch(0.685 0.169 237.323);            /* #0EA5E9 (sky-500) */
+  --chart-3: oklch(0.585 0.233 277.117);            /* #6366F1 (indigo-500) */
+  --chart-4: oklch(0.704 0.140 182.503);            /* #14B8A6 (teal-500) */
+  --chart-5: oklch(0.606 0.250 292.717);            /* #8B5CF6 (violet-500) */
+}

@@ -1,0 +1,80 @@
+<!-- c22-title: Prosa-Musterartikel -->
+<!-- custom: Typeset-Prosa. Zeigt die komplette Text-Hierarchie EINER Seite im Zusammenhang
+     (h1 + Untertitel, Absätze, h2/h3, Liste, Blockquote, Inline-Code, .code-block, Tabelle
+     im Fließtext, Bild mit Bildunterschrift, Metazeile) — die Vorlage, die ein späterer
+     Typeset-Generator variieren soll. Utilities deckungsgleich mit typography.html;
+     Codeblock = kanonisches .code-block-Muster aus components/code-block.html, Tabelle
+     nutzt .table-container/.table. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Musterartikel (komplette Text-Hierarchie einer Seite)</span>
+    <article class="flex w-full max-w-2xl flex-col gap-4">
+      <h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight">Werkstattbericht: Ein Design-System einführen</h1>
+      <p class="text-muted-foreground text-xl leading-7">Wie ein kleines Team in drei Monaten von verstreuten Stilblättern zu einer gemeinsamen Komponentenbibliothek kam — und was es unterwegs gelernt hat.</p>
+
+      <h2 class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">Ausgangslage</h2>
+      <p class="leading-7">Am Anfang stand kein System, sondern ein Flickenteppich: Jede Seite brachte ihre eigenen Abstände, Grautöne und Knopfformen mit. Wer eine Farbe ändern wollte, suchte sie an <em>vierzehn</em> Stellen. Der Wendepunkt kam mit einer einfachen Verabredung, die im <a href="#" class="font-medium underline underline-offset-4">Team-Handbuch</a> festgehalten wurde: <strong>Aussehen wird nie an die Logik geklebt.</strong> Farben existieren nur noch als Tokens wie <code class="bg-muted relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">--primary</code>, Varianten nur noch als Attribut wie <code class="bg-muted relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">data-variant="outline"</code>.</p>
+      <p class="leading-7">Das klingt nach Verzicht, ist aber das Gegenteil: Wer nichts hartkodiert, kann alles austauschen. Ein Redesign wird damit zur Frage von Stunden statt Wochen.</p>
+
+      <h3 class="scroll-m-20 text-2xl font-semibold tracking-tight">Drei Grundsätze</h3>
+      <p class="leading-7">Auf drei Regeln hat sich das Team früh geeinigt:</p>
+      <ul class="my-2 ml-6 list-disc text-sm [&>li]:mt-1">
+        <li>Jedes wiederkehrende Element lebt an genau einer Stelle — nie als Kopie.</li>
+        <li>Farben, Radien und Abstände kommen ausschließlich aus Tokens.</li>
+        <li>Jede Komponente ist in jedem Zustand in der Galerie sichtbar, bevor sie live geht.</li>
+      </ul>
+      <blockquote class="text-muted-foreground mt-2 border-l-2 pl-6 italic">„Ein Design-System ist kein Ordner voller Screenshots, sondern eine Verabredung, die man mechanisch prüfen kann."</blockquote>
+
+      <h2 class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">Vom Stilblatt zur Komponente</h2>
+      <p class="leading-7">Der eigentliche Umbau war unspektakulär: rohe Utility-Ketten raus, semantische Klassen rein. Ein Knopf greift seine Rolle als Token-Paar ab und rechnet nichts selbst aus:</p>
+      <pre class="code-block w-full"><code>.btn {
+  border-radius: var(--radius);
+  background: var(--primary);
+  color: var(--primary-foreground);
+}</code></pre>
+      <p class="leading-7">Danach war Umfärben tatsächlich nur noch „Tokens tauschen" — die Komponenten selbst blieben unangetastet.</p>
+
+      <h3 class="scroll-m-20 text-2xl font-semibold tracking-tight">Zwischenstand in Zahlen</h3>
+      <p class="leading-7">Nach zwölf Wochen sah die Bilanz so aus:</p>
+      <div class="table-container w-full">
+        <table class="table text-sm">
+          <thead>
+            <tr>
+              <th>Phase</th>
+              <th>Zeitraum</th>
+              <th class="text-end">Abgelöste Sonderwege</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-medium">Bestandsaufnahme</td>
+              <td>Woche 1–2</td>
+              <td class="text-end tabular-nums">0</td>
+            </tr>
+            <tr>
+              <td class="font-medium">Tokens &amp; Grundbausteine</td>
+              <td>Woche 3–6</td>
+              <td class="text-end tabular-nums">23</td>
+            </tr>
+            <tr>
+              <td class="font-medium">Seiten-Umstellung</td>
+              <td>Woche 7–12</td>
+              <td class="text-end tabular-nums">61</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <figure class="my-2 flex flex-col gap-2">
+        <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=1080&q=80" alt="Heller Besprechungsraum mit langem Tisch" class="aspect-video w-full rounded-lg object-cover">
+        <figcaption class="text-muted-foreground text-center text-sm">Wöchentliche Galerie-Durchsicht: Jede Komponente wird in jedem Zustand gemeinsam abgenommen.</figcaption>
+      </figure>
+
+      <h2 class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">Fazit</h2>
+      <p class="leading-7">Der größte Gewinn war nicht die Optik, sondern die Verlässlichkeit: Neue Seiten sehen automatisch aus wie ihre Nachbarn, weil es schlicht keinen zweiten Weg mehr gibt, einen Knopf zu bauen. Das System hält, weil es geprüft wird — nicht, weil sich alle daran erinnern.</p>
+
+      <hr role="separator">
+      <p class="text-muted-foreground text-sm">Zuletzt aktualisiert am 12. März 2026 · Lesezeit ca. 6 Minuten · Verfasst von Mara Schmidt</p>
+    </article>
+  </div>
+</div>

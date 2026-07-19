@@ -1,0 +1,25 @@
+<!-- c22-title: Donut-Diagramm -->
+<!-- custom: ein <div data-chart='{…}'> je Chart, gerendert von c22.js (wireChart); Segmentfarben
+     automatisch aus --chart-1…5 (Reihenfolge = Label-Reihenfolge, überschreibbar per
+     "colors":["chart-N",…] in der Serie). Legende via "legend": true (nutzt die labels), Mitteltext
+     via "center":{"value","label"}, Tooltip zeigt den Prozent-Anteil ("unit" = Tooltip-Beschriftung).
+     ENGINE-GRENZE: es gibt nur den Ring (Donut) — eine vollflächige Pie-Darstellung kennt wireChart
+     nicht. -->
+<div class="c22-examples">
+
+  <div class="c22-example">
+    <span class="c22-example-label">Donut mit Legende (<code class="text-[11px]">type: "donut"</code>, <code class="text-[11px]">legend: true</code>)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"donut","legend":true,"unit":"Anteil","labels":["Neukunden","Bestandskunden","Wiederkehrer","Gäste"],"series":[{"data":[34,41,15,10]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Zentrum-Wert (<code class="text-[11px]">center: {value, label}</code>)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"donut","legend":true,"unit":"Anteil","labels":["E-Mail","Telefon","Chat","Formular"],"center":{"value":"1.284","label":"Anfragen"},"series":[{"data":[46,22,20,12]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Eigene Token-Reihenfolge je Segment (<code class="text-[11px]">"colors": ["chart-5", "chart-3", "chart-1"]</code>)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"donut","legend":true,"unit":"Anteil","labels":["Zufrieden","Neutral","Unzufrieden"],"center":{"value":"86 %","label":"Zufriedenheit"},"series":[{"colors":["chart-5","chart-3","chart-1"],"data":[62,24,14]}]}'></div>
+  </div>
+
+</div>

@@ -6,6 +6,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Galerie als Mehrseiten-Werk (shadcn-artig):** `gallery/build.py` erzeugt jetzt vier
+  Seiten mit gemeinsamer Kopfleiste und Seiten-Navigation — **Components**
+  (`index.html`), **Blocks** (`blocks.html`, gruppiert nach Navigation / Komplette
+  Seite / Login & Signup / Tabellen), **Charts** (`charts.html`) und **Typeset**
+  (`typeset.html`). Blocks/Charts/Typeset werden per Verzeichnis-Scan entdeckt
+  (`c22/blocks/<kategorie>/`, `c22/charts/`, `c22/typeset/`; Titel per
+  `<!-- c22-title: … -->`), der gewählte Pack überlebt Seitenwechsel (localStorage).
+- **Erste Blocks:** App-Shell + Titelleisten (Navigation), Verwaltungsseite
+  (Komplette Seite), Anmeldung + Registrierung (Login & Signup), Tabelle mit
+  verschmelzenden Gruppenspalten + Auswahl-/Aktionsleiste (Tabellen).
+- **Charts-Seite:** Linien-, Balken-, Flächen- und Donut-Diagramm als eigene
+  Muster auf den `--chart-1…5`-Tokens.
+- **Typeset-Seite:** Typografie-Component (umgezogen) + Musterartikel „Prose"
+  (komplette Text-Hierarchie im Zusammenhang, Basis für den späteren Generator).
+- **Style-Pack `spica`:** erstes EIGENES Pack als reiner Token-Override über der
+  vega-Form (`c22/static/css/packs/spica.css`, Marken-Blau nach dem blauen Stern) —
+  Startpunkt der Pack-Entmonolithisierung (Phase B); `build-gallery.sh` komponiert
+  eigene Packs als vega + Token-Schicht.
+
+### Changed
+
+- **Components neu sortiert (alphabetisch)** — die alte „nur ans Ende anhängen"-Regel
+  ist aufgehoben; Chart, Typography, Data Table und Editable Table sind aus der
+  Components-Seite auf die passenderen Seiten umgezogen (Charts / Typeset /
+  Blocks→Tabellen). Konventions-Suite prüft jetzt auch Blocks/Charts/Typeset.
+
 ### Removed
 
 - **Sonner aus der Galerie entfernt — in Toast aufgegangen** (PO-Entscheid): „Sonner"
