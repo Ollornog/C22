@@ -1,0 +1,94 @@
+<!-- c22-title: Dashboard (Kennzahlen + Handlungsbedarf) -->
+<!-- Start-/Übersichtsseite einer Verwaltungs-App: Kennzahl-Karten (mit Zustand
+     als Token-Farbe) + „Zu erledigen"-Liste mit Dringlichkeits-Badges und
+     Zeilen-Aktion. Ergänzt die Verwaltungsseite (admin-page.html) um das
+     Dashboard-Muster; Zahlen/Zustände sind reine Beispieldaten. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Kennzahlen-Zeile + Handlungsbedarf-Liste</span>
+    <div class="w-full max-w-5xl">
+      <div class="mb-6 flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h1 class="text-xl font-semibold tracking-tight">Guten Morgen, Mara</h1>
+          <p class="text-muted-foreground text-sm">Hier ist der Stand deines Bestands.</p>
+        </div>
+        <button type="button" class="btn" data-variant="outline" data-size="sm">
+          <svg data-icon-lu="download" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+          Bericht abrufen
+        </button>
+      </div>
+
+      <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div class="card" data-size="sm">
+          <header><h2>Objekte gesamt</h2></header>
+          <section class="flex items-baseline gap-2">
+            <span class="text-2xl font-semibold tabular-nums">248</span>
+            <span class="badge" data-variant="secondary">+4 diesen Monat</span>
+          </section>
+        </div>
+        <div class="card" data-size="sm">
+          <header><h2>Überfällig</h2></header>
+          <section class="flex items-baseline gap-2">
+            <span class="text-destructive text-2xl font-semibold tabular-nums">7</span>
+            <span class="badge" data-variant="destructive">Handeln</span>
+          </section>
+        </div>
+        <div class="card" data-size="sm">
+          <header><h2>Bald fällig</h2></header>
+          <section class="flex items-baseline gap-2">
+            <span class="text-2xl font-semibold tabular-nums">19</span>
+            <span class="badge" data-variant="warning">≤ 30 Tage</span>
+          </section>
+        </div>
+        <div class="card" data-size="sm">
+          <header><h2>Offene Meldungen</h2></header>
+          <section class="flex items-baseline gap-2">
+            <span class="text-2xl font-semibold tabular-nums">12</span>
+            <span class="badge" data-variant="info">3 neu</span>
+          </section>
+        </div>
+      </div>
+
+      <div class="card mt-6" data-size="sm">
+        <header class="flex items-center justify-between">
+          <h2>Zu erledigen</h2>
+          <a href="#" class="text-muted-foreground hover:text-foreground text-sm font-medium">Alle ansehen</a>
+        </header>
+        <section class="p-0">
+          <table class="w-full border-separate border-spacing-0 text-sm">
+            <tbody>
+              <tr>
+                <td class="border-border border-t px-4 py-2.5"><span class="badge" data-variant="destructive">überfällig</span></td>
+                <td class="border-border border-t px-4 py-2.5 font-medium">Halle 2 · Sektionaltor Ost — Wartung seit 12 Tagen fällig</td>
+                <td class="border-border border-t px-4 py-2.5 text-end">
+                  <button type="button" class="btn" data-variant="outline" data-size="sm">Beauftragen</button>
+                </td>
+              </tr>
+              <tr>
+                <td class="border-border border-t px-4 py-2.5"><span class="badge" data-variant="destructive">überfällig</span></td>
+                <td class="border-border border-t px-4 py-2.5 font-medium">Verwaltung · Aufzugstür EG — Prüfung seit 5 Tagen fällig</td>
+                <td class="border-border border-t px-4 py-2.5 text-end">
+                  <button type="button" class="btn" data-variant="outline" data-size="sm">Beauftragen</button>
+                </td>
+              </tr>
+              <tr>
+                <td class="border-border border-t px-4 py-2.5"><span class="badge" data-variant="warning">bald fällig</span></td>
+                <td class="border-border border-t px-4 py-2.5 font-medium">Werk Nord · Fluchttür B12 — Prüfung in 9 Tagen</td>
+                <td class="border-border border-t px-4 py-2.5 text-end">
+                  <button type="button" class="btn" data-variant="ghost" data-size="sm">Später</button>
+                </td>
+              </tr>
+              <tr>
+                <td class="border-border border-t px-4 py-2.5"><span class="badge" data-variant="info">Meldung</span></td>
+                <td class="border-border border-t px-4 py-2.5 font-medium">Empfang · Drehtür — „schließt langsam" (gestern gemeldet)</td>
+                <td class="border-border border-t px-4 py-2.5 text-end">
+                  <button type="button" class="btn" data-variant="outline" data-size="sm">Ansehen</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </div>
+    </div>
+  </div>
+</div>

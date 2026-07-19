@@ -15,9 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (`typeset.html`). Blocks/Charts/Typeset werden per Verzeichnis-Scan entdeckt
   (`c22/blocks/<kategorie>/`, `c22/charts/`, `c22/typeset/`; Titel per
   `<!-- c22-title: … -->`), der gewählte Pack überlebt Seitenwechsel (localStorage).
-- **Erste Blocks:** App-Shell + Titelleisten (Navigation), Verwaltungsseite
-  (Komplette Seite), Anmeldung + Registrierung (Login & Signup), Tabelle mit
-  verschmelzenden Gruppenspalten + Auswahl-/Aktionsleiste (Tabellen).
+- **Erste Blocks:** App-Shell + Titelleisten (Navigation), Verwaltungsseite +
+  Dashboard mit Kennzahlen/Handlungsbedarf (Komplette Seite), Anmeldung +
+  Registrierung (Login & Signup), Tabelle mit verschmelzenden Gruppenspalten +
+  Auswahl-/Aktionsleiste (Tabellen).
 - **Charts-Seite:** Linien-, Balken-, Flächen- und Donut-Diagramm als eigene
   Muster auf den `--chart-1…5`-Tokens.
 - **Typeset-Seite:** Typografie-Component (umgezogen) + Musterartikel „Prose"
