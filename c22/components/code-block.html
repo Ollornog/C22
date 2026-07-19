@@ -1,0 +1,61 @@
+<!-- custom: Code-Block (.code-block) — der mehrzeilige Codeblock als eigene Komponente.
+     Die Optik (Muted-Fläche, Radius, p-4, text-sm, waagerechtes Scrollen, Mono im <code>)
+     ist SPOT in components.css; Typography zeigt denselben Block als Duplikat, holt die
+     Optik aber von hier. Feature-Variante data-line-numbers (KEINE Farb-Rolle → kein
+     data-variant, Suite-Regel 12): Nummern per CSS-Counter, user-select:none — Kopieren
+     nimmt sie nicht mit. Copy-Button oben rechts = .btn ghost + .code-block-copy (optische
+     Ausrichtung nach dem Modell .btn-close[data-corner]); Verhalten/Feedback in c22.js
+     (wireCopy). -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Standard</span>
+    <pre class="code-block w-full max-w-md"><code>function schatzkammer() {
+  return {
+    gold: 240000,
+    siegel: true,
+  };
+}</code></pre>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Copy-Button (oben rechts, Klick → Häkchen für ~2s)</span>
+    <div class="relative w-full max-w-md">
+      <pre class="code-block"><code>function schatzkammer() {
+  return {
+    gold: 240000,
+    siegel: true,
+  };
+}</code></pre>
+      <button type="button" class="btn code-block-copy" data-variant="ghost" data-copy aria-label="Code kopieren"><svg data-icon-lu="copy" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg></button>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Zeilenanzahl (dezente Fußzeile unten rechts)</span>
+    <div class="w-full max-w-md">
+      <pre class="code-block"><code>function schatzkammer() {
+  return {
+    gold: 240000,
+    siegel: true,
+  };
+}</code></pre>
+      <div class="text-muted-foreground mt-1 pe-1 text-end text-xs">6 Zeilen</div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Zeilennummerierung (data-line-numbers — Nummern werden nicht mitkopiert)</span>
+    <pre class="code-block w-full max-w-md" data-line-numbers><code><span>function schatzkammer() {</span><span>  return {</span><span>    gold: 240000,</span><span>    siegel: true,</span><span>  };</span><span>}</span></code></pre>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Ausklappbarer Code eines Containers (gerendertes Demo + &lt;details&gt;)</span>
+    <div class="w-full max-w-md rounded-xl border">
+      <div class="flex min-h-24 items-center justify-center p-8">
+        <button type="button" class="btn" data-variant="primary">Speichern</button>
+      </div>
+      <details>
+        <summary class="flex cursor-pointer list-none select-none items-center gap-4 border-t px-4 py-2 [&::-webkit-details-marker]:hidden">
+          <span class="text-muted-foreground hover:text-foreground text-xs font-medium">Code</span>
+        </summary>
+        <pre class="code-block rounded-t-none rounded-b-xl"><code>&lt;button type=&quot;button&quot; class=&quot;btn&quot; data-variant=&quot;primary&quot;&gt;Speichern&lt;/button&gt;</code></pre>
+      </details>
+    </div>
+  </div>
+</div>

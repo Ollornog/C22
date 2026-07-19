@@ -1,8 +1,8 @@
-<!-- custom: kein eigenes Basecoat-Bauteil -- horizontale/vertikale Navigation aus .dropdown-menu (Trigger-Button + Popover-Menü) + .btn zusammengesetzt. Trigger bekommt group + rotierenden Chevron (group-aria-expanded:rotate-180); Panels sind Mega-Menüs (Icon-Grid, Bild+Links) oder schlichte role=menu-Listen; aktive Seite über aria-current="page"; vertikale Variante nutzt data-side="right" für das Untermenü. Beispielbilder: Unsplash. -->
+<!-- custom: kein eigenes Basecoat-Bauteil -- horizontale/vertikale Navigation aus .dropdown-menu (Trigger-Button + Popover-Menü) + .btn zusammengesetzt. Trigger bekommt group + rotierenden Chevron (group-aria-expanded:rotate-180); Panels sind Mega-Menüs (mehrspaltig mit UNABHÄNGIGEN Spaltenhöhen = zwei flex-col-Spalten im Grid, Bild-Karte, Icon-Zeilen) oder schlichte role=menu-Listen; mehrzeilige Einträge über data-rich (components.css). Aktive Seite über aria-current="page" (Standard ohne Unterstrich, Container-Variante mit Unterstrich); vertikale Variante nutzt data-side="right" für die Untermenüs. Beispielbilder: Unsplash. -->
 <div class="c22-examples">
   <div class="c22-example">
-    <span class="c22-example-label">Standard</span>
-    <nav class="flex items-center gap-1 rounded-md border p-1" aria-label="Hauptnavigation">
+    <span class="c22-example-label">Standard (ohne Container — einspaltig · zweispaltig, unabhängige Spaltenhöhen · Bild · Icon-Zeilen · aktive Seite ohne Unterstrich)</span>
+    <nav class="flex items-center gap-1" aria-label="Hauptnavigation">
       <div class="dropdown-menu" id="c22-nm1">
         <button type="button" class="btn group" data-variant="ghost" data-size="sm" id="c22-nm1-trigger" aria-haspopup="menu" aria-controls="c22-nm1-menu" aria-expanded="false">
           Produkte
@@ -10,21 +10,33 @@
         </button>
         <div id="c22-nm1-popover" data-popover aria-hidden="true">
           <div role="menu" id="c22-nm1-menu" aria-labelledby="c22-nm1-trigger" class="w-72">
-            <button type="button" role="menuitem" class="flex-col! items-start!"><span class="font-medium">Analytics</span><span class="text-muted-foreground text-xs">Zahlen in Echtzeit auswerten</span></button>
-            <button type="button" role="menuitem" class="flex-col! items-start!"><span class="font-medium">Automation</span><span class="text-muted-foreground text-xs">Abläufe automatisch verketten</span></button>
+            <button type="button" role="menuitem" data-rich><span class="font-medium">Analytics</span><span class="text-muted-foreground text-xs">Zahlen in Echtzeit auswerten</span></button>
+            <button type="button" role="menuitem" data-rich><span class="font-medium">Automation</span><span class="text-muted-foreground text-xs">Abläufe automatisch verketten</span></button>
             <hr role="separator">
             <a role="menuitem" href="#" class="text-muted-foreground"><svg data-icon-lu="arrow-up-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>Alle Produkte ansehen</a>
           </div>
         </div>
       </div>
-      <a href="#" class="btn" data-variant="ghost" data-size="sm">Preise</a>
-      <a href="#" class="btn" data-variant="ghost" data-size="sm">Doku</a>
-      <a href="#" class="btn" data-variant="ghost" data-size="sm">Blog</a>
-    </nav>
-  </div>
-  <div class="c22-example">
-    <span class="c22-example-label">Mega-Menü mit Bild</span>
-    <nav class="flex items-center gap-1 rounded-md border p-1" aria-label="Hauptnavigation">
+      <div class="dropdown-menu" id="c22-nm6">
+        <button type="button" class="btn group" data-variant="ghost" data-size="sm" id="c22-nm6-trigger" aria-haspopup="menu" aria-controls="c22-nm6-menu" aria-expanded="false">
+          Komponenten
+          <svg data-icon-lu="chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5 opacity-50 transition-transform duration-200 group-aria-expanded:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div id="c22-nm6-popover" data-popover aria-hidden="true">
+          <div role="menu" id="c22-nm6-menu" aria-labelledby="c22-nm6-trigger" class="grid w-[560px] max-w-[85vw] grid-cols-2 items-start gap-1">
+            <div class="flex flex-col gap-1">
+              <a role="menuitem" href="#" data-rich><span class="font-medium">Alert Dialog</span><span class="text-muted-foreground text-xs">Unterbricht den Nutzer mit einer wichtigen Rückfrage, die eine Entscheidung verlangt, bevor es weitergeht.</span></a>
+              <a role="menuitem" href="#" data-rich><span class="font-medium">Hover Card</span><span class="text-muted-foreground text-xs">Vorschau hinter einem Link.</span></a>
+              <a role="menuitem" href="#" data-rich><span class="font-medium">Progress</span><span class="text-muted-foreground text-xs">Zeigt den Fortschritt einer Aufgabe als wachsenden Balken an, etwa beim Hochladen.</span></a>
+            </div>
+            <div class="flex flex-col gap-1">
+              <a role="menuitem" href="#" data-rich><span class="font-medium">Scroll Area</span><span class="text-muted-foreground text-xs">Eigener Scrollbalken.</span></a>
+              <a role="menuitem" href="#" data-rich><span class="font-medium">Tabs</span><span class="text-muted-foreground text-xs">Geschichtete Inhaltsbereiche, von denen genau einer sichtbar ist — umschaltbar über eine Reiterleiste darüber.</span></a>
+              <a role="menuitem" href="#" data-rich><span class="font-medium">Tooltip</span><span class="text-muted-foreground text-xs">Kurzinfo beim Zeigen auf ein Element.</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="dropdown-menu" id="c22-nm2">
         <button type="button" class="btn group" data-variant="ghost" data-size="sm" id="c22-nm2-trigger" aria-haspopup="menu" aria-controls="c22-nm2-menu" aria-expanded="false">
           Erkunden
@@ -32,7 +44,7 @@
         </button>
         <div id="c22-nm2-popover" data-popover aria-hidden="true">
           <div role="menu" id="c22-nm2-menu" aria-labelledby="c22-nm2-trigger" class="grid w-[520px] max-w-[85vw] grid-cols-2 gap-1">
-            <a role="menuitem" href="#" class="flex-col! items-start! h-full gap-0! overflow-hidden rounded-sm p-0!">
+            <a role="menuitem" href="#" data-rich class="h-full gap-0 overflow-hidden rounded-sm p-0">
               <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=400&h=300&fit=crop&q=80" alt="" class="aspect-video w-full rounded-t-sm object-cover">
               <span class="flex flex-col gap-1 p-3">
                 <span class="text-sm font-medium">C22 Design-System</span>
@@ -40,20 +52,13 @@
               </span>
             </a>
             <div class="flex flex-col">
-              <a role="menuitem" href="#" class="flex-col! items-start!"><span class="font-medium">Einführung</span><span class="text-muted-foreground text-xs">Wie C22 aufgebaut ist</span></a>
-              <a role="menuitem" href="#" class="flex-col! items-start!"><span class="font-medium">Installation</span><span class="text-muted-foreground text-xs">In wenigen Minuten startklar</span></a>
-              <a role="menuitem" href="#" class="flex-col! items-start!"><span class="font-medium">Typografie</span><span class="text-muted-foreground text-xs">Schriftskala &amp; Tokens</span></a>
+              <a role="menuitem" href="#" data-rich><span class="font-medium">Einführung</span><span class="text-muted-foreground text-xs">Wie C22 aufgebaut ist</span></a>
+              <a role="menuitem" href="#" data-rich><span class="font-medium">Installation</span><span class="text-muted-foreground text-xs">In wenigen Minuten startklar</span></a>
+              <a role="menuitem" href="#" data-rich><span class="font-medium">Typografie</span><span class="text-muted-foreground text-xs">Schriftskala &amp; Tokens</span></a>
             </div>
           </div>
         </div>
       </div>
-      <a href="#" class="btn" data-variant="ghost" data-size="sm">Komponenten</a>
-      <a href="#" class="btn" data-variant="ghost" data-size="sm">Doku</a>
-    </nav>
-  </div>
-  <div class="c22-example">
-    <span class="c22-example-label">Icon-Grid</span>
-    <nav class="flex items-center gap-1 rounded-md border p-1" aria-label="Hauptnavigation">
       <div class="dropdown-menu" id="c22-nm3">
         <button type="button" class="btn group" data-variant="ghost" data-size="sm" id="c22-nm3-trigger" aria-haspopup="menu" aria-controls="c22-nm3-menu" aria-expanded="false">
           Lösungen
@@ -61,39 +66,38 @@
         </button>
         <div id="c22-nm3-popover" data-popover aria-hidden="true">
           <div role="menu" id="c22-nm3-menu" aria-labelledby="c22-nm3-trigger" class="grid w-[520px] max-w-[85vw] grid-cols-2 gap-1">
-            <button type="button" role="menuitem" class="flex-col! items-start! gap-3">
-              <span class="bg-muted grid size-8 shrink-0 place-items-center rounded-md"><svg data-icon-lu="chart-column" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4"><path d="M3 3v18h18"/><rect width="3" height="6" x="7" y="12"/><rect width="3" height="10" x="12" y="8"/><rect width="3" height="14" x="17" y="4"/></svg></span>
-              <span class="flex flex-col"><span class="font-medium">Analytics</span><span class="text-muted-foreground text-xs">Zahlen in Echtzeit</span></span>
+            <button type="button" role="menuitem" data-rich class="flex-row items-center gap-3">
+              <span class="bg-muted grid size-10 shrink-0 place-items-center rounded-md"><svg data-icon-lu="chart-column" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5"><path d="M3 3v18h18"/><rect width="3" height="6" x="7" y="12"/><rect width="3" height="10" x="12" y="8"/><rect width="3" height="14" x="17" y="4"/></svg></span>
+              <span class="flex flex-col gap-0.5"><span class="font-medium">Analytics</span><span class="text-muted-foreground text-xs">Zahlen in Echtzeit</span></span>
             </button>
-            <button type="button" role="menuitem" class="flex-col! items-start! gap-3">
-              <span class="bg-muted grid size-8 shrink-0 place-items-center rounded-md"><svg data-icon-lu="rotate-ccw" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></span>
-              <span class="flex flex-col"><span class="font-medium">Automation</span><span class="text-muted-foreground text-xs">Abläufe verketten</span></span>
+            <button type="button" role="menuitem" data-rich class="flex-row items-center gap-3">
+              <span class="bg-muted grid size-10 shrink-0 place-items-center rounded-md"><svg data-icon-lu="rotate-ccw" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></span>
+              <span class="flex flex-col gap-0.5"><span class="font-medium">Automation</span><span class="text-muted-foreground text-xs">Abläufe verketten</span></span>
             </button>
-            <button type="button" role="menuitem" class="flex-col! items-start! gap-3">
-              <span class="bg-muted grid size-8 shrink-0 place-items-center rounded-md"><svg data-icon-lu="lock" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
-              <span class="flex flex-col"><span class="font-medium">Sicherheit</span><span class="text-muted-foreground text-xs">SSO &amp; Audit-Log</span></span>
+            <button type="button" role="menuitem" data-rich class="flex-row items-center gap-3">
+              <span class="bg-muted grid size-10 shrink-0 place-items-center rounded-md"><svg data-icon-lu="lock" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+              <span class="flex flex-col gap-0.5"><span class="font-medium">Sicherheit</span><span class="text-muted-foreground text-xs">SSO &amp; Audit-Log</span></span>
             </button>
-            <button type="button" role="menuitem" class="flex-col! items-start! gap-3">
-              <span class="bg-muted grid size-8 shrink-0 place-items-center rounded-md"><svg data-icon-lu="user-plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg></span>
-              <span class="flex flex-col"><span class="font-medium">Team</span><span class="text-muted-foreground text-xs">Mitglieder einladen</span></span>
+            <button type="button" role="menuitem" data-rich class="flex-row items-center gap-3">
+              <span class="bg-muted grid size-10 shrink-0 place-items-center rounded-md"><svg data-icon-lu="user-plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg></span>
+              <span class="flex flex-col gap-0.5"><span class="font-medium">Team</span><span class="text-muted-foreground text-xs">Mitglieder einladen</span></span>
             </button>
-            <button type="button" role="menuitem" class="flex-col! items-start! gap-3">
-              <span class="bg-muted grid size-8 shrink-0 place-items-center rounded-md"><svg data-icon-lu="folder" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg></span>
-              <span class="flex flex-col"><span class="font-medium">Dokumentation</span><span class="text-muted-foreground text-xs">Anleitungen &amp; Referenz</span></span>
+            <button type="button" role="menuitem" data-rich class="flex-row items-center gap-3">
+              <span class="bg-muted grid size-10 shrink-0 place-items-center rounded-md"><svg data-icon-lu="folder" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg></span>
+              <span class="flex flex-col gap-0.5"><span class="font-medium">Dokumentation</span><span class="text-muted-foreground text-xs">Anleitungen &amp; Referenz</span></span>
             </button>
-            <button type="button" role="menuitem" class="flex-col! items-start! gap-3">
-              <span class="bg-muted grid size-8 shrink-0 place-items-center rounded-md"><svg data-icon-lu="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
-              <span class="flex flex-col"><span class="font-medium">Support</span><span class="text-muted-foreground text-xs">Hilfe-Center &amp; Kontakt</span></span>
+            <button type="button" role="menuitem" data-rich class="flex-row items-center gap-3">
+              <span class="bg-muted grid size-10 shrink-0 place-items-center rounded-md"><svg data-icon-lu="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
+              <span class="flex flex-col gap-0.5"><span class="font-medium">Support</span><span class="text-muted-foreground text-xs">Hilfe-Center &amp; Kontakt</span></span>
             </button>
           </div>
         </div>
       </div>
-      <a href="#" class="btn" data-variant="ghost" data-size="sm">Preise</a>
-      <a href="#" class="btn" data-variant="ghost" data-size="sm">Unternehmen</a>
+      <a href="#" class="btn bg-accent text-accent-foreground" data-variant="ghost" data-size="sm" aria-current="page">Preise</a>
     </nav>
   </div>
   <div class="c22-example">
-    <span class="c22-example-label">Aktive Seite (<code class="text-[11px]">aria-current="page"</code>)</span>
+    <span class="c22-example-label">Mit Container &amp; Unterstrich (aktive Seite)</span>
     <nav class="flex items-center gap-1 rounded-md border p-1" aria-label="Hauptnavigation">
       <a href="#" class="btn bg-accent text-accent-foreground relative after:absolute after:inset-x-2 after:-bottom-1 after:h-0.5 after:rounded-full after:bg-primary" data-variant="ghost" data-size="sm" aria-current="page">Übersicht</a>
       <a href="#" class="btn" data-variant="ghost" data-size="sm">Projekte</a>
@@ -102,23 +106,99 @@
     </nav>
   </div>
   <div class="c22-example">
-    <span class="c22-example-label">Vertikal (<code class="text-[11px]">data-side="right"</code>)</span>
-    <div class="flex w-56 flex-col gap-1 rounded-md border p-1" aria-label="Hauptnavigation" role="navigation">
-      <a href="#" class="btn w-full justify-start" data-variant="ghost" data-size="sm" aria-current="page">Übersicht</a>
-      <div class="dropdown-menu" id="c22-nm5">
-        <button type="button" class="btn group w-full justify-between" data-variant="ghost" data-size="sm" id="c22-nm5-trigger" aria-haspopup="menu" aria-controls="c22-nm5-menu" aria-expanded="false">
+    <span class="c22-example-label">Vertikal (ohne Container — aktive Zeile, alle Menü-Bauformen, <code class="text-[11px]">data-side="right"</code>)</span>
+    <div class="flex w-56 flex-col gap-1" aria-label="Hauptnavigation" role="navigation">
+      <a href="#" class="btn bg-accent text-accent-foreground w-full justify-start" data-variant="ghost" data-size="sm" aria-current="page">Übersicht</a>
+      <div class="dropdown-menu" id="c22-nmv1">
+        <button type="button" class="btn group w-full justify-between" data-variant="ghost" data-size="sm" id="c22-nmv1-trigger" aria-haspopup="menu" aria-controls="c22-nmv1-menu" aria-expanded="false">
           Produkte
-          <svg data-icon-lu="chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5 opacity-50 -rotate-90 transition-transform duration-200 group-aria-expanded:rotate-0"><path d="m6 9 6 6 6-6"/></svg>
+          <svg data-icon-lu="chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5 opacity-50 -rotate-90 transition-transform duration-200 group-aria-expanded:rotate-90"><path d="m6 9 6 6 6-6"/></svg>
         </button>
-        <div id="c22-nm5-popover" data-popover aria-hidden="true" data-side="right" data-align="start">
-          <div role="menu" id="c22-nm5-menu" aria-labelledby="c22-nm5-trigger" class="w-56">
-            <button type="button" role="menuitem">Analytics</button>
-            <button type="button" role="menuitem">Automation</button>
-            <button type="button" role="menuitem">Sicherheit</button>
+        <div id="c22-nmv1-popover" data-popover aria-hidden="true" data-side="right" data-align="start">
+          <div role="menu" id="c22-nmv1-menu" aria-labelledby="c22-nmv1-trigger" class="w-72">
+            <button type="button" role="menuitem" data-rich><span class="font-medium">Analytics</span><span class="text-muted-foreground text-xs">Zahlen in Echtzeit auswerten</span></button>
+            <button type="button" role="menuitem" data-rich><span class="font-medium">Automation</span><span class="text-muted-foreground text-xs">Abläufe automatisch verketten</span></button>
+            <hr role="separator">
+            <a role="menuitem" href="#" class="text-muted-foreground"><svg data-icon-lu="arrow-up-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>Alle Produkte ansehen</a>
           </div>
         </div>
       </div>
-      <a href="#" class="btn w-full justify-start" data-variant="ghost" data-size="sm">Preise</a>
+      <div class="dropdown-menu" id="c22-nmv2">
+        <button type="button" class="btn group w-full justify-between" data-variant="ghost" data-size="sm" id="c22-nmv2-trigger" aria-haspopup="menu" aria-controls="c22-nmv2-menu" aria-expanded="false">
+          Komponenten
+          <svg data-icon-lu="chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5 opacity-50 -rotate-90 transition-transform duration-200 group-aria-expanded:rotate-90"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div id="c22-nmv2-popover" data-popover aria-hidden="true" data-side="right" data-align="start">
+          <div role="menu" id="c22-nmv2-menu" aria-labelledby="c22-nmv2-trigger" class="grid w-[560px] max-w-[85vw] grid-cols-2 items-start gap-1">
+            <div class="flex flex-col gap-1">
+              <a role="menuitem" href="#" data-rich><span class="font-medium">Alert Dialog</span><span class="text-muted-foreground text-xs">Unterbricht den Nutzer mit einer wichtigen Rückfrage, die eine Entscheidung verlangt, bevor es weitergeht.</span></a>
+              <a role="menuitem" href="#" data-rich><span class="font-medium">Hover Card</span><span class="text-muted-foreground text-xs">Vorschau hinter einem Link.</span></a>
+              <a role="menuitem" href="#" data-rich><span class="font-medium">Progress</span><span class="text-muted-foreground text-xs">Zeigt den Fortschritt einer Aufgabe als wachsenden Balken an, etwa beim Hochladen.</span></a>
+            </div>
+            <div class="flex flex-col gap-1">
+              <a role="menuitem" href="#" data-rich><span class="font-medium">Scroll Area</span><span class="text-muted-foreground text-xs">Eigener Scrollbalken.</span></a>
+              <a role="menuitem" href="#" data-rich><span class="font-medium">Tabs</span><span class="text-muted-foreground text-xs">Geschichtete Inhaltsbereiche, von denen genau einer sichtbar ist — umschaltbar über eine Reiterleiste darüber.</span></a>
+              <a role="menuitem" href="#" data-rich><span class="font-medium">Tooltip</span><span class="text-muted-foreground text-xs">Kurzinfo beim Zeigen auf ein Element.</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="dropdown-menu" id="c22-nmv3">
+        <button type="button" class="btn group w-full justify-between" data-variant="ghost" data-size="sm" id="c22-nmv3-trigger" aria-haspopup="menu" aria-controls="c22-nmv3-menu" aria-expanded="false">
+          Erkunden
+          <svg data-icon-lu="chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5 opacity-50 -rotate-90 transition-transform duration-200 group-aria-expanded:rotate-90"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div id="c22-nmv3-popover" data-popover aria-hidden="true" data-side="right" data-align="start">
+          <div role="menu" id="c22-nmv3-menu" aria-labelledby="c22-nmv3-trigger" class="grid w-[520px] max-w-[85vw] grid-cols-2 gap-1">
+            <a role="menuitem" href="#" data-rich class="h-full gap-0 overflow-hidden rounded-sm p-0">
+              <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=400&h=300&fit=crop&q=80" alt="" class="aspect-video w-full rounded-t-sm object-cover">
+              <span class="flex flex-col gap-1 p-3">
+                <span class="text-sm font-medium">C22 Design-System</span>
+                <span class="text-muted-foreground text-xs">Kanonisches HTML, Tokens und Basecoat-Klassen für jede Engine.</span>
+              </span>
+            </a>
+            <div class="flex flex-col">
+              <a role="menuitem" href="#" data-rich><span class="font-medium">Einführung</span><span class="text-muted-foreground text-xs">Wie C22 aufgebaut ist</span></a>
+              <a role="menuitem" href="#" data-rich><span class="font-medium">Installation</span><span class="text-muted-foreground text-xs">In wenigen Minuten startklar</span></a>
+              <a role="menuitem" href="#" data-rich><span class="font-medium">Typografie</span><span class="text-muted-foreground text-xs">Schriftskala &amp; Tokens</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="dropdown-menu" id="c22-nmv4">
+        <button type="button" class="btn group w-full justify-between" data-variant="ghost" data-size="sm" id="c22-nmv4-trigger" aria-haspopup="menu" aria-controls="c22-nmv4-menu" aria-expanded="false">
+          Lösungen
+          <svg data-icon-lu="chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5 opacity-50 -rotate-90 transition-transform duration-200 group-aria-expanded:rotate-90"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div id="c22-nmv4-popover" data-popover aria-hidden="true" data-side="right" data-align="start">
+          <div role="menu" id="c22-nmv4-menu" aria-labelledby="c22-nmv4-trigger" class="grid w-[520px] max-w-[85vw] grid-cols-2 gap-1">
+            <button type="button" role="menuitem" data-rich class="flex-row items-center gap-3">
+              <span class="bg-muted grid size-10 shrink-0 place-items-center rounded-md"><svg data-icon-lu="chart-column" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5"><path d="M3 3v18h18"/><rect width="3" height="6" x="7" y="12"/><rect width="3" height="10" x="12" y="8"/><rect width="3" height="14" x="17" y="4"/></svg></span>
+              <span class="flex flex-col gap-0.5"><span class="font-medium">Analytics</span><span class="text-muted-foreground text-xs">Zahlen in Echtzeit</span></span>
+            </button>
+            <button type="button" role="menuitem" data-rich class="flex-row items-center gap-3">
+              <span class="bg-muted grid size-10 shrink-0 place-items-center rounded-md"><svg data-icon-lu="rotate-ccw" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></span>
+              <span class="flex flex-col gap-0.5"><span class="font-medium">Automation</span><span class="text-muted-foreground text-xs">Abläufe verketten</span></span>
+            </button>
+            <button type="button" role="menuitem" data-rich class="flex-row items-center gap-3">
+              <span class="bg-muted grid size-10 shrink-0 place-items-center rounded-md"><svg data-icon-lu="lock" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+              <span class="flex flex-col gap-0.5"><span class="font-medium">Sicherheit</span><span class="text-muted-foreground text-xs">SSO &amp; Audit-Log</span></span>
+            </button>
+            <button type="button" role="menuitem" data-rich class="flex-row items-center gap-3">
+              <span class="bg-muted grid size-10 shrink-0 place-items-center rounded-md"><svg data-icon-lu="user-plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg></span>
+              <span class="flex flex-col gap-0.5"><span class="font-medium">Team</span><span class="text-muted-foreground text-xs">Mitglieder einladen</span></span>
+            </button>
+            <button type="button" role="menuitem" data-rich class="flex-row items-center gap-3">
+              <span class="bg-muted grid size-10 shrink-0 place-items-center rounded-md"><svg data-icon-lu="folder" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg></span>
+              <span class="flex flex-col gap-0.5"><span class="font-medium">Dokumentation</span><span class="text-muted-foreground text-xs">Anleitungen &amp; Referenz</span></span>
+            </button>
+            <button type="button" role="menuitem" data-rich class="flex-row items-center gap-3">
+              <span class="bg-muted grid size-10 shrink-0 place-items-center rounded-md"><svg data-icon-lu="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
+              <span class="flex flex-col gap-0.5"><span class="font-medium">Support</span><span class="text-muted-foreground text-xs">Hilfe-Center &amp; Kontakt</span></span>
+            </button>
+          </div>
+        </div>
+      </div>
       <a href="#" class="btn w-full justify-start" data-variant="ghost" data-size="sm">Doku</a>
     </div>
   </div>

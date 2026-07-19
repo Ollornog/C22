@@ -22,7 +22,12 @@
    * Default = Fließtext-Font. Ein Theme/Generator setzt nur diese Variable um, alle h1–h6 folgen. */
   --font-heading: var(--font-sans);
 
-  /* Ampel-/Status-Farben — vega kennt nur destructive, kein success/warning. */
+  /* Ampel-/Status-Farben — vega kennt nur destructive, kein success/warning. Vollwertige
+     Rollen-PAARE (Fläche + lesbarer Foreground) wie primary/secondary/…: die Fläche bleibt
+     theme-UNabhängig (mittleres Grün / helles Amber trägt auf hellem wie dunklem Grund), darum
+     kein eigener .dark-Wert — der Foreground ist so gewählt, dass er in beiden Themes liest
+     (weiß auf Grün, dunkles Braun auf Amber). Abgegriffen über data-variant (badge/slider) bzw.
+     die Utilities bg-success/text-success-foreground; Übersicht: components/color-roles.html. */
   --success: oklch(0.60 0.17 150);
   --success-foreground: oklch(0.98 0 0);
   --warning: oklch(0.79 0.16 78);
@@ -32,6 +37,16 @@
      beiden Themes, deshalb kein separater Dark-Wert nötig — aber als Token, nicht als bg-blue-600. */
   --info: oklch(0.55 0.21 255);
   --info-foreground: oklch(0.99 0 0);
+
+  /* Destructive-Foreground: vega definiert nur --destructive (rot), aber keinen Foreground —
+     damit war destructive das einzige unvollständige Rollen-Paar. Hier ergänzt, damit
+     text-destructive-foreground existiert und color-roles.html destructive als echtes Paar zeigt.
+     Anders als bei success/warning/info ist die destructive-FLÄCHE NICHT theme-unabhängig: hell
+     ist sie dunkles Rot (0.577 → weißer Text liest), dunkel aber ein helles Lachs-Rot (0.704 →
+     weiß trägt nicht mehr). Deshalb theme-abhängig — weiß im Hellen, dunkel im .dark-Block unten.
+     Die getönte destructive-Ausführung (bubble/alert) nutzt weiterhin text-destructive auf
+     bg-destructive/10. */
+  --destructive-foreground: oklch(0.98 0 0);
 
   /* Steuerelemente ÜBER beliebigen Medien (Bild-Overlays, z.B. Carousel-Pfeile/-Punkte): bewusst
      theme-UNabhängig, aber zentral (SPOT) — immer helle Kontrolle + Schatten, damit sie auf hellem wie
@@ -88,6 +103,45 @@
    * Kontextmenü über einem offenen Popover erscheint. Genutzt in components.css (context-menu). */
   --z-popover: 50;
   --z-context: 60;
+
+  /* Scrollbar-Achse: Basecoats .scrollbar/.scrollbar-sm lesen ausschließlich diese fünf Tokens.
+   * Der Vendor bringt in base/base.css zwar Defaults mit (Thumb = var(--border)) — hier der
+   * sichtbare C22-Seam (Muster wie Schatten/Motion oben): Breiten/Radius = Basecoat-Defaults,
+   * der Thumb aber bewusst kräftiger als var(--border) (in beiden Themes sonst kaum sichtbar),
+   * abgeleitet aus --muted-foreground. Track standardmäßig transparent; die sichtbare Rinne ist
+   * eine C22-Variante (data-track='visible', components.css). Da Thumb/Track über var(--…)-Ableitung
+   * laufen, folgen sie dem Dark-Theme automatisch — kein eigener .dark-Wert nötig. */
+  --scrollbar-width: 0.625rem;
+  --scrollbar-sm-width: 0.375rem;
+  --scrollbar-radius: 9999px;
+  --scrollbar-track: transparent;
+  --scrollbar-thumb: color-mix(in oklab, var(--muted-foreground) 35%, transparent);
+  /* C22-eigenes sechstes Token (nicht Basecoat): Puffer, um den der Track vor den Container-
+   * Ecken endet, damit der Daumen nicht über die Rundung läuft. An --radius gekoppelt, folgt
+   * also der Radius-Achse. Angewandt in components.css (automatisch bei rounded-*-Scrollflächen,
+   * explizit per data-scrollbar-inset). Nur ::-webkit-Route — Firefox kennt keine Track-Ränder. */
+  --scrollbar-inset: var(--radius);
+
+  /* C22-eigenes Token: HOVER-SCHLEIER (PO 2026-07-18). Wo ein Hover in derselben Farbe
+   * unterginge (z.B. secondary-Fläche auf secondary-Hover), legt sich stattdessen dieser
+   * theme-adaptive, transparente Schleier über die Fläche: foreground 8 % macht Helles im
+   * hellen Theme dunkler und (weil foreground kippt) Dunkles im Dark-Theme heller. Als
+   * background-image auftragen (linear-gradient), damit die Grundfarbe darunter stehen
+   * bleibt. Angewandt in components.css. */
+  --hover-veil: color-mix(in oklab, var(--foreground) 8%, transparent);
+  /* Gegenstück für KONTRASTFARBIGE Flächen (primary, destructive …): background-basiert —
+   * hellt im Hellmodus das fast schwarze Element auf, dunkelt im Dark-Theme das fast weiße
+   * ab (weil --background mitkippt). Etwas stärker dosiert, weil Weiß über Dunkel mehr
+   * Anteil braucht, um sichtbar zu sein. */
+  --hover-veil-invers: color-mix(in oklab, var(--background) 18%, transparent);
+}
+
+/* Dark-Theme-Override nur dort, wo ein Token themeabhängig sein MUSS: die destructive-Fläche ist
+   im .dark hell (Lachs-Rot), darum liest dort dunkler statt weißer Foreground. success/warning/info
+   bleiben bewusst themeunabhängig (Fläche + Foreground tragen in beiden Themes → kein Override).
+   Selber Selektor (.dark) wie der Vendor (base.css) — später importiert, gewinnt also im Gleichstand. */
+.dark {
+  --destructive-foreground: oklch(0.21 0 0);
 }
 
 /* Heading-Font-/Gewicht-Achse: alle Überschriften folgen --font-heading und --font-weight-heading.
@@ -132,6 +186,7 @@
   --color-warning-foreground: var(--warning-foreground);
   --color-info: var(--info);
   --color-info-foreground: var(--info-foreground);
+  --color-destructive-foreground: var(--destructive-foreground);
   --color-overlay-control: var(--overlay-control);
   /* macht die Utility `font-heading` verfügbar (Nicht-h*-Elemente in Heading-Schrift). */
   --font-heading: var(--font-heading);

@@ -39,20 +39,22 @@
     </div>
   </div>
   <div class="c22-example">
-    <span class="c22-example-label">Responsiv (<code class="text-[11px]">data-orientation="responsive"</code> — ab mittlerer Containerbreite nebeneinander, darunter gestapelt)</span>
-    <fieldset class="fieldset w-full max-w-xl">
-      <legend data-variant="label">Adresse</legend>
-      <div role="group" aria-label="Adressfelder">
-        <div class="field" role="group" data-orientation="responsive">
-          <label for="c22-field-street">Straße &amp; Hausnummer</label>
-          <input class="input" type="text" id="c22-field-street" placeholder="Musterstraße 1">
+    <span class="c22-example-label">Responsiv (<code class="text-[11px]">data-orientation="responsive"</code> — ab mittlerer Containerbreite nebeneinander, darunter gestapelt; Container unten rechts greifen und ziehen)</span>
+    <div class="w-full max-w-xl resize-x overflow-auto rounded-lg border p-4">
+      <fieldset class="fieldset w-full">
+        <legend data-variant="label">Adresse</legend>
+        <div role="group" aria-label="Adressfelder">
+          <div class="field" role="group" data-orientation="responsive">
+            <label for="c22-field-street" class="w-20 shrink-0">Straße</label>
+            <input class="input" type="text" id="c22-field-street" placeholder="Musterstraße 1">
+          </div>
+          <div class="field" role="group" data-orientation="responsive">
+            <label for="c22-field-zip" class="w-20 shrink-0">Ort</label>
+            <input class="input" type="text" id="c22-field-zip" placeholder="12345 Musterstadt">
+          </div>
         </div>
-        <div class="field" role="group" data-orientation="responsive">
-          <label for="c22-field-zip">PLZ &amp; Ort</label>
-          <input class="input" type="text" id="c22-field-zip" placeholder="12345 Musterstadt">
-        </div>
-      </div>
-    </fieldset>
+      </fieldset>
+    </div>
   </div>
   <div class="c22-example">
     <span class="c22-example-label">Fieldset mit mehreren Feldern (Gruppe mit Legende)</span>
@@ -109,4 +111,53 @@
       </footer>
     </div>
   </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Tabs (unterschiedliche Feld-Elemente je Reiter)</span>
+    <div class="tabs w-full max-w-sm" id="c22-field-tabs">
+      <nav role="tablist">
+        <button type="button" role="tab" id="c22-ft-1" aria-controls="c22-ft-p1" aria-selected="true" tabindex="0">Profil</button>
+        <button type="button" role="tab" id="c22-ft-2" aria-controls="c22-ft-p2" aria-selected="false" tabindex="-1">Mitteilungen</button>
+        <button type="button" role="tab" id="c22-ft-3" aria-controls="c22-ft-p3" aria-selected="false" tabindex="-1">Zahlung</button>
+      </nav>
+      <div role="tabpanel" id="c22-ft-p1" aria-labelledby="c22-ft-1" tabindex="-1" class="flex flex-col gap-4 pt-4">
+        <div class="field" role="group">
+          <label for="c22-ft-name">Anzeigename</label>
+          <input class="input" type="text" id="c22-ft-name" placeholder="Vor- und Nachname">
+          <p>Wird auf deinem Profil angezeigt.</p>
+        </div>
+        <div class="field" role="group">
+          <label for="c22-ft-bio">Über mich</label>
+          <textarea class="textarea" id="c22-ft-bio" rows="3" placeholder="Ein paar Sätze zu dir …"></textarea>
+        </div>
+      </div>
+      <div role="tabpanel" id="c22-ft-p2" aria-labelledby="c22-ft-2" tabindex="-1" hidden class="flex flex-col gap-3 pt-4">
+        <div role="group" class="field" data-orientation="horizontal">
+          <input class="input" type="checkbox" role="switch" id="c22-ft-mail" checked>
+          <label for="c22-ft-mail">E-Mail-Benachrichtigungen</label>
+        </div>
+        <div role="group" class="field" data-orientation="horizontal">
+          <input class="input" type="checkbox" role="switch" id="c22-ft-push">
+          <label for="c22-ft-push">Push-Mitteilungen</label>
+        </div>
+        <div role="group" class="field" data-orientation="horizontal">
+          <input class="input" type="checkbox" role="switch" id="c22-ft-digest" checked>
+          <label for="c22-ft-digest">Wöchentliche Zusammenfassung</label>
+        </div>
+      </div>
+      <div role="tabpanel" id="c22-ft-p3" aria-labelledby="c22-ft-3" tabindex="-1" hidden class="flex flex-col gap-4 pt-4">
+        <div class="field" role="group">
+          <label for="c22-ft-method">Zahlungsart</label>
+          <select class="select" id="c22-ft-method">
+            <option>Rechnung</option><option selected>SEPA-Lastschrift</option><option>Kreditkarte</option>
+          </select>
+        </div>
+        <div class="field" role="group">
+          <label for="c22-ft-iban">IBAN</label>
+          <input class="input" type="text" id="c22-ft-iban" placeholder="DE00 0000 0000 0000 0000 00">
+          <p>Wird nur für den Einzug verwendet.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Schwebendes Label (.field[data-float]) wird bei Label (label.html) gezeigt. -->
 </div>

@@ -351,6 +351,71 @@ def r11_lucide_namen() -> list[str]:
     return treffer
 
 
+# ── Regel 12: geschlossenes Varianten-Vokabular ──────────────────────────────
+# Regel 4 prüft die FORM eines data-variant (lowercase-kebab); Regel 12 prüft die
+# MITGLIEDSCHAFT: jeder Wert muss aus einer festen Liste stammen. Die Farb-Rollen
+# (primary/secondary/muted/accent/tinted/outline/ghost/link/destructive/success/
+# warning/info) sind der geteilte Kern aller Varianten — die sichtbare Übersicht
+# dazu ist components/color-roles.html; „Umfärben = Tokens tauschen" hängt daran.
+# Dazu die wenigen Nicht-Farb-Ausführungen derselben Achse (Form/Struktur statt
+# eigener Rolle), die real existieren. Ein neuer Variantenname gehört ZUERST hierher
+# (bewusste Entscheidung + color-roles.html), nicht per Tippfehler ins Markup —
+# genau so wie Regel 6 das Wegrefactoren der Achsen-Tokens verhindert.
+ERLAUBTE_VARIANTEN = {
+    # Farb-Rollen — greifen die Token-Paare ab (siehe color-roles.html):
+    "primary", "secondary", "muted", "accent", "tinted",
+    "outline", "ghost", "link", "destructive",
+    "success", "warning", "info",
+    # Nicht-Farb-Ausführungen derselben Achse (Form/Struktur, keine eigene Farb-Rolle):
+    "line", "label", "elevated", "card", "bordered", "separator", "mono",
+}
+VARIANT_ATTR = re.compile(r'data-variant="([^"]*)"')
+
+
+def _variant_verstoesse(quelle: str, name: str) -> list[str]:
+    """Kernprüfung (auch vom Selbsttest genutzt): meldet data-variant-Werte, die nicht
+    im Vokabular stehen. Kommentare/<code>-Labels sind vom Aufrufer schon ausgeblendet."""
+    treffer: list[str] = []
+    for i, ln in enumerate(zeilen(quelle), 1):
+        for wert in VARIANT_ATTR.findall(ln):
+            if wert not in ERLAUBTE_VARIANTEN:
+                treffer.append(f"{name}:{i}  data-variant=\"{wert}\" nicht im Vokabular "
+                               f"— Wert in color-roles.html/ERLAUBTE_VARIANTEN aufnehmen "
+                               f"oder an eine bestehende Rolle angleichen")
+    return treffer
+
+
+def r12_variant_vokabular() -> list[str]:
+    treffer: list[str] = []
+    for p in KOMPONENTEN:
+        treffer += _variant_verstoesse(strip_kommentare(p.read_text(encoding="utf-8")), rel(p))
+    return treffer
+
+
+def r12_selbsttest() -> bool:
+    """Ein Wächter, der nie anschlägt, ist wertlos (Lektion aus früheren Regex-Wächtern):
+    ein erfundener Wert MUSS gemeldet, ein gültiger NICHT gemeldet werden."""
+    bad = _variant_verstoesse('<span data-variant="knallrot">x</span>', "selftest")
+    good = _variant_verstoesse('<span data-variant="primary">x</span>'
+                               '<span data-variant="success">x</span>', "selftest")
+    return len(bad) == 1 and good == []
+
+
+# ── Regel 13: keine RTL-Demos außerhalb von direction.html (Galerie-Linie, PO) ─
+# RTL wird EINMAL in der Direction-Component gezeigt; verstreute dir="rtl"-Demos in
+# anderen Partials wurden systematisch entfernt und sollen nicht zurückkehren.
+# Kopfkommentare (Doku-Hinweise wie „funktioniert mit dir=rtl") sind ausgenommen.
+def r13_rtl_demos() -> list[str]:
+    treffer: list[str] = []
+    for p in KOMPONENTEN:
+        if p.name == "direction.html":
+            continue
+        for i, ln in enumerate(zeilen(strip_kommentare(p.read_text(encoding="utf-8"))), 1):
+            if 'dir="rtl"' in ln:
+                treffer.append(f'{rel(p)}:{i}  dir="rtl" — RTL-Demos leben nur in direction.html')
+    return treffer
+
+
 r = Report("Konventionen — Varianten-Vertrag & Tokens")
 r.check("Regel 1 — keine Literal-Farben im Markup", not (t := r1_literalfarben()), " | ".join(t[:4]))
 r.check("Regel 2 — keine Tailwind-Palette-Klassen", not (t := r2_palette_klassen()), " | ".join(t[:4]))
@@ -368,5 +433,10 @@ r.check("Regel 10 — kein aria-pressed:/aria-checked:-Arbitrary-Variant im Mark
         not (t := r10_aria_variant_utilities()), " | ".join(t[:6]))
 r.check("Regel 11 — jedes Lucide-<svg> trägt ein nicht-leeres data-icon-lu",
         not (t := r11_lucide_namen()), " | ".join(t[:6]))
+r.check("Regel 12 — data-variant nur aus dem festen Vokabular (color-roles.html)",
+        not (t := r12_variant_vokabular()), " | ".join(t[:6]))
+r.check("Regel 12 — Selbsttest (Vokabular-Regel greift wirklich)", r12_selbsttest())
+r.check("Regel 13 — keine RTL-Demos außerhalb von direction.html",
+        not (t := r13_rtl_demos()), " | ".join(t[:6]))
 
 sys.exit(r.done())

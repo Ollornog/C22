@@ -1,4 +1,5 @@
-<!-- basecoat: Table (.table-container + .table). thead/tbody/tfoot, <caption>, data-state="selected" hebt eine Zeile hervor (Basecoat-CSS), [role=checkbox] bekommt automatisch Innenabstand/Ausrichtung kompensiert. -->
+<!-- basecoat: Table (.table-container + .table). thead/tbody/tfoot, <caption>, data-state="selected" hebt eine Zeile hervor (Basecoat-CSS), [role=checkbox] bekommt automatisch Innenabstand/Ausrichtung kompensiert.
+     Das ist das PRIMITIV (Tabellen-Optik) — interaktive Muster (Filter, Sortierung, Zeilenaktionen, Pagination) zeigt die Komposition data-table.html. -->
 <div class="c22-examples">
   <div class="c22-example">
     <span class="c22-example-label">Standard (mit Bildunterschrift)</span>
@@ -155,63 +156,6 @@
             </td>
             <td>Mitglied</td>
             <td><span class="badge" data-variant="secondary">Eingeladen</span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-  <div class="c22-example">
-    <span class="c22-example-label">Mit Zeilenaktionen (Dropdown-Menü)</span>
-    <div class="table-container w-full max-w-2xl">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Rechnung</th>
-            <th>Status</th>
-            <th class="text-end">Betrag</th>
-            <th class="w-px"><span class="sr-only">Aktionen</span></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="font-medium">INV-001</td>
-            <td><span class="badge" data-variant="success">Bezahlt</span></td>
-            <td class="text-end tabular-nums">250,00 €</td>
-            <td>
-              <div class="dropdown-menu" id="c22-table-dd-1">
-                <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" id="c22-table-dd-1-trigger" aria-haspopup="menu" aria-controls="c22-table-dd-1-menu" aria-expanded="false" aria-label="Aktionen für INV-001">
-                  <svg data-icon-lu="ellipsis" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
-                </button>
-                <div id="c22-table-dd-1-popover" data-popover aria-hidden="true">
-                  <div role="menu" id="c22-table-dd-1-menu" aria-labelledby="c22-table-dd-1-trigger">
-                    <button type="button" role="menuitem">Rechnung ansehen</button>
-                    <button type="button" role="menuitem">Als bezahlt markieren</button>
-                    <hr role="separator">
-                    <button type="button" role="menuitem" data-variant="destructive">Stornieren</button>
-                  </div>
-                </div>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td class="font-medium">INV-002</td>
-            <td><span class="badge" data-variant="secondary">Offen</span></td>
-            <td class="text-end tabular-nums">150,00 €</td>
-            <td>
-              <div class="dropdown-menu" id="c22-table-dd-2">
-                <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" id="c22-table-dd-2-trigger" aria-haspopup="menu" aria-controls="c22-table-dd-2-menu" aria-expanded="false" aria-label="Aktionen für INV-002">
-                  <svg data-icon-lu="ellipsis" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
-                </button>
-                <div id="c22-table-dd-2-popover" data-popover aria-hidden="true">
-                  <div role="menu" id="c22-table-dd-2-menu" aria-labelledby="c22-table-dd-2-trigger">
-                    <button type="button" role="menuitem">Rechnung ansehen</button>
-                    <button type="button" role="menuitem">Als bezahlt markieren</button>
-                    <hr role="separator">
-                    <button type="button" role="menuitem" data-variant="destructive">Stornieren</button>
-                  </div>
-                </div>
-              </div>
-            </td>
           </tr>
         </tbody>
       </table>

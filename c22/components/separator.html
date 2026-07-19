@@ -1,4 +1,4 @@
-<!-- custom: Separator (shadcn/Radix) — Basecoat hat keine eigene separator.css/-doku; Trennlinie via <hr> + data-orientation, Klassen 1:1 aus dem offiziellen shadcn-Markup übernommen (bg-border shrink-0 data-[orientation=…]:h-px/w-full bzw. h-full/w-px). Basecoat selbst nutzt <hr role="separator"> nur innerhalb anderer Components (dropdown-menu, command, button-group, .field-separator) — hier die generische, freistehende Variante. -->
+<!-- custom: Separator (shadcn/Radix) — Basecoat hat keine eigene separator.css/-doku; Trennlinie via <hr> + data-orientation, Klassen 1:1 aus dem offiziellen shadcn-Markup übernommen (bg-border shrink-0 data-[orientation=…]:h-px/w-full bzw. w-px/self-stretch). Basecoat selbst nutzt <hr role="separator"> nur innerhalb anderer Components (dropdown-menu, command, button-group, .field-separator) — hier die generische, freistehende Variante. -->
 <div class="c22-examples">
   <div class="c22-example">
     <span class="c22-example-label">Standard</span>
@@ -8,13 +8,61 @@
         <p class="text-muted-foreground text-sm">Ein Design-System für konsistente UIs.</p>
       </div>
       <hr role="none" data-orientation="horizontal" class="separator my-4">
-      <div class="flex h-5 items-center gap-4 text-sm">
-        <span>Blog</span>
-        <hr role="none" data-orientation="vertical" class="separator">
-        <span>Doku</span>
-        <hr role="none" data-orientation="vertical" class="separator">
-        <span>Quelle</span>
+      <div class="space-y-1">
+        <h4 class="text-sm leading-none font-medium">Galerie</h4>
+        <p class="text-muted-foreground text-sm">Jede Component in jedem Zustand.</p>
       </div>
+    </div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Vertikal</span>
+    <div class="flex h-5 items-center gap-4 text-sm">
+      <span>Blog</span>
+      <hr role="none" data-orientation="vertical" class="separator">
+      <span>Doku</span>
+      <hr role="none" data-orientation="vertical" class="separator">
+      <span>Quelle</span>
+    </div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Menü (vertikal, mehrzeilige Einträge)</span>
+    <div class="flex items-center gap-4 text-sm">
+      <div class="flex flex-col gap-1">
+        <span class="font-medium">Einstellungen</span>
+        <span class="text-muted-foreground text-xs">Präferenzen verwalten</span>
+      </div>
+      <hr role="none" data-orientation="vertical" class="separator">
+      <div class="flex flex-col gap-1">
+        <span class="font-medium">Konto</span>
+        <span class="text-muted-foreground text-xs">Profil &amp; Sicherheit</span>
+      </div>
+      <hr role="none" data-orientation="vertical" class="separator">
+      <div class="flex flex-col gap-1">
+        <span class="font-medium">Hilfe</span>
+        <span class="text-muted-foreground text-xs">Support &amp; Doku</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Liste (horizontal zwischen Zeilen)</span>
+    <div class="flex w-full max-w-sm flex-col gap-2 text-sm">
+      <dl class="flex items-center justify-between">
+        <dt>Version</dt>
+        <dd class="text-muted-foreground">1.4.2</dd>
+      </dl>
+      <hr role="none" data-orientation="horizontal" class="separator">
+      <dl class="flex items-center justify-between">
+        <dt>Lizenz</dt>
+        <dd class="text-muted-foreground">MIT</dd>
+      </dl>
+      <hr role="none" data-orientation="horizontal" class="separator">
+      <dl class="flex items-center justify-between">
+        <dt>Aktualisiert</dt>
+        <dd class="text-muted-foreground">Juli 2026</dd>
+      </dl>
     </div>
   </div>
 
@@ -30,7 +78,7 @@
     <div class="flex items-center gap-1 rounded-md border p-1">
       <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Fett"><svg data-icon-lu="bold" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12h9a4 4 0 0 1 0 8H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h7a4 4 0 0 1 0 8"/></svg></button>
       <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Kursiv"><svg data-icon-lu="italic" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" x2="10" y1="4" y2="4"/><line x1="14" x2="5" y1="20" y2="20"/><line x1="15" x2="9" y1="4" y2="20"/></svg></button>
-      <hr role="none" data-orientation="vertical" class="separator mx-1 h-5!">
+      <hr role="none" data-orientation="vertical" class="separator mx-1 h-5! self-center">
       <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Linksbündig"><svg data-icon-lu="text-align-start" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="21" x2="3" y1="6" y2="6"/><line x1="15" x2="3" y1="12" y2="12"/><line x1="17" x2="3" y1="18" y2="18"/></svg></button>
       <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Zentriert"><svg data-icon-lu="text-align-center" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="21" x2="3" y1="6" y2="6"/><line x1="17" x2="7" y1="12" y2="12"/><line x1="19" x2="5" y1="18" y2="18"/></svg></button>
     </div>

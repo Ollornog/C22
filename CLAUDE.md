@@ -31,6 +31,8 @@ the look per component.
 | Keyboard shortcut | `<kbd class="kbd">` — one cap per key | `kbd.html` |
 | Badge / avatar | `class="badge"` / `class="avatar"` | `badge.html`, `avatar.html` |
 | Divider | `class="separator"` or `<hr role="separator">` | `separator.html` |
+| Multi-line code block | `<pre class="code-block"><code>…</code>` — copy button via `.btn.code-block-copy` + `[data-copy]`, line numbers via `data-line-numbers` | `code-block.html` |
+| Scrollable area | the token scrollbar is the **global default** (arrowless) — no class needed; variants via `class="scrollbar"` + `data-size`/`data-track`/`data-buttons`; rounded scroll containers get the track inset automatically (`data-scrollbar-inset` to force/disable) | `scrollbar.html` |
 | Popover / menu / dropdown / listbox | `[data-popover]` + `role="menu"`/`"menuitem"`/`"option"` | `dropdown-menu.html`, `select.html`, `combobox.html` |
 
 Do **not** write `<button class="inline-flex rounded-md px-3 py-2 …">` when `.btn` exists, and so on.
@@ -48,6 +50,16 @@ badge (shields-style), or a control sitting on an arbitrary photo (carousel over
 legibility. Even then, express it as a **dedicated token** (the way chart series use `--chart-1…5`), not a
 literal `bg-blue-600`/`text-white` in the markup — so the exception is still one place to change.
 
+**Role pairs are the shared core of every variant.** Each `data-variant` (on a button, bubble, badge,
+alert, …) just reaches for a `bg-<role>` / `text-<role>-foreground` token pair — the same pairs, reused.
+The living overview is [`color-roles.html`](c22/components/color-roles.html) (the gallery’s Color Roles section): the core pairs
+(background, primary, secondary, muted, accent, destructive, card, popover) and the status pairs. Re-colouring
+is therefore "change the tokens" (`tokens.css` / a pack), never the component. The status roles
+(`success`/`warning`/`info`) are **full pairs** like the rest — used via `data-variant` on badge/slider and
+via the utilities; **buttons deliberately omit them** (they don't fit a button's job). The variant
+vocabulary is **closed and mechanically checked** (rule 12): every `data-variant` value must come from the
+fixed list — a new role goes into `color-roles.html` + the list first, not into the markup by a typo.
+
 These conventions are not honour-system: the hygiene suite (`tests/test_conventions.py`) checks them
 **mechanically** — tokens over hex, the variant contract, and the rest — and must stay green before a push.
 
@@ -55,8 +67,10 @@ These conventions are not honour-system: the hygiene suite (`tests/test_conventi
 
 - **Hover / active in any menu or list** → `bg-accent` + `text-accent-foreground` (command, dropdown-menu,
   context-menu, combobox, calendar dropdown). Never `bg-muted` for this.
-- **Selected option** (dropdown/select/calendar month-year) → a check (`var(--check-icon)`) on the right,
-  like a selected `select` option. Not a filled `bg-primary` row and not an ad-hoc grey.
+- **Selected option / checked menu item** (dropdown radio/checkbox, select/combobox option, calendar
+  month-year) → **bold + filled `primary` row** (one shared canon rule in `components.css`). Not a
+  check on the right — a check/dot indicator column is the explicit variant `data-mark="indicator"`
+  on the menu.
 - **Down-chevron indicator** → the muted-50 look: token `--chevron-down-icon-50` or `opacity-50`. The
   combobox trigger chevron is `.combobox-trigger-icon`.
 - **`.kbd` keys** → one cap per key; a constant `border-border`; the background only lightens to
@@ -64,6 +78,10 @@ These conventions are not honour-system: the hygiene suite (`tests/test_conventi
 - **Command palette** opens **without** a pre-highlighted first row (handled once in `c22.js`).
 - **Combobox auto-highlight** is opt-in via `data-auto-highlight="true"` on the one variant that shows it —
   not the default.
+- **Optical alignment for corner actions** (close button & friends): the visible glyph sits on the
+  container's normal content grid (same inset as text); the invisible hit area is the sanctioned
+  exception — it bleeds into the padding (`.btn-close[data-corner]`, item `data-actions="corner"`).
+  Never move the glyph off the grid to make room for the hit area.
 
 ## Variant contract
 

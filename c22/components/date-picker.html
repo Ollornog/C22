@@ -1,4 +1,9 @@
-<!-- custom: Date Picker = Trigger (.popover) + Kalender (Basecoat liefert kein Vendor-CSS für Date-Picker/Calendar; Grundwahrheit ist popover.css für .popover/[data-popover] + button.css/vega.css für .btn-Größen/-Varianten). Varianten aus der shadcn-Doku (Basic, Range, Date of Birth mit Monat/Jahr-Dropdown, Input, Time Picker) auf Basecoat-Bausteine übertragen. -->
+<!-- custom: Date Picker = Trigger (.popover, Basecoat) + der SPOT-Kalender aus calendar.html
+     (<div data-calendar …>, gerendert/bedient von c22.js — Blättern, Auswahl, Bereich, Dropdown).
+     KEINE eigenen Kalendertabellen hier: jede Kalender-Optik/-Logik lebt in EINER Stelle (#12);
+     der Date Picker liefert nur Hülle (Trigger, Popover) plus die Zeit-Bausteine data-clock /
+     data-time-stepper und die Datums-Eingabe data-date-input (alle c22.js).
+     Im Popover trägt der Inhalt p-3 statt `rounded-lg border p-3` — den Rahmen stellt das Panel. -->
 <div class="c22-examples">
   <div class="c22-example">
     <span class="c22-example-label">Einzeldatum</span>
@@ -8,23 +13,7 @@
         15. Juli 2026
       </button>
       <div id="c22-dp1-popover" data-popover aria-hidden="true">
-        <div class="w-fit p-3">
-          <div class="flex items-center justify-between px-1 pb-3">
-            <button type="button" class="btn" data-variant="outline" data-size="icon-sm" aria-label="Vorheriger Monat"><svg data-icon-lu="chevron-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
-            <div class="text-sm font-medium">Juli 2026</div>
-            <button type="button" class="btn" data-variant="outline" data-size="icon-sm" aria-label="Nächster Monat"><svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
-          </div>
-          <table class="text-sm">
-            <thead><tr class="text-muted-foreground"><th class="size-9 font-normal">Mo</th><th class="size-9 font-normal">Di</th><th class="size-9 font-normal">Mi</th><th class="size-9 font-normal">Do</th><th class="size-9 font-normal">Fr</th><th class="size-9 font-normal">Sa</th><th class="size-9 font-normal">So</th></tr></thead>
-            <tbody class="[&_button]:size-9 [&_button]:rounded-md [&_button:hover]:bg-accent">
-              <tr><td></td><td></td><td><button type="button">1</button></td><td><button type="button">2</button></td><td><button type="button">3</button></td><td><button type="button">4</button></td><td><button type="button">5</button></td></tr>
-              <tr><td><button type="button">6</button></td><td><button type="button">7</button></td><td><button type="button">8</button></td><td><button type="button">9</button></td><td><button type="button">10</button></td><td><button type="button">11</button></td><td><button type="button">12</button></td></tr>
-              <tr><td><button type="button">13</button></td><td><button type="button">14</button></td><td><button type="button" aria-selected="true" class="bg-primary text-primary-foreground hover:bg-primary!">15</button></td><td><button type="button">16</button></td><td><button type="button">17</button></td><td><button type="button">18</button></td><td><button type="button">19</button></td></tr>
-              <tr><td><button type="button">20</button></td><td><button type="button">21</button></td><td><button type="button">22</button></td><td><button type="button">23</button></td><td><button type="button">24</button></td><td><button type="button">25</button></td><td><button type="button">26</button></td></tr>
-              <tr><td><button type="button">27</button></td><td><button type="button">28</button></td><td><button type="button">29</button></td><td><button type="button">30</button></td><td><button type="button">31</button></td><td></td><td></td></tr>
-            </tbody>
-          </table>
-        </div>
+        <div data-calendar data-mode="single" data-month="2026-07" data-selected="2026-07-15" class="w-fit p-3"></div>
       </div>
     </div>
   </div>
@@ -36,84 +25,68 @@
         12. – 19. Juli 2026
       </button>
       <div id="c22-dp2-popover" data-popover aria-hidden="true">
-        <div class="w-fit p-3">
-          <div class="flex items-center justify-between px-1 pb-3">
-            <button type="button" class="btn" data-variant="outline" data-size="icon-sm" aria-label="Vorheriger Monat"><svg data-icon-lu="chevron-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
-            <div class="text-sm font-medium">Juli 2026</div>
-            <button type="button" class="btn" data-variant="outline" data-size="icon-sm" aria-label="Nächster Monat"><svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
-          </div>
-          <table class="text-sm [&_td]:p-0">
-            <thead><tr class="text-muted-foreground"><th class="size-9 font-normal">Mo</th><th class="size-9 font-normal">Di</th><th class="size-9 font-normal">Mi</th><th class="size-9 font-normal">Do</th><th class="size-9 font-normal">Fr</th><th class="size-9 font-normal">Sa</th><th class="size-9 font-normal">So</th></tr></thead>
-            <tbody class="[&_button]:size-9 [&_button]:hover:bg-accent">
-              <tr><td></td><td></td><td><button type="button" class="rounded-md">1</button></td><td><button type="button" class="rounded-md">2</button></td><td><button type="button" class="rounded-md">3</button></td><td><button type="button" class="rounded-md">4</button></td><td><button type="button" class="rounded-md">5</button></td></tr>
-              <tr><td><button type="button" class="rounded-md">6</button></td><td><button type="button" class="rounded-md">7</button></td><td><button type="button" class="rounded-md">8</button></td><td><button type="button" class="rounded-md">9</button></td><td><button type="button" class="rounded-md">10</button></td><td><button type="button" class="rounded-md">11</button></td><td class="bg-accent rounded-l-md"><button type="button" aria-selected="true" class="bg-primary text-primary-foreground rounded-md">12</button></td></tr>
-              <tr class="bg-accent"><td><button type="button">13</button></td><td><button type="button">14</button></td><td><button type="button">15</button></td><td><button type="button">16</button></td><td><button type="button">17</button></td><td><button type="button">18</button></td><td class="rounded-r-md"><button type="button" aria-selected="true" class="bg-primary text-primary-foreground rounded-md">19</button></td></tr>
-              <tr><td><button type="button" class="rounded-md">20</button></td><td><button type="button" class="rounded-md">21</button></td><td><button type="button" class="rounded-md">22</button></td><td><button type="button" class="rounded-md">23</button></td><td><button type="button" class="rounded-md">24</button></td><td><button type="button" class="rounded-md">25</button></td><td><button type="button" class="rounded-md">26</button></td></tr>
-              <tr><td><button type="button" class="rounded-md">27</button></td><td><button type="button" class="rounded-md">28</button></td><td><button type="button" class="rounded-md">29</button></td><td><button type="button" class="rounded-md">30</button></td><td><button type="button" class="rounded-md">31</button></td><td></td><td></td></tr>
-            </tbody>
-          </table>
-        </div>
+        <div data-calendar data-mode="range" data-month="2026-07" data-selected="2026-07-12/2026-07-19" class="w-fit p-3"></div>
       </div>
     </div>
   </div>
   <div class="c22-example">
-    <span class="c22-example-label">Mit Uhrzeit</span>
+    <span class="c22-example-label">Mit Uhrzeit (Uhr)</span>
     <div class="popover w-fit" id="c22-dp3">
       <button type="button" class="btn justify-start gap-2" data-variant="outline" id="c22-dp3-trigger" aria-expanded="false" aria-controls="c22-dp3-popover">
         <svg data-icon-lu="calendar" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
         15. Juli 2026, 14:30
       </button>
       <div id="c22-dp3-popover" data-popover aria-hidden="true">
-        <div class="w-fit p-3">
-          <div class="flex items-center justify-between px-1 pb-3">
-            <button type="button" class="btn" data-variant="outline" data-size="icon-sm" aria-label="Vorheriger Monat"><svg data-icon-lu="chevron-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
-            <div class="text-sm font-medium">Juli 2026</div>
-            <button type="button" class="btn" data-variant="outline" data-size="icon-sm" aria-label="Nächster Monat"><svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
-          </div>
-          <table class="text-sm">
-            <thead><tr class="text-muted-foreground"><th class="size-9 font-normal">Mo</th><th class="size-9 font-normal">Di</th><th class="size-9 font-normal">Mi</th><th class="size-9 font-normal">Do</th><th class="size-9 font-normal">Fr</th><th class="size-9 font-normal">Sa</th><th class="size-9 font-normal">So</th></tr></thead>
-            <tbody class="[&_button]:size-9 [&_button]:rounded-md [&_button:hover]:bg-accent">
-              <tr><td></td><td></td><td><button type="button">1</button></td><td><button type="button">2</button></td><td><button type="button">3</button></td><td><button type="button">4</button></td><td><button type="button">5</button></td></tr>
-              <tr><td><button type="button">6</button></td><td><button type="button">7</button></td><td><button type="button">8</button></td><td><button type="button">9</button></td><td><button type="button">10</button></td><td><button type="button">11</button></td><td><button type="button">12</button></td></tr>
-              <tr><td><button type="button">13</button></td><td><button type="button">14</button></td><td><button type="button" aria-selected="true" class="bg-primary text-primary-foreground hover:bg-primary!">15</button></td><td><button type="button">16</button></td><td><button type="button">17</button></td><td><button type="button">18</button></td><td><button type="button">19</button></td></tr>
-              <tr><td><button type="button">20</button></td><td><button type="button">21</button></td><td><button type="button">22</button></td><td><button type="button">23</button></td><td><button type="button">24</button></td><td><button type="button">25</button></td><td><button type="button">26</button></td></tr>
-              <tr><td><button type="button">27</button></td><td><button type="button">28</button></td><td><button type="button">29</button></td><td><button type="button">30</button></td><td><button type="button">31</button></td><td></td><td></td></tr>
-            </tbody>
-          </table>
-          <div class="field border-t pt-3 mt-3">
-            <label class="label" for="c22-dp3-time">Uhrzeit</label>
-            <input class="input" type="time" id="c22-dp3-time" value="14:30">
+        <div class="flex flex-col gap-4 p-3 sm:flex-row">
+          <div data-calendar data-mode="single" data-month="2026-07" data-selected="2026-07-15" class="w-fit"></div>
+          <div class="border-t pt-4 sm:border-t-0 sm:border-s sm:ps-4 sm:pt-0">
+            <div data-clock data-input data-value="14:30"></div>
           </div>
         </div>
       </div>
     </div>
   </div>
   <div class="c22-example">
-    <span class="c22-example-label">Per Texteingabe</span>
+    <span class="c22-example-label">Mit Uhrzeit (Stepper)</span>
+    <div class="popover w-fit" id="c22-dp6">
+      <button type="button" class="btn justify-start gap-2" data-variant="outline" id="c22-dp6-trigger" aria-expanded="false" aria-controls="c22-dp6-popover">
+        <svg data-icon-lu="calendar" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
+        15. Juli 2026, 14:30
+      </button>
+      <div id="c22-dp6-popover" data-popover aria-hidden="true">
+        <div class="w-fit p-3">
+          <div data-calendar data-mode="single" data-month="2026-07" data-selected="2026-07-15" class="w-fit"></div>
+          <div class="border-t pt-2 mt-3">
+            <div data-time-stepper data-value="14:30"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Per Texteingabe (aktives Feld öffnet sofort)</span>
     <div class="input-group w-full max-w-56">
-      <input class="input" type="text" placeholder="tt.mm.jjjj" value="15.07.2026" aria-label="Datum">
+      <input class="input" type="text" placeholder="tt.mm.jjjj" value="15.07.2026" data-date-input aria-controls="c22-dp4-popover" aria-expanded="false" aria-haspopup="dialog" autocomplete="off" aria-label="Datum">
       <div class="popover" id="c22-dp4">
         <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" id="c22-dp4-trigger" aria-expanded="false" aria-controls="c22-dp4-popover" aria-label="Kalender öffnen">
           <svg data-icon-lu="calendar" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
         </button>
         <div id="c22-dp4-popover" data-popover data-side="bottom" data-align="end" aria-hidden="true">
-          <div class="w-fit p-3">
-            <div class="flex items-center justify-between px-1 pb-3">
-              <button type="button" class="btn" data-variant="outline" data-size="icon-sm" aria-label="Vorheriger Monat"><svg data-icon-lu="chevron-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
-              <div class="text-sm font-medium">Juli 2026</div>
-              <button type="button" class="btn" data-variant="outline" data-size="icon-sm" aria-label="Nächster Monat"><svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
-            </div>
-            <table class="text-sm">
-              <thead><tr class="text-muted-foreground"><th class="size-9 font-normal">Mo</th><th class="size-9 font-normal">Di</th><th class="size-9 font-normal">Mi</th><th class="size-9 font-normal">Do</th><th class="size-9 font-normal">Fr</th><th class="size-9 font-normal">Sa</th><th class="size-9 font-normal">So</th></tr></thead>
-              <tbody class="[&_button]:size-9 [&_button]:rounded-md [&_button:hover]:bg-accent">
-                <tr><td></td><td></td><td><button type="button">1</button></td><td><button type="button">2</button></td><td><button type="button">3</button></td><td><button type="button">4</button></td><td><button type="button">5</button></td></tr>
-                <tr><td><button type="button">6</button></td><td><button type="button">7</button></td><td><button type="button">8</button></td><td><button type="button">9</button></td><td><button type="button">10</button></td><td><button type="button">11</button></td><td><button type="button">12</button></td></tr>
-                <tr><td><button type="button">13</button></td><td><button type="button">14</button></td><td><button type="button" aria-selected="true" class="bg-primary text-primary-foreground hover:bg-primary!">15</button></td><td><button type="button">16</button></td><td><button type="button">17</button></td><td><button type="button">18</button></td><td><button type="button">19</button></td></tr>
-                <tr><td><button type="button">20</button></td><td><button type="button">21</button></td><td><button type="button">22</button></td><td><button type="button">23</button></td><td><button type="button">24</button></td><td><button type="button">25</button></td><td><button type="button">26</button></td></tr>
-                <tr><td><button type="button">27</button></td><td><button type="button">28</button></td><td><button type="button">29</button></td><td><button type="button">30</button></td><td><button type="button">31</button></td><td></td><td></td></tr>
-              </tbody>
-            </table>
-          </div>
+          <div data-calendar data-mode="single" data-month="2026-07" data-selected="2026-07-15" class="w-fit p-3"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Per Texteingabe (öffnet nur über das Kalender-Symbol)</span>
+    <div class="input-group w-full max-w-56">
+      <input class="input" type="text" placeholder="tt.mm.jjjj" value="15.07.2026" aria-label="Datum">
+      <div class="popover" id="c22-dp8">
+        <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" id="c22-dp8-trigger" aria-expanded="false" aria-controls="c22-dp8-popover" aria-label="Kalender öffnen">
+          <svg data-icon-lu="calendar" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
+        </button>
+        <div id="c22-dp8-popover" data-popover data-side="bottom" data-align="end" aria-hidden="true">
+          <div data-calendar data-mode="single" data-month="2026-07" data-selected="2026-07-15" class="w-fit p-3"></div>
         </div>
       </div>
     </div>
@@ -126,30 +99,16 @@
         <span class="text-muted-foreground">Geburtsdatum wählen</span>
       </button>
       <div id="c22-dp5-popover" data-popover aria-hidden="true">
-        <div class="w-fit p-3">
-          <div class="flex items-center justify-between gap-2 px-1 pb-3">
-            <button type="button" class="btn" data-variant="outline" data-size="icon-sm" aria-label="Vorheriger Monat"><svg data-icon-lu="chevron-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
-            <div class="flex items-center gap-1">
-              <select class="select" data-size="sm" aria-label="Monat wählen">
-                <option>Januar</option><option>Februar</option><option>März</option><option>April</option><option>Mai</option><option>Juni</option><option selected>Juli</option><option>August</option><option>September</option><option>Oktober</option><option>November</option><option>Dezember</option>
-              </select>
-              <select class="select" data-size="sm" aria-label="Jahr wählen">
-                <option>1990</option><option>1991</option><option>…</option><option selected>2008</option><option>…</option><option>2026</option>
-              </select>
-            </div>
-            <button type="button" class="btn" data-variant="outline" data-size="icon-sm" aria-label="Nächster Monat"><svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
-          </div>
-          <table class="text-sm">
-            <thead><tr class="text-muted-foreground"><th class="size-9 font-normal">Mo</th><th class="size-9 font-normal">Di</th><th class="size-9 font-normal">Mi</th><th class="size-9 font-normal">Do</th><th class="size-9 font-normal">Fr</th><th class="size-9 font-normal">Sa</th><th class="size-9 font-normal">So</th></tr></thead>
-            <tbody class="[&_button]:size-9 [&_button]:rounded-md [&_button:hover]:bg-accent">
-              <tr><td></td><td></td><td><button type="button">1</button></td><td><button type="button">2</button></td><td><button type="button">3</button></td><td><button type="button">4</button></td><td><button type="button">5</button></td></tr>
-              <tr><td><button type="button">6</button></td><td><button type="button">7</button></td><td><button type="button">8</button></td><td><button type="button">9</button></td><td><button type="button">10</button></td><td><button type="button">11</button></td><td><button type="button">12</button></td></tr>
-              <tr><td><button type="button">13</button></td><td><button type="button">14</button></td><td><button type="button" aria-selected="true" class="bg-primary text-primary-foreground hover:bg-primary!">15</button></td><td><button type="button">16</button></td><td><button type="button">17</button></td><td><button type="button">18</button></td><td><button type="button">19</button></td></tr>
-              <tr><td><button type="button">20</button></td><td><button type="button">21</button></td><td><button type="button">22</button></td><td><button type="button">23</button></td><td><button type="button">24</button></td><td><button type="button">25</button></td><td><button type="button">26</button></td></tr>
-              <tr><td><button type="button">27</button></td><td><button type="button">28</button></td><td><button type="button">29</button></td><td><button type="button">30</button></td><td><button type="button">31</button></td><td></td><td></td></tr>
-            </tbody>
-          </table>
-        </div>
+        <div data-calendar data-mode="single" data-dropdown data-month="2008-07" class="w-fit p-3"></div>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Geburtsdatum per Texteingabe</span>
+    <div class="relative w-fit" id="c22-dp7">
+      <input class="input w-40" type="text" id="c22-dp7-input" data-date-input placeholder="tt.mm.jjjj" aria-controls="c22-dp7-popover" aria-expanded="false" aria-haspopup="dialog" autocomplete="off" aria-label="Geburtsdatum">
+      <div id="c22-dp7-popover" data-popover aria-hidden="true">
+        <div data-calendar data-mode="single" data-dropdown data-month="2008-07" class="w-fit p-3"></div>
       </div>
     </div>
   </div>

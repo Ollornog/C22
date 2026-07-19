@@ -37,7 +37,7 @@
     <div class="dropdown-menu" id="c22-dd3">
       <button type="button" class="btn" data-variant="outline" id="c22-dd3-trigger" aria-haspopup="menu" aria-controls="c22-dd3-menu" aria-expanded="false">Ansicht</button>
       <div id="c22-dd3-popover" data-popover aria-hidden="true">
-        <div role="menu" id="c22-dd3-menu" aria-labelledby="c22-dd3-trigger">
+        <div role="menu" id="c22-dd3-menu" aria-labelledby="c22-dd3-trigger" data-mark="indicator">
           <div role="group" aria-labelledby="c22-dd3-h"><div role="heading" id="c22-dd3-h">Anzeigen</div>
             <button type="button" role="menuitemcheckbox" aria-checked="true"><span data-indicator><svg data-icon-lu="check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Statusleiste</button>
             <button type="button" role="menuitemcheckbox" aria-checked="true"><span data-indicator><svg data-icon-lu="check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Aktivitätsleiste</button>
@@ -52,7 +52,7 @@
     <div class="dropdown-menu" id="c22-dd4">
       <button type="button" class="btn" data-variant="outline" id="c22-dd4-trigger" aria-haspopup="menu" aria-controls="c22-dd4-menu" aria-expanded="false">Sortieren</button>
       <div id="c22-dd4-popover" data-popover aria-hidden="true">
-        <div role="menu" id="c22-dd4-menu" aria-labelledby="c22-dd4-trigger">
+        <div role="menu" id="c22-dd4-menu" aria-labelledby="c22-dd4-trigger" data-mark="indicator">
           <div role="group" aria-labelledby="c22-dd4-h"><div role="heading" id="c22-dd4-h">Sortieren nach</div>
             <button type="button" role="menuitemradio" aria-checked="true"><span data-indicator><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="12" cy="12" r="6"/></svg></span>Name</button>
             <button type="button" role="menuitemradio" aria-checked="false"><span data-indicator><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="12" cy="12" r="6"/></svg></span>Datum</button>
@@ -63,27 +63,12 @@
     </div>
   </div>
   <div class="c22-example">
-    <span class="c22-example-label">Radiogruppe — Markierung fett</span>
+    <span class="c22-example-label">Auswahl-Kanon (fett + gefüllt — Standard ohne Indikator-Markup)</span>
     <div class="dropdown-menu" id="c22-dd6">
       <button type="button" class="btn" data-variant="outline" id="c22-dd6-trigger" aria-haspopup="menu" aria-controls="c22-dd6-menu" aria-expanded="false">Sortieren</button>
       <div id="c22-dd6-popover" data-popover aria-hidden="true">
-        <div role="menu" id="c22-dd6-menu" aria-labelledby="c22-dd6-trigger" data-mark="bold">
+        <div role="menu" id="c22-dd6-menu" aria-labelledby="c22-dd6-trigger">
           <div role="group" aria-labelledby="c22-dd6-h"><div role="heading" id="c22-dd6-h">Sortieren nach</div>
-            <button type="button" role="menuitemradio" aria-checked="true">Name</button>
-            <button type="button" role="menuitemradio" aria-checked="false">Datum</button>
-            <button type="button" role="menuitemradio" aria-checked="false">Größe</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="c22-example">
-    <span class="c22-example-label">Radiogruppe — Markierung fett + Hintergrund</span>
-    <div class="dropdown-menu" id="c22-dd7">
-      <button type="button" class="btn" data-variant="outline" id="c22-dd7-trigger" aria-haspopup="menu" aria-controls="c22-dd7-menu" aria-expanded="false">Sortieren</button>
-      <div id="c22-dd7-popover" data-popover aria-hidden="true">
-        <div role="menu" id="c22-dd7-menu" aria-labelledby="c22-dd7-trigger" data-mark="bold bg">
-          <div role="group" aria-labelledby="c22-dd7-h"><div role="heading" id="c22-dd7-h">Sortieren nach</div>
             <button type="button" role="menuitemradio" aria-checked="true">Name</button>
             <button type="button" role="menuitemradio" aria-checked="false">Datum</button>
             <button type="button" role="menuitemradio" aria-checked="false">Größe</button>
@@ -102,6 +87,25 @@
           <button type="button" role="menuitem" data-inset>Zuletzt geöffnet</button>
           <hr role="separator">
           <button type="button" role="menuitem" aria-disabled="true" data-variant="destructive"><svg data-icon-lu="trash-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>Löschen</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Komponiert im Popover (Menü-Optik ohne Menü-JS — bleibt beim Klicken offen, <code class="text-[11px]">data-dropdown-menu-initialized</code>)</span>
+    <div class="popover dropdown-menu" id="c22-dd-still" data-dropdown-menu-initialized="true">
+      <button type="button" class="btn" data-variant="outline" id="c22-dd-still-trigger" aria-expanded="false" aria-controls="c22-dd-still-popover">Ansicht anpassen</button>
+      <div id="c22-dd-still-popover" data-popover class="w-56" aria-hidden="true">
+        <div role="menu" aria-label="Ansicht">
+          <div role="heading">Dichte</div>
+          <div role="group">
+            <button type="button" role="menuitemradio" aria-checked="true">Komfortabel</button>
+            <button type="button" role="menuitemradio" aria-checked="false">Kompakt</button>
+          </div>
+          <hr role="separator">
+          <div role="heading">Elemente</div>
+          <button type="button" role="menuitemcheckbox" aria-checked="true">Vorschaubilder</button>
+          <button type="button" role="menuitemcheckbox" aria-checked="false">Zeilennummern</button>
         </div>
       </div>
     </div>

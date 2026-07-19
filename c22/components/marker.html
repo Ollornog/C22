@@ -1,60 +1,87 @@
-<!-- custom: Marker — shadcn/ui "Marker" ist KEIN Text-<mark>, sondern eine Inline-Statuszeile/Trennlinie
-     für Konversationen (Chat/Agent-Verlauf, passt zu message.html/message-scroller.html). Kein Basecoat-CSS
-     vorhanden → reine Tailwind-Utilities, analog separator.html/item.html. Varianten laut shadcn-Doku: default
-     (inline), border (Zeile mit Unterstrich), separator (zentriertes Label mit Trennlinien); dazu Status
-     (role="status" + Spinner + .c22-shimmer aus components.css) und polymorphes Link-Rendering. -->
+<!-- custom: Marker (.marker, Regeln in components.css) — shadcn/ui Base "Marker": Inline-Statuszeile/
+     Systemnotiz/Trennzeile für Konversationen (komponiert mit message.html/message-scroller.html).
+     Aufbau: <svg> (dekorativ, aria-hidden, Größe aus der Klasse) + <span> Inhalt.
+     data-variant="bordered" = Zeile mit Unterstrich, "separator" = zentriertes Label mit Linien;
+     role="status" + Spinner + .c22-shimmer für Ladezustände; polymorph als <a>/<button class="marker">. -->
 <div class="c22-examples">
   <div class="c22-example">
-    <span class="c22-example-label">Standard (Icon + Text, inline)</span>
-    <div class="flex w-full max-w-md flex-col gap-2">
-      <div class="flex items-center gap-2 text-sm text-muted-foreground">
-        <svg data-icon-lu="check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 shrink-0" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+    <span class="c22-example-label">Standard (Konversationsverlauf — Marker mit Icon, Ladezustand, Trennlinie)</span>
+    <div class="flex w-full max-w-md flex-col">
+      <div class="marker">
+        <svg data-icon-lu="git-branch" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" x2="6" y1="3" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>
+        <span>Auf einen neuen Branch gewechselt</span>
+      </div>
+      <div class="marker" role="status">
+        <svg data-icon-lu="loader-circle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="animate-spin" aria-hidden="true"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+        <span class="c22-shimmer">Denkt nach …</span>
+      </div>
+      <div class="marker" data-variant="separator">
+        <span>Unterhaltung komprimiert</span>
+      </div>
+      <div class="marker">
+        <svg data-icon-lu="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
         <span>4 Dateien durchsucht</span>
       </div>
     </div>
   </div>
   <div class="c22-example">
-    <span class="c22-example-label">Ohne Icon</span>
-    <div class="flex w-full max-w-md flex-col gap-2">
-      <div class="flex items-center gap-2 text-sm text-muted-foreground">
-        <span>Unterhaltung komprimiert</span>
+    <span class="c22-example-label">Gestapelt (<code class="text-[11px]">flex-col</code> — Icon über dem Inhalt)</span>
+    <div class="w-full max-w-md">
+      <div class="marker flex-col">
+        <svg data-icon-lu="circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+        <span>Synchronisierung abgeschlossen</span>
       </div>
     </div>
   </div>
   <div class="c22-example">
-    <span class="c22-example-label">Rahmen (<code class="text-[11px]">variant="border"</code> — Unterstrich unter der Zeile)</span>
+    <span class="c22-example-label">Rahmen (<code class="text-[11px]">data-variant="bordered"</code> — Zeilen mit Unterstrich)</span>
     <div class="flex w-full max-w-md flex-col">
-      <div class="flex items-center gap-2 border-b py-2 text-sm text-muted-foreground">
-        <svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 shrink-0" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M9 15h6"/><path d="M9 11h6"/></svg>
+      <div class="marker" data-variant="bordered">
+        <svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M9 15h6"/><path d="M9 11h6"/></svg>
         <span>Implementierungsnotizen geöffnet</span>
       </div>
-      <div class="px-1 py-3 text-sm">Der nächste Nachrichteninhalt folgt hier …</div>
-    </div>
-  </div>
-  <div class="c22-example">
-    <span class="c22-example-label">Trennlinie (<code class="text-[11px]">variant="separator"</code> — zentriertes Label)</span>
-    <div class="flex w-full max-w-md items-center gap-3 text-xs text-muted-foreground">
-      <span class="h-px flex-1 bg-border"></span>
-      <span class="shrink-0">Heute</span>
-      <span class="h-px flex-1 bg-border"></span>
-    </div>
-  </div>
-  <div class="c22-example">
-    <span class="c22-example-label">Ladezustand (<code class="text-[11px]">role="status"</code> + Shimmer)</span>
-    <div class="flex w-full max-w-md flex-col gap-2">
-      <div class="flex items-center gap-2 text-sm" role="status">
-        <svg data-icon-lu="loader-circle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground size-4 shrink-0 animate-spin" aria-hidden="true"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
-        <span class="c22-shimmer">Unterhaltung wird komprimiert …</span>
+      <div class="marker" data-variant="bordered">
+        <svg data-icon-lu="git-branch" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" x2="6" y1="3" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>
+        <span>Branch <code class="text-[11px]">feature/anmeldung</code> erstellt</span>
+      </div>
+      <div class="marker" data-variant="bordered">
+        <svg data-icon-lu="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <span>12 Treffer gefunden</span>
       </div>
     </div>
   </div>
   <div class="c22-example">
-    <span class="c22-example-label">Als Link (klickbar, polymorph)</span>
-    <div class="flex w-full max-w-md flex-col gap-2">
-      <a href="#" class="group flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
-        <svg data-icon-lu="arrow-up-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 shrink-0" aria-hidden="true"><path d="M18 6 6 18"/><path d="M6 6h12v12"/></svg>
-        <span class="underline-offset-4 group-hover:underline">Pull Request ansehen</span>
+    <span class="c22-example-label">Trennlinie (<code class="text-[11px]">data-variant="separator"</code> — zentriertes Label)</span>
+    <div class="flex w-full max-w-md flex-col">
+      <div class="marker" data-variant="separator"><span>Heute</span></div>
+      <div class="marker" data-variant="separator"><span>42 s gearbeitet</span></div>
+      <div class="marker" data-variant="separator"><span>Unterhaltung komprimiert</span></div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Ladezustand (<code class="text-[11px]">role="status"</code> + Spinner + Shimmer)</span>
+    <div class="flex w-full max-w-md flex-col">
+      <div class="marker" role="status">
+        <svg data-icon-lu="loader-circle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="animate-spin" aria-hidden="true"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+        <span class="c22-shimmer">Unterhaltung wird komprimiert …</span>
+      </div>
+      <div class="marker" role="status">
+        <svg data-icon-lu="loader-circle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="animate-spin" aria-hidden="true"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+        <span class="c22-shimmer">Tests laufen …</span>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Links &amp; Buttons (klickbar, polymorph)</span>
+    <div class="flex w-full max-w-md flex-col">
+      <a href="#" class="marker">
+        <svg data-icon-lu="arrow-up-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="M6 6h12v12"/></svg>
+        <span>Pull Request ansehen</span>
       </a>
+      <button type="button" class="marker">
+        <svg data-icon-lu="undo-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11"/></svg>
+        <span>Diese Änderung zurücknehmen</span>
+      </button>
     </div>
   </div>
 </div>

@@ -1,4 +1,4 @@
-<!-- basecoat: Label (.label). Für Formularfelder das .field-Muster nutzen (field.html) — dieses Partial zeigt die Label-Klasse selbst: verknüpft per for/id, umschließt eine Checkbox, deaktiviert über data-disabled am Elternelement (in-data-[disabled=true]:opacity-50) und in Rechts-nach-links-Kontexten. -->
+<!-- basecoat: Label (.label). Für Formularfelder das .field-Muster nutzen (field.html) — dieses Partial zeigt die Label-Klasse selbst: verknüpft per for/id, umschließt eine Checkbox, deaktiviert über data-disabled am Elternelement (in-data-[disabled=true]:opacity-50). Schwebendes Label = .field[data-float] (Regel in components.css). -->
 <div class="c22-examples">
   <div class="c22-example">
     <span class="c22-example-label">Standard (mit Textfeld verknüpft)</span>
@@ -37,10 +37,16 @@
     </div>
   </div>
   <div class="c22-example">
-    <span class="c22-example-label">Rechts-nach-links (RTL)</span>
-    <div class="flex w-full max-w-sm flex-col gap-3" dir="rtl">
-      <label class="label" for="lbl-rtl">البريد الإلكتروني</label>
-      <input class="input" type="email" id="lbl-rtl" placeholder="name@example.com">
+    <span class="c22-example-label">Schwebendes Label (<code class="text-[11px]">.field[data-float]</code> — wandert bei Fokus/Inhalt auf den Rahmen, leer geht es zurück)</span>
+    <div class="flex w-full max-w-sm flex-col gap-6">
+      <div class="field" role="group" data-float>
+        <input class="input" type="email" id="c22-ff-mail" placeholder=" ">
+        <label for="c22-ff-mail">E-Mail</label>
+      </div>
+      <div class="field" role="group" data-float>
+        <input class="input" type="text" id="c22-ff-name" placeholder=" " value="Mara Beispiel">
+        <label for="c22-ff-name">Name</label>
+      </div>
     </div>
   </div>
 </div>

@@ -11,7 +11,7 @@
           <button type="button" class="btn" data-variant="outline" onclick="this.closest('dialog').close()">Abbrechen</button>
           <button type="button" class="btn" onclick="this.closest('dialog').close()">Speichern</button>
         </footer>
-        <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Schließen" onclick="this.closest('dialog').close()"><svg data-icon-lu="x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+        <button type="button" class="btn btn-close" data-variant="ghost" aria-label="Schließen" onclick="this.closest('dialog').close()"><svg data-icon-lu="x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
       </div>
     </dialog>
   </div>
@@ -22,17 +22,50 @@
       <div>
         <header><h2 id="c22-ds-title">Nutzungsbedingungen</h2><p id="c22-ds-desc">Bitte lies die Bedingungen bis zum Ende.</p></header>
         <section class="scrollbar -mx-4 max-h-64 space-y-3 overflow-y-auto px-4 text-sm">
-          <p>1. Diese Galerie dient der Demonstration von C22-Components.</p>
-          <p>2. Alle Beispiele sind Platzhalter ohne echte Daten.</p>
-          <p>3. Das Aussehen stammt aus Basecoat + den C22-Tokens.</p>
-          <p>4. Varianten werden über <code>data-*</code>-Attribute gesteuert.</p>
-          <p>5. Der Inhalt hier ist lang genug, damit die Sektion scrollt.</p>
-          <p>6. Kopf und Fußzeile bleiben dabei stehen, nur die Sektion scrollt.</p>
-          <p>7. So sieht ein Dialog mit viel Inhalt aus.</p>
-          <p>8. Ende der Bedingungen.</p>
+          <p>1. Diese Galerie dient der Demonstration von C22-Components. Alle gezeigten Inhalte
+          sind Beispieltexte ohne rechtliche Bedeutung und ohne Bezug zu echten Personen,
+          Diensten oder Verträgen.</p>
+          <p>2. Alle Beispiele sind Platzhalter ohne echte Daten. Namen, Termine, Beträge und
+          Adressen sind frei erfunden; Übereinstimmungen wären Zufall und nicht beabsichtigt.</p>
+          <p>3. Das Aussehen stammt aus Basecoat und den C22-Tokens. Farben, Radien und Abstände
+          kommen ausschließlich aus Token-Variablen, damit ein Re-Theming ohne Eingriff in die
+          Components möglich bleibt.</p>
+          <p>4. Varianten werden über <code>data-*</code>-Attribute gesteuert. Utility-Klassen im
+          Markup ändern niemals die Ausführung einer Component — das erzwingt die Hygiene-Suite.</p>
+          <p>5. Der Inhalt dieser Sektion ist bewusst lang, damit sie wirklich scrollt und sich
+          das Scrollverhalten (Rad, Balken ziehen, Tastatur) realistisch beurteilen lässt.</p>
+          <p>6. Kopf und Fußzeile bleiben beim Scrollen stehen; nur diese Sektion bewegt sich.
+          Der Scrollbalken folgt dem C22-Standard: schlank, ohne Pfeile, mit rundem Daumen.</p>
+          <p>7. Ein Dialog mit viel Inhalt soll den Text nicht abschneiden, sondern eine klar
+          begrenzte, scrollbare Fläche anbieten — genau das zeigt dieses Beispiel.</p>
+          <p>8. Formulare in Dialogen bestätigen mit der primären Aktion rechts unten; die
+          abbrechende Aktion steht links daneben und schließt ohne Änderungen.</p>
+          <p>9. Lange Bedingungstexte gliedert man in nummerierte Absätze, damit beim Vorlesen
+          und beim Verweisen („siehe Punkt 9") keine Missverständnisse entstehen.</p>
+          <p>10. Tastaturbedienung: Escape schließt den Dialog, Tab wandert durch die
+          Bedienelemente, die Pfeiltasten scrollen diese Sektion, wenn sie den Fokus hat.</p>
+          <p>11. Beim Öffnen animiert der Dialog kurz mit Deckkraft und leichtem Zoom; wer
+          reduzierte Bewegung eingestellt hat, bekommt die Inhalte ohne Effekt.</p>
+          <p>12. Der Hintergrund wird abgedunkelt und die restliche Seite inert geschaltet —
+          Klicks außerhalb des Dialogs schließen ihn.</p>
+          <p>13. Auch sehr lange Absätze mit viel Fließtext müssen sauber umbrechen, ohne dass
+          horizontales Scrollen entsteht; die Sektion scrollt ausschließlich vertikal.</p>
+          <p>14. Wer bis hierher gescrollt hat, hat rund die Hälfte geschafft — der Text geht
+          noch ein Stück weiter, damit auch schnelles Schwungscrollen beurteilbar ist.</p>
+          <p>15. Überschriften, Codebeispiele und Listen dürfen in solchen Sektionen vorkommen;
+          sie erben die Typografie-Regeln der Galerie.</p>
+          <p>16. Verweise auf andere Components („siehe Scroll Area, siehe Scrollbar") gehören
+          in die Doku, nicht in den Bedingungstext — hier stehen sie nur als Fülltext.</p>
+          <p>17. Ein echter AGB-Text wäre deutlich länger; für die Demonstration genügt eine
+          Länge, bei der der Scrollbalken sichtbar kleiner als die halbe Sektionshöhe ist.</p>
+          <p>18. Wiederholtes Auf- und Abscrollen sollte gleichmäßig laufen, ohne Sprünge und
+          ohne dass der Daumen „klebt".</p>
+          <p>19. Am unteren Rand endet die Sektion mit etwas Abstand, damit der letzte Absatz
+          nicht an der Kante klebt.</p>
+          <p>20. Ende der Bedingungen — mit „Akzeptieren" bestätigst du den Beispieltext.</p>
         </section>
         <footer><button type="button" class="btn" data-variant="outline" onclick="this.closest('dialog').close()">Ablehnen</button><button type="button" class="btn" onclick="this.closest('dialog').close()">Akzeptieren</button></footer>
-        <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Schließen" onclick="this.closest('dialog').close()"><svg data-icon-lu="x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+        <button type="button" class="btn btn-close" data-variant="ghost" aria-label="Schließen" onclick="this.closest('dialog').close()"><svg data-icon-lu="x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
       </div>
     </dialog>
   </div>
@@ -75,7 +108,7 @@
           <button type="button" class="btn" data-variant="outline" onclick="this.closest('dialog').close()">Schließen</button>
           <button type="button" class="btn" onclick="this.closest('dialog').close()">Als PDF herunterladen</button>
         </footer>
-        <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Schließen" onclick="this.closest('dialog').close()"><svg data-icon-lu="x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+        <button type="button" class="btn btn-close" data-variant="ghost" aria-label="Schließen" onclick="this.closest('dialog').close()"><svg data-icon-lu="x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
       </div>
     </dialog>
   </div>
