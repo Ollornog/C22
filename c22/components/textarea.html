@@ -33,7 +33,7 @@
     <div class="field w-full max-w-sm" role="group">
       <label for="c22-ta-kurz">Kurzbeschreibung</label>
       <textarea class="textarea" id="c22-ta-kurz" rows="3" maxlength="200" placeholder="Kurz beschreiben …">Dieses Werkzeug spart mir jeden Tag Zeit.</textarea>
-      <p class="text-end">41/200</p>
+      <p class="text-end" data-char-count>41/200</p>
     </div>
   </div>
   <div class="c22-example">
@@ -43,15 +43,11 @@
         <label for="c22-ta-send" class="sr-only">Nachricht</label>
         <textarea class="textarea" id="c22-ta-send" rows="3" placeholder="Schreib eine Nachricht …"></textarea>
       </div>
-      <button type="button" class="btn self-end" data-size="sm">Senden<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></button>
+      <button type="button" class="btn self-end" data-size="sm">Senden<svg data-icon-lu="send" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></button>
     </div>
   </div>
   <div class="c22-example">
     <span class="c22-example-label">Nicht größenveränderbar (<code class="text-[11px]">resize-none</code>)</span>
     <textarea class="textarea resize-none w-full max-w-sm" rows="4" placeholder="Feste Höhe, kein Ziehgriff …"></textarea>
-  </div>
-  <div class="c22-example">
-    <span class="c22-example-label">Rechts-nach-links (arabisch)</span>
-    <textarea class="textarea w-full max-w-sm" rows="3" dir="rtl" placeholder="اكتب رسالتك هنا …"></textarea>
   </div>
 </div>

@@ -1,11 +1,11 @@
-<!-- basecoat: Select (.select) = Button-Trigger + Popover-Listbox (role=listbox/option/group/heading/separator), analog zu combobox.html aber ohne Textfilter. data-placeholder auf dem Container, data-value je Option, verstecktes <input type="hidden"> hält den Formularwert. data-size="sm" auf dem Trigger für kompakt. Deaktivieren über disabled am Trigger (ganzes Select) oder aria-disabled="true" an einer Option. dir="rtl" spiegelt Pfeil + Häkchen automatisch. -->
+<!-- basecoat: Select (.select) = Button-Trigger + Popover-Listbox (role=listbox/option/group/heading/separator), analog zu combobox.html aber ohne Textfilter. data-placeholder auf dem Container, data-value je Option, verstecktes <input type="hidden"> hält den Formularwert. data-size="sm" auf dem Trigger für kompakt. Deaktivieren über disabled am Trigger (ganzes Select) oder aria-disabled="true" an einer Option. Scrollende Listbox: Scrollbar-Kanon (.scrollbar + data-size="sm", s. scrollbar.html). -->
 <div class="c22-examples">
   <div class="c22-example">
     <span class="c22-example-label">Standard</span>
-    <div class="select w-full max-w-xs" id="c22-sel" data-placeholder="Frucht wählen">
+    <div class="select w-48" id="c22-sel" data-placeholder="Frucht wählen">
       <button type="button" id="c22-sel-trigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="c22-sel-listbox">
         <span class="truncate">Frucht wählen</span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground shrink-0 opacity-50"><path d="m6 9 6 6 6-6"/></svg>
+        <svg data-icon-lu="chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 opacity-50"><path d="m6 9 6 6 6-6"/></svg>
       </button>
       <div id="c22-sel-popover" data-popover aria-hidden="true">
         <div role="listbox" id="c22-sel-listbox" aria-orientation="vertical" aria-labelledby="c22-sel-trigger">
@@ -19,10 +19,10 @@
   </div>
   <div class="c22-example">
     <span class="c22-example-label">Gruppiert</span>
-    <div class="select w-full max-w-xs" id="c22-selg" data-placeholder="Zutat wählen">
+    <div class="select w-48" id="c22-selg" data-placeholder="Zutat wählen">
       <button type="button" id="c22-selg-trigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="c22-selg-listbox">
         <span class="truncate">Zutat wählen</span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground shrink-0 opacity-50"><path d="m6 9 6 6 6-6"/></svg>
+        <svg data-icon-lu="chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 opacity-50"><path d="m6 9 6 6 6-6"/></svg>
       </button>
       <div id="c22-selg-popover" data-popover aria-hidden="true">
         <div role="listbox" id="c22-selg-listbox" aria-orientation="vertical" aria-labelledby="c22-selg-trigger">
@@ -40,26 +40,12 @@
     </div>
   </div>
   <div class="c22-example">
-    <span class="c22-example-label">Größen (Standard · Klein <code class="text-[11px]">data-size="sm"</code>)</span>
+    <span class="c22-example-label">Größen (Klein <code class="text-[11px]">data-size="sm"</code> · Standard · Groß <code class="text-[11px]">data-size="lg"</code>)</span>
     <div class="flex flex-wrap items-center justify-center gap-3">
-      <div class="select w-full max-w-[10rem]" id="c22-sels-std" data-placeholder="Tarif">
-        <button type="button" id="c22-sels-std-trigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="c22-sels-std-listbox">
-          <span class="truncate">Tarif</span>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground shrink-0 opacity-50"><path d="m6 9 6 6 6-6"/></svg>
-        </button>
-        <div id="c22-sels-std-popover" data-popover aria-hidden="true">
-          <div role="listbox" id="c22-sels-std-listbox" aria-orientation="vertical" aria-labelledby="c22-sels-std-trigger">
-            <div role="option" data-value="starter">Starter</div>
-            <div role="option" data-value="pro">Professional</div>
-            <div role="option" data-value="enterprise">Enterprise</div>
-          </div>
-        </div>
-        <input type="hidden" name="c22-sels-std-value" value="">
-      </div>
-      <div class="select w-full max-w-[10rem]" id="c22-sels-sm" data-size="sm" data-placeholder="Tarif">
+      <div class="select w-40" id="c22-sels-sm" data-size="sm" data-placeholder="Tarif">
         <button type="button" id="c22-sels-sm-trigger" data-size="sm" aria-haspopup="listbox" aria-expanded="false" aria-controls="c22-sels-sm-listbox">
           <span class="truncate">Tarif</span>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground shrink-0 opacity-50"><path d="m6 9 6 6 6-6"/></svg>
+          <svg data-icon-lu="chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 opacity-50"><path d="m6 9 6 6 6-6"/></svg>
         </button>
         <div id="c22-sels-sm-popover" data-popover aria-hidden="true">
           <div role="listbox" id="c22-sels-sm-listbox" aria-orientation="vertical" aria-labelledby="c22-sels-sm-trigger">
@@ -70,17 +56,45 @@
         </div>
         <input type="hidden" name="c22-sels-sm-value" value="">
       </div>
+      <div class="select w-40" id="c22-sels-std" data-placeholder="Tarif">
+        <button type="button" id="c22-sels-std-trigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="c22-sels-std-listbox">
+          <span class="truncate">Tarif</span>
+          <svg data-icon-lu="chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 opacity-50"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div id="c22-sels-std-popover" data-popover aria-hidden="true">
+          <div role="listbox" id="c22-sels-std-listbox" aria-orientation="vertical" aria-labelledby="c22-sels-std-trigger">
+            <div role="option" data-value="starter">Starter</div>
+            <div role="option" data-value="pro">Professional</div>
+            <div role="option" data-value="enterprise">Enterprise</div>
+          </div>
+        </div>
+        <input type="hidden" name="c22-sels-std-value" value="">
+      </div>
+      <div class="select w-40" id="c22-sels-lg" data-placeholder="Tarif">
+        <button type="button" id="c22-sels-lg-trigger" data-size="lg" aria-haspopup="listbox" aria-expanded="false" aria-controls="c22-sels-lg-listbox">
+          <span class="truncate">Tarif</span>
+          <svg data-icon-lu="chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 opacity-50"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div id="c22-sels-lg-popover" data-popover aria-hidden="true">
+          <div role="listbox" id="c22-sels-lg-listbox" aria-orientation="vertical" aria-labelledby="c22-sels-lg-trigger">
+            <div role="option" data-value="starter">Starter</div>
+            <div role="option" data-value="pro">Professional</div>
+            <div role="option" data-value="enterprise">Enterprise</div>
+          </div>
+        </div>
+        <input type="hidden" name="c22-sels-lg-value" value="">
+      </div>
     </div>
   </div>
   <div class="c22-example">
-    <span class="c22-example-label">Scrollbar mit Trennlinie (<code class="text-[11px]">role="separator"</code>)</span>
-    <div class="select w-full max-w-xs" id="c22-selz" data-placeholder="Zeitzone wählen">
+    <span class="c22-example-label">Scrollbar (Kanon <code class="text-[11px]">data-size="sm"</code>) mit Trennlinien</span>
+    <div class="select w-64" id="c22-selz" data-placeholder="Zeitzone wählen">
       <button type="button" id="c22-selz-trigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="c22-selz-listbox">
         <span class="truncate">Zeitzone wählen</span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground shrink-0 opacity-50"><path d="m6 9 6 6 6-6"/></svg>
+        <svg data-icon-lu="chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 opacity-50"><path d="m6 9 6 6 6-6"/></svg>
       </button>
       <div id="c22-selz-popover" data-popover aria-hidden="true">
-        <div role="listbox" id="c22-selz-listbox" class="scrollbar-sm max-h-64 overflow-y-auto" aria-orientation="vertical" aria-labelledby="c22-selz-trigger">
+        <div role="listbox" id="c22-selz-listbox" class="scrollbar max-h-64 overflow-y-auto" data-size="sm" aria-orientation="vertical" aria-labelledby="c22-selz-trigger">
           <div role="group" aria-labelledby="c22-selz-amerika"><div role="heading" id="c22-selz-amerika">Amerika</div>
             <div role="option" data-value="america-new_york">(GMT-5) New York</div>
             <div role="option" data-value="america-los_angeles">(GMT-8) Los Angeles</div>
@@ -104,11 +118,11 @@
   </div>
   <div class="c22-example">
     <span class="c22-example-label">Zustände (Ganzes Select deaktiviert · Einzelne Option deaktiviert)</span>
-    <div class="flex w-full flex-wrap items-center justify-center gap-3">
-      <div class="select w-full max-w-xs" id="c22-seld" data-placeholder="Frucht wählen">
+    <div class="flex w-full flex-wrap items-start justify-center gap-3">
+      <div class="select w-64" id="c22-seld" data-placeholder="Frucht wählen">
         <button type="button" id="c22-seld-trigger" disabled aria-haspopup="listbox" aria-expanded="false" aria-controls="c22-seld-listbox">
           <span class="truncate">Frucht wählen</span>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground shrink-0 opacity-50"><path d="m6 9 6 6 6-6"/></svg>
+          <svg data-icon-lu="chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 opacity-50"><path d="m6 9 6 6 6-6"/></svg>
         </button>
         <div id="c22-seld-popover" data-popover aria-hidden="true">
           <div role="listbox" id="c22-seld-listbox" aria-orientation="vertical" aria-labelledby="c22-seld-trigger">
@@ -118,10 +132,10 @@
         </div>
         <input type="hidden" name="c22-seld-value" value="">
       </div>
-      <div class="select w-full max-w-xs" id="c22-seld2" data-placeholder="Frucht wählen">
+      <div class="select w-64" id="c22-seld2" data-placeholder="Frucht wählen">
         <button type="button" id="c22-seld2-trigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="c22-seld2-listbox">
           <span class="truncate">Frucht wählen</span>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground shrink-0 opacity-50"><path d="m6 9 6 6 6-6"/></svg>
+          <svg data-icon-lu="chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 opacity-50"><path d="m6 9 6 6 6-6"/></svg>
         </button>
         <div id="c22-seld2-popover" data-popover aria-hidden="true">
           <div role="listbox" id="c22-seld2-listbox" aria-orientation="vertical" aria-labelledby="c22-seld2-trigger">
@@ -142,7 +156,7 @@
         <div class="select" id="c22-self" data-placeholder="Land wählen">
           <button type="button" id="c22-self-trigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="c22-self-listbox">
             <span class="truncate">Land wählen</span>
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground shrink-0 opacity-50"><path d="m6 9 6 6 6-6"/></svg>
+            <svg data-icon-lu="chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 opacity-50"><path d="m6 9 6 6 6-6"/></svg>
           </button>
           <div id="c22-self-popover" data-popover aria-hidden="true">
             <div role="listbox" id="c22-self-listbox" aria-orientation="vertical" aria-labelledby="c22-self-trigger">
@@ -160,7 +174,7 @@
         <div class="select" id="c22-selfi" data-placeholder="Bitte wählen …">
           <button type="button" id="c22-selfi-trigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="c22-selfi-listbox" aria-invalid="true" aria-describedby="c22-selfi-err">
             <span class="truncate">Bitte wählen …</span>
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground shrink-0 opacity-50"><path d="m6 9 6 6 6-6"/></svg>
+            <svg data-icon-lu="chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 opacity-50"><path d="m6 9 6 6 6-6"/></svg>
           </button>
           <div id="c22-selfi-popover" data-popover aria-hidden="true">
             <div role="listbox" id="c22-selfi-listbox" aria-orientation="vertical" aria-labelledby="c22-selfi-trigger">
@@ -175,22 +189,4 @@
       </div>
     </div>
   </div>
-  <div class="c22-example">
-    <span class="c22-example-label">Rechts-nach-links (<code class="text-[11px]">dir="rtl"</code>, Pfeil &amp; Häkchen spiegeln)</span>
-    <div class="select w-full max-w-xs" id="c22-selr" dir="rtl" data-placeholder="Land wählen">
-      <button type="button" id="c22-selr-trigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="c22-selr-listbox">
-        <span class="truncate">Land wählen</span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground shrink-0 opacity-50"><path d="m6 9 6 6 6-6"/></svg>
-      </button>
-      <div id="c22-selr-popover" data-popover aria-hidden="true">
-        <div role="listbox" id="c22-selr-listbox" aria-orientation="vertical" aria-labelledby="c22-selr-trigger">
-          <div role="option" data-value="de" aria-selected="true">Deutschland</div>
-          <div role="option" data-value="at">Österreich</div>
-          <div role="option" data-value="ch">Schweiz</div>
-        </div>
-      </div>
-      <input type="hidden" name="c22-selr-value" value="de">
-    </div>
-  </div>
 </div>
-</content>

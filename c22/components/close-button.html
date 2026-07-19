@@ -1,0 +1,42 @@
+<!-- custom: Close-Button (.btn-close) — der repo-weite Schließbutton (X). Aufgebaut auf .btn
+     (class="btn btn-close" data-variant="ghost"), normiert Größe/Trefferfläche/X-Maß, den
+     Ecken-Abstand (data-corner) und den Overlay-Stil auf Bildern (data-on-image) an EINEM Ort
+     (components.css). Größen s/m/l über data-size (Default = m ohne Attribut); im Bestand wird
+     überall m genutzt, s/l sind hier das Angebot. aria-label ist Pflicht.
+     OPTISCHE AUSRICHTUNG (repo-weit): im Ecken-Einsatz sitzt die GLYPHE auf dem Content-
+     Raster des Containers (data-corner → p-4-Raster, data-corner="panel" → p-6-Raster); die
+     unsichtbare Klickfläche ist die Ausnahme und bleedet in den Innenabstand. Auf Bildern
+     bleibt die Glyphe m, nur die Fläche ist kleiner (24px). -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Größen (s · m · l — Default ist m)</span>
+    <div class="flex items-center gap-6">
+      <button type="button" class="btn btn-close" data-variant="ghost" data-size="sm" aria-label="Schließen"><svg data-icon-lu="x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+      <button type="button" class="btn btn-close" data-variant="ghost" aria-label="Schließen"><svg data-icon-lu="x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+      <button type="button" class="btn btn-close" data-variant="ghost" data-size="lg" aria-label="Schließen"><svg data-icon-lu="x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Ghost auf Fläche (Hover zeigt den Accent-Grund)</span>
+    <div class="bg-card flex items-center gap-4 rounded-lg border px-4 py-3">
+      <span class="text-sm font-medium">Benachrichtigung</span>
+      <span class="text-muted-foreground text-sm">Neuer Kommentar in deinem Dokument.</span>
+      <button type="button" class="btn btn-close" data-variant="ghost" aria-label="Schließen"><svg data-icon-lu="x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">In der Ecke einer Karte (data-corner)</span>
+    <div class="bg-card relative w-72 rounded-lg border p-4">
+      <button type="button" class="btn btn-close" data-variant="ghost" data-corner aria-label="Schließen"><svg data-icon-lu="x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+      <h4 class="pe-6 font-medium">Speicher fast voll</h4>
+      <p class="text-muted-foreground mt-1 text-sm">Du hast 92 % deines Kontingents belegt. Räume Platz frei oder buche mehr.</p>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Auf Bild (data-corner data-on-image — frosted, auf jedem Motiv lesbar)</span>
+    <div class="relative w-56 overflow-hidden rounded-lg border">
+      <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=400&h=300&fit=crop&q=80" alt="Arbeitsplatz" class="aspect-[4/3] w-full object-cover">
+      <button type="button" class="btn btn-close" data-variant="ghost" data-corner data-on-image aria-label="Entfernen"><svg data-icon-lu="x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+    </div>
+  </div>
+</div>

@@ -1,36 +1,41 @@
-<!-- basecoat: Kbd (<kbd class="kbd">) für Tastenkombinationen. Reine Text-/Icon-Darstellung, kein JS, RTL-neutral. Kombinationen (shadcn: KbdGroup) als benachbarte <kbd>-Elemente in einem flex-Container gruppieren, Trenner ("+" / "oder") als eigenes <span>; alternativ eine ganze Kombination in einem einzigen <kbd> (siehe dropdown-menu.html). Passt sich als Kind von .btn (data-icon="inline-end") und .input-group (data-align="end"/"start") automatisch an. -->
+<!-- basecoat: Kbd (<kbd class="kbd">) für Tastenkombinationen. Reine Text-/Icon-Darstellung, kein JS, RTL-neutral. Kombinationen (shadcn: KbdGroup) IMMER in einer .kbd-group gruppieren (SPOT: ein kanonischer Abstand an allen Einsatzorten — frei, im Button, im Eingabefeld), Trenner ("+" / "oder") als eigenes <span>; „+"-Kombinationen rücken mit data-join="plus" enger zusammen. Alternativ eine ganze Kombination in einem einzigen <kbd> (siehe dropdown-menu.html). Passt sich als Kind von .btn (data-icon="inline-end") und .input-group (data-align="end"/"start") automatisch an. -->
 <div class="c22-examples">
   <div class="c22-example">
     <span class="c22-example-label">Standard</span>
     <div class="flex flex-col items-center gap-3 text-sm">
-      <div class="flex items-center gap-1"><kbd class="kbd">Strg</kbd><kbd class="kbd">K</kbd><span class="text-muted-foreground px-1">oder</span><kbd class="kbd">Strg</kbd><kbd class="kbd">B</kbd></div>
-      <div class="flex items-center gap-1"><kbd class="kbd">Strg</kbd><span class="text-muted-foreground">+</span><kbd class="kbd">Umschalt</kbd><span class="text-muted-foreground">+</span><kbd class="kbd">P</kbd></div>
+      <div class="kbd-group"><kbd class="kbd">Strg</kbd><kbd class="kbd">K</kbd><span class="text-muted-foreground px-1">oder</span><kbd class="kbd">Strg</kbd><kbd class="kbd">B</kbd></div>
+      <div class="kbd-group" data-join="plus"><kbd class="kbd">Strg</kbd><span class="text-muted-foreground">+</span><kbd class="kbd">Umschalt</kbd><span class="text-muted-foreground">+</span><kbd class="kbd">P</kbd></div>
     </div>
   </div>
   <div class="c22-example">
     <span class="c22-example-label">Sondertasten (Icons)</span>
-    <div class="flex flex-wrap items-center justify-center gap-2">
-      <kbd class="kbd"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg></kbd>
-      <kbd class="kbd"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></kbd>
-      <kbd class="kbd"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></kbd>
-      <kbd class="kbd"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></kbd>
-      <kbd class="kbd"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 10-5 5 5 5"/><path d="M20 4v7a4 4 0 0 1-4 4H4"/></svg></kbd>
+    <div class="kbd-group flex-wrap justify-center">
+      <kbd class="kbd"><svg data-icon-lu="chevron-up" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg></kbd>
+      <kbd class="kbd"><svg data-icon-lu="chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></kbd>
+      <kbd class="kbd"><svg data-icon-lu="chevron-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></kbd>
+      <kbd class="kbd"><svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></kbd>
+      <kbd class="kbd"><svg data-icon-lu="corner-down-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 10-5 5 5 5"/><path d="M20 4v7a4 4 0 0 1-4 4H4"/></svg></kbd>
+      <kbd class="kbd" aria-label="Umschalt"><svg data-icon-lu="arrow-big-up" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18v-6H5l7-7 7 7h-4v6H9z"/></svg></kbd>
+      <kbd class="kbd" aria-label="Windows-Taste"><svg data-icon-lu="grid-2x2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 12h18"/><path d="M12 3v18"/></svg></kbd>
+      <kbd class="kbd" aria-label="Befehlstaste (Cmd)"><svg data-icon-lu="command" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3"/></svg></kbd>
+      <kbd class="kbd" aria-label="Optionstaste (Alt)"><svg data-icon-lu="option" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h6l6 18h6"/><path d="M14 3h7"/></svg></kbd>
       <kbd class="kbd">Tab</kbd>
       <kbd class="kbd">Esc</kbd>
+      <kbd class="kbd">Entf</kbd>
     </div>
   </div>
   <div class="c22-example">
     <span class="c22-example-label">Im Button (<code class="text-[11px]">data-icon="inline-end"</code>)</span>
     <div class="flex flex-wrap items-center justify-center gap-3">
-      <button type="button" class="btn" data-variant="outline">Bestätigen<kbd class="kbd translate-x-0.5" data-icon="inline-end"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 10-5 5 5 5"/><path d="M20 4v7a4 4 0 0 1-4 4H4"/></svg></kbd></button>
-      <button type="button" class="btn" data-variant="outline">Suchen<span class="inline-flex items-center gap-1" data-icon="inline-end"><kbd class="kbd">Strg</kbd><kbd class="kbd">K</kbd></span></button>
+      <button type="button" class="btn" data-variant="outline">Bestätigen<kbd class="kbd translate-x-0.5" data-icon="inline-end"><svg data-icon-lu="corner-down-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 10-5 5 5 5"/><path d="M20 4v7a4 4 0 0 1-4 4H4"/></svg></kbd></button>
+      <button type="button" class="btn" data-variant="outline">Suchen<span class="kbd-group" data-icon="inline-end"><kbd class="kbd">Strg</kbd><kbd class="kbd">K</kbd></span></button>
     </div>
   </div>
   <div class="c22-example">
     <span class="c22-example-label">Im Eingabefeld (<code class="text-[11px]">data-align="end"</code>)</span>
     <div class="input-group w-full max-w-sm">
       <input class="input" type="search" placeholder="Suchen …">
-      <span data-align="end"><kbd class="kbd">Strg</kbd><kbd class="kbd">K</kbd></span>
+      <span data-align="end" class="kbd-group"><kbd class="kbd">Strg</kbd><kbd class="kbd">K</kbd></span>
     </div>
   </div>
 </div>

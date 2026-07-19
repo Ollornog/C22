@@ -1,0 +1,158 @@
+<!-- C22-custom: Editable Table = normale .table + [data-edit-table] auf dem Container (Verdrahtung c22.js).
+     Alle tbody-Zellen ohne [data-noedit] werden contenteditable="plaintext-only"; data-editing="false"
+     schaltet den Bearbeiten-Modus ab (Umschalter setzt nur dieses Attribut). Fokussierte Zelle = innerer
+     Ring (Kanon components.css). Looks kommen unverändert vom Table-Primitiv (Standard, data-variant="grid"). -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Standard-Layout, direkt editierbar (Zelle anklicken und tippen)</span>
+    <div class="table-container w-full max-w-2xl" data-edit-table>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Projekt</th>
+            <th>Verantwortlich</th>
+            <th data-type="number">Budget</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Website-Relaunch</td><td>Mara Albrecht</td><td data-type="number">12.000 €</td></tr>
+          <tr><td>App-Prototyp</td><td>Jonas Weber</td><td data-type="number">8.500 €</td></tr>
+          <tr><td>Design-System</td><td>Lena Krüger</td><td data-type="number">15.200 €</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Excel-Look (<code class="text-[11px]">data-variant="grid"</code>), direkt editierbar</span>
+    <div class="table-container w-full max-w-2xl" data-edit-table>
+      <table class="table" data-variant="grid">
+        <thead>
+          <tr>
+            <th>Artikel</th>
+            <th data-type="number">Menge</th>
+            <th data-type="number">Einzelpreis</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Schreibtischlampe</td><td data-type="number">2</td><td data-type="number">34,90 €</td></tr>
+          <tr><td>Monitorständer</td><td data-type="number">1</td><td data-type="number">49,00 €</td></tr>
+          <tr><td>USB-C-Kabel 2 m</td><td data-type="number">3</td><td data-type="number">9,50 €</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Vollausbau (die komplette Data Table aus 21a) — Bearbeiten als Stift-Toggle in der Toolbar</span>
+    <div class="w-full" id="c22-et-c" data-datatable data-dt-multisort data-edit-table data-editing="false">
+      <div class="mb-1 flex items-center justify-between gap-4" data-dt-toolbar>
+        <input class="input max-w-xs" type="search" placeholder="Suchen …" data-dt-filter aria-label="Tabelle durchsuchen">
+        <div class="bg-accent text-accent-foreground flex items-center gap-2 rounded-md ps-3 pe-1 py-0.5" data-dt-bulkbar hidden>
+          <span class="text-sm font-medium" data-dt-count-bulk>0 ausgewählt</span>
+          <div class="dropdown-menu" id="c22-ete-bulk">
+            <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" id="c22-ete-bulk-trigger" aria-haspopup="menu" aria-controls="c22-ete-bulk-menu" aria-expanded="false" aria-label="Sammel-Aktionen"><svg data-icon-lu="chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-50"><path d="m6 9 6 6 6-6"/></svg></button>
+            <div id="c22-ete-bulk-popover" data-popover data-align="end" aria-hidden="true">
+              <div role="menu" id="c22-ete-bulk-menu" aria-labelledby="c22-ete-bulk-trigger">
+                <button type="button" role="menuitem"><svg data-icon-lu="download" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><path d="M12 15V3"/></svg>Exportieren</button>
+                <button type="button" role="menuitem" data-variant="destructive"><svg data-icon-lu="trash" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>Löschen</button>
+                <hr role="separator">
+                <button type="button" role="menuitem" data-dt-clearselect><svg data-icon-lu="x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>Auswahl aufheben</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center gap-1">
+          <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" data-dt-reset aria-label="Filter und Sortierung zurücksetzen"><svg data-icon-lu="funnel-x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.531 3H2a1 1 0 0 0-.8 1.6l6.6 8.8a1 1 0 0 1 .2.6v6.09a1 1 0 0 0 .553.895l2 1A1 1 0 0 0 12 21.09V14a1 1 0 0 1 .2-.6l1.62-2.16"/><path d="m17 17 5-5"/><path d="m22 17-5-5"/></svg></button>
+          <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-pressed="false" aria-label="Bearbeiten umschalten"
+            onclick="var an = this.getAttribute('aria-pressed') !== 'true'; this.setAttribute('aria-pressed', an); document.getElementById('c22-et-c').dataset.editing = an ? 'true' : 'false';"><svg data-icon-lu="pencil" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg></button>
+          <div class="popover dropdown-menu" id="c22-ete-set" data-dropdown-menu-initialized="true">
+          <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" id="c22-ete-set-trigger" aria-expanded="false" aria-controls="c22-ete-set-popover" aria-label="Tabelleneinstellungen"><svg data-icon-lu="settings" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></button>
+          <div id="c22-ete-set-popover" data-popover data-align="end" data-filter-combo data-dt-colpanel class="w-64" aria-hidden="true">
+            <div role="menu" aria-label="Tabelleneinstellungen">
+              <button type="button" role="menuitem" data-dt-reset><svg data-icon-lu="funnel-x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.531 3H2a1 1 0 0 0-.8 1.6l6.6 8.8a1 1 0 0 1 .2.6v6.09a1 1 0 0 0 .553.895l2 1A1 1 0 0 0 12 21.09V14a1 1 0 0 1 .2-.6l1.62-2.16"/><path d="m17 17 5-5"/><path d="m22 17-5-5"/></svg>Filter zurücksetzen</button>
+              <div data-submenu>
+                <button type="button" role="menuitem" aria-haspopup="menu">Zeilen pro Seite <svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ms-auto opacity-50"><path d="m9 18 6-6-6-6"/></svg></button>
+                <div data-submenu-panel role="menu" aria-label="Zeilen pro Seite">
+                  <div role="group">
+                    <button type="button" role="menuitemradio" aria-checked="true" data-dt-pagesize-opt="0">Alle anzeigen</button>
+                    <button type="button" role="menuitemradio" aria-checked="false" data-dt-pagesize-opt="5">5</button>
+                    <button type="button" role="menuitemradio" aria-checked="false" data-dt-pagesize-opt="10">10</button>
+                    <button type="button" role="menuitemradio" aria-checked="false" data-dt-pagesize-opt="20">20</button>
+                  </div>
+                </div>
+              </div>
+              <hr role="separator">
+              <div role="heading">Spalten</div>
+              <div class="combobox-chips input mx-1 mb-1 h-auto min-h-8 flex-wrap gap-1 px-1.5 py-1" data-fc-chips><input class="placeholder:text-muted-foreground min-w-16 flex-1 bg-transparent text-sm outline-hidden" type="text" placeholder="Suchen …" aria-label="Spalten durchsuchen"></div>
+              <div role="listbox" aria-multiselectable="true" aria-label="Sichtbare Spalten">
+                <div role="option" aria-selected="true" data-dt-col="1">Status</div>
+                <div role="option" aria-selected="true" data-dt-col="2">E-Mail</div>
+                <div role="option" aria-selected="true" data-dt-col="3">Betrag</div>
+              </div>
+              <div class="text-muted-foreground px-2 py-1.5 text-sm" data-fc-leer hidden>Keine Treffer.</div>
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
+      <div class="context-menu relative">
+        <div class="table-container rounded-md border">
+          <table class="table text-sm">
+            <thead><tr class="text-muted-foreground text-left">
+              <th class="w-px ps-3 pe-1 py-2"><input class="input" type="checkbox" aria-label="Alle auswählen" data-dt-select-all></th>
+              <th class="px-1 py-1"><button type="button" class="btn -mx-1" data-variant="ghost" data-size="sm" data-dt-sort="text">Status
+            <svg data-dt-icon="asc" data-icon-lu="arrow-up" hidden xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
+            <svg data-dt-icon="desc" data-icon-lu="arrow-down" hidden xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
+          </button> <div class="popover dropdown-menu inline-block align-middle" id="c22-ete-f1" data-dropdown-menu-initialized="true"><button type="button" class="btn" data-variant="ghost" data-size="icon-xs" id="c22-ete-f1-trigger" aria-expanded="false" aria-controls="c22-ete-f1-popover" aria-pressed="false" aria-label="Status filtern"><svg data-icon-lu="funnel" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg></button><div id="c22-ete-f1-popover" data-popover data-filter-combo class="w-56" aria-hidden="true"><div role="menu" aria-label="Status: Sortieren und Filtern"><div role="heading">Sortieren</div><button type="button" role="menuitem" data-dt-sortdir="ascending"><svg data-icon-lu="arrow-up" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>Aufsteigend</button><button type="button" role="menuitem" data-dt-sortdir="descending"><svg data-icon-lu="arrow-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>Absteigend</button><button type="button" role="menuitem" data-dt-sortdir="none"><svg data-icon-lu="x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>Nicht sortieren</button><hr role="separator"><div role="heading">Filtern</div><div class="combobox-chips input mx-1 mb-1 h-auto min-h-8 flex-wrap gap-1 px-1.5 py-1" data-fc-chips><input class="placeholder:text-muted-foreground min-w-16 flex-1 bg-transparent text-sm outline-hidden" type="text" placeholder="Suchen …" aria-label="Status-Werte durchsuchen"></div><div role="listbox" aria-multiselectable="true" aria-label="Status-Filter" data-dt-filter-col="1" class="scrollbar max-h-56 overflow-y-auto" data-size="sm"><div role="option" aria-selected="false">Erfolg</div><div role="option" aria-selected="false">Offen</div><div role="option" aria-selected="false">Fehler</div></div><div class="text-muted-foreground px-2 py-1.5 text-sm" data-fc-leer hidden>Keine Treffer.</div></div></div></th>
+              <th class="px-1 py-1"><button type="button" class="btn -mx-1" data-variant="ghost" data-size="sm" data-dt-sort="text">E-Mail
+            <svg data-dt-icon="asc" data-icon-lu="arrow-up" hidden xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
+            <svg data-dt-icon="desc" data-icon-lu="arrow-down" hidden xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
+          </button> <div class="popover dropdown-menu inline-block align-middle" id="c22-ete-f2" data-dropdown-menu-initialized="true"><button type="button" class="btn" data-variant="ghost" data-size="icon-xs" id="c22-ete-f2-trigger" aria-expanded="false" aria-controls="c22-ete-f2-popover" aria-pressed="false" aria-label="E-Mail filtern"><svg data-icon-lu="funnel" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg></button><div id="c22-ete-f2-popover" data-popover data-filter-combo class="w-56" aria-hidden="true"><div role="menu" aria-label="E-Mail: Sortieren und Filtern"><div role="heading">Sortieren</div><button type="button" role="menuitem" data-dt-sortdir="ascending"><svg data-icon-lu="arrow-up" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>Aufsteigend</button><button type="button" role="menuitem" data-dt-sortdir="descending"><svg data-icon-lu="arrow-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>Absteigend</button><button type="button" role="menuitem" data-dt-sortdir="none"><svg data-icon-lu="x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>Nicht sortieren</button><hr role="separator"><div role="heading">Filtern</div><div class="combobox-chips input mx-1 mb-1 h-auto min-h-8 flex-wrap gap-1 px-1.5 py-1" data-fc-chips><input class="placeholder:text-muted-foreground min-w-16 flex-1 bg-transparent text-sm outline-hidden" type="text" placeholder="Suchen …" aria-label="E-Mail-Werte durchsuchen"></div><div role="listbox" aria-multiselectable="true" aria-label="E-Mail-Filter" data-dt-filter-col="2" class="scrollbar max-h-56 overflow-y-auto" data-size="sm"><div role="option" aria-selected="false">ken@example.com</div><div role="option" aria-selected="false">abe@example.com</div><div role="option" aria-selected="false">mon@example.com</div><div role="option" aria-selected="false">lia@example.com</div><div role="option" aria-selected="false">tom@example.com</div><div role="option" aria-selected="false">ana@example.com</div><div role="option" aria-selected="false">rob@example.com</div><div role="option" aria-selected="false">eva@example.com</div><div role="option" aria-selected="false">jan@example.com</div><div role="option" aria-selected="false">mia@example.com</div><div role="option" aria-selected="false">leo@example.com</div><div role="option" aria-selected="false">ida@example.com</div></div><div class="text-muted-foreground px-2 py-1.5 text-sm" data-fc-leer hidden>Keine Treffer.</div></div></div></th>
+              <th class="px-1 py-1" data-type="number"><span class="flex items-center justify-end"><button type="button" class="btn -mx-1" data-variant="ghost" data-size="sm" data-dt-sort="number">Betrag
+            <svg data-dt-icon="asc" data-icon-lu="arrow-up" hidden xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
+            <svg data-dt-icon="desc" data-icon-lu="arrow-down" hidden xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
+          </button> <div class="popover dropdown-menu inline-block align-middle" id="c22-ete-f3" data-dropdown-menu-initialized="true"><button type="button" class="btn" data-variant="ghost" data-size="icon-xs" id="c22-ete-f3-trigger" aria-expanded="false" aria-controls="c22-ete-f3-popover" aria-pressed="false" aria-label="Betrag filtern"><svg data-icon-lu="funnel" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg></button><div id="c22-ete-f3-popover" data-popover data-filter-combo class="w-56" aria-hidden="true"><div role="menu" aria-label="Betrag: Sortieren und Filtern"><div role="heading">Sortieren</div><button type="button" role="menuitem" data-dt-sortdir="ascending"><svg data-icon-lu="arrow-up" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>Aufsteigend</button><button type="button" role="menuitem" data-dt-sortdir="descending"><svg data-icon-lu="arrow-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>Absteigend</button><button type="button" role="menuitem" data-dt-sortdir="none"><svg data-icon-lu="x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>Nicht sortieren</button><hr role="separator"><div role="heading">Filtern</div><div class="combobox-chips input mx-1 mb-1 h-auto min-h-8 flex-wrap gap-1 px-1.5 py-1" data-fc-chips><input class="placeholder:text-muted-foreground min-w-16 flex-1 bg-transparent text-sm outline-hidden" type="text" placeholder="Suchen …" aria-label="Betrag-Werte durchsuchen"></div><div role="listbox" aria-multiselectable="true" aria-label="Betrag-Filter" data-dt-filter-col="3" class="scrollbar max-h-56 overflow-y-auto" data-size="sm"><div role="option" aria-selected="false">316,00 €</div><div role="option" aria-selected="false">242,00 €</div><div role="option" aria-selected="false">837,00 €</div><div role="option" aria-selected="false">128,00 €</div><div role="option" aria-selected="false">512,00 €</div><div role="option" aria-selected="false">93,00 €</div><div role="option" aria-selected="false">404,00 €</div><div role="option" aria-selected="false">271,00 €</div><div role="option" aria-selected="false">654,00 €</div><div role="option" aria-selected="false">189,00 €</div><div role="option" aria-selected="false">58,00 €</div><div role="option" aria-selected="false">733,00 €</div></div><div class="text-muted-foreground px-2 py-1.5 text-sm" data-fc-leer hidden>Keine Treffer.</div></div></div></span></th>
+            </tr></thead>
+            <tbody>
+              <tr data-state="selected"><td class="w-px ps-3 pe-1 py-2" data-noedit><input class="input" type="checkbox" checked aria-label="Zeile auswählen" data-dt-select></td><td><span class="badge" data-variant="success">Erfolg</span></td><td>ken@example.com</td><td data-type="number">316,00 €</td></tr>
+              <tr data-state="selected"><td class="w-px ps-3 pe-1 py-2" data-noedit><input class="input" type="checkbox" checked aria-label="Zeile auswählen" data-dt-select></td><td><span class="badge" data-variant="secondary">Offen</span></td><td>abe@example.com</td><td data-type="number">242,00 €</td></tr>
+              <tr><td class="w-px ps-3 pe-1 py-2" data-noedit><input class="input" type="checkbox" aria-label="Zeile auswählen" data-dt-select></td><td><span class="badge" data-variant="destructive">Fehler</span></td><td>mon@example.com</td><td data-type="number">837,00 €</td></tr>
+              <tr><td class="w-px ps-3 pe-1 py-2" data-noedit><input class="input" type="checkbox" aria-label="Zeile auswählen" data-dt-select></td><td><span class="badge" data-variant="success">Erfolg</span></td><td>lia@example.com</td><td data-type="number">128,00 €</td></tr>
+              <tr><td class="w-px ps-3 pe-1 py-2" data-noedit><input class="input" type="checkbox" aria-label="Zeile auswählen" data-dt-select></td><td><span class="badge" data-variant="secondary">Offen</span></td><td>tom@example.com</td><td data-type="number">512,00 €</td></tr>
+              <tr><td class="w-px ps-3 pe-1 py-2" data-noedit><input class="input" type="checkbox" aria-label="Zeile auswählen" data-dt-select></td><td><span class="badge" data-variant="success">Erfolg</span></td><td>ana@example.com</td><td data-type="number">93,00 €</td></tr>
+              <tr><td class="w-px ps-3 pe-1 py-2" data-noedit><input class="input" type="checkbox" aria-label="Zeile auswählen" data-dt-select></td><td><span class="badge" data-variant="destructive">Fehler</span></td><td>rob@example.com</td><td data-type="number">404,00 €</td></tr>
+              <tr><td class="w-px ps-3 pe-1 py-2" data-noedit><input class="input" type="checkbox" aria-label="Zeile auswählen" data-dt-select></td><td><span class="badge" data-variant="success">Erfolg</span></td><td>eva@example.com</td><td data-type="number">271,00 €</td></tr>
+              <tr><td class="w-px ps-3 pe-1 py-2" data-noedit><input class="input" type="checkbox" aria-label="Zeile auswählen" data-dt-select></td><td><span class="badge" data-variant="secondary">Offen</span></td><td>jan@example.com</td><td data-type="number">654,00 €</td></tr>
+              <tr><td class="w-px ps-3 pe-1 py-2" data-noedit><input class="input" type="checkbox" aria-label="Zeile auswählen" data-dt-select></td><td><span class="badge" data-variant="success">Erfolg</span></td><td>mia@example.com</td><td data-type="number">189,00 €</td></tr>
+              <tr><td class="w-px ps-3 pe-1 py-2" data-noedit><input class="input" type="checkbox" aria-label="Zeile auswählen" data-dt-select></td><td><span class="badge" data-variant="destructive">Fehler</span></td><td>leo@example.com</td><td data-type="number">58,00 €</td></tr>
+              <tr><td class="w-px ps-3 pe-1 py-2" data-noedit><input class="input" type="checkbox" aria-label="Zeile auswählen" data-dt-select></td><td><span class="badge" data-variant="secondary">Offen</span></td><td>ida@example.com</td><td data-type="number">733,00 €</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div data-cm-panel hidden role="menu" aria-label="Zeilenaktionen" class="w-52">
+          <div data-dt-cm-row>
+            <button type="button" role="menuitem">Rechnungs-ID kopieren</button>
+            <hr role="separator">
+            <button type="button" role="menuitem">Kunde anzeigen</button>
+            <button type="button" role="menuitem">Zahlungsdetails</button>
+            <hr role="separator">
+            <button type="button" role="menuitem" data-variant="destructive">Rechnung stornieren</button>
+          </div>
+          <div data-dt-cm-bulk hidden>
+            <button type="button" role="menuitem"><svg data-icon-lu="download" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><path d="M12 15V3"/></svg>Exportieren</button>
+            <button type="button" role="menuitem" data-variant="destructive"><svg data-icon-lu="trash" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>Löschen</button>
+            <hr role="separator">
+            <button type="button" role="menuitem" data-dt-clearselect><svg data-icon-lu="x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>Auswahl aufheben</button>
+          </div>
+        </div>
+      </div>
+      <div class="flex items-center justify-between gap-4 pt-2">
+        <span class="text-muted-foreground text-xs" data-dt-count>12 Einträge</span>
+        <nav class="flex items-center gap-1" aria-label="Seitennavigation" data-dt-pager hidden>
+          <button type="button" class="btn" data-variant="ghost" data-size="sm" data-dt-prev>‹ Zurück</button>
+          <span class="flex items-center gap-1" data-dt-pages></span>
+          <button type="button" class="btn" data-variant="ghost" data-size="sm" data-dt-next>Weiter ›</button>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>

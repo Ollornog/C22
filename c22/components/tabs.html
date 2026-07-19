@@ -44,6 +44,20 @@
   </div>
 
   <div class="c22-example">
+    <span class="c22-example-label">Line, vertikal mit Spur (<code class="text-[11px]">data-track</code> — durchgehende Linie, Marker liegt darauf)</span>
+    <div class="tabs w-full max-w-md" id="t7">
+      <nav role="tablist" data-variant="line" data-track aria-orientation="vertical">
+        <button type="button" role="tab" id="t7-1" aria-controls="t7-p1" aria-selected="true" tabindex="0">Profil</button>
+        <button type="button" role="tab" id="t7-2" aria-controls="t7-p2" aria-selected="false" tabindex="-1">Benachrichtigungen</button>
+        <button type="button" role="tab" id="t7-3" aria-controls="t7-p3" aria-selected="false" tabindex="-1">Abrechnung</button>
+      </nav>
+      <div role="tabpanel" id="t7-p1" aria-labelledby="t7-1" tabindex="-1" class="text-muted-foreground ps-4 text-sm">Profilangaben.</div>
+      <div role="tabpanel" id="t7-p2" aria-labelledby="t7-2" tabindex="-1" hidden class="text-muted-foreground ps-4 text-sm">Benachrichtigungseinstellungen.</div>
+      <div role="tabpanel" id="t7-p3" aria-labelledby="t7-3" tabindex="-1" hidden class="text-muted-foreground ps-4 text-sm">Rechnungen und Zahlungsmittel.</div>
+    </div>
+  </div>
+
+  <div class="c22-example">
     <span class="c22-example-label">Vertikal (<code class="text-[11px]">aria-orientation="vertical"</code>)</span>
     <div class="tabs w-full max-w-md" id="t4">
       <nav role="tablist" aria-orientation="vertical">
@@ -61,8 +75,8 @@
     <span class="c22-example-label">Mit Icons + deaktiviertem Reiter</span>
     <div class="tabs w-full max-w-sm" id="t3">
       <nav role="tablist">
-        <button type="button" role="tab" id="t3-1" aria-controls="t3-p1" aria-selected="true" tabindex="0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg> Dashboard</button>
-        <button type="button" role="tab" id="t3-2" aria-controls="t3-p2" aria-selected="false" tabindex="-1"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> Einstellungen</button>
+        <button type="button" role="tab" id="t3-1" aria-controls="t3-p1" aria-selected="true" tabindex="0"><svg data-icon-lu="layout-dashboard" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg> Dashboard</button>
+        <button type="button" role="tab" id="t3-2" aria-controls="t3-p2" aria-selected="false" tabindex="-1"><svg data-icon-lu="settings" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> Einstellungen</button>
         <button type="button" role="tab" id="t3-3" aria-controls="t3-p3" aria-selected="false" tabindex="-1" disabled aria-disabled="true">Archiv</button>
       </nav>
       <div role="tabpanel" id="t3-p1" aria-labelledby="t3-1" tabindex="-1" class="text-muted-foreground pt-4 text-sm">Dashboard.</div>
@@ -115,6 +129,22 @@
           </section>
           <footer><button type="button" class="btn">Passwort ändern</button></footer>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Browser-Reiter (<code class="text-[11px]">data-variant="browser"</code> — Chrome-Optik mit Hohlkehlen)</span>
+    <div class="w-full max-w-md overflow-hidden rounded-xl border">
+      <div class="tabs" id="t8">
+        <nav role="tablist" data-variant="browser">
+          <button type="button" role="tab" id="t8-1" aria-controls="t8-p1" aria-selected="true" tabindex="0"><svg data-icon-lu="globe" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg> Startseite</button>
+          <button type="button" role="tab" id="t8-2" aria-controls="t8-p2" aria-selected="false" tabindex="-1"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg> Dokumentation</button>
+          <button type="button" role="tab" id="t8-3" aria-controls="t8-p3" aria-selected="false" tabindex="-1"><svg data-icon-lu="mail" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg> Postfach</button>
+        </nav>
+        <div role="tabpanel" id="t8-p1" aria-labelledby="t8-1" tabindex="-1" class="text-muted-foreground p-4 text-sm">Willkommen zurück.</div>
+        <div role="tabpanel" id="t8-p2" aria-labelledby="t8-2" tabindex="-1" hidden class="text-muted-foreground p-4 text-sm">Handbuch und Referenz.</div>
+        <div role="tabpanel" id="t8-p3" aria-labelledby="t8-3" tabindex="-1" hidden class="text-muted-foreground p-4 text-sm">Keine neuen Nachrichten.</div>
       </div>
     </div>
   </div>

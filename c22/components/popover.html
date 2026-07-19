@@ -1,26 +1,104 @@
-<!-- basecoat: Popover (.popover) = Trigger-Button + Panel [data-popover]. data-side="top|right|bottom|left|inline-start|inline-end" steuert die Seite, data-align="start|center|end" die Ausrichtung (Vorgabe jeweils bottom/start); header (oder [data-header]) + h1-h6/[data-title] + p/[data-description] für den Titelblock. -->
+<!-- basecoat: Popover (.popover) = Trigger-Button + Panel [data-popover]. data-side="top|right|bottom|left|inline-start|inline-end" steuert die Seite, data-align="start|center|end" die Ausrichtung (Vorgabe jeweils bottom/start); header (oder [data-header]) + h1-h6/[data-title] + p/[data-description] für den Titelblock. Varianten nach der Basecoat-Quelle (basecoatui.com/components/popover): Standard, Ausrichtungs-Trio, alle sechs Seiten, Formular; dazu die Praxis-Beispiele Aktionen und Profilkarte. -->
 <div class="c22-examples">
   <div class="c22-example">
     <span class="c22-example-label">Standard</span>
     <div class="popover" id="c22-pop">
-      <button type="button" class="btn" data-variant="outline" id="c22-pop-trigger" aria-expanded="false" aria-controls="c22-pop-popover">Maße einstellen</button>
-      <div id="c22-pop-popover" data-popover aria-hidden="true">
+      <button type="button" class="btn" data-variant="outline" id="c22-pop-trigger" aria-expanded="false" aria-controls="c22-pop-popover">Popover öffnen</button>
+      <div id="c22-pop-popover" data-popover class="w-72" aria-hidden="true">
+        <header>
+          <h4>Titel</h4>
+          <p>Kurze Beschreibung, worum es in diesem Popover geht.</p>
+        </header>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Ausrichtung (<code class="text-[11px]">data-align="start | center | end"</code>)</span>
+    <div class="flex flex-wrap items-center justify-center gap-3">
+    <div class="popover" id="c22-pop-al-start">
+      <button type="button" class="btn" data-variant="outline" id="c22-pop-al-start-trigger" aria-expanded="false" aria-controls="c22-pop-al-start-popover">Start</button>
+      <div id="c22-pop-al-start-popover" data-popover class="w-56" data-align="start" aria-hidden="true">
+        <p class="text-sm">Ausgerichtet an „Start".</p>
+      </div>
+    </div>
+    <div class="popover" id="c22-pop-al-center">
+      <button type="button" class="btn" data-variant="outline" id="c22-pop-al-center-trigger" aria-expanded="false" aria-controls="c22-pop-al-center-popover">Center</button>
+      <div id="c22-pop-al-center-popover" data-popover class="w-56" data-align="center" aria-hidden="true">
+        <p class="text-sm">Ausgerichtet an „Center".</p>
+      </div>
+    </div>
+    <div class="popover" id="c22-pop-al-end">
+      <button type="button" class="btn" data-variant="outline" id="c22-pop-al-end-trigger" aria-expanded="false" aria-controls="c22-pop-al-end-popover">End</button>
+      <div id="c22-pop-al-end-popover" data-popover class="w-56" data-align="end" aria-hidden="true">
+        <p class="text-sm">Ausgerichtet an „End".</p>
+      </div>
+    </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Seiten (<code class="text-[11px]">data-side</code> — top · right · bottom · left · inline-start · inline-end)</span>
+    <div class="flex flex-wrap items-center justify-center gap-3">
+    <div class="popover" id="c22-pop-s-top">
+      <button type="button" class="btn" data-variant="outline" id="c22-pop-s-top-trigger" aria-expanded="false" aria-controls="c22-pop-s-top-popover">Top</button>
+      <div id="c22-pop-s-top-popover" data-popover class="w-40" data-side="top" data-align="center" aria-hidden="true">
+        <p class="text-sm">Seite „Top".</p>
+      </div>
+    </div>
+    <div class="popover" id="c22-pop-s-right">
+      <button type="button" class="btn" data-variant="outline" id="c22-pop-s-right-trigger" aria-expanded="false" aria-controls="c22-pop-s-right-popover">Right</button>
+      <div id="c22-pop-s-right-popover" data-popover class="w-40" data-side="right" data-align="center" aria-hidden="true">
+        <p class="text-sm">Seite „Right".</p>
+      </div>
+    </div>
+    <div class="popover" id="c22-pop-s-bottom">
+      <button type="button" class="btn" data-variant="outline" id="c22-pop-s-bottom-trigger" aria-expanded="false" aria-controls="c22-pop-s-bottom-popover">Bottom</button>
+      <div id="c22-pop-s-bottom-popover" data-popover class="w-40" data-side="bottom" data-align="center" aria-hidden="true">
+        <p class="text-sm">Seite „Bottom".</p>
+      </div>
+    </div>
+    <div class="popover" id="c22-pop-s-left">
+      <button type="button" class="btn" data-variant="outline" id="c22-pop-s-left-trigger" aria-expanded="false" aria-controls="c22-pop-s-left-popover">Left</button>
+      <div id="c22-pop-s-left-popover" data-popover class="w-40" data-side="left" data-align="center" aria-hidden="true">
+        <p class="text-sm">Seite „Left".</p>
+      </div>
+    </div>
+    <div class="popover" id="c22-pop-s-istart">
+      <button type="button" class="btn" data-variant="outline" id="c22-pop-s-istart-trigger" aria-expanded="false" aria-controls="c22-pop-s-istart-popover">Inline start</button>
+      <div id="c22-pop-s-istart-popover" data-popover class="w-40" data-side="inline-start" data-align="center" aria-hidden="true">
+        <p class="text-sm">Seite „Inline start".</p>
+      </div>
+    </div>
+    <div class="popover" id="c22-pop-s-iend">
+      <button type="button" class="btn" data-variant="outline" id="c22-pop-s-iend-trigger" aria-expanded="false" aria-controls="c22-pop-s-iend-popover">Inline end</button>
+      <div id="c22-pop-s-iend-popover" data-popover class="w-40" data-side="inline-end" data-align="center" aria-hidden="true">
+        <p class="text-sm">Seite „Inline end".</p>
+      </div>
+    </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Formular</span>
+    <div class="popover" id="c22-popf">
+      <button type="button" class="btn" data-variant="outline" id="c22-popf-trigger" aria-expanded="false" aria-controls="c22-popf-popover">Maße einstellen</button>
+      <div id="c22-popf-popover" data-popover class="w-72" aria-hidden="true">
         <header>
           <h4>Abmessungen</h4>
-          <p>Lege Breite und Höhe fest.</p>
+          <p>Lege die Maße für die Ebene fest.</p>
         </header>
-        <div class="grid gap-3">
-          <div class="field"><label class="label" for="c22-pop-w">Breite</label><input class="input" id="c22-pop-w" value="100%"></div>
-          <div class="field"><label class="label" for="c22-pop-h">Höhe</label><input class="input" id="c22-pop-h" value="25rem"></div>
+        <div class="grid gap-2">
+          <div class="grid grid-cols-2 items-center gap-3"><label class="label" for="c22-popf-breite">Breite</label><input class="input h-8" id="c22-popf-breite" value="100%"></div>
+          <div class="grid grid-cols-2 items-center gap-3"><label class="label" for="c22-popf-max-breite">Max. Breite</label><input class="input h-8" id="c22-popf-max-breite" value="300px"></div>
+          <div class="grid grid-cols-2 items-center gap-3"><label class="label" for="c22-popf-höhe">Höhe</label><input class="input h-8" id="c22-popf-höhe" value="25rem"></div>
+          <div class="grid grid-cols-2 items-center gap-3"><label class="label" for="c22-popf-max-höhe">Max. Höhe</label><input class="input h-8" id="c22-popf-max-höhe" value="none"></div>
         </div>
       </div>
     </div>
   </div>
   <div class="c22-example">
-    <span class="c22-example-label">Ausrichtung Ende (<code class="text-[11px]">data-align="end"</code>)</span>
+    <span class="c22-example-label">Mit Aktionen (<code class="text-[11px]">data-align="end"</code>)</span>
     <div class="popover" id="c22-pop-align">
       <button type="button" class="btn" data-variant="outline" id="c22-pop-align-trigger" aria-expanded="false" aria-controls="c22-pop-align-popover">Konto löschen</button>
-      <div id="c22-pop-align-popover" data-popover data-align="end" aria-hidden="true">
+      <div id="c22-pop-align-popover" data-popover data-align="end" class="w-72" aria-hidden="true">
         <header>
           <h4>Bist du sicher?</h4>
           <p>Diese Aktion kann nicht rückgängig gemacht werden.</p>
@@ -33,22 +111,10 @@
     </div>
   </div>
   <div class="c22-example">
-    <span class="c22-example-label">Position oben (<code class="text-[11px]">data-side="top"</code>)</span>
-    <div class="popover" id="c22-pop-top">
-      <button type="button" class="btn" data-variant="outline" id="c22-pop-top-trigger" aria-expanded="false" aria-controls="c22-pop-top-popover"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>Hinweis</button>
-      <div id="c22-pop-top-popover" data-popover data-side="top" aria-hidden="true">
-        <header>
-          <h4>Automatisches Speichern</h4>
-          <p>Änderungen werden alle 30 Sekunden gesichert.</p>
-        </header>
-      </div>
-    </div>
-  </div>
-  <div class="c22-example">
     <span class="c22-example-label">Profilkarte (<code class="text-[11px]">data-side="right"</code>)</span>
     <div class="popover" id="c22-pop-profile">
       <button type="button" class="btn" data-variant="ghost" id="c22-pop-profile-trigger" aria-expanded="false" aria-controls="c22-pop-profile-popover">@mara</button>
-      <div id="c22-pop-profile-popover" data-popover data-side="right" aria-hidden="true">
+      <div id="c22-pop-profile-popover" data-popover data-side="right" class="w-72" aria-hidden="true">
         <div class="flex gap-3">
           <span class="avatar"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop&crop=faces&q=80" alt="Daniel B."><span>DB</span></span>
           <div>

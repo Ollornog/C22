@@ -1,0 +1,90 @@
+<!-- custom: Phosphor-Icons (MIT, https://phosphoricons.com) als ZWEITE Icon-Bibliothek neben den
+     Lucide-Inline-SVGs (siehe CLAUDE.md „Icons"). Subset in icons.js (window.C22_ICONS), gerendert
+     von c22.js: deklarativ <span data-icon-ph="name" data-weight="thin|light|regular|bold|fill|
+     duotone" class="size-4"> (befüllt beim init()), programmatisch window.C22.phIcon(name, weight)
+     -> SVG-String. Das Gewicht ist die Icon-Gewichts-Achse dieser Bibliothek — pro Instanz per
+     data-weight gesetzt, kein globaler Schalter (anders als Lucide, das nur einen Strich kennt).
+     Farbe kommt wie überall aus currentColor, Größe aus size-*-Klassen. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Gewichte (ein Icon, alle 6)</span>
+    <div class="flex flex-wrap items-end justify-center gap-6">
+      <div class="flex flex-col items-center gap-2 text-muted-foreground">
+        <span data-icon-ph="bell" data-weight="thin" class="size-7"></span>
+        <span class="text-xs">thin</span>
+      </div>
+      <div class="flex flex-col items-center gap-2 text-muted-foreground">
+        <span data-icon-ph="bell" data-weight="light" class="size-7"></span>
+        <span class="text-xs">light</span>
+      </div>
+      <div class="flex flex-col items-center gap-2 text-muted-foreground">
+        <span data-icon-ph="bell" data-weight="regular" class="size-7"></span>
+        <span class="text-xs">regular</span>
+      </div>
+      <div class="flex flex-col items-center gap-2 text-muted-foreground">
+        <span data-icon-ph="bell" data-weight="bold" class="size-7"></span>
+        <span class="text-xs">bold</span>
+      </div>
+      <div class="flex flex-col items-center gap-2 text-muted-foreground">
+        <span data-icon-ph="bell" data-weight="fill" class="size-7"></span>
+        <span class="text-xs">fill</span>
+      </div>
+      <div class="flex flex-col items-center gap-2 text-muted-foreground">
+        <span data-icon-ph="bell" data-weight="duotone" class="size-7"></span>
+        <span class="text-xs">duotone</span>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Raster (regular)</span>
+    <div class="grid grid-cols-4 gap-4 sm:grid-cols-7">
+      <div class="flex flex-col items-center gap-2 text-muted-foreground">
+        <span data-icon-ph="house" data-weight="regular" class="size-5"></span>
+        <span class="text-xs">house</span>
+      </div>
+      <div class="flex flex-col items-center gap-2 text-muted-foreground">
+        <span data-icon-ph="gear" data-weight="regular" class="size-5"></span>
+        <span class="text-xs">gear</span>
+      </div>
+      <div class="flex flex-col items-center gap-2 text-muted-foreground">
+        <span data-icon-ph="user" data-weight="regular" class="size-5"></span>
+        <span class="text-xs">user</span>
+      </div>
+      <div class="flex flex-col items-center gap-2 text-muted-foreground">
+        <span data-icon-ph="folder" data-weight="regular" class="size-5"></span>
+        <span class="text-xs">folder</span>
+      </div>
+      <div class="flex flex-col items-center gap-2 text-muted-foreground">
+        <span data-icon-ph="magnifying-glass" data-weight="regular" class="size-5"></span>
+        <span class="text-xs">magnifying-glass</span>
+      </div>
+      <div class="flex flex-col items-center gap-2 text-muted-foreground">
+        <span data-icon-ph="chart-bar" data-weight="regular" class="size-5"></span>
+        <span class="text-xs">chart-bar</span>
+      </div>
+      <div class="flex flex-col items-center gap-2 text-muted-foreground">
+        <span data-icon-ph="sign-out" data-weight="regular" class="size-5"></span>
+        <span class="text-xs">sign-out</span>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Größen (<code class="text-[11px]">size-*</code>)</span>
+    <div class="flex flex-wrap items-end justify-center gap-4 text-muted-foreground">
+      <span data-icon-ph="gear" data-weight="regular" class="size-3.5"></span>
+      <span data-icon-ph="gear" data-weight="regular" class="size-4"></span>
+      <span data-icon-ph="gear" data-weight="regular" class="size-5"></span>
+      <span data-icon-ph="gear" data-weight="regular" class="size-6"></span>
+      <span data-icon-ph="gear" data-weight="regular" class="size-8"></span>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Farbe (erbt <code class="text-[11px]">currentColor</code>)</span>
+    <div class="flex flex-wrap items-center justify-center gap-4">
+      <span data-icon-ph="x-circle" data-weight="fill" class="size-6 text-destructive"></span>
+      <span data-icon-ph="warning" data-weight="fill" class="size-6 text-warning"></span>
+      <span data-icon-ph="check-circle" data-weight="fill" class="size-6 text-success"></span>
+      <span data-icon-ph="info" data-weight="regular" class="size-6 text-muted-foreground"></span>
+    </div>
+  </div>
+</div>

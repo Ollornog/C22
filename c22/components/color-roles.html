@@ -1,0 +1,169 @@
+<!-- custom: „Color Roles" — die Token-Rollen-PAARE, die alle Varianten teilen (SPOT). Jede Fläche
+     zeigt bg-<rolle> mit dem zugehörigen text-<rolle>-foreground darauf; umfärben heißt Tokens
+     tauschen (tokens.css / Style-Pack), nie die Komponente anfassen. Nur Token-Utilities, keine
+     Hex-Werte. Vertiefung: CLAUDE.md „Tokens, not fixed colours". -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Kernpaare (Fläche + zugehöriger Foreground-Text — der geteilte Kern aller Varianten)</span>
+    <div class="grid w-full max-w-2xl grid-cols-2 gap-3 sm:grid-cols-4">
+      <div class="flex h-24 flex-col justify-between rounded-lg border bg-background p-3 text-foreground">
+        <span class="text-sm font-medium">Grundfläche</span>
+        <code class="text-[11px]">background · foreground</code>
+      </div>
+      <div class="flex h-24 flex-col justify-between rounded-lg border bg-card p-3 text-card-foreground">
+        <span class="text-sm font-medium">Karte</span>
+        <code class="text-[11px]">card · card-foreground</code>
+      </div>
+      <div class="flex h-24 flex-col justify-between rounded-lg border bg-popover p-3 text-popover-foreground">
+        <span class="text-sm font-medium">Popover</span>
+        <code class="text-[11px]">popover · popover-foreground</code>
+      </div>
+      <div class="flex h-24 flex-col justify-between rounded-lg border bg-muted p-3 text-muted-foreground">
+        <span class="text-sm font-medium">Gedämpft</span>
+        <code class="text-[11px]">muted · muted-foreground</code>
+      </div>
+      <div class="flex h-24 flex-col justify-between rounded-lg border bg-primary p-3 text-primary-foreground">
+        <span class="text-sm font-medium">Primär</span>
+        <code class="text-[11px]">primary · primary-foreground</code>
+      </div>
+      <div class="flex h-24 flex-col justify-between rounded-lg border bg-secondary p-3 text-secondary-foreground">
+        <span class="text-sm font-medium">Sekundär</span>
+        <code class="text-[11px]">secondary · secondary-foreground</code>
+      </div>
+      <div class="flex h-24 flex-col justify-between rounded-lg border bg-accent p-3 text-accent-foreground">
+        <span class="text-sm font-medium">Akzent</span>
+        <code class="text-[11px]">accent · accent-foreground</code>
+      </div>
+      <div class="flex h-24 flex-col justify-between rounded-lg border bg-destructive p-3 text-destructive-foreground">
+        <span class="text-sm font-medium">Destruktiv</span>
+        <code class="text-[11px]">destructive · destructive-foreground</code>
+      </div>
+    </div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Statuspaare (Ampel — Fläche + Foreground oben, getönte Ausführung unten, wie alert/badge sie nutzen)</span>
+    <div class="grid w-full max-w-2xl grid-cols-1 gap-4 sm:grid-cols-3">
+      <div class="flex flex-col gap-2">
+        <div class="flex h-16 flex-col justify-between rounded-lg border bg-success p-3 text-success-foreground">
+          <span class="text-sm font-medium">Erfolg</span>
+          <code class="text-[11px]">success · success-foreground</code>
+        </div>
+        <div class="flex h-16 flex-col justify-between rounded-lg border border-success/30 bg-success/10 p-3">
+          <span class="text-success text-sm font-semibold">Erfolg</span>
+          <code class="text-muted-foreground text-[11px]">bg-success/10 · text-success</code>
+        </div>
+      </div>
+      <div class="flex flex-col gap-2">
+        <div class="flex h-16 flex-col justify-between rounded-lg border bg-warning p-3 text-warning-foreground">
+          <span class="text-sm font-medium">Warnung</span>
+          <code class="text-[11px]">warning · warning-foreground</code>
+        </div>
+        <div class="flex h-16 flex-col justify-between rounded-lg border border-warning/40 bg-warning/10 p-3">
+          <span class="text-warning text-sm font-semibold">Warnung</span>
+          <code class="text-muted-foreground text-[11px]">bg-warning/10 · text-warning</code>
+        </div>
+      </div>
+      <div class="flex flex-col gap-2">
+        <div class="flex h-16 flex-col justify-between rounded-lg border bg-info p-3 text-info-foreground">
+          <span class="text-sm font-medium">Info</span>
+          <code class="text-[11px]">info · info-foreground</code>
+        </div>
+        <div class="flex h-16 flex-col justify-between rounded-lg border border-info/30 bg-info/10 p-3">
+          <span class="text-info text-sm font-semibold">Info</span>
+          <code class="text-muted-foreground text-[11px]">bg-info/10 · text-info</code>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Wer nutzt was — dieselben Paare, abgegriffen per <code class="text-[11px]">data-variant</code></span>
+    <div class="flex w-full max-w-2xl flex-col gap-6">
+      <div class="flex flex-col gap-2">
+        <span class="text-muted-foreground text-xs font-medium">Button — die sechs Grund-Ausführungen (bewusst OHNE success/warning/info — passt dort nicht; „deaktiviert" = <code class="text-[11px]">disabled</code>-Attribut, keine Variante)</span>
+        <div class="flex flex-wrap items-center gap-2">
+          <button type="button" class="btn">Primär</button>
+          <button type="button" class="btn" data-variant="secondary">Sekundär</button>
+          <button type="button" class="btn" data-variant="outline">Outline</button>
+          <button type="button" class="btn" data-variant="muted">Muted</button>
+          <button type="button" class="btn" data-variant="ghost">Ghost</button>
+          <button type="button" class="btn" data-variant="destructive">Destruktiv</button>
+          <button type="button" class="btn" disabled>Deaktiviert</button>
+        </div>
+      </div>
+      <div class="flex flex-col gap-2">
+        <span class="text-muted-foreground text-xs font-medium">Bubble — dieselben sechs, plus die Statusrollen</span>
+        <div class="flex flex-wrap items-center gap-2">
+          <div class="bubble" data-variant="primary">Primary</div>
+          <div class="bubble" data-variant="secondary">Secondary</div>
+          <div class="bubble" data-variant="outline">Outline</div>
+          <div class="bubble" data-variant="muted">Muted</div>
+          <div class="bubble" data-variant="ghost">Ghost</div>
+          <div class="bubble" data-variant="destructive">Destructive</div>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <div class="bubble" data-variant="success">Success</div>
+          <div class="bubble" data-variant="warning">Warning</div>
+          <div class="bubble" data-variant="info">Info</div>
+        </div>
+      </div>
+      <div class="flex flex-col gap-2">
+        <span class="text-muted-foreground text-xs font-medium">Badge — dieselben sechs, plus die Statusrollen</span>
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="badge">Primär</span>
+          <span class="badge" data-variant="secondary">Sekundär</span>
+          <span class="badge" data-variant="outline">Outline</span>
+          <span class="badge" data-variant="muted">Muted</span>
+          <span class="badge" data-variant="ghost">Ghost</span>
+          <span class="badge" data-variant="destructive">Destruktiv</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="badge" data-variant="success">Erfolg</span>
+          <span class="badge" data-variant="warning">Warnung</span>
+          <span class="badge" data-variant="info">Info</span>
+        </div>
+      </div>
+      <p class="text-muted-foreground max-w-xl text-sm leading-relaxed">
+        Diese Rollen-Paare sind der <span class="text-foreground font-medium">SPOT</span>: das
+        <code class="text-[11px]">data-variant</code> von Button, Bubble, Badge und Alert greift genau
+        diese Tokens ab. Umfärben heißt darum <span class="text-foreground font-medium">Tokens
+        ändern</span> (in <code class="text-[11px]">tokens.css</code> bzw. dem Style-Pack) — nie die
+        Komponente. Das Vokabular ist geschlossen und wird mechanisch geprüft (Konventions-Suite,
+        Regel 12).
+      </p>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Zustands-Marker (Hover/Aktiv · Auswahl · Fokus · Gedrückt — der Interaktions-Kanon, dieselben Tokens)</span>
+    <div class="grid w-full max-w-2xl gap-6 sm:grid-cols-2">
+      <div class="flex flex-col gap-2">
+        <span class="text-muted-foreground text-xs font-medium">Hover/Aktiv in Menüs &amp; Listen — <code class="text-[11px]">accent · accent-foreground</code>, nie bg-muted</span>
+        <div class="bg-popover w-full rounded-md border p-1 text-sm shadow-sm">
+          <div class="rounded-sm px-2 py-1.5">Profil</div>
+          <div class="bg-accent text-accent-foreground rounded-sm px-2 py-1.5">Einstellungen (Hover/Aktiv)</div>
+          <div class="rounded-sm px-2 py-1.5">Abmelden</div>
+        </div>
+      </div>
+      <div class="flex flex-col gap-2">
+        <span class="text-muted-foreground text-xs font-medium">Ausgewählte Option — fett + gefüllte Zeile (<code class="text-[11px]">primary</code>-Paar, geteilte Kanon-Regel)</span>
+        <div role="listbox" aria-label="Sprache" class="bg-popover w-full rounded-md border p-1 text-sm shadow-sm">
+          <div role="option" aria-selected="false" class="rounded-sm px-2 py-1.5">Englisch</div>
+          <div role="option" aria-selected="true" class="rounded-sm px-2 py-1.5">Deutsch</div>
+          <div role="option" aria-selected="false" class="rounded-sm px-2 py-1.5">Französisch</div>
+        </div>
+      </div>
+      <div class="flex flex-col gap-2">
+        <span class="text-muted-foreground text-xs font-medium">Fokus — Ring aus <code class="text-[11px]">ring · border-ring</code> (Tastatur/Feld-Fokus)</span>
+        <div class="input border-ring ring-ring/50 flex w-full items-center rounded-md ring-2">Fokussiertes Eingabefeld</div>
+      </div>
+      <div class="flex flex-col gap-2">
+        <span class="text-muted-foreground text-xs font-medium">Gedrückt/Ausgewählt an Buttons — <code class="text-[11px]">aria-pressed</code> → accent (Kanon, z.B. Toggle &amp; Reaktions-Chips)</span>
+        <div class="flex flex-wrap items-center gap-2">
+          <button type="button" class="btn" data-variant="outline" data-size="sm" aria-pressed="true">Gedrückt</button>
+          <button type="button" class="btn" data-variant="outline" data-size="sm" aria-pressed="false">Nicht gedrückt</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,151 +1,285 @@
-<!-- custom (shadcn-Vorlage "Message", kein Basecoat-Pendant): Chat-Nachricht = Avatar (verankert
-     am unteren Ende der Nachricht) + Header (Name/Zeit) + .bubble-Inhalt (siehe bubble.html) +
-     Footer (Status/Aktionen). Ausrichtung über data-align/flex-row-reverse: start = Empfänger
-     links, end = Absender rechts. MessageGroup = mehrere Bubbles eines Absenders teilen sich
-     Avatar/Header/Footer; .bubble-group lässt nur die letzte Blase die Spitze behalten. Footer-
-     Aktionen (Kopieren/Wiederholen/Feedback/Bearbeiten) erscheinen bei Hover und bleiben auf der
-     jeweiligen Seite ausgerichtet. Anhänge: Bild (Datei-Chip s. attachment.html). -->
+<!-- custom (shadcn-Vorlage "Message", kein Basecoat-Pendant): Chat-Nachricht mit der EINEN
+     kanonischen Zeilen-Anatomie .message (Regeln in components.css): Avatar (oben verankert,
+     die Blasen-Spitze zeigt zu ihm) + <section> aus den Slots <header> (Name + <time>, immer
+     oben, beim Absender gespiegelt), Inhalt (.bubble / .bubble-group / data-typing, siehe
+     bubble.html) und <footer> (Fuß-Slot: Status ODER Aktionen [data-message-actions] ODER
+     Reaktionen [data-reactions]; kombiniert = EINE Fußzeile — Reaktionen sichtbar, Aktionen
+     als [data-message-actions]-Span dahinter, bei Hover). FUSSZEILEN-KANON (PO): erlaubte
+     Aktionen sind Kopieren, Antworten, Reagieren („+" bzw. React-Knopf mit Schnellauswahl
+     👍 ❤️ 🎉), Info, Löschen — und „Erneut senden" nur bei Fehlschlag. Zuordnung: das
+     GEGENÜBER bekommt Antworten · Kopieren · Info (+ Reagieren), ICH bekomme Kopieren ·
+     Info · Löschen (kein Antworten/Reagieren auf eigene Nachrichten). Dropdown-Variante:
+     das Chevron-Menü sitzt IN der Blase ([data-bubble-menu], erscheint beim Hover der Blase — Gegenüber rechts oben, ich links oben);
+     Kopieren + React-Knopf sind dauerhaft sichtbar — beim Gegenüber Kopieren als erster
+     Knopf, bei mir als letzter, jeweils gefolgt vom React-Knopf. Verlauf chronologisch, die NEUESTE Nachricht unten — Tippen daher immer als
+     unterste Zeile. Ausrichtung über data-align="end" = Absender rechts.
+     Kopieren = data-copy + data-copy-scope (kopiert den Blasentext), Daumen = data-feedback. -->
 <div class="c22-examples">
   <div class="c22-example">
-    <span class="c22-example-label">Standard (Empfänger links · Absender rechts)</span>
+    <span class="c22-example-label">Standard (Empfänger links · Absender rechts — Anatomie <code class="text-[11px]">.message</code>)</span>
     <div class="flex w-full max-w-md flex-col gap-4">
-      <div class="flex gap-3">
+      <div class="message">
         <span class="avatar" data-size="sm"><span>AK</span></span>
-        <div class="flex flex-col items-start gap-1">
-          <div class="flex items-baseline gap-2"><span class="text-sm font-medium">Anna K.</span><span class="text-muted-foreground text-xs">09:41</span></div>
+        <section>
+          <header><span>Anna K.</span><time>09:41</time></header>
           <div class="bubble" data-variant="muted">Kannst du die Galerie teilen?</div>
-        </div>
+        </section>
       </div>
-      <div class="flex flex-row-reverse gap-3">
+      <div class="message" data-align="end">
         <span class="avatar" data-size="sm"><span>DB</span></span>
-        <div class="flex flex-col items-end gap-1">
-          <div class="flex items-baseline gap-2"><span class="text-muted-foreground text-xs">09:42</span><span class="text-sm font-medium">Du</span></div>
+        <section>
+          <header><span>Du</span><time>09:42</time></header>
           <div class="bubble" data-align="end">Klar, kommt gleich!</div>
-        </div>
+        </section>
       </div>
     </div>
   </div>
   <div class="c22-example">
-    <span class="c22-example-label">Gruppiert (MessageGroup — Avatar unten verankert, <code class="text-[11px]">.bubble-group</code>)</span>
+    <span class="c22-example-label">Gruppiert (<code class="text-[11px]">.bubble-group</code> — Spitze nur an der obersten Blase)</span>
     <div class="flex w-full max-w-md flex-col gap-4">
-      <div class="flex gap-3">
-        <span class="avatar self-end" data-size="sm"><span>AK</span></span>
-        <div class="flex flex-col items-start gap-1">
-          <span class="text-sm font-medium">Anna K.</span>
+      <div class="message">
+        <span class="avatar" data-size="sm"><span>AK</span></span>
+        <section>
+          <header><span>Anna K.</span><time>09:44</time></header>
           <div class="bubble-group">
             <div class="bubble" data-variant="muted">Kurze Frage zum Deployment.</div>
             <div class="bubble" data-variant="muted">Läuft das noch heute?</div>
           </div>
-          <span class="text-muted-foreground text-xs">09:44</span>
-        </div>
+        </section>
       </div>
     </div>
   </div>
   <div class="c22-example">
-    <span class="c22-example-label">Mit Footer-Aktionen (bei Hover · bleiben seitentreu ausgerichtet)</span>
+    <span class="c22-example-label">Mit Footer-Aktionen (bei Hover — Kanon: Gegenüber Antworten · Kopieren · Info, Ich Kopieren · Info · Löschen)</span>
     <div class="flex w-full max-w-md flex-col gap-4">
-      <div class="flex gap-3">
-        <span class="avatar" data-size="sm"><span>KI</span></span>
-        <div class="group flex flex-col items-start gap-1">
-          <span class="text-sm font-medium">Assistent</span>
-          <div class="bubble" data-variant="muted">Ich habe drei Varianten vorbereitet — Standard, kompakt und mit Bild.</div>
-          <div class="text-muted-foreground -ml-1.5 flex items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
-            <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Kopieren"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg></button>
-            <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Wiederholen"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></button>
-            <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Gut"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2h.94a2 2 0 0 1 2 2.22Z"/></svg></button>
-            <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Schlecht"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 14V2"/><path d="M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L13 22h-.94a2 2 0 0 1-2-2.22Z"/></svg></button>
-          </div>
-        </div>
+      <div class="message" data-copy-scope>
+        <span class="avatar" data-size="sm"><span>AK</span></span>
+        <section>
+          <header><span>Anna K.</span><time>11:02</time></header>
+          <div class="bubble" data-variant="muted">Schaffst du das Review bis heute Abend?</div>
+          <footer class="-ml-1.5" data-message-actions>
+            <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Antworten"><svg data-icon-lu="reply" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 17-5-5 5-5"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></svg></button>
+            <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" data-copy aria-label="Kopieren"><svg data-icon-lu="copy" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg></button>
+            <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Info"><svg data-icon-lu="info" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></button>
+          </footer>
+        </section>
       </div>
-      <div class="group flex flex-row-reverse gap-3">
+      <div class="message" data-align="end" data-copy-scope>
         <span class="avatar" data-size="sm"><span>DB</span></span>
-        <div class="flex flex-col items-end gap-1">
-          <div class="bubble" data-align="end">Gut, dann bau die Bild-Variante zuerst.</div>
-          <div class="text-muted-foreground -mr-1.5 flex items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
-            <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Bearbeiten"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg></button>
-            <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Kopieren"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg></button>
+        <section>
+          <header><span>Du</span><time>11:03</time></header>
+          <div class="bubble" data-align="end">Ja, ich schaue heute Nachmittag drüber.</div>
+          <footer class="-mr-1.5" data-message-actions>
+            <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" data-copy aria-label="Kopieren"><svg data-icon-lu="copy" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg></button>
+            <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Info"><svg data-icon-lu="info" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></button>
+            <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" data-message-delete aria-label="Löschen"><svg data-icon-lu="trash-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg></button>
+          </footer>
+        </section>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Reaktionen (beidseitig — „+" öffnet die Schnellauswahl 👍 ❤️ 🎉, Chips immer rechts davon)</span>
+    <div class="flex w-full max-w-md flex-col gap-4">
+      <div class="message">
+        <span class="avatar" data-size="sm"><span>AK</span></span>
+        <section>
+          <header><span>Anna K.</span><time>12:10</time></header>
+          <div data-bubble-col>
+            <div class="bubble" data-variant="muted">Der neue Screenshot sieht super aus!</div>
+            <!-- data-reactions verdrahtet c22.js: Chip togglet die eigene Reaktion (aria-pressed +
+                 Zähler ±1; fällt der Zähler auf 0, verschwindet der Chip), „+"-Popover fügt hinzu.
+                 Emoji sind Text (keine Icons -> kein data-icon-lu). Ohne JS bleiben die Chips gültig. -->
+            <footer data-reactions>
+              <div class="popover" data-reaction-picker>
+                <button type="button" class="btn" data-variant="ghost" data-size="icon-xs" id="c22-msg-react-trigger" aria-expanded="false" aria-controls="c22-msg-react-pop" aria-label="Reaktion hinzufügen"><svg data-icon-lu="plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button>
+                <div id="c22-msg-react-pop" data-popover data-side="top" aria-hidden="true">
+                  <div class="flex gap-0.5">
+                    <button type="button" class="btn text-base" data-variant="ghost" data-size="icon-sm" data-reaction-add="👍" aria-label="Mit 👍 reagieren">👍</button>
+                    <button type="button" class="btn text-base" data-variant="ghost" data-size="icon-sm" data-reaction-add="❤️" aria-label="Mit ❤️ reagieren">❤️</button>
+                    <button type="button" class="btn text-base" data-variant="ghost" data-size="icon-sm" data-reaction-add="🎉" aria-label="Mit 🎉 reagieren">🎉</button>
+                  </div>
+                </div>
+              </div>
+              <button type="button" class="btn" data-variant="outline" data-size="xs" data-reaction="👍" aria-pressed="true" aria-label="👍, 3 Reaktionen"><span aria-hidden="true">👍</span><span data-reaction-count>3</span></button>
+              <button type="button" class="btn" data-variant="outline" data-size="xs" data-reaction="❤️" aria-pressed="false" aria-label="❤️, 1 Reaktion"><span aria-hidden="true">❤️</span><span data-reaction-count>1</span></button>
+            </footer>
           </div>
-        </div>
+        </section>
+      </div>
+      <div class="message" data-align="end">
+        <span class="avatar" data-size="sm"><span>DB</span></span>
+        <section>
+          <header><span>Du</span><time>12:11</time></header>
+          <div data-bubble-col>
+            <div class="bubble" data-align="end">Danke, ging heute schneller als gedacht.</div>
+            <footer data-reactions>
+              <button type="button" class="btn" data-variant="outline" data-size="xs" data-reaction="🎉" aria-pressed="false" aria-label="🎉, 1 Reaktion"><span aria-hidden="true">🎉</span><span data-reaction-count>1</span></button>
+              <div class="popover" data-reaction-picker>
+                <button type="button" class="btn" data-variant="ghost" data-size="icon-xs" id="c22-msgr-react-trigger" aria-expanded="false" aria-controls="c22-msgr-react-pop" aria-label="Reaktion hinzufügen"><svg data-icon-lu="plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button>
+                <div id="c22-msgr-react-pop" data-popover data-side="top" aria-hidden="true">
+                  <div class="flex gap-0.5">
+                    <button type="button" class="btn text-base" data-variant="ghost" data-size="icon-sm" data-reaction-add="👍" aria-label="Mit 👍 reagieren">👍</button>
+                    <button type="button" class="btn text-base" data-variant="ghost" data-size="icon-sm" data-reaction-add="❤️" aria-label="Mit ❤️ reagieren">❤️</button>
+                    <button type="button" class="btn text-base" data-variant="ghost" data-size="icon-sm" data-reaction-add="🎉" aria-label="Mit 🎉 reagieren">🎉</button>
+                  </div>
+                </div>
+              </div>
+            </footer>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Chevron-Menü auf der Blase (bei Hover — Gegenüber rechts oben, ich links oben; Fußzeile beidseitig: Kopieren · Reagieren · Chips)</span>
+    <div class="flex w-full max-w-md flex-col gap-4">
+      <div class="message" data-copy-scope>
+        <span class="avatar" data-size="sm"><span>KI</span></span>
+        <section>
+          <header><span>Assistent</span><time>12:14</time></header>
+          <div data-bubble-col>
+            <div class="bubble" data-variant="muted">Finaler Entwurf ist fertig — Feedback gern direkt hier.
+              <div class="dropdown-menu" data-bubble-menu id="c22-msgdd1">
+                <button type="button" class="btn" data-variant="ghost" data-size="icon-xs" id="c22-msgdd1-trigger" aria-haspopup="menu" aria-controls="c22-msgdd1-menu" aria-expanded="false" aria-label="Weitere Aktionen"><svg data-icon-lu="chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+                <div id="c22-msgdd1-popover" data-popover data-align="end" aria-hidden="true">
+                  <div role="menu" id="c22-msgdd1-menu" aria-labelledby="c22-msgdd1-trigger">
+                  <button type="button" role="menuitem"><svg data-icon-lu="reply" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 17-5-5 5-5"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></svg>Antworten</button>
+                  <button type="button" role="menuitem"><svg data-icon-lu="info" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>Info</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <footer class="ps-1.5" data-reactions>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" data-copy aria-label="Kopieren"><svg data-icon-lu="copy" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg></button>
+              <div class="popover" data-reaction-picker>
+                <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" id="c22-msg2-react-trigger" aria-expanded="false" aria-controls="c22-msg2-react-pop" aria-label="Reaktion hinzufügen"><svg data-icon-lu="smile-plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11v1a10 10 0 1 1-9-10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" x2="9.01" y1="9" y2="9"/><line x1="15" x2="15.01" y1="9" y2="9"/><path d="M16 5h6"/><path d="M19 2v6"/></svg></button>
+                <div id="c22-msg2-react-pop" data-popover data-side="top" aria-hidden="true">
+                  <div class="flex gap-0.5">
+                    <button type="button" class="btn text-base" data-variant="ghost" data-size="icon-sm" data-reaction-add="👍" aria-label="Mit 👍 reagieren">👍</button>
+                    <button type="button" class="btn text-base" data-variant="ghost" data-size="icon-sm" data-reaction-add="❤️" aria-label="Mit ❤️ reagieren">❤️</button>
+                    <button type="button" class="btn text-base" data-variant="ghost" data-size="icon-sm" data-reaction-add="🎉" aria-label="Mit 🎉 reagieren">🎉</button>
+                  </div>
+                </div>
+              </div>
+              <button type="button" class="btn" data-variant="outline" data-size="xs" data-reaction="👍" aria-pressed="false" aria-label="👍, 2 Reaktionen"><span aria-hidden="true">👍</span><span data-reaction-count>2</span></button>
+            </footer>
+          </div>
+        </section>
+      </div>
+      <div class="message" data-align="end" data-copy-scope>
+        <span class="avatar" data-size="sm"><span>DB</span></span>
+        <section>
+          <header><span>Du</span><time>12:15</time></header>
+          <div data-bubble-col>
+            <div class="bubble" data-align="end">Stark — genau so umsetzen!
+              <div class="dropdown-menu" data-bubble-menu id="c22-msgdd2">
+                <button type="button" class="btn" data-variant="ghost" data-size="icon-xs" id="c22-msgdd2-trigger" aria-haspopup="menu" aria-controls="c22-msgdd2-menu" aria-expanded="false" aria-label="Weitere Aktionen"><svg data-icon-lu="chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+                <div id="c22-msgdd2-popover" data-popover data-align="start" aria-hidden="true">
+                  <div role="menu" id="c22-msgdd2-menu" aria-labelledby="c22-msgdd2-trigger">
+                  <button type="button" role="menuitem"><svg data-icon-lu="info" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>Info</button>
+                  <hr role="separator">
+                  <button type="button" role="menuitem" data-variant="destructive" data-message-delete><svg data-icon-lu="trash-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>Löschen</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <footer class="ps-1.5" data-reactions>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" data-copy aria-label="Kopieren"><svg data-icon-lu="copy" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg></button>
+              <div class="popover" data-reaction-picker>
+                <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" id="c22-msg2r-react-trigger" aria-expanded="false" aria-controls="c22-msg2r-react-pop" aria-label="Reaktion hinzufügen"><svg data-icon-lu="smile-plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11v1a10 10 0 1 1-9-10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" x2="9.01" y1="9" y2="9"/><line x1="15" x2="15.01" y1="9" y2="9"/><path d="M16 5h6"/><path d="M19 2v6"/></svg></button>
+                <div id="c22-msg2r-react-pop" data-popover data-side="top" aria-hidden="true">
+                  <div class="flex gap-0.5">
+                    <button type="button" class="btn text-base" data-variant="ghost" data-size="icon-sm" data-reaction-add="👍" aria-label="Mit 👍 reagieren">👍</button>
+                    <button type="button" class="btn text-base" data-variant="ghost" data-size="icon-sm" data-reaction-add="❤️" aria-label="Mit ❤️ reagieren">❤️</button>
+                    <button type="button" class="btn text-base" data-variant="ghost" data-size="icon-sm" data-reaction-add="🎉" aria-label="Mit 🎉 reagieren">🎉</button>
+                  </div>
+                </div>
+              </div>
+              <button type="button" class="btn" data-variant="outline" data-size="xs" data-reaction="🎉" aria-pressed="false" aria-label="🎉, 1 Reaktion"><span aria-hidden="true">🎉</span><span data-reaction-count>1</span></button>
+            </footer>
+          </div>
+        </section>
       </div>
     </div>
   </div>
   <div class="c22-example">
     <span class="c22-example-label">Mit Anhang (Bild · Datei)</span>
     <div class="flex w-full max-w-md flex-col gap-4">
-      <div class="flex flex-row-reverse gap-3">
+      <div class="message" data-align="end">
         <span class="avatar" data-size="sm"><span>DB</span></span>
-        <div class="flex flex-col items-end gap-1">
-          <div class="flex items-baseline gap-2"><span class="text-muted-foreground text-xs">10:03</span><span class="text-sm font-medium">Du</span></div>
-          <div class="bg-primary text-primary-foreground flex w-fit flex-col gap-2 rounded-lg p-2 text-sm">
+        <section>
+          <header><span>Du</span><time>10:03</time></header>
+          <div class="bubble flex flex-col gap-2 p-2" data-align="end">
             <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=320&h=200&fit=crop&q=80" alt="Arbeitsplatz" class="aspect-[8/5] w-56 rounded-md object-cover">
             <span class="px-1">So sieht der neue Schreibtisch aus.</span>
           </div>
-        </div>
+        </section>
       </div>
-      <div class="flex gap-3">
+      <div class="message">
         <span class="avatar" data-size="sm"><span>AK</span></span>
-        <div class="flex flex-col items-start gap-1">
-          <div class="flex items-baseline gap-2"><span class="text-sm font-medium">Anna K.</span><span class="text-muted-foreground text-xs">10:05</span></div>
-          <div class="bg-muted flex w-64 items-center gap-3 rounded-lg p-3 text-sm">
-            <span class="bg-background grid size-9 shrink-0 place-items-center rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg></span>
+        <section>
+          <header><span>Anna K.</span><time>10:05</time></header>
+          <div class="bubble flex w-64 max-w-none items-center gap-3 p-3" data-variant="muted">
+            <span class="bg-background grid size-9 shrink-0 place-items-center rounded-md"><svg data-icon-lu="file" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg></span>
             <div class="min-w-0 flex-1"><div class="truncate font-medium">Bericht-Q3.pdf</div><div class="text-muted-foreground text-xs">2,4 MB</div></div>
+            <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Herunterladen"><svg data-icon-lu="download" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg></button>
           </div>
-        </div>
+        </section>
       </div>
     </div>
   </div>
   <div class="c22-example">
-    <span class="c22-example-label">Status (Tippt … · Zugestellt · Gelesen · Fehlgeschlagen)</span>
+    <span class="c22-example-label">Status (chronologisch, Neueste unten: Gelesen · Zugestellt · Fehlgeschlagen · Tippt)</span>
     <div class="flex w-full max-w-md flex-col gap-4">
-      <div class="flex gap-3">
-        <span class="avatar" data-size="sm"><span>AK</span></span>
-        <div class="flex flex-col items-start gap-1">
-          <span class="text-sm font-medium">Anna K.</span>
-          <div class="bubble flex items-center gap-1 py-3" data-variant="muted">
-            <span class="bg-muted-foreground/60 size-1.5 animate-bounce rounded-full [animation-delay:-0.3s]"></span>
-            <span class="bg-muted-foreground/60 size-1.5 animate-bounce rounded-full [animation-delay:-0.15s]"></span>
-            <span class="bg-muted-foreground/60 size-1.5 animate-bounce rounded-full"></span>
-          </div>
-        </div>
-      </div>
-      <div class="flex flex-row-reverse gap-3">
+      <div class="message" data-align="end">
         <span class="avatar" data-size="sm"><span>DB</span></span>
-        <div class="flex flex-col items-end gap-1">
-          <div class="bubble" data-align="end">Zugestellt.</div>
-          <span class="text-muted-foreground text-xs">Zugestellt · 09:45</span>
-        </div>
-      </div>
-      <div class="flex flex-row-reverse gap-3">
-        <span class="avatar" data-size="sm"><span>DB</span></span>
-        <div class="flex flex-col items-end gap-1">
+        <section>
+          <header><span>Du</span><time>gestern</time></header>
           <div class="bubble" data-align="end">Und gelesen?</div>
-          <span class="text-muted-foreground text-xs">Gelesen · gestern</span>
-        </div>
+          <footer>Gelesen</footer>
+        </section>
       </div>
-      <div class="flex flex-row-reverse gap-3">
+      <div class="message" data-align="end">
         <span class="avatar" data-size="sm"><span>DB</span></span>
-        <div class="flex flex-col items-end gap-1">
+        <section>
+          <header><span>Du</span><time>09:45</time></header>
+          <div class="bubble" data-align="end">Zugestellt.</div>
+          <footer>Zugestellt</footer>
+        </section>
+      </div>
+      <div class="message" data-align="end">
+        <span class="avatar" data-size="sm"><span>DB</span></span>
+        <section>
+          <header><span>Du</span><time>09:47</time></header>
           <div class="bubble" data-variant="destructive" data-align="end">Läuft der Server noch?</div>
-          <div class="text-destructive flex items-center gap-1 text-xs">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+          <footer class="text-destructive">
+            <svg data-icon-lu="circle-alert" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
             Fehlgeschlagen <button type="button" class="underline underline-offset-2">Erneut senden</button>
-          </div>
-        </div>
+          </footer>
+        </section>
+      </div>
+      <div class="message">
+        <span class="avatar" data-size="sm"><span>AK</span></span>
+        <section>
+          <header><span>Anna K.</span></header>
+          <div class="bubble" data-typing data-variant="muted"><span></span><span></span><span></span></div>
+        </section>
       </div>
     </div>
   </div>
   <div class="c22-example">
     <span class="c22-example-label">Assistent — Reasoning + Antwort im Aufbau</span>
-    <div class="flex w-full max-w-md gap-3">
+    <div class="message w-full max-w-md">
       <span class="avatar" data-size="sm"><span>KI</span></span>
-      <div class="flex flex-col items-start gap-1.5">
-        <span class="text-sm font-medium">Assistent</span>
+      <section>
+        <header><span>Assistent</span></header>
         <div class="text-muted-foreground flex items-center gap-1.5 text-xs">
-          <svg class="size-3.5 animate-spin" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+          <svg data-icon-lu="loader-circle" class="size-3.5 animate-spin" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
           <span class="c22-shimmer">Denkt nach …</span>
         </div>
         <div class="bubble" data-variant="muted">Basierend auf den Daten schlage ich vor, zuerst die Standard-Variante<span class="animate-pulse">▌</span></div>
-      </div>
+      </section>
     </div>
   </div>
 </div>

@@ -4,14 +4,14 @@
     <span class="c22-example-label">Standard — im Popover (Trigger-Button)</span>
     <div class="popover" id="c22-cmd-a-pop">
       <button type="button" class="btn" data-variant="outline" id="c22-cmd-a-trigger" aria-expanded="false" aria-controls="c22-cmd-a-popover">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <svg data-icon-lu="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
         Befehlsmenü
       </button>
       <!-- p-0: das Panel bringt Rahmen/Schatten, die Palette (.command hat eigenes bg + rounded) füllt es randlos. -->
       <div id="c22-cmd-a-popover" data-popover aria-hidden="true" class="w-80 max-w-[92vw] p-0">
         <div class="command" id="c22-cmd-a" aria-label="Befehlsmenü">
           <header>
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <svg data-icon-lu="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
             <input type="text" id="c22-cmd-a-input" placeholder="Befehl eingeben oder suchen …" autocomplete="off" autocorrect="off" spellcheck="false" aria-autocomplete="list" role="combobox" aria-expanded="true" aria-controls="c22-cmd-a-menu">
           </header>
           <!-- Auswahl schließt den Popover: Klick auf einen Eintrag klickt den Trigger (toggelt zu). -->
@@ -37,14 +37,14 @@
   <div class="c22-example">
     <span class="c22-example-label">Im Modal-Dialog (Strg+K-Palette)</span>
     <button type="button" class="btn" data-variant="outline" onclick="document.getElementById('c22-cmd-b').showModal()">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <svg data-icon-lu="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
       Befehlsmenü öffnen
       <kbd class="kbd ms-auto">Strg</kbd><kbd class="kbd">K</kbd>
     </button>
     <dialog id="c22-cmd-b" class="command-dialog" aria-label="Befehlsmenü" onclick="if (event.target === this) this.close()">
       <div class="command">
         <header>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <svg data-icon-lu="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
           <input type="text" id="c22-cmd-b-input" placeholder="Befehl eingeben oder suchen …" autocomplete="off" autocorrect="off" spellcheck="false" aria-autocomplete="list" role="combobox" aria-expanded="true" aria-controls="c22-cmd-b-menu">
         </header>
         <div role="menu" id="c22-cmd-b-menu" aria-orientation="vertical" data-empty="Keine Ergebnisse.">
@@ -68,21 +68,21 @@
     <span class="c22-example-label">Mit Icons</span>
     <div class="command w-full max-w-md border shadow-md" id="c22-cmd-c" aria-label="Befehlsmenü">
       <header>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <svg data-icon-lu="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
         <input type="text" id="c22-cmd-c-input" placeholder="Befehl eingeben oder suchen …" autocomplete="off" autocorrect="off" spellcheck="false" aria-autocomplete="list" role="combobox" aria-expanded="true" aria-controls="c22-cmd-c-menu">
       </header>
       <div role="menu" id="c22-cmd-c-menu" aria-orientation="vertical" data-empty="Keine Ergebnisse.">
         <div role="group" aria-labelledby="c22-cmd-c-h1">
           <span role="heading" id="c22-cmd-c-h1">Aktionen</span>
-          <div role="menuitem" data-filter="Neue Datei" data-keywords="erstellen dokument"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M9 15h6"/><path d="M12 12v6"/></svg>Neue Datei<span class="ms-auto flex items-center gap-1"><kbd class="kbd">Strg</kbd><kbd class="kbd">N</kbd></span></div>
-          <div role="menuitem" data-filter="Kalender öffnen" data-keywords="termin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>Kalender öffnen</div>
+          <div role="menuitem" data-filter="Neue Datei" data-keywords="erstellen dokument"><svg data-icon-lu="file-plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M9 15h6"/><path d="M12 12v6"/></svg>Neue Datei<span class="ms-auto flex items-center gap-1"><kbd class="kbd">Strg</kbd><kbd class="kbd">N</kbd></span></div>
+          <div role="menuitem" data-filter="Kalender öffnen" data-keywords="termin"><svg data-icon-lu="calendar" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>Kalender öffnen</div>
         </div>
         <hr role="separator">
         <div role="group" aria-labelledby="c22-cmd-c-h2">
           <span role="heading" id="c22-cmd-c-h2">Konto</span>
-          <div role="menuitem" data-filter="Profil" data-keywords="konto benutzer"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profil<span class="ms-auto flex items-center gap-1"><kbd class="kbd">Strg</kbd><kbd class="kbd">P</kbd></span></div>
-          <div role="menuitem" data-filter="Abrechnung" data-keywords="rechnung zahlung"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>Abrechnung<span class="ms-auto flex items-center gap-1"><kbd class="kbd">Strg</kbd><kbd class="kbd">B</kbd></span></div>
-          <div role="menuitem" data-filter="Abmelden" data-keywords="logout ausloggen"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>Abmelden</div>
+          <div role="menuitem" data-filter="Profil" data-keywords="konto benutzer"><svg data-icon-lu="user" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profil<span class="ms-auto flex items-center gap-1"><kbd class="kbd">Strg</kbd><kbd class="kbd">P</kbd></span></div>
+          <div role="menuitem" data-filter="Abrechnung" data-keywords="rechnung zahlung"><svg data-icon-lu="credit-card" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>Abrechnung<span class="ms-auto flex items-center gap-1"><kbd class="kbd">Strg</kbd><kbd class="kbd">B</kbd></span></div>
+          <div role="menuitem" data-filter="Abmelden" data-keywords="logout ausloggen"><svg data-icon-lu="log-out" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>Abmelden</div>
         </div>
       </div>
     </div>
@@ -91,7 +91,7 @@
     <span class="c22-example-label">Scrollbar (lange Liste) — Menü scrollt ab ~18rem</span>
     <div class="command w-full max-w-md border shadow-md" id="c22-cmd-scroll" aria-label="Land suchen">
       <header>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <svg data-icon-lu="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
         <input type="text" id="c22-cmd-scroll-input" placeholder="Land suchen …" autocomplete="off" autocorrect="off" spellcheck="false" aria-autocomplete="list" role="combobox" aria-expanded="true" aria-controls="c22-cmd-scroll-menu">
       </header>
       <div role="menu" id="c22-cmd-scroll-menu" aria-orientation="vertical" data-empty="Kein Land gefunden.">
@@ -124,7 +124,7 @@
     <span class="c22-example-label">Deaktivierter Eintrag (<code class="text-[11px]">aria-disabled="true"</code>)</span>
     <div class="command w-full max-w-md border shadow-md" id="c22-cmd-d" aria-label="Befehlsmenü">
       <header>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <svg data-icon-lu="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
         <input type="text" id="c22-cmd-d-input" placeholder="Befehl eingeben oder suchen …" autocomplete="off" autocorrect="off" spellcheck="false" aria-autocomplete="list" role="combobox" aria-expanded="true" aria-controls="c22-cmd-d-menu">
       </header>
       <div role="menu" id="c22-cmd-d-menu" aria-orientation="vertical" data-empty="Keine Ergebnisse.">
@@ -132,7 +132,7 @@
           <span role="heading" id="c22-cmd-d-h1">Werkzeuge</span>
           <div role="menuitem" data-filter="Kalender">Kalender</div>
           <div role="menuitem" data-filter="Emoji suchen">Emoji suchen</div>
-          <div role="menuitem" aria-disabled="true" data-filter="Rechner" data-keywords="taschenrechner"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/></svg>Rechner (bald verfügbar)</div>
+          <div role="menuitem" aria-disabled="true" data-filter="Rechner" data-keywords="taschenrechner"><svg data-icon-lu="calculator" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/></svg>Rechner (bald verfügbar)</div>
         </div>
       </div>
     </div>
@@ -141,15 +141,15 @@
     <span class="c22-example-label">Navigation (Linkeinträge)</span>
     <div class="command w-full max-w-md border shadow-md" id="c22-cmd-e" aria-label="Befehlsmenü">
       <header>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <svg data-icon-lu="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
         <input type="text" id="c22-cmd-e-input" placeholder="Seite suchen …" autocomplete="off" autocorrect="off" spellcheck="false" aria-autocomplete="list" role="combobox" aria-expanded="true" aria-controls="c22-cmd-e-menu">
       </header>
       <div role="menu" id="c22-cmd-e-menu" aria-orientation="vertical" data-empty="Keine Ergebnisse.">
         <div role="group" aria-labelledby="c22-cmd-e-h1">
           <span role="heading" id="c22-cmd-e-h1">Seiten</span>
-          <a role="menuitem" href="#" data-filter="Dokumentation" data-keywords="doku hilfe"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>Dokumentation</a>
-          <a role="menuitem" href="#" data-filter="Support kontaktieren" data-keywords="hilfe kontakt"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>Support kontaktieren</a>
-          <a role="menuitem" href="#" data-filter="Statusseite" data-keywords="uptime verfügbarkeit"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>Statusseite</a>
+          <a role="menuitem" href="#" data-filter="Dokumentation" data-keywords="doku hilfe"><svg data-icon-lu="arrow-up-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>Dokumentation</a>
+          <a role="menuitem" href="#" data-filter="Support kontaktieren" data-keywords="hilfe kontakt"><svg data-icon-lu="arrow-up-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>Support kontaktieren</a>
+          <a role="menuitem" href="#" data-filter="Statusseite" data-keywords="uptime verfügbarkeit"><svg data-icon-lu="arrow-up-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>Statusseite</a>
         </div>
       </div>
     </div>
@@ -158,7 +158,7 @@
     <span class="c22-example-label">Leerer Zustand (<code class="text-[11px]">data-empty</code>)</span>
     <div class="command w-full max-w-md border shadow-md" id="c22-cmd-f" aria-label="Befehlsmenü">
       <header>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <svg data-icon-lu="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
         <input type="text" id="c22-cmd-f-input" placeholder="Befehl eingeben oder suchen …" value="xyz" autocomplete="off" autocorrect="off" spellcheck="false" aria-autocomplete="list" role="combobox" aria-expanded="true" aria-controls="c22-cmd-f-menu">
       </header>
       <div role="menu" id="c22-cmd-f-menu" aria-orientation="vertical" data-empty="Keine Ergebnisse gefunden."></div>

@@ -1,35 +1,36 @@
 <!-- basecoat: Badge (.badge) + data-variant. Icon = svg vor/nach dem Text (gap eingebaut). Link = <a class="badge">. Statusfarben via C22-Tokens. -->
 <div class="c22-examples">
   <div class="c22-example">
-    <span class="c22-example-label">Varianten (Primär · Sekundär · Outline · Destructive · Ghost)</span>
+    <span class="c22-example-label">Varianten (Primär · Sekundär · Outline · Muted · Ghost · Destructive)</span>
     <div class="flex flex-wrap items-center justify-center gap-3">
       <span class="badge">Primär</span>
       <span class="badge" data-variant="secondary">Sekundär</span>
       <span class="badge" data-variant="outline">Outline</span>
-      <span class="badge" data-variant="destructive">Destructive</span>
+      <span class="badge" data-variant="muted">Muted</span>
       <span class="badge" data-variant="ghost">Ghost</span>
+      <span class="badge" data-variant="destructive">Destructive</span>
     </div>
   </div>
   <div class="c22-example">
     <span class="c22-example-label">Statusfarben (OK · Warnung · Info — C22-Tokens/Custom)</span>
     <div class="flex flex-wrap items-center justify-center gap-3">
-      <span class="badge bg-success text-success-foreground border-transparent">OK</span>
-      <span class="badge bg-warning text-warning-foreground border-transparent">Warnung</span>
-      <span class="badge border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-900 dark:bg-blue-950 dark:text-blue-300">Info</span>
+      <span class="badge" data-variant="success">OK</span>
+      <span class="badge" data-variant="warning">Warnung</span>
+      <span class="badge" data-variant="info">Info</span>
     </div>
   </div>
   <div class="c22-example">
     <span class="c22-example-label">Mit Icon (vorne · hinten · Spinner)</span>
     <div class="flex flex-wrap items-center justify-center gap-3">
-      <span class="badge bg-success text-success-foreground border-transparent"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Verifiziert</span>
-      <span class="badge" data-variant="secondary">8 neu<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span>
-      <span class="badge" data-variant="outline"><svg class="animate-spin" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>Lädt …</span>
+      <span class="badge" data-variant="success"><svg data-icon-lu="check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Verifiziert</span>
+      <span class="badge" data-variant="secondary">8 neu<svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span>
+      <span class="badge" data-variant="outline"><svg data-icon-lu="loader-circle" class="animate-spin" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>Lädt …</span>
     </div>
   </div>
   <div class="c22-example">
     <span class="c22-example-label">Als Link (klickbar)</span>
     <div class="flex flex-wrap items-center justify-center gap-3">
-      <a href="#" class="badge">Dokumentation<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a>
+      <a href="#" class="badge">Dokumentation<svg data-icon-lu="arrow-up-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a>
       <a href="#" class="badge" data-variant="outline">v1.0.2</a>
     </div>
   </div>
@@ -45,10 +46,10 @@
     <span class="c22-example-label">Zweiseitig (Shields-Stil — Beschriftung + Wert)</span>
     <div class="flex flex-wrap items-center justify-center gap-3">
       <span class="badge-split"><span>build</span><span class="bg-success! text-success-foreground!">passing</span></span>
-      <span class="badge-split"><span>version</span><span class="bg-blue-600! text-white!">1.0.2</span></span>
+      <span class="badge-split"><span>version</span><span class="bg-info! text-info-foreground!">1.0.2</span></span>
       <span class="badge-split"><span>coverage</span><span class="bg-success! text-success-foreground!">98%</span></span>
-      <span class="badge-split"><span>license</span><span class="bg-blue-600! text-white!">MIT</span></span>
-      <span class="badge-split"><span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2 0 1.9 1.2 1.9 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6 0-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8 0 3.2.9.8 1.3 1.9 1.3 3.2 0 4.6-2.8 5.6-5.5 5.9.5.4.9 1 .9 2.2v3.3c0 .3.1.7.8.6A12 12 0 0 0 12 .3"/></svg>stars</span><span class="bg-blue-600! text-white!">1.2k</span></span>
+      <span class="badge-split"><span>license</span><span class="bg-info! text-info-foreground!">MIT</span></span>
+      <span class="badge-split"><span><svg data-icon-lu="github" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2 0 1.9 1.2 1.9 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6 0-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8 0 3.2.9.8 1.3 1.9 1.3 3.2 0 4.6-2.8 5.6-5.5 5.9.5.4.9 1 .9 2.2v3.3c0 .3.1.7.8.6A12 12 0 0 0 12 .3"/></svg>stars</span><span class="bg-info! text-info-foreground!">1.2k</span></span>
     </div>
   </div>
 </div>

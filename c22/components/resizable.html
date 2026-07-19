@@ -1,7 +1,45 @@
-<!-- custom (shadcn-Vorlage, ohne react-resizable-panels): shadcn/Radix ziehen ResizablePanelGroup per JS-Lib auf — Basecoat hat keine eigene Resizable-Component und C22-Partials laden keine Panel-JS. Lösung: natives CSS `resize` (resize-x/resize-y) je Panel, der Browser-Greifer sitzt an dessen Ecke unten rechts. `.c22-resizable` skinnt diesen Greifer dezent in Border-Farbe (Chromium; Firefox zeigt seinen eigenen, Funktion bleibt gleich). -->
+<!-- custom (shadcn-Vorlage "base/resizable", ohne react-resizable-panels): Trennlinie
+     [data-resize-handle] mit dickerem Griff [data-resize-grip] in der Mitte — Standard zieht
+     an der GANZEN Linie, data-resize-handle="grip" nur am Griff (Verdrahtung wireResizeHandle
+     in c22.js, ändert die flex-basis des Panels davor; Grenzen = dessen min-/max-Klassen).
+     Dazu die native Alternative: CSS `resize` je Panel mit Browser-Greifer an der Ecke
+     (.c22-resizable skinnt ihn in Chromium; Firefox zeigt seinen eigenen). -->
 <div class="c22-examples">
   <div class="c22-example">
-    <span class="c22-example-label">Standard (horizontal)</span>
+    <span class="c22-example-label">Standard (nur der Griff in der Mitte zieht)</span>
+    <div class="flex h-48 w-full max-w-md overflow-hidden rounded-lg border">
+      <div class="w-1/2 min-w-24 max-w-[80%] overflow-auto p-4 text-sm">
+        <div class="font-medium">Navigation</div>
+        <p class="text-muted-foreground mt-1">Nur der dickere Griff in der Mitte zieht.</p>
+      </div>
+      <div data-resize-handle role="separator" aria-orientation="vertical" aria-label="Größe ändern">
+        <span data-resize-grip></span>
+      </div>
+      <div class="flex-1 overflow-auto p-4 text-sm">
+        <div class="font-medium">Inhalt</div>
+        <p class="text-muted-foreground mt-1">Passt sich automatisch an.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Ganze Linie zieht (<code class="text-[11px]">data-resize-handle="line"</code>)</span>
+    <div class="flex h-48 w-full max-w-md overflow-hidden rounded-lg border">
+      <div class="w-1/2 min-w-24 max-w-[80%] overflow-auto p-4 text-sm">
+        <div class="font-medium">Navigation</div>
+        <p class="text-muted-foreground mt-1">An der ganzen Trennlinie ziehen — überall auf der Linie.</p>
+      </div>
+      <div data-resize-handle="line" role="separator" aria-orientation="vertical" aria-label="Größe ändern">
+        <span data-resize-grip></span>
+      </div>
+      <div class="flex-1 overflow-auto p-4 text-sm">
+        <div class="font-medium">Inhalt</div>
+        <p class="text-muted-foreground mt-1">Passt sich automatisch an.</p>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Nativ (CSS <code class="text-[11px]">resize</code> — Browser-Greifer an der Ecke)</span>
     <div class="flex h-48 w-full max-w-md overflow-hidden rounded-lg border">
       <div class="c22-resizable bg-muted/30 w-1/2 min-w-24 max-w-[80%] resize-x overflow-auto border-r p-4 text-sm">
         <div class="font-medium">Navigation</div>
@@ -15,23 +53,9 @@
   </div>
 
   <div class="c22-example">
-    <span class="c22-example-label">Vertikal</span>
-    <div class="flex h-64 w-full max-w-md flex-col overflow-hidden rounded-lg border">
-      <div class="c22-resizable bg-muted/30 h-1/2 min-h-16 max-h-[80%] resize-y overflow-auto border-b p-4 text-sm">
-        <div class="font-medium">Oben</div>
-        <p class="text-muted-foreground mt-1">Ecke unten rechts ziehen, um die Höhe zu ändern.</p>
-      </div>
-      <div class="flex-1 p-4 text-sm">
-        <div class="font-medium">Unten</div>
-        <p class="text-muted-foreground mt-1">Passt sich automatisch an.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="c22-example">
-    <span class="c22-example-label">Drei Panels</span>
+    <span class="c22-example-label">Drei Panels (Standard-Trennlinien)</span>
     <div class="flex h-56 w-full max-w-lg overflow-hidden rounded-lg border text-sm">
-      <div class="c22-resizable bg-muted/30 w-40 min-w-20 max-w-[50%] resize-x overflow-auto border-r p-3">
+      <div class="w-40 min-w-20 max-w-[50%] shrink-0 overflow-auto p-3">
         <div class="font-medium">Navigation</div>
         <ul class="text-muted-foreground mt-2 flex flex-col gap-1">
           <li>Übersicht</li>
@@ -39,32 +63,35 @@
           <li>Einstellungen</li>
         </ul>
       </div>
-      <div class="c22-resizable w-64 min-w-32 max-w-[70%] resize-x overflow-auto border-r p-3">
+      <div data-resize-handle role="separator" aria-orientation="vertical" aria-label="Größe ändern"><span data-resize-grip></span></div>
+      <div class="w-56 min-w-32 max-w-[70%] shrink-0 overflow-auto p-3">
         <div class="font-medium">Editor</div>
-        <p class="text-muted-foreground mt-1">Beide Trennlinien lassen sich unabhängig ziehen.</p>
+        <p class="text-muted-foreground mt-1">Beide Griffe lassen sich unabhängig ziehen.</p>
       </div>
+      <div data-resize-handle role="separator" aria-orientation="vertical" aria-label="Größe ändern"><span data-resize-grip></span></div>
       <div class="flex-1 overflow-auto p-3">
         <div class="font-medium">Vorschau</div>
         <p class="text-muted-foreground mt-1">Nimmt den restlichen Platz ein.</p>
       </div>
     </div>
   </div>
-
   <div class="c22-example">
-    <span class="c22-example-label">Verschachtelt</span>
+    <span class="c22-example-label">Verschachtelt (Standard-Trennlinien, innen quer)</span>
     <div class="flex h-64 w-full max-w-lg overflow-hidden rounded-lg border text-sm">
-      <div class="c22-resizable bg-muted/30 w-1/3 min-w-24 max-w-[60%] resize-x overflow-auto border-r p-3">
+      <div class="w-1/3 min-w-24 max-w-[60%] shrink-0 overflow-auto p-3">
         <div class="font-medium">Seitenleiste</div>
-        <p class="text-muted-foreground mt-1">Horizontal ziehbar.</p>
+        <p class="text-muted-foreground mt-1">Am Griff horizontal ziehen.</p>
       </div>
-      <div class="flex flex-1 flex-col overflow-hidden">
-        <div class="c22-resizable h-2/3 min-h-16 max-h-[85%] resize-y overflow-auto border-b p-3">
-          <div class="font-medium">Editor</div>
-          <p class="text-muted-foreground mt-1">Vertikal ziehbar, unabhängig von der Seitenleiste.</p>
+      <div data-resize-handle role="separator" aria-orientation="vertical" aria-label="Größe ändern"><span data-resize-grip></span></div>
+      <div class="flex min-w-0 flex-1 flex-col overflow-hidden">
+        <div class="h-1/2 min-h-16 max-h-[80%] shrink-0 overflow-auto p-3">
+          <div class="font-medium">Oben</div>
+          <p class="text-muted-foreground mt-1">Der Quer-Griff zieht vertikal.</p>
         </div>
+        <div data-resize-handle role="separator" aria-orientation="horizontal" aria-label="Größe ändern"><span data-resize-grip></span></div>
         <div class="flex-1 overflow-auto p-3">
-          <div class="font-medium">Konsole</div>
-          <p class="text-muted-foreground mt-1">Passt sich an.</p>
+          <div class="font-medium">Unten</div>
+          <p class="text-muted-foreground mt-1">Passt sich automatisch an.</p>
         </div>
       </div>
     </div>

@@ -27,11 +27,62 @@
     animation: c22-shimmer 2.4s linear infinite;
   }
 
+  /* Marker (shadcn Base „Marker", marker.html): Inline-Status/Systemnotiz/Trennzeile in
+     Konversationen (komponiert mit message/message-scroller). Icon = <svg> (dekorativ,
+     Größe kommt von hier — kein size-* im Markup, wie bei .btn), Inhalt = <span>.
+     data-variant="bordered" = Zeile mit Unterstrich, "separator" = zentriertes Label mit
+     Linien beidseits (::before/::after). Polymorph: <a class="marker"> wird klickbar
+     (Text hebt sich, Inhalt unterstreicht beim Hover). */
+  .marker {
+    @apply text-muted-foreground flex items-center gap-2 text-sm;
+  }
+  .marker > svg {
+    @apply size-4 shrink-0;
+  }
+  .marker[data-variant='bordered'] {
+    @apply border-b py-2;
+  }
+  .marker[data-variant='separator'] {
+    @apply gap-3 text-xs;
+  }
+  .marker[data-variant='separator']::before,
+  .marker[data-variant='separator']::after {
+    content: '';
+    @apply bg-border h-px flex-1;
+  }
+  /* Klickbare Marker: beide heben beim Hover die Textfarbe, aber nur der LINK trägt den
+     Unterstrich — und zwar DAUERHAFT (Link-Konvention, wie die shadcn-Quelle); der Button
+     bleibt ohne Unterstrich (PO 37). */
+  :is(a, button).marker:hover {
+    @apply text-foreground;
+  }
+  a.marker > span {
+    @apply underline underline-offset-4;
+  }
+  /* Marker-Stapel (SPOT, PO 37a): aufeinanderfolgende Marker halten EINEN kanonischen
+     Abstand — aus dieser Regel, nicht aus gap-Utilities im Markup. Gilt für ALLE
+     Varianten, auch gerahmte Zeilen (PO 37c). */
+  .marker + .marker {
+    margin-block-start: calc(var(--spacing) * 12);
+  }
+
+  /* Link-Knöpfe (<a class="btn">) können kein disabled tragen — aria-disabled ist ihr
+     Deaktiviert-Zustand (z.B. Pagination am Rand); Vendor stylt nur :disabled. */
+  .btn[aria-disabled='true'] {
+    @apply pointer-events-none opacity-50;
+  }
+
   /* Buttons zeigen die Hand — Basecoat/Tailwind v4 setzen keinen cursor:pointer.
    * Deaktivierte (disabled / aria-disabled) bleiben beim Standardzeiger. */
   button:not(:disabled):not([aria-disabled="true"]),
   .btn:not(:disabled):not([aria-disabled="true"]),
-  [role="button"]:not([aria-disabled="true"]) {
+  [role="button"]:not([aria-disabled="true"]),
+  a[role="menuitem"]:not([aria-disabled="true"]) {
+    @apply cursor-pointer;
+  }
+  /* Labels zeigen IMMER die Hand (PO 46a): Klick aktiviert das verknüpfte Feld. */
+  label[for],
+  label:has(input:not(:disabled)) {
     @apply cursor-pointer;
   }
 
@@ -105,28 +156,33 @@
 
 @layer components {
   /* Bubble: Chat-Blase mit Farb-Variante (data-variant) und Ausrichtung (data-align).
-   * Basis liefert Form + Tail-Ecke (flache Ecke unten = "Sprechblasen-Spitze");
-   * data-align steuert ms-auto + welche Ecke die Spitze bekommt. Kein Basecoat-Pendant
-   * (shadcn-Referenz "base/bubble"), daher komplett hier definiert wie .badge-split. */
+   * Basis liefert Form + Tail-Ecke: die "Sprechblasen-Spitze" sitzt OBEN (zeigt zum
+   * Absender-Kopf/Avatar) und ist fast komplett spitz (2px, PO). data-align steuert
+   * ms-auto + welche Seite die Spitze bekommt. Kein Basecoat-Pendant (shadcn-Referenz
+   * "base/bubble"), daher komplett hier definiert wie .badge-split. */
   .bubble {
     @apply w-fit max-w-[80%] rounded-2xl px-4 py-2 text-sm leading-relaxed break-words;
+    --bubble-bg: var(--color-background);
   }
   .bubble:not([data-align]),
   .bubble[data-align='start'] {
-    @apply rounded-bl-sm;
+    @apply rounded-tl-[2px];
   }
   .bubble[data-align='end'] {
-    @apply ms-auto rounded-br-sm;
+    @apply ms-auto rounded-tr-[2px];
   }
   .bubble:not([data-variant]),
-  .bubble[data-variant='default'] {
+  .bubble[data-variant='primary'] {
     @apply bg-primary text-primary-foreground;
+    --bubble-bg: var(--color-primary);
   }
   .bubble[data-variant='secondary'] {
     @apply bg-secondary text-secondary-foreground;
+    --bubble-bg: var(--color-secondary);
   }
   .bubble[data-variant='muted'] {
-    @apply bg-muted text-foreground;
+    @apply bg-muted text-muted-foreground;
+    --bubble-bg: var(--color-muted);
   }
   .bubble[data-variant='tinted'] {
     @apply bg-primary/10 text-primary;
@@ -142,9 +198,9 @@
   }
 
   /* Bubble-Group: mehrere Blasen derselben Seite direkt hintereinander — nur die
-   * letzte behält die Tail-Ecke, die davor werden durchgängig gerundet (höhere
-   * Selector-Spezifität als .bubble[data-align] gewinnt bewusst unabhängig von der
-   * Reihenfolge im Stylesheet). */
+   * OBERSTE behält die Tail-Ecke (Spitze zeigt nach oben zum Absender), die danach
+   * werden durchgängig gerundet (höhere Selector-Spezifität als .bubble[data-align]
+   * gewinnt bewusst unabhängig von der Reihenfolge im Stylesheet). */
   .bubble-group {
     @apply flex w-fit max-w-[80%] flex-col gap-1;
   }
@@ -154,9 +210,173 @@
   .bubble-group > .bubble {
     @apply max-w-none;
   }
-  .bubble-group > .bubble:not(:last-child) {
+  .bubble-group > .bubble:not(:first-child) {
     @apply rounded-2xl;
   }
+
+  /* Tippt-Indikator (SPOT für Bubble 9 und Message 39): <div class="bubble" data-typing>
+     mit drei leeren <span>. Drei Ausführungen — STANDARD = gefüllte Punkte in
+     Seiten-Punkt-Größe (8px, sanft pulsierend; PO — keine Ringe), data-typing="bounce" =
+     hüpfende Punkte, data-typing="pulse" = stark pulsierende Punkte; Keyframes unter dem
+     Layer-Block. shrink-0 ist PFLICHT: die Punkte sind Flex-Kinder und wurden sonst im
+     schmalen Container horizontal gequetscht (9 zeigte Ovale, 39 Kreise). Steht immer
+     UNTEN im Verlauf (die neueste Nachricht ist unten — tippen ist das Neueste). */
+  .bubble[data-typing] {
+    @apply flex items-center gap-1 py-3;
+  }
+  .bubble[data-typing] > span {
+    @apply bg-muted-foreground/60 size-2 shrink-0 rounded-full;
+    animation: c22-typing-kreis 1.1s ease-in-out infinite;
+  }
+  .bubble[data-typing] > span:nth-child(2) { animation-delay: 0.12s; }
+  .bubble[data-typing] > span:nth-child(3) { animation-delay: 0.24s; }
+  .bubble[data-typing='bounce'] > span,
+  .bubble[data-typing='pulse'] > span {
+    @apply size-1.5;
+  }
+  .bubble[data-typing='bounce'] > span { animation-name: c22-typing-huepf; }
+  .bubble[data-typing='pulse'] > span { animation-name: c22-typing-puls; }
+
+  /* Nachricht-Aktionszeile (Message 39, SPOT): erscheint beim Hover der Nachricht
+     oder bei Tastatur-Fokus; bleibt seitentreu — der seitenspezifische Randausgleich
+     (-ml/-mr) steht im Markup. */
+  [data-message-actions] {
+    @apply text-muted-foreground flex items-center gap-0.5 opacity-0 transition-opacity;
+  }
+  .group:hover [data-message-actions],
+  .bubble:hover ~ [data-message-actions],
+  .bubble:hover ~ * [data-message-actions],
+  [data-message-actions]:hover,
+  [data-message-actions]:focus-within,
+  [data-message-actions]:has([aria-expanded='true']) {
+    @apply opacity-100;
+  }
+
+  /* Fußzeilen-Kanon, Sichtbarkeit (SPOT, PO 39): Aktions-Elemente in der Fußzeile
+     (Kopieren, React-Knopf) erscheinen erst beim Hover der BLASE oder der Fußzeile —
+     AUSNAHME sind die Reaktions-Chips, die bleiben immer sichtbar. Deckkraft statt
+     display, damit die Chips nicht springen, wenn die Nachbarn auftauchen. */
+  footer[data-reactions] :is([data-copy], [data-reaction-picker]) {
+    @apply opacity-0 transition-opacity;
+  }
+  .bubble:hover ~ footer[data-reactions] :is([data-copy], [data-reaction-picker]),
+  footer[data-reactions]:hover :is([data-copy], [data-reaction-picker]),
+  footer[data-reactions]:focus-within :is([data-copy], [data-reaction-picker]),
+  footer[data-reactions]:has([aria-expanded='true']) :is([data-copy], [data-reaction-picker]) {
+    @apply opacity-100;
+  }
+
+  /* Chevron-Menü AUF der Blase (Message 39e, SPOT): der Trigger liegt als OVERLAY über
+     dem Inhalt (kein reservierter Platz) — beim GEGENÜBER rechts oben, bei MIR
+     (data-align="end") links oben. Er erscheint beim Hover der BLASE und wächst dabei
+     deutlich auf (Scale + große Chevron-Glyphe); bei Fokus/offenem Menü bleibt er stehen. */
+  .bubble:has(> [data-bubble-menu]) {
+    @apply relative pe-6;
+  }
+  .bubble[data-align='end']:has(> [data-bubble-menu]) {
+    @apply ps-6 pe-4;
+  }
+  .bubble > [data-bubble-menu] {
+    @apply absolute end-0.5 top-0.5 scale-75 opacity-0 transition-all;
+  }
+  .bubble[data-align='end'] > [data-bubble-menu] {
+    @apply start-0.5 end-auto;
+  }
+  /* Halo IM Knopf statt Box-Shadow: der Radial-Verlauf in Blasenfarbe endet an der
+     Knopf-Box — kann also geometrisch nie über die Blase hinauslaufen (PO). Der
+     Hover-Schleier des Ghost-Knopfs ist hier aus (gleiche background-Angabe auf :hover);
+     Highlight kommt allein vom Chevron (Deckkraft 60 % → 100 %). */
+  .bubble > [data-bubble-menu] .btn,
+  .bubble > [data-bubble-menu] .btn:hover {
+    @apply size-7;
+    background: radial-gradient(closest-side, var(--bubble-bg) 45%, transparent 100%);
+    color: inherit;   /* Ghost-Hover färbt sonst auf accent-foreground um — auf der dunklen Blase wäre der Chevron schwarz auf schwarz */
+  }
+  .bubble > [data-bubble-menu] svg {
+    @apply size-5 opacity-60;
+  }
+  .bubble > [data-bubble-menu] .btn:hover svg {
+    @apply opacity-100;
+  }
+  .bubble:hover > [data-bubble-menu],
+  .bubble > [data-bubble-menu]:focus-within,
+  .bubble > [data-bubble-menu]:has([aria-expanded='true']) {
+    @apply scale-110 opacity-100;
+  }
+
+  /* Message (39): EINE kanonische Zeilen-Anatomie (SPOT, PO) — jedes Beispiel füllt nur
+     noch Slots, keine eigenen Flex-Ketten:
+       <div class="message" [data-align="end"]>
+         <span class="avatar">…                      Avatar, OBEN verankert (Spitze zeigt zu ihm)
+         <section>
+           <header><span>Name</span><time>09:41</time></header>   IMMER oben; end = gespiegelt
+           .bubble / .bubble-group / [data-typing]                Inhalt
+           <footer>                                  Fuß-Slot, immer unten:
+             Statustext ODER [data-message-actions] ODER [data-reactions];
+             Kombination = EINE Fußzeile (Reaktionen + Aktionen-Span bei Hover)
+     Die Zeit steht damit an EINER Stelle (im Header neben dem Namen), Status/Aktionen/
+     Reaktionen an EINER (im Footer) — die früheren Streuungen sind strukturell weg.
+     Verlauf ist chronologisch, die NEUESTE Nachricht steht unten (Tippen daher immer
+     als unterste Zeile); die Blasen-Spitze zeigt trotzdem nach oben zum Absender. */
+  .message {
+    @apply flex w-full gap-3;
+  }
+  .message[data-align='end'] {
+    @apply flex-row-reverse;
+  }
+  .message > .avatar {
+    @apply self-start;
+  }
+  .message > section {
+    @apply flex min-w-0 flex-1 flex-col items-start gap-1;
+  }
+  .message[data-align='end'] > section {
+    @apply items-end;
+  }
+  .message > section > header {
+    @apply flex items-baseline gap-2 text-sm font-medium;
+  }
+  .message[data-align='end'] > section > header {
+    @apply flex-row-reverse;
+  }
+  .message header time {
+    @apply text-muted-foreground text-xs font-normal;
+  }
+  /* Blasen-Spalte [data-bubble-col] (SPOT, PO 39e): gruppiert Blase + Fußzeile in einer
+     w-fit-Spalte, damit die Fußzeile LINKSBÜNDIG an der Blasenkante hängt — auch auf der
+     Absender-Seite (section ist dort items-end, die Spalte selbst rückt nach rechts).
+     Die 80%-Breitenbremse wandert von der Blase auf die Spalte (wie bei .bubble-group),
+     sonst misst sich die Spalte am UNGEKAPPTEN Blasentext und die Fußzeile ragt links raus. */
+  .message [data-bubble-col] {
+    @apply flex w-fit max-w-[80%] flex-col items-start gap-1;
+  }
+  .message [data-bubble-col] > .bubble {
+    @apply max-w-none;
+  }
+  /* Fußzeile spannt die volle Blasenbreite — die Hover-Fläche zum Einblenden der
+     Aktions-Elemente ist damit so breit wie die Blase, nicht nur so breit wie die Knöpfe. */
+  .message [data-bubble-col] > footer {
+    @apply w-full;
+  }
+  .message section footer:not([data-message-actions]) {
+    @apply text-muted-foreground flex items-center gap-1 text-xs;
+  }
+}
+
+/* Tippt-Punkte: kräftiger als Tailwinds animate-bounce — Hüpfer mit Überhöhung
+   und Aufhellen (Standard) bzw. Puls aus Größe + Deckkraft (data-typing="pulse"). */
+@keyframes c22-typing-huepf {
+  0%, 55%, 100% { transform: translateY(0) scale(1); opacity: 0.55; }
+  25% { transform: translateY(-5px) scale(1.15); opacity: 1; }
+}
+@keyframes c22-typing-puls {
+  0%, 60%, 100% { transform: scale(0.7); opacity: 0.4; }
+  30% { transform: scale(1.35); opacity: 1; }
+}
+/* Standard-Punkte: sanfter Puls (Größe + Deckkraft) */
+@keyframes c22-typing-kreis {
+  0%, 60%, 100% { transform: scale(0.75); opacity: 0.45; }
+  30% { transform: scale(1.1); opacity: 1; }
 }
 
 /* Collapsible: Chevron-Rotation + Disabled-Optik, analog zum Accordion-Muster */
@@ -179,13 +399,38 @@
   }
 
   .context-menu [data-cm-panel] {
-    @apply bg-popover text-popover-foreground ring-foreground/10 z-[60] min-w-[8rem] w-max gap-0 overflow-x-hidden overflow-y-auto rounded-md p-1 shadow-md ring-1 outline-hidden;
+    @apply bg-popover text-popover-foreground ring-foreground/10 min-w-[8rem] w-max gap-0 overflow-x-hidden overflow-y-auto rounded-md p-1 shadow-md ring-1 outline-hidden;
+    /* Z-Leiter aus tokens.css statt nacktem z-[60]: Kontextmenü eine Stufe über dem Popover (50). */
+    z-index: var(--z-context);
+  }
+  /* Flyout-Untermenüs: ein Panel, das ein Unter-Panel enthält, darf NICHT clippen — das
+     overflow-y-auto (für lange Menüs) machte den absolut positionierten Flyout sonst zur
+     Scrollfläche IM Mutter-Menü statt daneben. Lange Menüs und Untermenüs schließen sich
+     gegenseitig aus; wer beides braucht, teilt das Menü auf. */
+  .context-menu [data-cm-panel]:has([data-cm-panel]) {
+    @apply overflow-visible;
+  }
+  /* Gleiches Clipping-Problem beim Kalender im Popover (Date Picker): Basecoats [data-popover]
+     scrollt (`overflow: hidden auto`) und schnitt das absolut positionierte Monat/Jahr-Menü
+     (data-dropdown) ab. [data-cal-menu] existiert nur, solange das Menü offen ist — genau dann
+     Panel nicht clippen; danach gilt wieder das normale Scrollverhalten. */
+  [data-popover]:has([data-cal-menu]) {
+    @apply overflow-visible;
   }
   /* Wurzelmenü: fest am Viewport positioniert (Koordinaten setzt c22.js), damit nur die
      Fensterkante zählt — nicht die Containergröße und kein overflow-Vorfahr. Untermenüs bleiben
      absolute an ihrem Auslöser (eigene .absolute-Klasse im Markup). */
   .context-menu > [data-cm-panel] {
     @apply fixed;
+  }
+
+  /* Navigations-Menü (42, SPOT): mehrzeilige „reiche" Menü-Einträge (Titel + Beschreibung,
+     Icon-Grid, Bild-Karte) — die Vendor-Menüzeile ist einzeilig (nowrap); data-rich macht
+     den Eintrag zur linksbündigen Spalte mit EINEM Abstands-Kanon (py-2, gap-0.5) und
+     erlaubt mehrzeilige Beschreibungen. Ersetzt die früheren flex-col!-Utility-Ketten
+     gegen den Vendor (vor der Layer-Entmachtung nötig, jetzt eine Kanon-Regel). */
+  [role='menuitem'][data-rich] {
+    @apply h-auto flex-col items-start gap-0.5 py-2 text-start whitespace-normal;
   }
 
   .context-menu :is([role='menuitem'], [role='menuitemcheckbox'], [role='menuitemradio']) {
@@ -258,11 +503,26 @@
      aria-current (volldeckend), inaktive gedämpft. SPOT-Klasse statt Utility-Kette je Punkt.
      data-overlay = Punkte liegen ÜBER dem Bild -> weiß + Schatten, damit sie auf jedem Foto lesbar
      bleiben (statt der gedämpften Variante fürs Layout "unterm Bild"). */
-  [data-carousel-dot] { @apply bg-muted-foreground/30 size-2 shrink-0 cursor-pointer rounded-full transition-colors; }
-  [data-carousel-dot]:hover { @apply bg-muted-foreground; }
-  [data-carousel-dot][aria-current='true'] { @apply bg-foreground; }
-  [data-carousel-dot][data-overlay] { @apply bg-white/60; box-shadow: 0 1px 3px rgb(0 0 0 / 0.6); }
-  [data-carousel-dot][data-overlay]:hover, [data-carousel-dot][data-overlay][aria-current='true'] { @apply bg-white; }
+  /* Punkt-Kanon (SPOT): Carousel-Punkte und Seiten-Punkte der Pagination ([data-page-dot])
+     teilen EIN Aussehen; aktueller Punkt via aria-current="true" (Carousel) bzw. "page"
+     (Pagination). Der SICHTBARE Punkt ist ein ::before im Zentrum eines größeren,
+     unsichtbaren Klickbereichs — die Klickflächen schließen ANEINANDER an (Container ohne
+     gap, Pitch = Knopfbreite; PO 43). Optik wie vorher: 8px Punkt, 16px Pitch.
+     Pagination-Größen: data-size="sm" (6px Punkt / 12px Klick) · Standard (8/16) ·
+     "lg" (12px / 24px). Die Overlay-Ausführung bleibt Carousel-spezifisch. */
+  :is([data-carousel-dot], [data-page-dot]) { @apply flex size-4 shrink-0 cursor-pointer items-center justify-center; }
+  :is([data-carousel-dot], [data-page-dot])::before {
+    content: '';
+    @apply bg-muted-foreground/30 size-2 rounded-full transition-colors;
+  }
+  :is([data-carousel-dot], [data-page-dot]):hover::before { @apply bg-muted-foreground; }
+  :is([data-carousel-dot], [data-page-dot]):is([aria-current='true'], [aria-current='page'])::before { @apply bg-foreground; }
+  [data-page-dot][data-size='sm'] { @apply size-3; }
+  [data-page-dot][data-size='sm']::before { @apply size-1.5; }
+  [data-page-dot][data-size='lg'] { @apply size-6; }
+  [data-page-dot][data-size='lg']::before { @apply size-3; }
+  [data-carousel-dot][data-overlay]::before { @apply bg-overlay-control/60; box-shadow: var(--overlay-shadow-dot); }
+  [data-carousel-dot][data-overlay]:hover::before, [data-carousel-dot][data-overlay][aria-current='true']::before { @apply bg-overlay-control; }
 
   /* "x von y"-Zähler (von c22.js gefüllt). */
   [data-carousel-counter] { @apply text-muted-foreground text-sm tabular-nums; }
@@ -271,11 +531,11 @@
      VIERTEL des Bildes ist die Klickzone. Weiß + kräftiger Schlagschatten für Lesbarkeit auf jedem
      Foto. Ausgegraut (am Rand) = dünnerer Pfeil, kein Schatten. */
   [data-carousel-arrow] {
-    @apply absolute inset-y-0 z-10 flex w-1/4 cursor-pointer items-center text-white/90 transition;
-    filter: drop-shadow(0 2px 6px rgb(0 0 0 / 0.7));
+    @apply absolute inset-y-0 z-10 flex w-1/4 cursor-pointer items-center text-overlay-control/90 transition;
+    filter: var(--overlay-shadow-arrow);
   }
   [data-carousel-arrow] svg { width: 2rem; height: 2rem; stroke-width: 3; }
-  [data-carousel-arrow]:hover:not(:disabled) { @apply text-white; }
+  [data-carousel-arrow]:hover:not(:disabled) { @apply text-overlay-control; }
   [data-carousel-arrow]:disabled { @apply cursor-default opacity-40; filter: none; }
   [data-carousel-arrow]:disabled svg { stroke-width: 2; }
   [data-carousel-arrow='prev'] { @apply left-0 justify-start ps-3; }
@@ -283,6 +543,42 @@
 }
 
 @layer components {
+  /* Resizable-Trennlinie (47, shadcn-Stil): [data-resize-handle] steht ZWISCHEN zwei
+     Panels eines flex-Containers; in der Mitte sitzt der schlanke, dickere Griff
+     ([data-resize-grip], Pill). STANDARD: nur der Griff zieht (PO); die Variante
+     data-resize-handle="line" zieht an der GANZEN Linie (unsichtbar verbreiterte
+     Greif-Fläche per ::before). Verdrahtung: wireResizeHandle in c22.js
+     (flex-basis des vorigen Panels). */
+  [data-resize-handle] {
+    @apply bg-border relative flex shrink-0 items-center justify-center;
+    touch-action: none;
+  }
+  [data-resize-handle]:not([aria-orientation='horizontal']) {
+    @apply w-px;
+  }
+  [data-resize-handle][aria-orientation='horizontal'] {
+    @apply h-px;
+  }
+  [data-resize-handle='line'] {
+    @apply cursor-col-resize;
+  }
+  [data-resize-handle='line'][aria-orientation='horizontal'] {
+    @apply cursor-row-resize;
+  }
+  [data-resize-handle='line']::before {
+    content: '';
+    @apply absolute inset-y-0 -inset-x-1.5;
+  }
+  [data-resize-handle='line'][aria-orientation='horizontal']::before {
+    @apply inset-x-0 -inset-y-1.5;
+  }
+  [data-resize-handle] > [data-resize-grip] {
+    @apply bg-border z-10 h-8 w-1.5 shrink-0 cursor-col-resize rounded-full;
+  }
+  [data-resize-handle][aria-orientation='horizontal'] > [data-resize-grip] {
+    @apply h-1.5 w-8 cursor-row-resize;
+  }
+
   /* Resizable: skinnt den nativen Browser-Greifer eines resize-x/resize-y-Panels
    * dezent in Border-Farbe statt des grauen Standard-Dreiecks. Nur Chromium
    * (::-webkit-resizer); Firefox zeigt seinen eigenen Greifer, Funktion bleibt gleich. */
@@ -318,12 +614,162 @@
   .input[type='range'][data-variant]::-ms-thumb { border-color: var(--slider-color, var(--primary)); }
   .input[type='range'][data-variant]::-ms-fill-lower { background-color: var(--slider-color, var(--primary)); }
 
+  /* Slider-Bedienung (PO 53): Zeiger-Cursor auf dem ganzen Regler, und der Hover-Ring
+     des Griffs (Vendor: hover:ring-4 nur auf dem Thumb-Pseudo selbst) zündet schon beim
+     Hover irgendwo auf dem Slider — gleiche Ring-Stärke, Ring-Farbe kommt weiter aus
+     der Vendor-Thumb-Regel (ring-ring/50). */
+  .field > input[type='range'],
+  .input[type='range'] {
+    @apply cursor-pointer;
+  }
+  :is(.field > input[type='range'], .input[type='range']):hover::-webkit-slider-thumb {
+    @apply ring-4;
+  }
+  :is(.field > input[type='range'], .input[type='range']):hover::-moz-range-thumb {
+    @apply ring-4;
+  }
+
+  /* Stummgeschaltet (Slider 53, data-muted via wireMute): der Füllstand nimmt die
+     Track-Hintergrundfarbe an (Track wirkt leer, kein Ausgrauen), bleibt aber voll
+     bedienbar — Klick/Ziehen im Regler entstummt wieder. Steht NACH den
+     data-variant-Track-Regeln: gleiche Spezifität, Reihenfolge entscheidet. */
+  .input[type='range'][data-muted='true']::-webkit-slider-runnable-track {
+    background: var(--muted);
+  }
+  .input[type='range'][data-muted='true']::-moz-range-track {
+    background: var(--muted);
+  }
+  .input[type='range'][data-muted='true']::-ms-fill-lower {
+    background-color: var(--muted);
+  }
+
+  /* Mehrgriff-Slider (53: Bereich/Mehrfach/Gesteuert — shadcn kann das über Base UI,
+     Basecoat bewusst nicht): N native Range-Inputs deckungsgleich gestapelt, nur die
+     GRIFFE nehmen Zeiger-Events an (Klassiker: pointer-events none auf dem Input,
+     auto auf dem Thumb-Pseudo); die Hülle malt den Track selbst — Füllung zwischen
+     kleinstem und größtem Griff via --von/--bis (Prozent, setzt wireMultiSlider). */
+  [data-slider-multi] {
+    /* cursor/touch-action: Track-Klicks landen auf der Hülle (Inputs sind
+       pointer-events-none) — Springen/Ziehen des nächsten Griffs macht wireMultiSlider. */
+    @apply relative flex h-5 w-full cursor-pointer items-center;
+    touch-action: none;
+  }
+  [data-slider-multi]::before {
+    content: '';
+    @apply absolute inset-x-0 top-1/2 h-1.5 -translate-y-1/2 rounded-full;
+    background: linear-gradient(
+      to right,
+      var(--muted) var(--von, 0%),
+      var(--slider-color, var(--primary)) var(--von, 0%) var(--bis, 0%),
+      var(--muted) var(--bis, 0%)
+    );
+  }
+  [data-slider-multi]:dir(rtl)::before {
+    background: linear-gradient(
+      to left,
+      var(--muted) var(--von, 0%),
+      var(--slider-color, var(--primary)) var(--von, 0%) var(--bis, 0%),
+      var(--muted) var(--bis, 0%)
+    );
+  }
+  [data-slider-multi] > input[type='range'] {
+    @apply absolute inset-0 h-full w-full;
+    pointer-events: none;
+  }
+  [data-slider-multi] > input[type='range']:focus-visible {
+    @apply z-10;
+  }
+  [data-slider-multi] > input[type='range']::-webkit-slider-runnable-track {
+    background: transparent;
+  }
+  [data-slider-multi] > input[type='range']::-webkit-slider-thumb {
+    pointer-events: auto;
+  }
+  [data-slider-multi] > input[type='range']::-moz-range-track {
+    background: transparent;
+  }
+  [data-slider-multi] > input[type='range']::-moz-range-thumb {
+    pointer-events: auto;
+  }
+  /* Hover-Ring auf dem dichtesten Griff (data-hover setzt wireMultiSlider beim
+     Track-Hover — der :hover-Kanon greift hier nicht, die Inputs sind pointer-events-none). */
+  [data-slider-multi] > input[type='range'][data-hover]::-webkit-slider-thumb {
+    @apply ring-4;
+  }
+  [data-slider-multi] > input[type='range'][data-hover]::-moz-range-thumb {
+    @apply ring-4;
+  }
+
+  /* Vertikaler Slider (53, data-orientation="vertical"): natives Element im vertikalen
+     Schreibmodus (Chrome 119+/Firefox), direction rtl legt min nach UNTEN. Höhe kommt
+     aus dem Markup (h-40 üblich); Track/Füllung laufen nach oben. */
+  .input[type='range'][data-orientation='vertical'] {
+    writing-mode: vertical-rl;
+    direction: rtl;
+    @apply h-40 w-5;
+  }
+  .input[type='range'][data-orientation='vertical']::-webkit-slider-runnable-track {
+    @apply h-full w-1.5;
+    background: linear-gradient(
+      to top,
+      var(--slider-color, var(--primary)) var(--slider-value),
+      var(--muted) var(--slider-value)
+    );
+  }
+  .input[type='range'][data-orientation='vertical']::-moz-range-track {
+    @apply h-full w-1.5;
+    background: linear-gradient(
+      to top,
+      var(--slider-color, var(--primary)) var(--slider-value),
+      var(--muted) var(--slider-value)
+    );
+  }
+  .input[type='range'][data-orientation='vertical']::-webkit-slider-thumb {
+    /* Quer-Zentrierung: bei vertical-rl ist die Block-Achse die Quer-Achse
+       (block-start = rechts) — margin-inline liefe ENTLANG des Sliders. */
+    margin-top: 0;
+    margin-block-start: calc((var(--slider-thumb-size) - var(--slider-track-height)) / -2);
+  }
+
+  /* Slider-Skala (PO 53d): Beschriftungen mittig unter ihrem Ankerpunkt. Der Griff läuft
+     nicht über die volle Breite, sondern von thumb/2 bis 100 % − thumb/2 — die Skala
+     rechnet mit demselben Versatz; justify-between setzte die mittleren Werte links
+     vom Anker. --p am <span> = Position 0…1 (value/max). */
+  [data-slider-scale] {
+    @apply text-muted-foreground relative mt-1.5 block h-4 text-xs tabular-nums;
+    --slider-thumb-size: 1rem;
+  }
+  [data-slider-scale] > span {
+    position: absolute;
+    inset-inline-start: calc(
+      var(--slider-thumb-size) / 2 + (100% - var(--slider-thumb-size)) * var(--p, 0)
+    );
+    translate: -50% 0;
+  }
+  [data-slider-scale] > span:dir(rtl) {
+    translate: 50% 0;
+  }
+
   /* Combobox-Chevron auf den systemweiten Kanon bringen: der Trigger-Abwärtspfeil ist überall
      muted-foreground bei 50% (Select .opacity-50, Native-Select var(--chevron-down-icon-50) mit
      stroke-alpha 0.5, Navigation-Menu/Breadcrumb .opacity-50). Basecoats .combobox-trigger-icon
      setzt nur die Farbe, keine Deckkraft → sonst wirkt der Combobox-Pfeil kräftiger als alle
      anderen. Eine Quelle der Wahrheit fürs Indikator-Icon. */
   .combobox-trigger-icon { opacity: 0.5; }
+
+  /* Select-Trigger füllt die Hülle (PO 49): Breite kommt vom .select-Container — wie bei
+     Input/Native Select — statt vom Beschriftungsinhalt (Vendor: width: fit-content).
+     Damit bestimmen Markup-Breiten (w-40, max-w-xs) Knopf UND Panel gemeinsam; das
+     Dropdown spielt nicht mehr in Position/Größe des Knopfs hinein. */
+  .select:not(select) > button {
+    @apply w-full;
+  }
+
+  /* Select-Trigger in Groß (49c: S/M/L — Vendor kennt nur Standard + data-size="sm") */
+  .select > button[data-size='lg'] {
+    @apply h-10 px-4;
+  }
+
   /* Im deaktivierten Zustand dimmt Basecoat das Input per opacity:.5 — der Chevron ist ein
      Geschwister-SVG und bliebe sonst kräftiger als der blasse Platzhalter (der solide 2px-Strich
      wirkt dichter als der dünne Text). Also mit dem Control mitdimmen: Basis .5 × disabled .5. */
@@ -354,9 +800,22 @@
   /* Dropdown-Radio/-Checkbox: Markierung des gewählten Eintrags wahlweise über den Punkt
      (data-indicator, Standard) ODER — via data-mark am Menü/der Gruppe — über fett bzw.
      fett + Hintergrund. Wiederverwendbar (z.B. Kalender-Monat/Jahr-Dropdown). */
-  [data-mark] [data-indicator] { @apply hidden; }
-  [data-mark~="bold"] :is([role="menuitemradio"], [role="menuitemcheckbox"])[aria-checked="true"] { @apply font-bold; }
-  [data-mark~="bg"] :is([role="menuitemradio"], [role="menuitemcheckbox"])[aria-checked="true"] { @apply bg-primary text-primary-foreground hover:bg-primary; }
+  /* AUSWAHL-KANON in MENÜS (PO 2026-07-19): Radios UND Checkboxen markieren per
+     HAKEN rechts, ohne Zeilen-Füllung — analog zur nativen Checkbox (Haken statt
+     Hintergrund). Listbox-Optionen (Select/Combobox) behalten ihre eigene
+     Markierung; Haken-/Punkt-Indikatoren für ALLE Einträge bleiben die EXPLIZITE
+     Variante data-mark="indicator" am Menü (Vendor-Verhalten). Hat der Eintrag
+     keinen [data-indicator] im Markup, zeichnet ::after den Haken aus
+     var(--check-icon). */
+  :is(.dropdown-menu, .context-menu, [role='menu']) :is([role='menuitemcheckbox'], [role='menuitemradio']) {
+    @apply relative pe-8;
+  }
+  :is(.dropdown-menu, .context-menu, [role='menu']) :is([role='menuitemcheckbox'], [role='menuitemradio'])[aria-checked='true']:not(:has([data-indicator]))::after {
+    content: '';
+    @apply absolute end-2 size-4 bg-current;
+    -webkit-mask: var(--check-icon) center / 0.875rem no-repeat;
+    mask: var(--check-icon) center / 0.875rem no-repeat;
+  }
 
   /* Alle Menüs teilen denselben Hover/Aktiv-Zustand: accent (wie dropdown-menu, context-menu,
      combobox, Kalender-Dropdown). .command wich als einziges mit muted ab — hier angeglichen,
@@ -371,9 +830,159 @@
      sonst "springt" die Taste, weil der Rahmen erst dazukäme. Normal: grauer Grund + grauer Rahmen.
      Auf der markierten/gehoverten Menüzeile wechselt nur der Grund auf Weiß (Rahmen bleibt) → die Taste
      hebt sich vom grauen Zeilen-Hover ab, ohne zu springen. */
-  .kbd { @apply border border-border; }
+  /* min-w-5: Einzelzeichen-Kappen ([ ] R …) werden gleich breite Quadrate — sonst stehen die
+     „Strg"-Kappen der Kürzelspalte je nach Zweittaste versetzt (ungleiche Abstände, PO 20a). */
+  .kbd { @apply border-border min-w-5 border; }
   :is(.command, .dropdown-menu, .context-menu) [role^='menuitem']:is(.active, :focus-visible, :hover) .kbd {
     @apply bg-background;
+  }
+  /* Tastengruppen-Kanon (SPOT, PO 35): .kbd-group = Kombination benachbarter Tasten mit
+     EINEM Abstand (4px, wie die Kürzelspalten der Menüs) an allen Einsatzorten — frei,
+     im Button, im Eingabefeld (der Vendor-Span der .input-group hätte sonst 8px).
+     Trenner („oder") als eigenes <span>; eine „+"-Kombination rückt mit
+     data-join="plus" enger zusammen. */
+  .kbd-group {
+    display: inline-flex;
+    align-items: center;
+    gap: calc(var(--spacing) * 1);
+  }
+  .kbd-group[data-join='plus'] {
+    gap: calc(var(--spacing) * 0.5);
+  }
+
+  /* Entry-Jank-Gegenmittel für Modals (Muster von Material Components/Headless UI): beim
+     showModal() hebt der Browser Dialog + ::backdrop aus display:none in den Top Layer UND
+     startet im SELBEN Frame die Transition — Layer-Aufbau, Erst-Raster und Animationsstart
+     kollidieren, der Einstieg ruckelt (Exit ist „warm" und läuft glatt; Recherche 2026-07-18).
+     Daher: c22.js patcht showModal, hält mit dieser Klasse für zwei rAF-Frames den STARTZUSTAND
+     ohne Transition fest (Frame 1 trägt nur den Aufbau) und lässt den Übergang dann regulär
+     laufen. Die Werte spiegeln Basecoats Startzustände (opacity-0, scale-95, translate-*-full). */
+  /* opacity .001 statt 0: Subtrees mit Deckkraft 0 darf der Browser beim Malen überspringen —
+     dann fiele die Erst-Rasterung doch wieder in den ersten SICHTBAREN Animationsframe.
+     .001 ist unsichtbar, zwingt aber zum Rastern im Hold-Frame.
+     Der ::backdrop wird bewusst NICHT festgehalten: die Abdunklung ist eine billige Farbfläche
+     und fadet sofort ab Frame 1 — sofortiges Klick-Feedback, während das teure Panel seine
+     Aufbau-Frames unsichtbar absitzt. So kostet der Hold keine gefühlte Latenz. */
+  :is(.dialog, .alert-dialog, .drawer).c22-open-hold {
+    transition: none !important;
+    opacity: 0.001;
+  }
+  :is(.dialog, .alert-dialog).c22-open-hold > * {
+    transition: none !important;
+    scale: 95%;
+  }
+  .drawer.c22-open-hold > * {
+    transition: none !important;
+  }
+  .drawer.c22-open-hold:not([data-side]) > *,
+  .drawer.c22-open-hold[data-side='bottom'] > * {
+    translate: 0 100%;
+  }
+  .drawer.c22-open-hold[data-side='top'] > * {
+    translate: 0 -100%;
+  }
+  .drawer.c22-open-hold[data-side='left'] > * {
+    translate: -100% 0;
+  }
+  .drawer.c22-open-hold[data-side='right'] > * {
+    translate: 100% 0;
+  }
+
+  /* Nackte Icon-SVGs im input-group bekommen ihre Größe von der GRUPPE (wie .btn es für seine
+     Icons tut): ohne width/height + ohne size-Klasse rendert ein SVG sonst in voller Breite
+     ÜBER dem Feld (PO, Empty 27f — betraf 7 Stellen). Eigene size-Klassen gewinnen weiter. */
+  .input-group > svg:not([class*='size-']) {
+    @apply size-4.5;
+  }
+
+  /* Fokus sitzt auf der GRUPPE (ein Feld = ein Rahmen = ein Fokusring): das Kind bleibt
+     ringfrei (Regel unten), die Gruppe übernimmt den kanonischen .input-Fokuslook. */
+  .input-group:has(:focus-visible) {
+    @apply border-ring ring-ring/50 ring-[3px];
+  }
+
+  /* Feld-Notizen (PO, 28): ALLE Hinweise unterm Feld teilen eine Optik — klein (text-xs, wie
+     der Fehlertext), dicht am Feld (-mt-1 gegen den .field-Gap) und eingerückt auf die
+     Textkante des Inputs (ps-2.5 = dessen padding-inline). Der Fehlertext ist nur farblich
+     die Ausnahme (rot via data-invalid/[role=alert], Vendor-Mechanik unangetastet). */
+  .field > p,
+  .field section > p,
+  .fieldset legend + p {
+    /* last:/nth-last-2: spiegeln Basecoats eigene Positions-Overrides (.field > p:last-child
+       { mt-0 } …, Spezifität 0,2,1) — ohne sie käme der dichte Abstand nie an. */
+    @apply -mt-1.5 ps-2.5 text-xs last:-mt-1.5 nth-last-2:-mt-1.5;
+  }
+
+  /* Datei-Input (PO 31c): der native Auswahl-Knopf ist der LINKE TEIL des Feldes — volle
+     Höhe, secondary-Füllung, bündig an Rahmen und linker Rundung (wie ein integrierter
+     Gruppen-Knopf, nur gefüllt). Selektoren verdoppelt: Basecoats Sammel-:is(…) setzt
+     Padding/Hintergrund mit ~(0,3,3) (die :not(:is(.command>header …))-Arme zählen mit) —
+     (0,2,1) käme nie durch. */
+  .input.input[type='file'][type='file'] {
+    @apply p-0 pe-2.5;
+  }
+  .input.input[type='file'][type='file']::file-selector-button {
+    @apply bg-secondary text-secondary-foreground me-3 h-full cursor-pointer border-0 px-3 py-0 text-sm font-medium;
+    border-start-start-radius: calc(var(--radius-md) - 1px);
+    border-end-start-radius: calc(var(--radius-md) - 1px);
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
+  }
+  /* Hover auf secondary ginge in derselben Farbe unter → Hover-Schleier (tokens.css). */
+  .input.input[type='file'][type='file']:hover::file-selector-button {
+    background-image: linear-gradient(var(--hover-veil), var(--hover-veil));
+  }
+
+  /* Knöpfe am GRUPPENRAND sitzen bündig in der Ecke (PO 31e): volle Höhe, Kante an Kante,
+     Rundung = Gruppenrundung minus Rahmen — Basecoat schiebt sie sonst mit margin-inline
+     von der Kante weg (die Hover-Fläche schwebte sichtbar im Feld). Gilt für direkte
+     .btn-Kinder mit data-align an beiden Enden. */
+  .input-group > .btn:is([data-align='end'], [data-align='inline-end']) {
+    @apply h-full rounded-none;
+    margin-inline-end: 0;
+    border-start-end-radius: calc(var(--radius-md) - 1px);
+    border-end-end-radius: calc(var(--radius-md) - 1px);
+  }
+  .input-group > .btn:is([data-align='start'], [data-align='inline-start']) {
+    @apply h-full rounded-none;
+    margin-inline-start: 0;
+    border-start-start-radius: calc(var(--radius-md) - 1px);
+    border-end-start-radius: calc(var(--radius-md) - 1px);
+  }
+
+  /* <legend> nimmt am Flex-Gap des .fieldset nicht teil — und Basecoat nullt die Margin der
+     label-Variante sogar explizit (legend[data-variant='label'] { mb: 0 }, Spezifität 0,2,1):
+     das erste Feld-Label klebte dadurch direkt an der Legende (PO, 28d gestapelt). Mit
+     gleicher Spezifität + späterer Quelle nachziehen. */
+  .fieldset > legend[data-variant='label'] {
+    @apply mb-2;
+  }
+
+  /* Schwebendes Label (Variante, .field[data-float]): das Label liegt IM Feld und schiebt
+     sich bei Fokus oder Inhalt auf den Rahmen (rein CSS über :placeholder-shown — das Input
+     braucht dafür placeholder=" "). Leer + unfokussiert → Label wandert zurück ins Feld. */
+  .field[data-float] {
+    @apply relative;
+  }
+  .field[data-float] > label {
+    @apply text-muted-foreground pointer-events-none absolute start-2 top-1/2 -translate-y-1/2 px-1 text-sm font-normal transition-all duration-150;
+  }
+  .field[data-float] > .input:focus + label,
+  .field[data-float] > .input:not(:placeholder-shown) + label {
+    @apply bg-background text-foreground top-0 text-xs font-medium;
+  }
+
+  /* Im input-group stellt die GRUPPE Rahmen, Radius und Schatten; die Kinder bleiben nackt.
+     Basecoat macht das schon (.input-group > input …, Spezifität 0,1,1) — verliert aber gegen
+     .input[type='text'] (0,2,1), sobald das Kind wie in allen C22-Beispielen zusätzlich .input
+     trägt: Ergebnis war ein doppelter Rahmen (PO, Date Picker e). Hier mit gleicher Spezifität
+     + späterer Quelle nachziehen, damit .input im input-group wieder rahmenlos ist. */
+  /* FOKUS-KANON für Kombinationen (PO): das Textfeld TRÄGT den Fokus, aber OPTISCH ringt der
+     Container (.input-group:has(:focus-visible) weiter oben). Der Kind-Reset ist dreifach
+     geklasst, weil Basecoats .input-Fokusregel über ihr Sammel-:is(…) mit ~(0,3,3) gewinnt —
+     sonst ringte das Feld zusätzlich zur Gruppe. */
+  .input-group > .input.input.input:is(input, textarea, select) {
+    @apply aria-invalid:ring-0 rounded-none border-0 bg-transparent shadow-none outline-none focus-visible:ring-0 focus-visible:outline-none;
   }
 
   /* Mehrtasten-Kürzel im Menü stehen in einem rechtsbündigen Flex-Wrapper (<span class="ms-auto …">).
@@ -382,13 +991,1209 @@
      Tasten ihre Eigenbreite und ihr symmetrisches Standard-Padding. */
   :is(.command, .dropdown-menu) [role='menuitem'] .kbd:last-child { @apply ms-0 ps-1; }
 
-  /* Kalender-Monat/Jahr-Dropdown (c22.js): gewählte Zeile im normalen Dropdown-Stil — Haken rechts
-     wie eine gewählte .select-Option (--check-icon), Hover bleibt accent. Kein gefülltes primary. */
+  /* Kalender-Monat/Jahr-Dropdown (c22.js) folgt dem Auswahl-Kanon: fett + primary-gefüllt,
+     Hover per inversem Schleier (PO 12e). */
   [data-cal-menu] [aria-selected='true'] {
-    background-image: var(--check-icon);
-    background-position: right 0.5rem center;
-    background-repeat: no-repeat;
-    background-size: 0.875rem;
-    @apply font-medium;
+    @apply bg-primary text-primary-foreground font-bold;
+  }
+  [data-cal-menu] [aria-selected='true']:hover {
+    background-image: linear-gradient(var(--hover-veil-invers), var(--hover-veil-invers));
+  }
+
+  /* Breadcrumb-Trigger als <button> (Dropdown) erbt die Link-Optik von .breadcrumb a — der
+     Vendor-Selektor trifft nur Anker, deshalb hier für Buttons gespiegelt statt inline nachgebaut. */
+  .breadcrumb button { @apply transition-colors; }
+  .breadcrumb button:hover { @apply text-foreground; }
+
+  /* Alert-Warnung über das --warning-Token statt hartkodierter amber-Utilities (dark-fähig, SPOT):
+     getönter Grund + kräftiges Warn-Icon; Titel/Text bleiben in der normalen Vordergrundfarbe, weil
+     --warning eine helle Füllfarbe ist und als Fließtext zu blass wäre. Aufbau analog zu destructive. */
+  .alert[data-variant='warning'] { @apply border-warning/40 bg-warning/10; }
+  .alert[data-variant='warning'] > svg { color: var(--warning); }
+
+  /* Toast-Status-Icons (PO, Alert als Design-Vorlage — gleiche Status-Sprache):
+     data-category färbte im Vendor NICHTS (Icons erbten currentColor, Erfolg/Fehler/
+     Warnung sahen farblich identisch aus). Jetzt dieselben Status-Token wie bei
+     Alert/Badge (color-roles #67); error = destructive-Rolle. */
+  .toast[data-category='success'] .toast-content > svg { color: var(--success); }
+  .toast[data-category='warning'] .toast-content > svg { color: var(--warning); }
+  .toast[data-category='info'] .toast-content > svg { color: var(--info); }
+  .toast[data-category='error'] .toast-content > svg { color: var(--destructive); }
+
+  /* Toast-Anatomie = Alert (PO): Icon sitzt wie beim Alert OBEN links neben dem Titel
+     (translate-y-0.5), nicht vertikal mittig im Ganzen — Grid statt Vendor-Flex;
+     Aktions-/Abbrechen-Spalte bleibt rechts. */
+  .toaster .toast .toast-content {
+    @apply grid grid-cols-[auto_1fr_auto] items-start gap-x-2.5;
+  }
+  .toaster .toast .toast-content > svg {
+    @apply translate-y-0.5;
+  }
+  .toaster .toast .toast-content > footer {
+    @apply self-center;
+  }
+
+  /* Zusatz-Variante "mono" (per c22Toast aufgestempelt): alles einfarbig, NUR das
+     Fehler-Icon bleibt rot — exakt Alerts Schema (Vendor-Alert kennt nur Standard
+     + destructive). Steht NACH den Kategorie-Regeln: gleiche Spezifität. */
+  .toast[data-variant='mono'] .toast-content > svg { color: currentColor; }
+  .toast[data-variant='mono'][data-category='error'] .toast-content > svg { color: var(--destructive); }
+
+  /* Hintergrund-Variationen (Alert als Vorlage): "tinted" = getönter Status-Hintergrund
+     (gleiches Muster wie .alert[data-variant='warning']: border-<rolle>/40 + bg-<rolle>/10),
+     "ghost" = ohne Hintergrund (kein Rand, kein Schatten — nur Icon + Text). */
+  .toast[data-variant='tinted'][data-category='success'] .toast-content { @apply border-success/40 bg-success/10; }
+  .toast[data-variant='tinted'][data-category='warning'] .toast-content { @apply border-warning/40 bg-warning/10; }
+  .toast[data-variant='tinted'][data-category='info'] .toast-content { @apply border-info/40 bg-info/10; }
+  .toast[data-variant='tinted'][data-category='error'] .toast-content { @apply border-destructive/40 bg-destructive/10; }
+  .toast[data-variant='ghost'] .toast-content { @apply border-transparent bg-transparent shadow-none; }
+
+  /* Geteilte Größenleiter mit Alert (data-size): Standard-Toast = S (Vendor-Maße,
+     13px), "lg" = L = EXAKT die Alert-Maße (text-sm, px-4 py-3, Icon size-4) —
+     ein Toast in L ist ein kleiner Alert; "sm" = kompakte Stufe darunter. */
+  .toast[data-size='sm'] .toast-content { @apply gap-x-2 p-2.5 text-xs; }
+  .toast[data-size='sm'] .toast-content svg { @apply size-3.5; }
+  .toast[data-size='lg'] .toast-content { @apply px-4 py-3 text-sm; }
+
+  /* Item-Media: getönte quadratische Icon-Kachel als Inhalt eines .item > figure. Basecoats
+     .item > figure zentriert nur ein blankes Icon; die getönte Kachel (bg-muted, rounded-md)
+     wird in vielen Zeilenlisten gebraucht (Datei-/Status-Icons) — hier EINMAL definiert statt
+     pro Component/Zeile mit einer rohen Utility-Kette nachgebaut. figure enthält dann ein
+     <span class="item-media"> statt eines blanken <svg>, deshalb greift Basecoats
+     "figure:has(>svg:only-child)"-Autosizing nicht — die Kachel bringt ihre eigene
+     Größenabstufung passend zu .item[data-size] mit. */
+  .item-media {
+    @apply bg-muted grid size-10 shrink-0 place-items-center rounded-md;
+  }
+  .item-media > svg:not([class*='size-']) {
+    @apply size-5;
+  }
+  /* Kachel-Größe koppelt an .item[data-size] ODER steht als eigene Variante direkt auf der
+     Kachel (data-size auf .item-media) — für Zeilen, deren CONTAINER-Raster einheitlich
+     bleiben soll und nur das Icon skaliert (PO, Attachment „Größen"). */
+  .item[data-size='sm'] .item-media,
+  .item-media[data-size='sm'] {
+    @apply size-8;
+  }
+  .item[data-size='sm'] .item-media > svg:not([class*='size-']),
+  .item-media[data-size='sm'] > svg:not([class*='size-']) {
+    @apply size-4;
+  }
+  .item[data-size='xs'] .item-media,
+  .item-media[data-size='xs'] {
+    @apply size-6;
+  }
+  .item[data-size='xs'] .item-media > svg:not([class*='size-']),
+  .item-media[data-size='xs'] > svg:not([class*='size-']) {
+    @apply size-3.5;
+  }
+
+  /* Größen-Abstufung sm: Basecoat stuft die Typo nur bei data-size='xs' ab (p → text-xs) —
+     'sm' änderte NUR gap/padding, dadurch sahen default und sm praktisch gleich aus (und der
+     Text wirkte bei sm durch das knappere Padding sogar größer). Hier die fehlende Mittelstufe:
+     die Meta-Zeile wird text-xs, der Titel bleibt text-sm. Explizite text-*-Utilities im
+     Markup (item.html) gewinnen weiterhin (Utility-Layer schlägt Components-Layer). */
+  .item[data-size='sm'] p {
+    @apply text-xs;
+  }
+
+  /* Ecken-Aktionen (Variant-Contract, z.B. Attachment): data-actions='corner' legt die
+     aside-Aktionen an den rechten Rand — Schließen-X oben, Zweitaktion (Pause/Retry) unten.
+
+     OPTISCHE AUSRICHTUNG (PO-Modell, gilt repo-weit): Das Content-Raster bleibt SPOT — die
+     SICHTBARE Glyphe (16px-X) sitzt exakt auf den normalen Item-Innenabständen (default
+     16/14, sm 12/10, xs 10/8), genau wie Text und Icon-Kachel. Die AUSNAHME ist die
+     unsichtbare Klickfläche: sie ist um die Glyphe zentriert und bleedet in den Innenabstand
+     hinein (Flächen-Inset = Content-Padding − Ring, Ring = (Fläche − Glyphe)/2). Damit zwei
+     Aktionen in einer natürlichen 2-Zeilen-Höhe Platz haben (keine Mindesthöhe, Container
+     wächst NICHT), ist die Fläche hier 24px bei voller m-Glyphe (Ring 4px).
+
+     Absolut positioniert statt im Flex-Fluss: .item ist flex-wrap, in schmalen Karten
+     (Gruppe) fiele ein aside im Fluss sonst unter den Text. pe-10 reserviert die Spalte.
+     Ohne das Attribut bleibt Basecoats vertikal zentriertes aside unberührt (item.html). */
+  .item[data-actions='corner'] {
+    @apply relative pe-10;
+  }
+  /* Insets = Content-Padding − Ring(4): default 16/14 → end-3(12)/top-2.5(10).
+     gap-0 überschreibt Basecoats aside-gap (8px); der Stapel ist VON OBEN gerechnet (PO):
+     X oben auf dem Raster, die Zweitaktion direkt darunter (Flächen berühren sich, Glyphen
+     ~8px auseinander) — in JEDER Zeilenhöhe identisch, auch wenn ein Fortschrittsbalken die
+     Karte nach unten verlängert. */
+  .item[data-actions='corner'] > aside {
+    @apply absolute top-2.5 end-3 flex-col items-center justify-start gap-0;
+  }
+  .item[data-size='sm'][data-actions='corner'] > aside {
+    @apply top-1.5 end-2;
+  }
+  /* Einzeilige Zeilen (xs) und Kopfzeilen nutzen KEIN data-actions='corner', sondern den
+     normalen Fluss (aside vertikal mittig bzw. header-Zeile über dem Bild). Damit die
+     X-Glyphe auch dort auf dem Content-Raster sitzt, bleedet die Klickfläche um ihren Ring
+     (8px bei m) nach rechts — gleiche optische Ausrichtung, anderer Mechanismus. In der
+     Kopfzeile zusätzlich vertikal (-my-1), damit die 32px-Fläche die Textzeile nicht aufbläht
+     und der Titel nahe am Blockraster bleibt. */
+  .item:not([data-actions='corner']) > :is(aside, header) .btn.btn-close {
+    @apply -me-2;
+  }
+  .item:not([data-actions='corner']) > header .btn.btn-close {
+    @apply -my-1;
+  }
+
+  /* Truncate mit weichem Ausfaden statt „…": der Text läuft nach rechts sanft in Transparenz
+     aus (Maske über die letzten 2rem), z.B. ein Dateiname, der an einen Schließbutton stößt.
+     Wiederverwendbar wie .truncate; Einschränkung: die Maske ist physisch „to right" — in
+     RTL-Kontexten stattdessen nicht einsetzen oder spiegeln. */
+  .truncate-fade {
+    overflow: hidden;
+    white-space: nowrap;
+    mask-image: linear-gradient(to right, black calc(100% - 2rem), transparent 100%);
+  }
+
+  /* Scroll-Kanten-Fade (Zustandspflege in c22.js): ein [data-scroll-fade]-Container blendet
+     seinen Inhalt an der Kante weich aus, an der es weiterscrollt — steht man am Anfang/Ende,
+     fällt der jeweilige Fade weg (c22.js setzt data-at-start/-end). Maskenbreite 2rem wie
+     .truncate-fade; physisch "to right", in RTL nicht einsetzen. */
+  [data-scroll-fade] {
+    mask-image: linear-gradient(to right, transparent, black 2rem, black calc(100% - 2rem), transparent);
+  }
+  [data-scroll-fade][data-at-start] {
+    mask-image: linear-gradient(to right, black, black calc(100% - 2rem), transparent);
+  }
+  [data-scroll-fade][data-at-end] {
+    mask-image: linear-gradient(to right, transparent, black 2rem, black);
+  }
+  [data-scroll-fade][data-at-start][data-at-end] {
+    mask-image: none;
+  }
+  /* Die Klickflächen-Ausnahme: alle aside-Buttons (X, Pause, Retry) 24px-Fläche mit voller
+     m-Glyphe (16px, Basecoats .btn-svg-Maß bleibt) — Glyphen identisch groß (SPOT), nur die
+     Fläche schrumpft. Spezifität (0,3,1) schlägt .btn[data-size=…] (0,2,0). */
+  .item[data-actions='corner'] > aside .btn {
+    @apply size-6 shrink-0 p-0;
+    border-radius: min(var(--radius-md), 8px);
+  }
+  /* Fortschrittszeile (Attachment „lädt hoch"): ein .progress als DIREKTES Kind der .item-Zeile
+     wird zur eigenen Zeile am unteren Kartenrand — im Content-Raster: links UND rechts gleich
+     weit vom Rahmen (Item-Padding 16), nach unten bewusst nur minimal Luft (sanktionierte
+     Ausnahme vom Blockraster, hier EINMAL definiert). Die Karte reserviert unten Platz
+     (padding-bottom), damit Titel/Meta nicht auf dem Balken liegen. */
+  .item[data-actions='corner'] > .progress {
+    position: absolute;
+    inset-inline: calc(var(--spacing) * 4);
+    bottom: calc(var(--spacing) * 1);
+    width: auto;
+  }
+  .item[data-actions='corner']:has(> .progress) {
+    padding-bottom: calc(var(--spacing) * 4.5);
+  }
+
+  /* Fehler-Mikrotext-Kanon im .item-Kontext (analog .field[data-invalid] > p[role='alert']):
+     eine als role='alert' markierte Meldung in einer Item-Zeile ist text-destructive text-xs —
+     statt der Utility-Streuung pro Zeile. */
+  .item p[role='alert'] {
+    @apply text-destructive text-xs;
+  }
+
+  /* Fortschritt als Flächenfüllung (Progress-Variante, SPOT): der HINTERGRUND des Containers
+     selbst zeigt den Fortschritt — kein eigener Balken. --progress (z.B. 64%) steuert die
+     Füllkante per Inline-Style (gleiches Muster wie width beim .progress-Füllspan). Farbe
+     primär-getönt aus Tokens (color-mix), folgt damit beiden Themes. Einsatz auf jeder
+     Fläche: Karte, .item-Zeile (Attachment „lädt hoch"), Listenzeile. */
+  .progress-surface {
+    background-image: linear-gradient(
+      to right,
+      color-mix(in oklab, var(--primary) 12%, transparent) 0%,
+      color-mix(in oklab, var(--primary) 12%, transparent) var(--progress, 0%),
+      transparent var(--progress, 0%)
+    );
+  }
+
+  /* Ring-Fortschritt (PO): Fortschrittsbalken im Spinner-Stil — ein Ring, der sich im
+     Uhrzeigersinn ab 12 Uhr füllt. conic-gradient (primary bis --progress, muted als
+     Rest-Track), per Radial-Maske zum Ring gestanzt (Dicke = --progress-ring-dicke,
+     entspricht der h-1.5-Balkenhöhe). Wert wie bei .progress-surface über --progress
+     (Inline-Style), Größe per size-*-Utility im Markup, Statusfarben über data-variant
+     (gleiche Rollen wie beim Balken/Slider). */
+  .progress-ring {
+    --progress-ring-dicke: 0.375rem;
+    @apply inline-block size-10 shrink-0 rounded-full;
+    background: conic-gradient(
+      var(--progress-ring-farbe, var(--primary)) var(--progress, 0%),
+      var(--progress-ring-track, var(--muted)) var(--progress, 0%)
+    );
+    -webkit-mask: radial-gradient(
+      farthest-side,
+      transparent calc(100% - var(--progress-ring-dicke)),
+      #000 calc(100% - var(--progress-ring-dicke) + 0.5px)
+    );
+    mask: radial-gradient(
+      farthest-side,
+      transparent calc(100% - var(--progress-ring-dicke)),
+      #000 calc(100% - var(--progress-ring-dicke) + 0.5px)
+    );
+  }
+  .progress-ring[data-variant='success'] { --progress-ring-farbe: var(--success); }
+  .progress-ring[data-variant='warning'] { --progress-ring-farbe: var(--warning); }
+  .progress-ring[data-variant='destructive'] { --progress-ring-farbe: var(--destructive); }
+  /* Ring in der .item-media-Kachel (Attachment „lädt hoch"): Icon-Maßstab statt
+     Standalone-Größe — sitzt dort, wo sonst der Spinner dreht. Rest-Track in
+     Hintergrundfarbe (PO): der muted-Track wäre auf der muted-Kachel unsichtbar. */
+  .item-media > .progress-ring {
+    --progress-ring-dicke: 0.1875rem;
+    --progress-ring-track: var(--background);
+    @apply size-5;
+  }
+
+  /* Tabellen-Dropdowns nicht kappen (PO 21): .table-container ist overflow-x-auto und
+     clippt absolute Popover. Overflow beim Öffnen umzuschalten ließ den Scrollbalken
+     verschwinden (Layout-Sprung, PO) — stattdessen positioniert wireTableMenu (c22.js)
+     das OFFENE Popover fix zum Viewport; der Container bleibt durchgehend scrollbar. */
+
+  /* Sortierte Spalte sichtbar machen (PO 21c): der aktive Spaltenkopf trägt den
+     Accent-Zustand (Kanon wie Menü-Hover/aktiv) — nicht nur den kleinen Pfeil. */
+  [data-datatable] th[aria-sort] [data-dt-sort] {
+    @apply bg-accent text-accent-foreground;
+  }
+
+  /* Mehrfachauswahl-Kanon (PO 21): Haken statt Hintergrund. Angehakte Checkboxen
+     zeigen den Haken in Vordergrundfarbe auf transparentem Grund (Rahmen bleibt) —
+     die primary-Füllung entfällt repo-weit. Radios (Einzelauswahl) behalten sie. */
+  .field > input[type='checkbox']:not([role='switch']):checked,
+  .input[type='checkbox']:not([role='switch']):checked {
+    @apply border-input bg-transparent text-foreground dark:bg-transparent dark:text-foreground;
+  }
+
+  /* Fester Icon-Schacht am Sortierknopf (Recherche-Regel: der Sortierpfeil darf die
+     Beschriftung nicht verschieben — Pencil & Paper): Pfeil/Doppelpfeil erscheinen
+     absolut im reservierten Platz, der Rang (²/³) daneben. */
+  [data-dt-sort] {
+    @apply relative pe-7;
+  }
+  [data-dt-sort] [data-dt-icon] {
+    @apply absolute end-2.5 top-1/2 -translate-y-1/2;
+  }
+  [data-dt-sort] [data-dt-rang] {
+    @apply absolute end-0 top-1/2 -translate-y-1/2 text-xs;
+  }
+
+  /* Spaltenkopf-Trichter erst bei Hover (PO 21): unsichtbar, bis der Kopf gehovert
+     wird; Tastaturfokus, offenes Panel oder aktiver Filter (aria-pressed) bleiben
+     sichtbar. */
+  [data-datatable] th > .popover > button {
+    @apply opacity-0 transition-opacity;
+  }
+  [data-datatable] th:hover > .popover > button,
+  [data-datatable] th > .popover > button:focus-visible,
+  [data-datatable] th > .popover > button[aria-expanded='true'],
+  [data-datatable] th > .popover > button[aria-pressed='true'] {
+    @apply opacity-100;
+  }
+
+  /* „Stilles" Dropdown-Menü (komponiert, PO 21a/29): class="popover dropdown-menu"
+     + data-dropdown-menu-initialized im Markup — das Popover-JS öffnet/schließt,
+     die Menü-OPTIK (Einträge, Überschriften, Trenner) kommt aus dem Vendor-CSS,
+     dessen Schließ-JS aber nie bindet (Einstellungs-Panels sollen offen bleiben).
+     Der Vendor koppelt den Eintrag-Hover an :not([initialized]) — hier nachgereicht. */
+  .dropdown-menu[data-dropdown-menu-initialized] :is([role='menuitem'], [role='menuitemcheckbox'], [role='menuitemradio']):not([aria-disabled='true']):not(:disabled):hover {
+    @apply bg-accent text-accent-foreground;
+  }
+
+  /* Ausklapp-Untermenü nach rechts (Einstellungs-Menü 21a): Panel klappt bei
+     Hover/Fokus neben dem Auslöser auf — Popover-Optik, eine Quelle. */
+  [data-submenu] {
+    @apply relative;
+  }
+  /* Das Panel ragt über die Popover-Kante hinaus — Vendor-[data-popover] clippt
+     per overflow-x-hidden und machte das Flyout unsichtbar/unklickbar. */
+  [data-popover]:has([data-submenu]) {
+    overflow: visible;
+  }
+  [data-submenu] > [data-submenu-panel] {
+    @apply bg-popover text-popover-foreground invisible absolute start-full top-0 z-50 ms-1 min-w-32 rounded-md border p-1 opacity-0 shadow-md;
+    /* Zuklappen mit Gnadenfrist: der (auch bei echten Nutzern diagonale) Mausweg
+       zum Panel verlässt den Eintrag kurz — visibility hält 300ms, wer das Panel
+       rechtzeitig erreicht, hovert die Kette wieder und es bleibt offen. */
+    transition: opacity 0.15s, visibility 0s 0.3s;
+  }
+  [data-submenu]:hover > [data-submenu-panel],
+  [data-submenu]:focus-within > [data-submenu-panel] {
+    transition: opacity 0.15s, visibility 0s;
+  }
+  /* Unsichtbare Brücke über die 4px-Lücke: beim Rüberfahren vom Eintrag ins Panel
+     riss der Hover sonst genau dazwischen ab und das Panel klappte zu. */
+  [data-submenu] > [data-submenu-panel]::before {
+    content: '';
+    @apply absolute top-0 bottom-0 end-full w-2;
+  }
+  [data-submenu]:hover > [data-submenu-panel],
+  [data-submenu]:focus-within > [data-submenu-panel] {
+    @apply visible opacity-100;
+  }
+
+  /* Data Table: Zeilenklick wählt aus (Standard) — Zeilen zeigen den Zeiger-Cursor. */
+  [data-datatable] tbody tr:has([data-dt-select]),
+  [data-dt-rowselect] tbody tr {
+    @apply cursor-pointer;
+  }
+
+  /* Auswahl-Kästchen erst bei Bedarf (PO 21a): in den Zeilen unsichtbar, solange
+     nicht markiert — sichtbar bei Zeilen-Hover, Markierung oder Tastaturfokus.
+     Die Kopf-Checkbox (Alle auswählen) bleibt immer stehen. */
+  [data-datatable] tbody [data-dt-select] {
+    @apply opacity-0 transition-opacity;
+  }
+  [data-datatable] tbody tr:hover [data-dt-select],
+  [data-datatable] tbody [data-dt-select]:checked,
+  [data-datatable] tbody [data-dt-select]:focus-visible {
+    @apply opacity-100;
+  }
+
+  /* Kein Doppelrahmen unter der letzten SICHTBAREN Zeile (PO 21i): der Vendor nimmt
+     nur :last-child den Unterstrich — bei Pagination/Filter ist die letzte sichtbare
+     Zeile aber selten das letzte Kind. */
+  [data-datatable] tbody tr:not([hidden]):not(:has(~ tr:not([hidden]))) {
+    @apply border-0;
+  }
+
+  /* Switch-Geometrie ganzzahlig (PO 55b): Vendor-Track ist 1.15rem = 18.4px hoch —
+     der 0.4px-Bruchteil verteilt sich beim Pixel-Snapping ungleich, die 16px-Pille
+     hängt sichtbar außermittig. 18px Track ⇒ 16px Innenhöhe = exakt Pillenhöhe. */
+  .field > input[type='checkbox'][role='switch']:not([data-size='sm']),
+  .input[type='checkbox'][role='switch']:not([data-size='sm']) {
+    @apply h-[18px];
+  }
+}
+
+
+/* ============================================================
+ * Close-Button (.btn-close) — der repo-weite Schließbutton (X), SPOT.
+ * Aufgebaut auf .btn: im Markup IMMER class="btn btn-close" data-variant="ghost" +
+ * data-icon-lu="x". Normiert an EINEM Ort: quadratische Trefferfläche + Radius je Größe,
+ * das X-Maß, den einheitlichen Ecken-Abstand und den Overlay-Stil auf Bildern — damit kein
+ * Einsatzort mehr seine eigene Utility-Kette (absolute top-… size-… bg-…/…) trägt.
+ * ============================================================ */
+@layer components {
+  /* Größen s/m/l bilden die bestehenden .btn-Icon-Kacheln ab: s=icon-xs (24px/12px-X),
+     m=icon-sm (32px/16px-X, DEFAULT ohne data-size), l=icon-lg-Kachel (40px) mit 20px-X.
+     .btn.btn-close (Spezifität 0,2,0) schlägt Basecoats .btn:not([data-size]) bzw.
+     .btn[data-size=sm/lg] (ebenfalls 0,2,0) über die spätere Quellreihenfolge — sonst
+     erzwänge Basecoat seine Pillen-Höhe/-Polsterung. Im Bestand wird ausschließlich m
+     genutzt; s/l sind ein Angebot in der Galerie. */
+  .btn.btn-close {
+    @apply size-8 shrink-0 p-0;
+    border-radius: min(var(--radius-md), 10px);
+  }
+  .btn.btn-close[data-size='sm'] {
+    @apply size-6;
+    border-radius: min(var(--radius-md), 8px);
+  }
+  .btn.btn-close[data-size='sm'] svg:not([class*='size-']) {
+    @apply size-3;
+  }
+  .btn.btn-close[data-size='lg'] {
+    @apply size-10;
+  }
+  .btn.btn-close[data-size='lg'] svg:not([class*='size-']) {
+    @apply size-5;
+  }
+
+  /* Ecken-Einsatz: EINE geteilte Positions-Regel statt „absolute top-… end-…" je Stelle.
+     OPTISCHE AUSRICHTUNG (repo-weit): die GLYPHE sitzt auf dem Content-Raster des Containers,
+     die unsichtbare Klickfläche bleedet in den Innenabstand (Flächen-Inset = Content-Padding −
+     Ring; m-Fläche 32, Glyphe 16 → Ring 8):
+     - data-corner        → p-4-Raster (Karten/Zeilen, Padding 16): Inset 8 → Glyphe bei 16.
+     - data-corner='panel'→ p-6-Raster (Dialog-/Drawer-Panels, Padding 24): Inset 16 → Glyphe 24.
+     Basecoats .dialog positioniert seinen Schließknopf selbst — dort KEIN data-corner setzen
+     (sonst doppelt), nur class + Variante. */
+  .btn-close[data-corner] {
+    @apply absolute top-2 end-2;
+  }
+  .btn-close[data-corner='panel'] {
+    @apply top-4 end-4;
+  }
+
+  /* Auf Bild/Foto (Overlay): frosted Steuerfläche mit garantierter Lesbarkeit auf beliebigem
+     Motiv — getönter Grund (Token bg-background) + Backdrop-Blur, kräftiger beim Hover. Ersetzt
+     die rohe Utility-Kette (text-foreground bg-background/10 backdrop-blur-sm hover:bg-background/90)
+     aus attachment.html; theme-fähig, weil aus Tokens. PO-Ausnahme: die X-Glyphe bleibt m (16px),
+     nur der sichtbare/klickbare Container ist kleiner (24px, Ring 4) — Inset 8 → Glyphe bei 12,
+     bündig knapp in der Bildecke. */
+  .btn.btn-close[data-on-image] {
+    @apply text-foreground bg-background/10 size-6 backdrop-blur-sm;
+    border-radius: min(var(--radius-md), 8px);
+  }
+  .btn-close[data-on-image]:hover {
+    @apply bg-background/90;
+  }
+}
+
+
+/* ============================================================
+ * Code-Block (.code-block) — der mehrzeilige Codeblock, SPOT.
+ * Die Optik (Muted-Fläche, Radius, Innenabstand p-4, text-sm, waagerechtes Scrollen,
+ * Mono-Schrift im <code>) lebt an EINEM Ort — Typography zeigt denselben Block weiter als
+ * Auftritt, holt die Optik aber von hier, statt die alte Utility-Kette zu wiederholen.
+ * ============================================================ */
+@layer components {
+  .code-block {
+    @apply bg-muted overflow-x-auto rounded-lg p-4 text-sm;
+  }
+  .code-block code {
+    @apply font-mono;
+  }
+
+  /* Zeilennummerierung — Feature-Variante über data-line-numbers (KEINE Farb-Rolle, darum
+     bewusst kein data-variant, Suite-Regel 12). Jede Zeile ist ein <span> (display:block);
+     die Nummer ist reiner CSS-Counter im ::before und damit NICHT Teil von code.textContent
+     oder einer Handauswahl — zusätzlich user-select:none. So nimmt weder der Copy-Button
+     (liest textContent) noch Markieren+Kopieren die Nummern mit. */
+  .code-block[data-line-numbers] code {
+    counter-reset: c22-line;
+  }
+  .code-block[data-line-numbers] code > span {
+    @apply block;
+    counter-increment: c22-line;
+  }
+  .code-block[data-line-numbers] code > span::before {
+    content: counter(c22-line);
+    @apply text-muted-foreground inline-block pe-4 text-end;
+    width: 2.5ch;
+    user-select: none;
+  }
+
+  /* Copy-Button oben rechts (data-copy). OPTISCHE AUSRICHTUNG nach dem Modell von
+     .btn-close[data-corner]: die Glyphe sitzt auf dem p-4-Content-Raster (Inset 16), die
+     unsichtbare 32er-Klickfläche bleedet in den Innenabstand (Ring 8 → Glyphe bei 16). Er
+     hängt in einem relativen Wrapper, NICHT im <pre> selbst — sonst würde er mit dem
+     overflow-x-auto mitscrollen/abgeschnitten. .btn.code-block-copy schlägt Basecoats
+     .btn-Höhe/-Polsterung (Spezifität 0,2,0 + spätere Quellreihenfolge). */
+  .btn.code-block-copy {
+    @apply absolute top-2 end-2 size-8 shrink-0 p-0;
+    border-radius: min(var(--radius-md), 10px);
+  }
+  .btn.code-block-copy svg:not([class*='size-']) {
+    @apply size-4;
+  }
+}
+
+
+/* ============================================================
+ * Foundation-/SPOT-Refactors (Voll-Audit): Toggle-Zustand, Hover-Card-Fläche,
+ * Separator, Status-Badge-Varianten, Fehler-Mikrotext, OTP-Zelle.
+ * ============================================================ */
+@layer components {
+  /* Pressed/Checked-Kanon: ein gedrückter/gewählter Toggle (aria-pressed bzw.
+     aria-checked) trägt den Accent-Zustand. EINE Regel ersetzt ~35 Inline-Ketten
+     (aria-pressed:bg-accent …) in toggle/toggle-group/theme-switcher — beide
+     Toggle-Semantiken (Button-Toggle = aria-pressed, Radio = aria-checked) teilen
+     denselben Look, greifen auf denselben aria-Attributen, die das Demo-JS toggelt. */
+  .btn[aria-pressed='true'],
+  .btn[aria-checked='true'] {
+    @apply bg-accent text-accent-foreground;
+  }
+
+  /* Hover-Card-Fläche: das schwebende Popover-Panel (Farbe, Rahmen, Schatten,
+     Übergang) — in hover-card.html 4× identisch. Hier EINMAL; Positionierung,
+     Sichtbarkeit (invisible/opacity/translate/group-hover) und Padding (p-3/p-4)
+     bleiben als Utilities im Markup, weil sie je Auslöser/Seite variieren. */
+  .hover-card {
+    @apply bg-popover text-popover-foreground rounded-lg border shadow-md transition-all duration-150;
+  }
+
+  /* Separator-Fläche: generische Trennlinie (shadcn-Kanon, in CLAUDE.md als
+     Foundation gelistet, bisher ohne CSS). bg-border + Orientierung steuert
+     Dicke/Ausdehnung; Marge bzw. eine feste Höhe bleiben Utility im Markup. */
+  .separator {
+    @apply bg-border shrink-0;
+  }
+  .separator[data-orientation='horizontal'] {
+    @apply h-px w-full;
+  }
+  .separator[data-orientation='vertical'] {
+    /* self-stretch wie im shadcn-Base-Original: füllt auch Flex-Zeilen ohne feste
+       Höhe (mehrzeilige Nachbarn). h-auto + border-none nötig, weil der Preflight
+       hr auf height:0 + border-top:1px setzt — die explizite Höhe schaltet
+       align-self:stretch ab, übrig bliebe nur der 1px-Border. */
+    @apply h-auto w-px self-stretch border-none;
+  }
+
+  /* Status-Badge: Ampel-Varianten über data-variant statt der Inline-Kette
+     `bg-<token> text-<token>-foreground border-transparent`, die in
+     badge/data-table/item/table/message-scroller dutzendfach wiederholt war. */
+  .badge[data-variant='success'] {
+    @apply bg-success text-success-foreground border-transparent;
+  }
+  .badge[data-variant='warning'] {
+    @apply bg-warning text-warning-foreground border-transparent;
+  }
+  .badge[data-variant='info'] {
+    @apply bg-info text-info-foreground border-transparent;
+  }
+
+  /* Fehler-Mikrotext-Kanon: die Fehlermeldung eines ungültigen Felds ist
+     text-destructive text-xs. Die Farbe kommt schon aus Basecoats
+     .field[data-invalid]-Regel; hier nur die Größe, damit select/textarea denselben
+     kleinen Fehlertext zeigen wie die expliziten (checkbox/radio-group/switch). */
+  .field[data-invalid] > p[role='alert'] {
+    @apply text-xs;
+  }
+
+  /* OTP-Zelle: die quadratische Einmalcode-Zelle (size-10, zentriert, mono) — in
+     input-otp.html ~30× wiederholt. Zusätzlich zur .input-Basis: class="input input-otp-slot".
+     Selektor bewusst .input.input-otp-slot: die OTP-Felder tragen kein type-Attribut, greift
+     also Basecoats .input:not([type]) (Spezifität 0,2,0) und würde size-10 aus einer 0,1,0-Regel
+     schlagen — die Doppelklasse zieht gleich und gewinnt über die Quellreihenfolge. */
+  .input.input-otp-slot {
+    @apply size-10 text-center font-mono text-base;
+  }
+}
+
+
+/* ============================================================
+ * Scrollbar — globaler C22-Standard + Varianten auf Basecoats .scrollbar/.scrollbar-sm.
+ * ============================================================ */
+@layer components {
+  /* Basecoat liefert .scrollbar (Standard) und .scrollbar-sm (schlank) fertig — beide lesen
+     ausschließlich die Tokens --scrollbar-width/-sm-width/-thumb/-track/-radius (Seam in
+     tokens.css). C22 baut deshalb NICHTS doppelt, sondern ergänzt Varianten über data-*
+     auf der semantischen Klasse (Variant-Contract): data-size (sm/lg), data-track (visible),
+     data-buttons (arrows). Zum kompletten Ausblenden gibt es weiterhin die
+     .no-scrollbar-Utility (oben) — ebenfalls keine Doppelung.
+
+     GLOBALER STANDARD (PO, SPOT): der pfeillose Token-Balken gilt für JEDE Scrollfläche der
+     Seite — ohne Klasse. Die nackten ::-webkit-scrollbar-Pseudos unten matchen universell;
+     ein Element steigt nur aus, wenn es die Standard-Properties selbst setzt
+     (data-buttons='arrows' → native Route, .no-scrollbar → aus, Vendor-Sonderfälle wie die
+     Command-Liste). .scrollbar bleibt der semantische Hook für die Varianten.
+
+     Architektur (PO-Entscheid): PFEILLOS IST DER C22-STANDARD. Motor-Falle dahinter
+     (verifiziert im Screenshot-Test): sobald die Standard-Properties scrollbar-color/
+     scrollbar-width auf einem Element gesetzt sind, IGNORIERT modernes Chromium dessen
+     ::-webkit-scrollbar-*-Styles komplett und rendert den nativen Balken — unter
+     Chromium/Linux INKLUSIVE nativer Schrittpfeile. Basecoat setzt beide Properties,
+     deshalb dreht C22 das hier um:
+     - Default (.scrollbar/.scrollbar-sm): Standard-Properties zurück auf auto → die
+       ::-webkit-Custom-Route greift (Tokens für Breite/Farbe/Radius), die Schrittknöpfe
+       werden explizit ausgeblendet (::-webkit-scrollbar-button matcht je Ende MEHRERE
+       Slots — single + double button —, ungefiltert gäbe das sogar Doppelpfeile).
+     - Firefox-Zweig (@supports (-moz-appearance: none) — matcht nur Gecko; bewusst NICHT
+       @supports selector(::-webkit-scrollbar), weil Firefox unbekannte ::-webkit-Pseudos
+       aus Webkompat-Gründen als gültig parst): Firefox kennt die ::-webkit-Route nicht
+       und bekäme durch das auto-Reset graue Systembalken — hier bekommt er die
+       Token-Farben über scrollbar-color zurück; Pfeile rendert Firefox nie.
+     - data-buttons='arrows': erzwingt die native scrollbar-color-Route (Token-Farben,
+       unter Chromium/Linux native Systempfeile). KEINE eigenen Pfeil-Grafiken über
+       ::-webkit-scrollbar-button — die Doppelpfeil-/Slot-Falle bleibt draußen.
+
+     Einschränkungen (im Galerie-Label dokumentiert):
+     - Firefox' scrollbar-width kennt nur auto/thin/none: 'sm' wird dort auf thin
+       abgebildet, 'lg' wirkt nicht (Standardbreite), Pfeile gibt es nie. */
+
+  /* Default: Custom-Route ohne Schrittpfeile (Chromium/WebKit). Gleiche Spezifität wie
+     Basecoats Regel — gewinnt über die Importreihenfolge (components.css nach Vendor). */
+  .scrollbar,
+  .scrollbar-sm {
+    scrollbar-color: auto;
+    scrollbar-width: auto;
+  }
+  .scrollbar::-webkit-scrollbar-button,
+  .scrollbar-sm::-webkit-scrollbar-button {
+    display: none;
+  }
+
+  /* Globaler Standard (Chromium/WebKit): dieselben Token-Regeln wie Basecoats .scrollbar,
+     aber universell — Galerie-Seitenleiste, Popover-Listen, Textareas, die Seite selbst.
+     Nackte Scrollbar-Pseudos ohne Selektor matchen jedes Element. */
+  ::-webkit-scrollbar {
+    width: var(--scrollbar-width);
+    height: var(--scrollbar-width);
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: var(--scrollbar-radius);
+    border: 1px solid transparent;
+    background-clip: padding-box;
+  }
+  ::-webkit-scrollbar-corner {
+    background: var(--scrollbar-track);
+  }
+  ::-webkit-scrollbar-button {
+    display: none;
+  }
+
+  /* Puffer (--scrollbar-inset, tokens.css): der Track endet vor den Ecken, damit der Daumen
+     nicht über die Container-Rundung läuft. Greift AUTOMATISCH, sobald die Scrollfläche
+     selbst eine rounded-*-Utility trägt — das echte berechnete border-radius kann CSS nicht
+     abfragen, innerhalb des kanonischen Markups ist die Klasse aber der verlässliche Marker,
+     und die Track-Pseudos existieren ohnehin nur auf echten Scrollflächen (die Regel kann
+     also nichts Falsches treffen). Liegt die Rundung auf einem ELTERN-Container, explizit
+     data-scrollbar-inset setzen; data-scrollbar-inset='false' schaltet die Automatik ab.
+     Nur ::-webkit-Route — Firefox' scrollbar-color kennt keine Track-Ränder. */
+  [class*='rounded-']:not([class*='rounded-none'])::-webkit-scrollbar-track:vertical,
+  [data-scrollbar-inset]::-webkit-scrollbar-track:vertical {
+    margin: var(--scrollbar-inset) 0;
+  }
+  [class*='rounded-']:not([class*='rounded-none'])::-webkit-scrollbar-track:horizontal,
+  [data-scrollbar-inset]::-webkit-scrollbar-track:horizontal {
+    margin: 0 var(--scrollbar-inset);
+  }
+  /* Doppeltes Attribut nur für die Spezifität (0,2,0): muss die Automatik-Regel oben
+     ([class*] + :not = ebenfalls 0,2,0) auch auf gerundeten Elementen schlagen. */
+  [data-scrollbar-inset='false'][data-scrollbar-inset]::-webkit-scrollbar-track:vertical,
+  [data-scrollbar-inset='false'][data-scrollbar-inset]::-webkit-scrollbar-track:horizontal {
+    margin: 0;
+  }
+
+  /* Größen nur noch als Token-Override auf der ::-webkit-Route: sm = schlank (nutzt das
+     Basecoat-Token --scrollbar-sm-width; .scrollbar-sm ist das Basecoat-Äquivalent),
+     lg = breit für großflächige Bereiche (Tabellen, Editoren). */
+  .scrollbar[data-size='sm'] {
+    --scrollbar-width: var(--scrollbar-sm-width);
+  }
+  .scrollbar[data-size='thin'] {
+    --scrollbar-width: 0.25rem;
+  }
+  .scrollbar[data-size='lg'] {
+    --scrollbar-width: 1rem;
+  }
+
+  /* Mit Hintergrund: sichtbarer Track (getönte Rinne) statt des transparenten Standards.
+     Wirkt in beiden Routen — ::-webkit-scrollbar-track UND scrollbar-color lesen das Token. */
+  .scrollbar[data-track='visible'],
+  .scrollbar-sm[data-track='visible'] {
+    --scrollbar-track: var(--muted);
+  }
+
+  /* Mit Pfeilen: zurück auf die native scrollbar-color-Route — die gesetzten
+     Standard-Properties deaktivieren die ::-webkit-Styles (s. Motor-Falle oben), Chromium
+     rendert den Systembalken in Token-Farben, unter Linux mit nativen Schrittpfeilen.
+     Kombinierbar mit data-track='visible' (Rinne) — ohne bleibt der Track transparent.
+     Firefox zeigt hier schlicht seinen (pfeillosen) Token-Balken. */
+  .scrollbar[data-buttons='arrows'] {
+    scrollbar-width: auto;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  }
+
+  /* Firefox-Zweig: Token-Farben global über scrollbar-color (die Property ERBT — einmal auf
+     :root gesetzt gilt sie für jede Scrollfläche) plus die .scrollbar-Regeln, weil das
+     auto-Reset oben sonst auch hier gälte. sm-Abbildung auf scrollbar-width: thin — mehr
+     Abstufung kennt Gecko nicht; einen Track-Puffer (--scrollbar-inset) gibt es dort nicht. */
+  @supports (-moz-appearance: none) {
+    :root {
+      scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+    }
+    .scrollbar,
+    .scrollbar-sm {
+      scrollbar-width: auto;
+      scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+    }
+    .scrollbar-sm,
+    .scrollbar[data-size='sm'],
+    .scrollbar[data-size='thin'] {
+      scrollbar-width: thin;
+    }
+  }
+}
+
+
+/* ============================================================
+ * Rollen-Vervollständigung + Interaktions-Feinschliff (PO-Review-Runde)
+ * ============================================================ */
+@layer components {
+  /* Jede der drei Kern-Komponenten (Button/Bubble/Badge) bietet die sechs Grund-Ausführungen
+     primär/sekundär/outline/muted/ghost/destruktiv; Bubble und Badge zusätzlich die drei
+     Statusrollen (Buttons bewusst nicht — PO). Fehlend waren: Button muted, Badge muted,
+     Bubble success/warning/info. Button muted = gedämpfte, aber BEDIENBARE Ausführung
+     (Rolle muted); „deaktiviert" bleibt weiterhin das disabled-Attribut, kein data-variant. */
+  .btn[data-variant='muted'] {
+    @apply bg-muted text-muted-foreground;
+  }
+  /* Hover kommt aus dem Hover-Schleier-Kanon weiter unten (eine Regel für alle
+     Button-Varianten) — hier stand eine tote bg-muted/70-Regel, die er immer überschrieb. */
+  .badge[data-variant='muted'] {
+    @apply bg-muted text-muted-foreground border-transparent;
+  }
+  /* Basecoat gibt dem Ghost-Badge einen Hover (bg-muted) — gedacht für Badges als LINK/Button.
+     Ein statisches Badge ist aber nicht interaktiv und darf nicht auf die Maus reagieren (PO):
+     Hover-Effekt nur, wenn das Badge wirklich ein a/button ist. */
+  .badge[data-variant='ghost']:not(a):not(button):hover {
+    background-color: transparent;
+    color: inherit;
+  }
+  /* Bubble-Statusrollen: getönte Ausführung analog zur destructive-Bubble
+     (Rand x/20 · Grund x/10 · Text in der Rollenfarbe). */
+  .bubble[data-variant='success'] {
+    @apply border-success/20 bg-success/10 text-success border;
+  }
+  .bubble[data-variant='warning'] {
+    @apply border-warning/20 bg-warning/10 text-warning border;
+  }
+  .bubble[data-variant='info'] {
+    @apply border-info/20 bg-info/10 text-info border;
+  }
+
+  /* Reaktions-Chips (bubble.html 9e): die EIGENE (gedrückte) Reaktion bekommt zusätzlich zum
+     accent-Grund (Kanon .btn[aria-pressed]) einen dunklen Rahmen — Token primary, themefolgend. */
+  [data-reactions] .btn[aria-pressed='true'] {
+    @apply border-primary;
+  }
+
+  /* Auswahl-Kanon in Listboxen (select, freie Listboxen): gewählte Option = fett +
+     primary-gefüllte Zeile — ersetzt Basecoats Haken rechts (--check-icon). Der erste
+     Selektor spiegelt die Vendor-Spezifität, damit background-image: none den Vendor-Haken
+     sicher überschreibt. AUSNAHME Combobox (#18, PO): bleibt komplett bei der
+     Häkchen-Markierung — deshalb hier ausgenommen, dort gilt der Vendor-Haken weiter. */
+  .select:not(select) [role='option'][aria-selected='true'],
+  [role='listbox']:not(.combobox *) [role='option'][aria-selected='true'] {
+    background-image: none;
+    @apply bg-primary text-primary-foreground font-bold;
+  }
+  .select:not(select) [role='option'][aria-selected='true']:hover,
+  [role='listbox']:not(.combobox *) [role='option'][aria-selected='true']:hover {
+    background-color: var(--primary);
+    background-image: linear-gradient(var(--hover-veil-invers), var(--hover-veil-invers));
+  }
+  /* Combobox-Markierung: Haken (Vendor) + fett — keine Füllung (PO). */
+  .combobox [role='option'][aria-selected='true'] {
+    @apply font-bold;
+  }
+
+  /* Mehrfachauswahl-Listbox (aria-multiselectable, z.B. Filter-Combobox): Haken statt
+     Füllung — gleiche Linie wie menuitemcheckbox/Checkbox (PO 21). Überschreibt den
+     Einzelauswahl-Füll-Kanon; die Combobox selbst bleibt beim Vendor-Haken. */
+  [role='listbox'][aria-multiselectable='true']:not(.combobox *) [role='option'] {
+    @apply relative pe-8;
+  }
+  [role='listbox'][aria-multiselectable='true']:not(.combobox *) [role='option'][aria-selected='true'] {
+    background-color: transparent;
+    background-image: none;
+    @apply text-popover-foreground font-normal;
+  }
+  [role='listbox'][aria-multiselectable='true']:not(.combobox *) [role='option'][aria-selected='true']::after {
+    content: '';
+    @apply absolute end-2 top-1/2 size-4 -translate-y-1/2 bg-current;
+    -webkit-mask: var(--check-icon) center / 0.875rem no-repeat;
+    mask: var(--check-icon) center / 0.875rem no-repeat;
+  }
+  [role='listbox'][aria-multiselectable='true']:not(.combobox *) [role='option'][aria-selected='true']:hover {
+    background-color: var(--accent);
+    background-image: none;
+    @apply text-accent-foreground;
+  }
+
+  /* Tabellen-Kanon (PO): Spaltenbeschriftungen sind IMMER fett — auch wenn die
+     Beschriftung in einem Sortier-Button steckt (Buttons erben keine Schriftstärke). */
+  .table th {
+    @apply font-bold;
+  }
+  .table th .btn {
+    @apply font-bold;
+  }
+
+  /* Tabelle „line" (PO 56, Booktabs-Stil): keine Flächen (kein Fuß-Grau, kein
+     Hover-/Selected-Grund), die DATENZONE wird oben und unten von einer kräftigen
+     Linie begrenzt (unter dem Kopf bzw. über der Fußzeile — border-collapse lässt
+     die 2px gegen die feinen Zeilenlinien gewinnen); über dem Kopf und unter der
+     Fußzeile läuft KEINE Linie. */
+  .table[data-variant='line'] tbody {
+    @apply border-t-2 border-b-2;
+  }
+  .table[data-variant='line'] tfoot {
+    @apply bg-transparent;
+  }
+  .table[data-variant='line'] tr {
+    @apply hover:bg-transparent data-[state=selected]:bg-transparent;
+  }
+
+  /* Vendor-Konflikt (PO 59c/62): [role='radiogroup'] stellt Basecoat pauschal auf
+     display:grid + gap (gedacht für Formular-Radios) — das zerlegt Button-/Toggle-Gruppen,
+     die semantisch korrekt role="radiogroup" tragen, in eine Spalte. Die Gruppen-Optik
+     gewinnt wieder: nebeneinander, ohne Lücke. */
+  .button-group[role='radiogroup'] {
+    display: inline-flex;
+    gap: 0;
+  }
+
+  /* Sidebar-Items in header/footer (PO 51: Team-Switcher, User-Zeile): der Vendor
+     verflext nur section-Items (`nav > section ul …`) — dieselbe Zeilen-Geometrie
+     gilt auch für Items im Kopf und Fuß der Sidebar. */
+  .sidebar nav > :is(header, footer) ul li > :is(a, button) {
+    @apply flex w-full items-center overflow-hidden;
+  }
+  /* Funktionale User-Zeile (PO 51h): die Dropdown-Hülle liegt auf dem <li> selbst
+     (li.dropdown-menu > button + [data-popover]) — so bleibt der Trigger ein
+     direktes li-Kind und behält die Vendor-Item-Optik (identisch zu g). Zwei
+     Vendor-Reste der Menü-Trigger-Optik müssen zurück auf die Item-Werte. */
+  .sidebar nav > :is(header, footer) ul li.dropdown-menu {
+    display: block;
+    width: 100%;
+  }
+  .sidebar nav > :is(header, footer) ul li.dropdown-menu > button {
+    border-radius: var(--radius-md);
+    padding: calc(var(--spacing) * 2);
+  }
+
+  /* Tabs „line", vertikal (PO 57c): der Marker sitzt LINKS vor dem Reiter (Leserichtung),
+     nicht rechts zwischen Liste und Panel (Vendor-Default inset-inline-end). */
+  .tabs > [role='tablist'][data-variant='line'][aria-orientation='vertical'] > [role='tab']::after {
+    inset-inline-end: auto;
+    inset-inline-start: -4px;
+  }
+
+  /* Tabs „line" mit Spur (PO 57): data-track am tablist zieht eine durchgehende graue
+     Linie über die volle Länge; der foreground-Marker des aktiven Reiters liegt darauf.
+     Geometrie: Marker (2px) sitzt bei ±4px vor der Tab-Kante, tablist-Padding ist 3px —
+     die 1px-Border der Liste landet damit exakt unter dem Marker. */
+  .tabs > [role='tablist'][data-variant='line'][data-track][aria-orientation='vertical'] {
+    @apply border-s;
+  }
+  .tabs > [role='tablist'][data-variant='line'][data-track]:not([aria-orientation='vertical']) {
+    @apply border-b;
+  }
+
+  /* Tabs als Browser-Reiter (PO 57, Chrome-Optik): Leiste auf muted-Grund, Reiter mit
+     oberen Rundungen; der AKTIVE Reiter trägt die background-Fläche und verschmilzt über
+     zwei Hohlkehlen (radial-gradient-Ecken) nahtlos mit der Fläche darunter. Inaktive
+     Nachbarn trennt ein kurzer Strich (wie im Browser). */
+  .tabs:has(> [role='tablist'][data-variant='browser']) {
+    @apply gap-0;
+  }
+  .tabs > [role='tablist'][data-variant='browser'] {
+    @apply h-auto w-full items-end gap-0 rounded-none bg-muted p-0 px-2 pt-1.5;
+  }
+  .tabs > [role='tablist'][data-variant='browser'] > [role='tab'] {
+    @apply relative flex-none rounded-t-lg rounded-b-none border-0 px-4 py-1.5;
+  }
+  .tabs > [role='tablist'][data-variant='browser'] > [role='tab']:not([aria-selected='true']) + [role='tab']:not([aria-selected='true'])::before {
+    content: '';
+    @apply absolute inset-y-1.5 -start-px w-px bg-border;
+  }
+  .tabs > [role='tablist'][data-variant='browser'] > [role='tab'][aria-selected='true'] {
+    @apply bg-background text-foreground shadow-none;
+  }
+  .tabs > [role='tablist'][data-variant='browser'] > [role='tab'][aria-selected='true']::before,
+  .tabs > [role='tablist'][data-variant='browser'] > [role='tab'][aria-selected='true']::after {
+    content: '';
+    @apply absolute bottom-0 size-2 opacity-100;
+  }
+  .tabs > [role='tablist'][data-variant='browser'] > [role='tab'][aria-selected='true']::before {
+    inset-inline-start: -8px;
+    background: radial-gradient(circle at 0 0, transparent 8px, var(--color-background) 8.5px);
+  }
+  .tabs > [role='tablist'][data-variant='browser'] > [role='tab'][aria-selected='true']::after {
+    inset-inline-start: auto;
+    inset-inline-end: -8px;
+    background: radial-gradient(circle at 100% 0, transparent 8px, var(--color-background) 8.5px);
+  }
+
+  /* Tabelle „grid" (PO 56, Excel-Look): Vollgitter — jede Zelle trägt Linien in
+     beide Richtungen (border-collapse kommt global aus dem Preflight), der Kopf
+     steht auf muted-Grund. Runde Ecken (PO): der Container liefert Rahmen +
+     Rundung; die Tabelle selbst versteckt ihre Außenkanten (border-style:hidden
+     gewinnt die border-collapse-Konfliktauflösung), sonst doppelten sich die
+     Linien am Rand und die Rundung würde überzeichnet. */
+  .table[data-variant='grid'] {
+    border-style: hidden;
+  }
+  .table[data-variant='grid'] :is(th, td) {
+    @apply border-border border;
+  }
+  .table[data-variant='grid'] thead th {
+    @apply bg-muted;
+  }
+  .table-container:has(> .table[data-variant='grid']) {
+    @apply border-border overflow-hidden rounded-lg border;
+  }
+
+  /* Inline-editierbare Tabelle (PO): editierbare Zellen zeigen den Text-Cursor,
+     die fokussierte Zelle einen inneren Ring (outline läuft nach innen, damit
+     das Gitter bzw. die Zeilenlinien nicht überdeckt werden). */
+  [data-edit-table] td[contenteditable] {
+    @apply cursor-text;
+  }
+  [data-edit-table] td[contenteditable]:focus {
+    @apply outline-ring bg-background outline-2 -outline-offset-2;
+  }
+
+  /* Zahlen-Spalten (PO 21): die AUSRICHTUNG kommt vom Attribut, nicht von Utilities
+     je Zelle — data-type="number" an th/td richtet rechtsbündig aus (tabular-nums).
+     Die POSITION einer Spalte regelt die Tabelle automatisch (erste sichtbare sitzt
+     links, die letzte sichtbare läuft bis an die rechte Kante) — rechts ANZEIGEN
+     ist nicht rechtsBÜNDIG. */
+  .table :is(th, td)[data-type='number'] {
+    @apply text-end tabular-nums;
+  }
+
+  /* Spaltennamen/Werte unter einer Gruppen-Überschrift leicht eingerückt (PO 21). */
+  [data-filter-combo]:has([role='heading']) [role='option'] {
+    @apply ps-4;
+  }
+
+  /* Filter-Combobox (Combobox-Variante „Als Filter", PO 18/21): die KOMPLETTE
+     Mehrfachauswahl-Liste lebt in EINEM Popover (Suchfeld + Liste, kein Dropdown im
+     Dropdown). Optionen im Look der Combobox-Liste — der Vendor scopet sein
+     Options-Styling auf .combobox/.select, hier die freistehende Hülle. */
+  [data-filter-combo] {
+    /* Erbschaft neutralisieren: das Panel sitzt u.a. in fetten Tabellenköpfen
+       (th.font-bold) — Einträge/Chips sollen normal und linksbündig stehen. */
+    @apply text-start font-normal;
+  }
+  [data-filter-combo] [role='option'] {
+    @apply flex cursor-pointer items-center gap-2 rounded-sm py-1.5 ps-2 pe-8 text-sm select-none;
+  }
+  [data-filter-combo] [role='option']:hover {
+    @apply bg-accent text-accent-foreground;
+  }
+
+  /* Carousel-Rahmen-Pfeile (Variante „mittig auf dem Rahmen"): EINE geteilte Regel statt der
+     bisherigen Utility-Kette je Button — NUR Position + Schatten (PO, SPOT). Die Farben kommen
+     ganz normal vom themefolgenden outline-Button: hell = weiße Fläche, dunkel = deckendes
+     --input-Grau aus Basecoats Dark-Regeln. Keine Overlay-Sonderoptik. */
+  [data-carousel] [data-carousel-frame] {
+    @apply absolute top-1/2 -translate-y-1/2 shadow-md;
+  }
+  [data-carousel] [data-carousel-frame][data-carousel-prev] {
+    @apply left-0 -translate-x-1/2;
+  }
+  [data-carousel] [data-carousel-frame][data-carousel-next] {
+    @apply right-0 translate-x-1/2;
+  }
+
+  /* Carousel-STANDARD (PO): deaktivierte Randpfeile werden ausgeblendet statt ausgegraut —
+     am Anfang fehlt „Zurück", am Ende „Weiter". visibility statt display, damit das Layout
+     ruhig bleibt; Zustandspflege (disabled an den Rändern) macht wireCarousel. Gilt für alle
+     Carousels ohne Attribut; der Endlos-Modus (data-carousel-loop) deaktiviert nie. */
+  [data-carousel] :is([data-carousel-prev], [data-carousel-next]):disabled {
+    visibility: hidden;
+  }
+}
+
+
+/* ============================================================
+ * Outline-Buttons im Dunkelmodus: deckend statt durchscheinend (PO, SPOT)
+ * ============================================================ */
+@layer components {
+  /* Basecoats Dark-Regel malt outline-Buttons mit color-mix(--input 30%, TRANSPARENT) — auf
+     Flächen unauffällig, aber über Bildern (z.B. Carousel-Rahmen-Pfeile) scheint das Motiv
+     durch. FALLE: --input ist im Dark-Theme SELBST halbtransparent (weiß /0.15), ein Mix
+     über --input erbt dieses Alpha und bleibt durchscheinend. Deshalb wird die gleiche
+     wahrgenommene Farbe (aufgehelltes Schwarz) hier aus den beiden DECKENDEN Tokens gemischt:
+     --foreground über --background (5% ≈ Optik von input/30, Hover 8% ≈ input/50). Gilt
+     global für alle outline-Buttons im Dunkelmodus (PO: nie transparent). */
+  html.dark .btn[data-variant='outline'] {
+    background-color: color-mix(in oklab, var(--foreground) 5%, var(--background));
+  }
+
+  /* HOVER-SCHLEIER-ROLLOUT, Schritt 1: BUTTONS (PO 2026-07-18). Statt je Variante eine
+     Prozentfarbe legt sich ein transparenter Schleier über die UNVERÄNDERTE Grundfläche
+     (background-image — Text/Icons bleiben unberührt): kontrastfarbige Flächen (primary,
+     destructive) nehmen den inversen Schleier (--hover-veil-invers: hellt Dunkles im
+     Hellmodus auf, dunkelt Helles im Dark ab), neutrale Flächen den normalen
+     (--hover-veil). Die background-color wird je Variante auf die Grundfarbe zurückgesetzt,
+     damit die Vendor-Hover-Prozentfarben (bg-primary/90 usw.) nicht mehr durchschlagen. `link` behält
+     seinen Unterstreichungs-Hover; Menü-/Listen-Hover (accent) sind ein eigener Kanon und
+     bleiben unangetastet. */
+  .btn:not([data-variant]):hover,
+  .btn[data-variant='primary']:hover {
+    background-color: var(--primary);
+    background-image: linear-gradient(var(--hover-veil-invers), var(--hover-veil-invers));
+  }
+  /* destructive ist KEINE volle rote Fläche, sondern getönt (destructive 10 %, dark 20 %,
+     rote Schrift) — Grundfläche entsprechend zurücksetzen und den NORMALEN Schleier nehmen
+     (die Fläche ist hell im Hellmodus). Voll-destructive wäre fast ganz rot gewesen (PO). */
+  .btn[data-variant='destructive']:hover {
+    background-color: color-mix(in oklab, var(--destructive) 10%, transparent);
+    background-image: linear-gradient(var(--hover-veil), var(--hover-veil));
+  }
+  html.dark .btn[data-variant='destructive']:hover {
+    background-color: color-mix(in oklab, var(--destructive) 20%, transparent);
+  }
+  .btn[data-variant='secondary']:hover {
+    background-color: var(--secondary);
+    background-image: linear-gradient(var(--hover-veil), var(--hover-veil));
+  }
+  .btn[data-variant='muted']:hover {
+    background-color: var(--muted);
+    background-image: linear-gradient(var(--hover-veil), var(--hover-veil));
+  }
+  .btn[data-variant='outline']:hover {
+    background-color: var(--background);
+    background-image: linear-gradient(var(--hover-veil), var(--hover-veil));
+  }
+  html.dark .btn[data-variant='outline']:hover {
+    background-color: color-mix(in oklab, var(--foreground) 5%, var(--background));
+  }
+  .btn[data-variant='ghost']:hover {
+    background-color: transparent;
+    background-image: linear-gradient(var(--hover-veil), var(--hover-veil));
+  }
+  /* GEDRÜCKTE Buttons (Toggles, Reaktions-Chips, aria-pressed) behalten beim Hovern ihre
+     accent-Druckfläche — die Varianten-Resets oben würden sie sonst wegwischen. Steht nach
+     den Varianten (gleiche Spezifität, spätere Quelle gewinnt). */
+  .btn[aria-pressed='true']:hover {
+    background-color: var(--accent);
+    background-image: linear-gradient(var(--hover-veil), var(--hover-veil));
+  }
+
+  /* HOVER-SCHLEIER-ROLLOUT, Schritt 2: BIG BANG (PO 2026-07-18) — die restlichen
+     Flächen-Hovers außerhalb des accent-Kanons (Menüs/Listen/Kalender bleiben accent).
+     Link-/Button-Badges: */
+  :is(a, button):is(.badge:not([data-variant]), .badge[data-variant='primary']):hover {
+    background-color: var(--primary);
+    background-image: linear-gradient(var(--hover-veil-invers), var(--hover-veil-invers));
+  }
+  :is(a, button).badge[data-variant='secondary']:hover {
+    background-color: var(--secondary);
+    background-image: linear-gradient(var(--hover-veil), var(--hover-veil));
+  }
+  :is(a, button).badge:is([data-variant='outline'], [data-variant='ghost']):hover {
+    background-color: transparent;
+    color: inherit;
+    background-image: linear-gradient(var(--hover-veil), var(--hover-veil));
+  }
+  /* Interaktive Items (Verweis-/Knopf-Zeilen): Schleier statt Vendor-bg-muted. */
+  :is(a, button).item:hover {
+    background-color: transparent;
+    background-image: linear-gradient(var(--hover-veil), var(--hover-veil));
+  }
+
+  /* Data-Table: MARKIERTE Zeilen hovern per HALBEM Schleier (PO 21 — voll war zu doll;
+     abgeleitet vom Token, kein eigener Wert). */
+  .table tr[data-state='selected']:hover {
+    background-image: linear-gradient(
+      color-mix(in oklab, var(--hover-veil) 50%, transparent),
+      color-mix(in oklab, var(--hover-veil) 50%, transparent)
+    );
+  }
+
+  /* Uhr (Date Picker): die markierte (primary-gefüllte) Kappe hovert per inversem Schleier;
+     UNMARKIERTE Kappen per normalem Schleier — accent ging auf dem muted-Zifferblatt unter
+     (PO 22c, gleiche Farbe). */
+  [data-clock] [aria-pressed='true']:hover {
+    background-image: linear-gradient(var(--hover-veil-invers), var(--hover-veil-invers));
+  }
+  [data-clock] :is([data-ck-hour], [data-ck-min]):not([aria-pressed]):hover {
+    background-image: linear-gradient(var(--hover-veil), var(--hover-veil));
+  }
+
+  /* Hover-Untermenü im Kontextmenü (20e): schließt mit kurzer Verzögerung — der Diagonalweg
+     vom Öffner ins Untermenü klappte sonst sofort zu. Öffnen bleibt verzögerungsfrei. */
+  .context-menu .group\/sub > [data-cm-panel] {
+    transition-delay: 400ms;
+  }
+  .context-menu .group\/sub:hover > [data-cm-panel] {
+    transition-delay: 0ms;
+  }
+
+  /* INPUT-GROUP-FEINSCHLIFF (PO 32er-Runde):
+     – Kopfzeilen-Label in primary statt grau, Fußzeilen (Zähler) klein.
+     – Text-Präfixe starten auf der Textkante des Feldes (nicht am Rand).
+     – Icon-/Spinner-SVGs am Rand: Abstand als MARGIN statt Padding — asymmetrisches Padding
+       verschob das Rotationszentrum, der Spinner eierte.
+     – Aktions-Gruppen ([role=group]) und Dropdown-Hüllen am Ende sitzen bündig in der Ecke
+       (wie einzelne Rand-Knöpfe), minimaler Abstand zwischen den Knöpfen.
+     – aria-invalid ringt die GRUPPE, nicht das innere Feld (wie der Fokus-Kanon). */
+  .input-group > header {
+    @apply text-primary;
+  }
+  .input-group > footer {
+    @apply text-xs;
+  }
+  .input-group > span:first-child {
+    padding-inline-start: calc(var(--spacing) * 2.5);
+  }
+  .input-group > span {
+    cursor: text; /* Affixe gehören optisch zum Feld — Klick fokussiert es (c22.js) */
+  }
+  /* Lösch-X (data-clear) nur zeigen, wenn das Feld Text enthält — unabhängig vom Fokus
+     (braucht einen Platzhalter, damit :placeholder-shown „leer" anzeigen kann). Gilt auch
+     für die relative-Icon-Bauform (31b). */
+  :is(.input-group, .relative):has(> .input:placeholder-shown) [data-clear] {
+    @apply hidden;
+  }
+
+  /* Natives Datumsfeld ist ein geschlossenes Browser-Widget (Schatten-DOM-Segmente) und
+     verhält sich als EIN Block — der Text-Cursor macht das ehrlich (PO 31a). */
+  .input[type='date'] {
+    cursor: text;
+  }
+
+  /* Suchfelder: WebKits eigener Lösch-Knopf verschwindet — das C22-Lösch-X (data-clear)
+     ist der Kanon, sonst stehen zwei X im Feld (PO 31b). */
+  .input[type='search']::-webkit-search-cancel-button {
+    appearance: none;
+  }
+  .input-group > svg:is([data-align='end'], [data-align='inline-end']) {
+    padding-inline-end: 0;
+    margin-inline-end: calc(var(--spacing) * 2.5);
+  }
+  .input-group > svg:is([data-align='start'], [data-align='inline-start']) {
+    padding-inline-start: 0;
+    margin-inline-start: calc(var(--spacing) * 2);
+  }
+  .input-group > :is([role='group'], .dropdown-menu):is([data-align='end'], [data-align='inline-end']) {
+    @apply h-full gap-0.5;
+    padding-inline-end: 0;
+    padding-block: 0;
+    margin-inline-end: 0; /* Vendor zieht mit -4px über die Kante hinaus */
+  }
+  .input-group > :is([role='group'], .dropdown-menu):is([data-align='end'], [data-align='inline-end']) > .btn,
+  .input-group > .dropdown-menu:is([data-align='end'], [data-align='inline-end']) > .btn {
+    @apply h-full rounded-none;
+  }
+  .input-group > :is([role='group'], .dropdown-menu):is([data-align='end'], [data-align='inline-end']) > .btn:last-child {
+    border-start-end-radius: calc(var(--radius-md) - 1px);
+    border-end-end-radius: calc(var(--radius-md) - 1px);
+  }
+  /* Icon-Knöpfe am rechten Feldrand folgen dem optischen Ausrichtungs-Kanon (CLAUDE.md,
+     Ecken-Icons): die GLYPHE sitzt auf der Textkante des Feldes (pe-2.5 = Input-Padding),
+     der KLICKBEREICH wächst unsichtbar nach links (größeres ps) und reicht bündig bis an
+     die Kante. Vorher klebte die Glyphe ~3px am Rand — anders als alle anderen
+     Container-Ecken-Icons im Repo (PO). In Aktionsgruppen gilt das für den letzten Knopf.
+     Nur der LETZTE Knopf ist ein Kanten-Knopf — steht danach noch etwas (z.B. eine
+     Ergebnisanzahl), bleibt der Knopf ein normaler Icon-Knopf ohne Links-Wachstum. */
+  .input-group > .btn[data-size='icon-sm']:is([data-align='end'], [data-align='inline-end']):last-child {
+    width: auto;
+    padding-inline-start: calc(var(--spacing) * 3.5);
+    padding-inline-end: calc(var(--spacing) * 2.5);
+  }
+  /* In Aktionsgruppen (mehrere Icons) wächst der Klickbereich NICHT nach links (PO) —
+     nur der letzte Knopf bekommt die Glyphen-Kante zum Rand. */
+  .input-group > [role='group']:is([data-align='end'], [data-align='inline-end']) > .btn[data-size='icon-sm']:last-child {
+    width: auto;
+    padding-inline-start: calc(var(--spacing) * 1);
+    padding-inline-end: calc(var(--spacing) * 2.5);
+  }
+
+  .input-group:has(> .input[aria-invalid='true']) {
+    @apply border-destructive ring-destructive/20 ring-[3px];
+  }
+  html.dark .input-group:has(> .input[aria-invalid='true']) {
+    @apply ring-destructive/40;
+  }
+
+  /* Knöpfe IM input-group: .btn clippt seinen Hintergrund auf die padding-box und trägt einen
+     transparenten 1px-Rahmen — beim Hovern blieb dadurch ein heller Rahmen zwischen Füllung
+     und Container stehen (PO 31/32). Im Gruppenkontext bis unter den Rahmen malen. */
+  .input-group .btn {
+    background-clip: border-box;
+  }
+
+  /* Passwort-Auge (32f): zwei Icons im Knopf, aria-pressed schaltet um (Verdrahtung c22.js). */
+  [data-password-toggle] svg:nth-of-type(2) { display: none; }
+  [data-password-toggle][aria-pressed='true'] svg:nth-of-type(1) { display: none; }
+  [data-password-toggle][aria-pressed='true'] svg:nth-of-type(2) { display: block; }
+
+  /* Zahlfelder: STANDARD ohne native Hoch/Runter-Pfeile (PO) — die Stepper-Ausführung ist
+     eine explizite Variante mit eigenen Knöpfen (data-number-step, c22.js). */
+  .input[type='number'] {
+    appearance: textfield;
+  }
+  .input[type='number']::-webkit-outer-spin-button,
+  .input[type='number']::-webkit-inner-spin-button {
+    appearance: none;
+    margin: 0;
   }
 }

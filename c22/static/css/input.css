@@ -3,10 +3,21 @@
  * Build:  tools/tailwindcss -i c22/static/css/input.css -o c22/static/css/c22.css --minify
  * (wired into scripts/check.sh / ci-local; the binary comes from scripts/fetch-tailwind.sh)
  */
+/* Layer-Reihenfolge (PO 2026-07-18, „Layer-Entmachtung"): die Vendor-Komponentenregeln
+ * liegen in einer EIGENEN Kaskaden-Ebene UNTER components — damit gewinnt jede C22-Regel
+ * gegen Basecoat per Layer, egal wie spezifisch der Vendor-Selektor ist (Schluss mit
+ * verdoppelten Selektoren gegen :is(…)-Spezifitätsbomben). Muss VOR dem Tailwind-Import
+ * stehen, sonst würde `vendor` erst nach `utilities` deklariert und läge ganz oben. */
+@layer theme, base, vendor, components, utilities;
+
 @import "tailwindcss";
 
-/* Basecoat (vendored, "own the code") — the shadcn look as HTML + Tailwind. */
-@import "../../vendor/basecoat/dist/basecoat.css";
+/* Basecoat (vendored, "own the code") — the shadcn look as HTML + Tailwind.
+ * base/base.css bleibt ungelayert (enthält @custom-variant/@theme — nicht layerbar,
+ * steckt intern ohnehin in @layer base/theme); Komponentenregeln + Pack in `vendor`. */
+@import "../../vendor/basecoat/dist/base/base.css";
+@import "../../vendor/basecoat/dist/basecoat-components.css" layer(vendor);
+@import "../../vendor/basecoat/dist/styles/vega.css" layer(vendor);
 
 /* C22 tokens on top (web font + status colours + radius axis). */
 @import "./tokens.css";

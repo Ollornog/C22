@@ -1,25 +1,33 @@
 <!-- basecoat: Input (.input). Klasse greift auf jedes <input type="text|email|password|number|file|tel|url|search|date|…">. Fehlerzustand via aria-invalid="true" (kein eigenes CSS nötig). Label/Feld-Text = eigene Components (field, label). -->
 <div class="c22-examples">
   <div class="c22-example">
-    <span class="c22-example-label">Standard (Text · E-Mail · Passwort · Zahl · Datum)</span>
+    <span class="c22-example-label">Standard (Text · E-Mail · Passwort · Zahl · Datum nativ · Datum als C22-Nachbau)</span>
     <div class="flex w-full max-w-sm flex-col gap-3">
       <input class="input" type="text" placeholder="Vor- und Nachname">
       <input class="input" type="email" placeholder="name@example.com">
       <input class="input" type="password" placeholder="Passwort">
       <input class="input" type="number" placeholder="42">
       <input class="input" type="date">
+      <div class="relative">
+        <input class="input pe-9" type="text" id="c22-in-datum" data-date-input placeholder="tt.mm.jjjj" aria-controls="c22-in-datum-popover" aria-expanded="false" aria-haspopup="dialog" autocomplete="off" aria-label="Datum (C22)">
+        <svg data-icon-lu="calendar" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground absolute inset-y-0 end-3 my-auto size-4 cursor-pointer"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
+        <div id="c22-in-datum-popover" data-popover aria-hidden="true" class="min-w-0">
+          <div data-calendar data-mode="single" data-dropdown data-clearable data-month="2026-07" class="w-fit p-3"></div>
+        </div>
+      </div>
     </div>
   </div>
   <div class="c22-example">
     <span class="c22-example-label">Mit Icon (Suche links · Betrag rechts)</span>
     <div class="flex w-full max-w-sm flex-col gap-3">
       <div class="relative">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground pointer-events-none absolute inset-y-0 start-3 my-auto size-4"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-        <input class="input ps-9" type="search" placeholder="Suchen …">
+        <svg data-icon-lu="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground pointer-events-none absolute inset-y-0 start-3 my-auto size-4"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input class="input ps-9 pe-9" type="search" placeholder="Suchen …">
+        <button type="button" class="btn absolute inset-y-0 end-1 my-auto" data-variant="ghost" data-size="icon-sm" data-clear aria-label="Eingabe löschen"><svg data-icon-lu="x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
       </div>
       <div class="relative">
         <input class="input pe-9" type="number" placeholder="0,00">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground pointer-events-none absolute inset-y-0 end-3 my-auto size-4"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        <svg data-icon-lu="dollar-sign" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground pointer-events-none absolute inset-y-0 end-3 my-auto size-4"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
       </div>
     </div>
   </div>
@@ -38,12 +46,28 @@
     </div>
   </div>
   <div class="c22-example">
-    <span class="c22-example-label">Rechts-nach-links (arabisch/hebräisch)</span>
-    <div class="w-full max-w-sm" dir="rtl">
-      <div class="relative">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground pointer-events-none absolute inset-y-0 start-3 my-auto size-4"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-        <input class="input ps-9" type="search" dir="rtl" placeholder="بحث …">
+    <span class="c22-example-label">Mit Suchen-Knopf, integriert (Knopf ohne Rahmen in der Gruppe)</span>
+    <div class="input-group w-full max-w-sm">
+      <span data-align="inline-start" aria-hidden="true"><svg data-icon-lu="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
+      <input class="input" type="search" placeholder="Suchen …">
+      <button type="button" class="btn" data-variant="ghost" data-align="inline-end">Suchen</button>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Zahl mit Steppern (Variante — das Standard-Zahlfeld ist ohne Pfeile)</span>
+    <div class="input-group w-full max-w-40">
+      <input class="input text-end" type="number" value="5" min="0" max="99" aria-label="Menge">
+      <div role="group" data-align="inline-end">
+        <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" data-number-step="down" aria-label="Verringern"><svg data-icon-lu="chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+        <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" data-number-step="up" aria-label="Erhöhen"><svg data-icon-lu="chevron-up" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg></button>
       </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Suchen-Knopf, separat</span>
+    <div class="flex w-full max-w-sm items-center gap-2">
+      <input class="input" type="search" placeholder="Suchen …">
+      <button type="button" class="btn shrink-0">Suchen</button>
     </div>
   </div>
 </div>

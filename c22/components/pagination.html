@@ -1,29 +1,27 @@
-<!-- basecoat: keine dedizierte .pagination-Klasse — nav > ul > li aus .btn-Bausteinen (Basecoat-Referenzmarkup). Aktuelle Seite = data-variant="outline" + aria-current="page", Zurück/Weiter mit Lucide-Chevron, Ellipse per aria-hidden + sr-only-Text. -->
+<!-- basecoat: keine dedizierte .pagination-Klasse — nav > ul > li aus .btn-Bausteinen (Basecoat-Referenzmarkup). Aktuelle Seite = data-variant="outline" + aria-current="page", Zurück/Weiter mit Lucide-Chevron, Ellipse per aria-hidden + sr-only-Text. Punkte-Form: <button data-page-dot> (geteilter Punkt-Kanon mit dem Carousel, components.css), aktueller Punkt aria-current="page". -->
 <div class="c22-examples">
   <div class="c22-example">
     <span class="c22-example-label">Standard</span>
-    <nav role="navigation" aria-label="Seitennavigation" class="mx-auto flex w-full justify-center">
+    <nav role="navigation" aria-label="Seitennavigation" data-pagination class="mx-auto flex w-full justify-center">
       <ul class="flex flex-row items-center gap-1">
         <li>
           <a href="#" class="btn" data-variant="ghost">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            <svg data-icon-lu="chevron-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
             Zurück
           </a>
         </li>
         <li><a href="#" class="btn" data-variant="ghost" data-size="icon">1</a></li>
         <li><a href="#" class="btn" data-variant="outline" data-size="icon" aria-current="page">2</a></li>
         <li><a href="#" class="btn" data-variant="ghost" data-size="icon">3</a></li>
-        <li>
-          <span class="btn pointer-events-none" data-variant="ghost" data-size="icon" aria-hidden="true">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
-          </span>
+        <li data-pg-ellipsis>
+          <span class="btn text-muted-foreground pointer-events-none" data-variant="ghost" data-size="icon" aria-hidden="true">…</span>
           <span class="sr-only">Weitere Seiten</span>
         </li>
         <li><a href="#" class="btn" data-variant="ghost" data-size="icon">8</a></li>
         <li>
           <a href="#" class="btn" data-variant="ghost">
             Weiter
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+            <svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
           </a>
         </li>
       </ul>
@@ -31,11 +29,11 @@
   </div>
   <div class="c22-example">
     <span class="c22-example-label">Kompakt (nur Icons, klein)</span>
-    <nav role="navigation" aria-label="Seitennavigation" class="mx-auto flex w-full justify-center">
+    <nav role="navigation" aria-label="Seitennavigation" data-pagination class="mx-auto flex w-full justify-center">
       <ul class="flex flex-row items-center gap-1">
         <li>
           <a href="#" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Vorherige Seite">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            <svg data-icon-lu="chevron-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
           </a>
         </li>
         <li><a href="#" class="btn" data-variant="ghost" data-size="icon-sm">1</a></li>
@@ -45,81 +43,136 @@
         <li><a href="#" class="btn" data-variant="ghost" data-size="icon-sm">5</a></li>
         <li>
           <a href="#" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Nächste Seite">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+            <svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
           </a>
         </li>
       </ul>
     </nav>
   </div>
   <div class="c22-example">
-    <span class="c22-example-label">Mit Sprung zu Anfang/Ende</span>
-    <nav role="navigation" aria-label="Seitennavigation" class="mx-auto flex w-full justify-center">
+    <span class="c22-example-label">Mit Sprung zu Anfang/Ende (Seitenzahl eintippbar)</span>
+    <nav role="navigation" aria-label="Seitennavigation" data-pagination class="mx-auto flex w-full justify-center">
       <ul class="flex flex-row items-center gap-1">
         <li>
           <a href="#" class="btn" data-variant="ghost" data-size="icon" aria-label="Erste Seite">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m11 17-5-5 5-5"/><path d="m18 17-5-5 5-5"/></svg>
+            <svg data-icon-lu="chevrons-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m11 17-5-5 5-5"/><path d="m18 17-5-5 5-5"/></svg>
           </a>
         </li>
         <li>
           <a href="#" class="btn" data-variant="ghost" data-size="icon" aria-label="Vorherige Seite">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            <svg data-icon-lu="chevron-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
           </a>
         </li>
-        <li><a href="#" class="btn" data-variant="outline" data-size="icon" aria-current="page">4</a></li>
+        <li><input class="input w-12 text-center" type="number" value="4" min="1" max="20" aria-label="Seitenzahl"></li>
         <li class="px-1 text-sm text-muted-foreground" aria-hidden="true">von 20</li>
         <li>
           <a href="#" class="btn" data-variant="ghost" data-size="icon" aria-label="Nächste Seite">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+            <svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
           </a>
         </li>
         <li>
           <a href="#" class="btn" data-variant="ghost" data-size="icon" aria-label="Letzte Seite">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 17 5-5-5-5"/><path d="m13 17 5-5-5-5"/></svg>
+            <svg data-icon-lu="chevrons-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 17 5-5-5-5"/><path d="m13 17 5-5-5-5"/></svg>
           </a>
         </li>
       </ul>
     </nav>
   </div>
   <div class="c22-example">
-    <span class="c22-example-label">Am Rand (Zurück auf Seite 1 deaktiviert)</span>
-    <nav role="navigation" aria-label="Seitennavigation" class="mx-auto flex w-full justify-center">
+    <span class="c22-example-label">Am Rand (Zurück ausgeblendet statt ausgegraut — Platz bleibt erhalten, nichts springt)</span>
+    <nav role="navigation" aria-label="Seitennavigation" data-pagination class="mx-auto flex w-full justify-center">
       <ul class="flex flex-row items-center gap-1">
         <li>
-          <button type="button" class="btn" data-variant="ghost" disabled aria-disabled="true">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+          <button type="button" class="btn invisible" data-variant="ghost" tabindex="-1">
+            <svg data-icon-lu="chevron-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
             Zurück
           </button>
         </li>
         <li><a href="#" class="btn" data-variant="outline" data-size="icon" aria-current="page">1</a></li>
         <li><a href="#" class="btn" data-variant="ghost" data-size="icon">2</a></li>
         <li><a href="#" class="btn" data-variant="ghost" data-size="icon">3</a></li>
-        <li>
-          <span class="btn pointer-events-none" data-variant="ghost" data-size="icon" aria-hidden="true">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
-          </span>
+        <li data-pg-ellipsis>
+          <span class="btn text-muted-foreground pointer-events-none" data-variant="ghost" data-size="icon" aria-hidden="true">…</span>
           <span class="sr-only">Weitere Seiten</span>
         </li>
         <li><a href="#" class="btn" data-variant="ghost" data-size="icon">12</a></li>
         <li>
           <a href="#" class="btn" data-variant="ghost">
             Weiter
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+            <svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
           </a>
         </li>
       </ul>
     </nav>
   </div>
   <div class="c22-example">
+    <span class="c22-example-label">Punkte mit Richtungsknöpfen (erste Seite — Zurück ausgegraut)</span>
+    <nav role="navigation" aria-label="Seitennavigation" data-pagination class="mx-auto flex w-full items-center justify-center gap-3">
+      <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" disabled aria-disabled="true" aria-label="Vorherige Seite">
+        <svg data-icon-lu="chevron-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      </button>
+      <div class="flex items-center">
+        <button type="button" data-page-dot aria-current="page" aria-label="Seite 1"></button>
+        <button type="button" data-page-dot aria-label="Seite 2"></button>
+        <button type="button" data-page-dot aria-label="Seite 3"></button>
+        <button type="button" data-page-dot aria-label="Seite 4"></button>
+        <button type="button" data-page-dot aria-label="Seite 5"></button>
+        <button type="button" data-page-dot aria-label="Seite 6"></button>
+      </div>
+      <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Nächste Seite">
+        <svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+      </button>
+    </nav>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Nur Punkte (ohne Knöpfe am Anfang/Ende — Größen <code class="text-[11px]">data-size="sm"</code> · Standard · <code class="text-[11px]">"lg"</code>)</span>
+    <div class="flex w-full flex-col items-center gap-4">
+      <div>
+        <p class="text-muted-foreground mb-1.5 text-center text-xs font-medium">Klein</p>
+        <nav role="navigation" aria-label="Seitennavigation" data-pagination class="flex items-center justify-center">
+          <button type="button" data-page-dot data-size="sm" aria-label="Seite 1"></button>
+          <button type="button" data-page-dot data-size="sm" aria-label="Seite 2"></button>
+          <button type="button" data-page-dot data-size="sm" aria-current="page" aria-label="Seite 3"></button>
+          <button type="button" data-page-dot data-size="sm" aria-label="Seite 4"></button>
+          <button type="button" data-page-dot data-size="sm" aria-label="Seite 5"></button>
+          <button type="button" data-page-dot data-size="sm" aria-label="Seite 6"></button>
+        </nav>
+      </div>
+      <div>
+        <p class="text-muted-foreground mb-1.5 text-center text-xs font-medium">Standard</p>
+        <nav role="navigation" aria-label="Seitennavigation" data-pagination class="flex items-center justify-center">
+          <button type="button" data-page-dot aria-label="Seite 1"></button>
+          <button type="button" data-page-dot aria-label="Seite 2"></button>
+          <button type="button" data-page-dot aria-current="page" aria-label="Seite 3"></button>
+          <button type="button" data-page-dot aria-label="Seite 4"></button>
+          <button type="button" data-page-dot aria-label="Seite 5"></button>
+          <button type="button" data-page-dot aria-label="Seite 6"></button>
+        </nav>
+      </div>
+      <div>
+        <p class="text-muted-foreground mb-1.5 text-center text-xs font-medium">Groß</p>
+        <nav role="navigation" aria-label="Seitennavigation" data-pagination class="flex items-center justify-center">
+          <button type="button" data-page-dot data-size="lg" aria-label="Seite 1"></button>
+          <button type="button" data-page-dot data-size="lg" aria-label="Seite 2"></button>
+          <button type="button" data-page-dot data-size="lg" aria-current="page" aria-label="Seite 3"></button>
+          <button type="button" data-page-dot data-size="lg" aria-label="Seite 4"></button>
+          <button type="button" data-page-dot data-size="lg" aria-label="Seite 5"></button>
+          <button type="button" data-page-dot data-size="lg" aria-label="Seite 6"></button>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
     <span class="c22-example-label">Einfach (nur Zurück/Weiter mit Zähler)</span>
-    <div class="flex items-center justify-center gap-3">
+    <div class="flex items-center justify-center gap-3" data-pagination>
       <button type="button" class="btn" data-variant="outline" data-size="sm">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        <svg data-icon-lu="chevron-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
         Zurück
       </button>
       <span class="text-sm text-muted-foreground">Seite 3 von 12</span>
       <button type="button" class="btn" data-variant="outline" data-size="sm">
         Weiter
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        <svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
       </button>
     </div>
   </div>

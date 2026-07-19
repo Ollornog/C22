@@ -1,49 +1,167 @@
-<!-- basecoat: Toast (.toaster > .toast). Ein #toaster pro Seite; getElementById('toaster').toast({...}) erzeugt die Meldung. -->
+<!-- basecoat: Toast (.toaster > .toast). Ein #toaster pro Seite; toaster.toast({...}) erzeugt die Meldung (Markup kommt aus dem Vendor-JS-Template). Deckt auch das shadcn-"Sonner" ab — gleiche Component, gleiche API.
+     C22-Kanon (Alert als Design-Vorlage): Anatomie wie Alert (Icon oben links neben dem Titel, Grid); Kategorie-Icons in Statusfarben (success/warning/info/destructive-Token wie bei Alert/Badge); Varianten data-variant="mono" (einfarbig, nur Fehler-Icon rot), "tinted" (getönter Status-Hintergrund wie Alert-Warnung), "ghost" (ohne Hintergrund); geteilte Größenleiter data-size="sm|lg" — Standard = S (13px), lg = exakt die Alert-Maße. Da das Vendor-Template keine Extra-Attribute kennt, stempelt der Helfer c22Toast() Variante/Größe auf den erzeugten Toast. -->
 <div class="c22-examples">
   <div class="c22-example">
-    <span class="c22-example-label">Standard (4 Kategorien)</span>
+    <span class="c22-example-label">Standard (4 Kategorien, Status-Icons)</span>
     <div class="flex flex-wrap items-center justify-center gap-3">
       <button type="button" class="btn" data-variant="outline"
-        onclick="document.getElementById('toaster').toast({category:'success',title:'Gespeichert',description:'Deine Änderungen sind live.'})">Erfolg</button>
+        onclick="c22Toast({category:'success',title:'Gespeichert',description:'Deine Änderungen sind live.'})">Erfolg</button>
       <button type="button" class="btn" data-variant="outline"
-        onclick="document.getElementById('toaster').toast({category:'error',title:'Fehlgeschlagen',description:'Bitte erneut versuchen.'})">Fehler</button>
+        onclick="c22Toast({category:'error',title:'Fehlgeschlagen',description:'Bitte erneut versuchen.'})">Fehler</button>
       <button type="button" class="btn" data-variant="outline"
-        onclick="document.getElementById('toaster').toast({category:'info',title:'Hinweis',description:'Neue Version verfügbar.'})">Info</button>
+        onclick="c22Toast({category:'info',title:'Hinweis',description:'Neue Version verfügbar.'})">Info</button>
       <button type="button" class="btn" data-variant="outline"
-        onclick="document.getElementById('toaster').toast({category:'warning',title:'Achtung',description:'Speicher fast voll.'})">Warnung</button>
+        onclick="c22Toast({category:'warning',title:'Achtung',description:'Speicher fast voll.'})">Warnung</button>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Einfarbig (<code class="text-[11px]">data-variant="mono"</code> — nur das Fehler-Icon bleibt rot)</span>
+    <div class="flex flex-wrap items-center justify-center gap-3">
+      <button type="button" class="btn" data-variant="outline"
+        onclick="c22Toast({category:'success',title:'Gespeichert',description:'Deine Änderungen sind live.'}, {variant:'mono'})">Erfolg</button>
+      <button type="button" class="btn" data-variant="outline"
+        onclick="c22Toast({category:'info',title:'Hinweis',description:'Neue Version verfügbar.'}, {variant:'mono'})">Info</button>
+      <button type="button" class="btn" data-variant="outline"
+        onclick="c22Toast({category:'warning',title:'Achtung',description:'Speicher fast voll.'}, {variant:'mono'})">Warnung</button>
+      <button type="button" class="btn" data-variant="outline"
+        onclick="c22Toast({category:'error',title:'Fehlgeschlagen',description:'Bitte erneut versuchen.'}, {variant:'mono'})">Fehler</button>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Getönt (<code class="text-[11px]">data-variant="tinted"</code> — Status-Hintergrund wie beim Alert)</span>
+    <div class="flex flex-wrap items-center justify-center gap-3">
+      <button type="button" class="btn" data-variant="outline"
+        onclick="c22Toast({category:'success',title:'Gespeichert',description:'Deine Änderungen sind live.'}, {variant:'tinted'})">Erfolg</button>
+      <button type="button" class="btn" data-variant="outline"
+        onclick="c22Toast({category:'info',title:'Hinweis',description:'Neue Version verfügbar.'}, {variant:'tinted'})">Info</button>
+      <button type="button" class="btn" data-variant="outline"
+        onclick="c22Toast({category:'warning',title:'Achtung',description:'Speicher fast voll.'}, {variant:'tinted'})">Warnung</button>
+      <button type="button" class="btn" data-variant="outline"
+        onclick="c22Toast({category:'error',title:'Fehlgeschlagen',description:'Bitte erneut versuchen.'}, {variant:'tinted'})">Fehler</button>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Ohne Hintergrund (<code class="text-[11px]">data-variant="ghost"</code>)</span>
+    <div class="flex flex-wrap items-center justify-center gap-3">
+      <button type="button" class="btn" data-variant="outline"
+        onclick="c22Toast({category:'success',title:'Gespeichert',description:'Deine Änderungen sind live.'}, {variant:'ghost'})">Erfolg</button>
+      <button type="button" class="btn" data-variant="outline"
+        onclick="c22Toast({category:'warning',title:'Achtung',description:'Speicher fast voll.'}, {variant:'ghost'})">Warnung</button>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Größen (<code class="text-[11px]">data-size</code>: sm · Standard = S · lg = Alert-Maße)</span>
+    <div class="flex flex-wrap items-center justify-center gap-3">
+      <button type="button" class="btn" data-variant="outline"
+        onclick="c22Toast({category:'info',title:'Kompakt',description:'data-size=&quot;sm&quot;'}, {size:'sm'})">Klein</button>
+      <button type="button" class="btn" data-variant="outline"
+        onclick="c22Toast({category:'info',title:'Standard',description:'Ohne data-size.'})">Mittel</button>
+      <button type="button" class="btn" data-variant="outline"
+        onclick="c22Toast({category:'info',title:'Groß',description:'data-size=&quot;lg&quot; — wie ein Alert.'}, {size:'lg'})">Groß</button>
     </div>
   </div>
   <div class="c22-example">
     <span class="c22-example-label">Mit Aktion &amp; Abbrechen (<code class="text-[11px]">action</code> / <code class="text-[11px]">cancel</code>)</span>
     <div class="flex justify-center">
       <button type="button" class="btn" data-variant="outline"
-        onclick="document.getElementById('toaster').toast({category:'info',title:'Update verfügbar',description:'Version 2.4 kann installiert werden.',action:{label:'Installieren'},cancel:{label:'Später'}})">Update anzeigen</button>
+        onclick="c22Toast({category:'info',title:'Update verfügbar',description:'Version 2.4 kann installiert werden.',action:{label:'Installieren',onclick:'void(0)'},cancel:{label:'Später'}})">Update anzeigen</button>
     </div>
   </div>
   <div class="c22-example">
     <span class="c22-example-label">Ausrichtung (<code class="text-[11px]">data-align</code>)</span>
     <div class="flex flex-wrap items-center justify-center gap-3">
       <button type="button" class="btn" data-variant="outline"
-        onclick="document.getElementById('toaster').dataset.align='start'; document.getElementById('toaster').toast({category:'success',title:'Linksbündig',description:'Toaster erscheint unten links.'})">Start</button>
+        onclick="c22Toast({category:'success',title:'Linksbündig',description:'Toaster erscheint unten links.'}, {align:'start'})">Start</button>
       <button type="button" class="btn" data-variant="outline"
-        onclick="document.getElementById('toaster').dataset.align='center'; document.getElementById('toaster').toast({category:'success',title:'Zentriert',description:'Toaster erscheint unten mittig.'})">Mitte</button>
+        onclick="c22Toast({category:'success',title:'Zentriert',description:'Toaster erscheint unten mittig.'}, {align:'center'})">Mitte</button>
       <button type="button" class="btn" data-variant="outline"
-        onclick="document.getElementById('toaster').dataset.align='end'; document.getElementById('toaster').toast({category:'success',title:'Rechtsbündig',description:'Toaster erscheint unten rechts (Standard).'})">Ende</button>
+        onclick="c22Toast({category:'success',title:'Rechtsbündig',description:'Toaster erscheint unten rechts (Standard).'}, {align:'end'})">Ende</button>
     </div>
   </div>
   <div class="c22-example">
-    <span class="c22-example-label">Dauerhaft offen (<code class="text-[11px]">duration:-1</code>)</span>
-    <div class="flex justify-center">
+    <span class="c22-example-label">Dauerhaft offen (<code class="text-[11px]">duration:-1</code>) &amp; Alle schließen</span>
+    <div class="flex flex-wrap items-center justify-center gap-3">
       <button type="button" class="btn" data-variant="outline"
-        onclick="document.getElementById('toaster').toast({category:'warning',title:'Aktion erforderlich',description:'Schließt sich nicht automatisch – bitte manuell bestätigen.',duration:-1,cancel:{label:'Verstanden'}})">Wichtiger Hinweis</button>
+        onclick="c22Toast({category:'warning',title:'Aktion erforderlich',description:'Schließt sich nicht automatisch – bitte manuell bestätigen.',duration:-1,cancel:{label:'Verstanden'}})">Wichtiger Hinweis</button>
+      <button type="button" class="btn" data-variant="outline"
+        onclick="var t=document.getElementById('toaster'); if (t &amp;&amp; t.closeAll) t.closeAll();">Alle schließen</button>
     </div>
   </div>
   <div class="c22-example">
-    <span class="c22-example-label">Eigenes Icon (überschreibt <code class="text-[11px]">category</code>-Icon)</span>
-    <div class="flex justify-center">
+    <span class="c22-example-label">Upload mit Fortschritt (Spinner + Balken, live — mehrere Dateien = mehrere Balken in EINEM Toast)</span>
+    <div class="flex flex-wrap items-center justify-center gap-3">
       <button type="button" class="btn" data-variant="outline"
-        onclick='document.getElementById("toaster").toast({category:"info",title:"Hochgeladen",description:"3 Dateien wurden übertragen.",icon:"<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 3v12\"/><path d=\"m17 8-5-5-5 5\"/><path d=\"M21 21H3\"/></svg>"})'>Datei-Upload</button>
+        onclick="c22UploadToast(['Quartalsbericht.pdf'])">1 Datei hochladen</button>
+      <button type="button" class="btn" data-variant="outline"
+        onclick="c22UploadToast(['Quartalsbericht.pdf','Logo_final_v3.png','Backup_2026.zip'])">3 Dateien hochladen</button>
     </div>
   </div>
 </div>
 <div id="toaster" class="toaster"></div>
+<script>
+  function c22Toast(config, opts) {
+    opts = opts || {};
+    var t = document.getElementById('toaster');
+    if (!t) return null;
+    if (opts.align) t.dataset.align = opts.align;
+    if (!t.toast && window.basecoat && window.basecoat.init) window.basecoat.init('toaster', {force: true});
+    if (!t.toast) return null;
+    var el = t.toast(config);
+    if (el) {
+      if (opts.variant) el.setAttribute('data-variant', opts.variant);
+      if (opts.size) el.setAttribute('data-size', opts.size);
+    }
+    return el;
+  }
+
+  /* Upload-Toast (PO 60i): Spinner als Status-Icon + je Datei ein echter Fortschrittsbalken
+     (progress-Kanon) IM Toast — eine Datei = ein Balken, mehrere Dateien = mehrere Balken in
+     EINEM Toast. Der Fortschritt läuft simuliert (verschiedene Tempi), fertige Balken werden
+     grün; sind alle durch, wechselt das Icon auf den Erfolgs-Haken und der Toast schließt. */
+  var C22_ICO = 'xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
+  var C22_SPIN = '<svg data-icon-lu="loader-circle" class="animate-spin" ' + C22_ICO + '><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>';
+  var C22_DONE = '<svg data-icon-lu="circle-check" class="text-success" ' + C22_ICO + '><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>';
+  function c22UploadToast(namen) {
+    var el = c22Toast({
+      title: namen.length > 1 ? namen.length + ' Dateien werden hochgeladen …' : 'Wird hochgeladen …',
+      icon: C22_SPIN,
+      duration: -1
+    });
+    if (!el) return;
+    var sec = el.querySelector('.toast-content > section');
+    var laeufe = namen.map(function (name, i) {
+      var zeile = document.createElement('div');
+      zeile.className = 'mt-2 grid w-56 gap-1';
+      zeile.innerHTML =
+        '<div class="flex items-center justify-between gap-4 text-xs">' +
+          '<span class="truncate"></span>' +
+          '<output class="text-muted-foreground tabular-nums shrink-0">0 %</output>' +
+        '</div>' +
+        '<div class="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"><span style="width:0%"></span></div>';
+      zeile.querySelector('span.truncate').textContent = name;
+      zeile.querySelector('.progress').setAttribute('aria-label', name);
+      sec.appendChild(zeile);
+      return { p: 0, tempo: [2.6, 1.5, 1.0][i % 3], zeile: zeile };
+    });
+    var timer = setInterval(function () {
+      var fertig = 0;
+      laeufe.forEach(function (l) {
+        if (l.p >= 100) { fertig++; return; }
+        l.p = Math.min(100, l.p + l.tempo);
+        var bar = l.zeile.querySelector('.progress');
+        bar.setAttribute('aria-valuenow', Math.round(l.p));
+        bar.firstChild.style.width = l.p + '%';
+        l.zeile.querySelector('output').textContent = Math.round(l.p) + ' %';
+        if (l.p >= 100) { bar.firstChild.classList.add('bg-success!'); fertig++; }
+      });
+      if (fertig === laeufe.length) {
+        clearInterval(timer);
+        var ico = el.querySelector('.toast-content > svg');
+        if (ico) ico.outerHTML = C22_DONE;
+        var h = el.querySelector('.toast-content h2');
+        if (h) h.textContent = namen.length > 1 ? namen.length + ' Dateien hochgeladen' : 'Hochgeladen';
+        setTimeout(function () { if (el.close) el.close(); }, 2200);
+      }
+    }, 80);
+  }
+</script>

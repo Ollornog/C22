@@ -29,79 +29,85 @@ GAP = os.environ.get("C22_GAP", "7rem")  # space before each section container
 SHADCN = "https://ui.shadcn.com/docs/components/base/{slug}"
 BASECOAT = "https://basecoatui.com/components/{slug}"
 
-# (title, basecoat, shadcn, custom, beta)
-COMPONENTS: list[tuple[str, bool, bool, bool, bool]] = [
-    ("Accordion", True, True, False, False),
-    ("Alert", True, True, False, False),
-    ("Alert Dialog", True, True, False, False),
-    ("Aspect Ratio", False, True, True, False),
-    ("Attachment", False, True, True, False),
-    ("Avatar", True, True, False, False),
-    ("Badge", True, True, False, False),
-    ("Breadcrumb", True, True, False, False),
-    ("Bubble", False, True, True, False),
-    ("Button", True, True, False, False),
-    ("Button Group", True, True, False, False),
-    ("Calendar", False, True, True, False),
-    ("Card", True, True, False, False),
-    ("Carousel", False, True, True, False),
-    ("Chart", True, True, False, True),
-    ("Checkbox", True, True, False, False),
-    ("Collapsible", True, True, False, False),
-    ("Combobox", True, True, False, False),
-    ("Command", True, True, False, False),
-    ("Context Menu", False, True, True, False),
-    ("Data Table", False, True, True, False),
-    ("Date Picker", False, True, True, False),
-    ("Dialog", True, True, False, False),
-    ("Direction", False, True, True, False),
-    ("Drawer", True, True, False, True),
-    ("Dropdown Menu", True, True, False, False),
-    ("Empty", True, True, False, False),
-    ("Field", True, True, False, False),
-    ("Hover Card", False, True, True, False),
-    ("Input", True, True, False, False),
-    ("Input Group", True, True, False, False),
-    ("Input OTP", False, True, True, False),
-    ("Item", True, True, False, False),
-    ("Kbd", True, True, False, False),
-    ("Label", True, True, False, False),
-    ("Marker", False, True, True, False),
-    ("Menubar", False, True, True, False),
-    ("Message", False, True, True, False),
-    ("Message Scroller", False, True, True, False),
-    ("Native Select", True, True, False, False),
-    ("Navigation Menu", False, True, True, False),
-    ("Pagination", True, True, True, False),
-    ("Popover", True, True, False, False),
-    ("Progress", True, True, False, False),
-    ("Radio Group", True, True, False, False),
-    ("Resizable", False, True, True, False),
-    ("Scroll Area", True, True, False, False),
-    ("Select", True, True, False, False),
-    ("Separator", False, True, True, False),
-    ("Sheet", False, True, True, False),
-    ("Sidebar", True, True, False, False),
-    ("Skeleton", True, True, False, False),
-    ("Slider", True, True, False, False),
-    ("Sonner", False, True, True, False),
-    ("Spinner", True, True, True, False),
-    ("Switch", True, True, False, False),
-    ("Table", True, True, False, False),
-    ("Tabs", True, True, False, False),
-    ("Textarea", True, True, False, False),
-    ("Theme Switcher", True, False, False, False),
-    ("Toast", True, True, False, False),
-    ("Toggle", False, True, True, False),
-    ("Toggle Group", False, True, True, False),
-    ("Tooltip", True, True, False, False),
-    ("Typography", False, True, True, False),
+# (title, basecoat, shadcn, custom)
+COMPONENTS: list[tuple[str, bool, bool, bool]] = [
+    ("Accordion", True, True, False),
+    ("Alert", True, True, False),
+    ("Alert Dialog", True, True, False),
+    ("Aspect Ratio", False, True, True),
+    ("Attachment", False, True, True),
+    ("Avatar", True, True, False),
+    ("Badge", True, True, False),
+    ("Breadcrumb", True, True, False),
+    ("Bubble", False, True, True),
+    ("Button", True, True, False),
+    ("Button Group", True, True, False),
+    ("Calendar", False, True, True),
+    ("Card", True, True, False),
+    ("Carousel", False, True, True),
+    ("Chart", True, True, False),
+    ("Checkbox", True, True, False),
+    ("Collapsible", True, True, False),
+    ("Combobox", True, True, False),
+    ("Command", True, True, False),
+    ("Context Menu", False, True, True),
+    ("Data Table", False, True, True),
+    ("Date Picker", False, True, True),
+    ("Dialog", True, True, False),
+    ("Direction", False, True, True),
+    ("Drawer", True, True, False),
+    ("Dropdown Menu", True, True, False),
+    ("Empty", True, True, False),
+    ("Field", True, True, False),
+    ("Hover Card", False, True, True),
+    ("Icon", False, False, True),
+    ("Input", True, True, False),
+    ("Input Group", True, True, False),
+    ("Input OTP", False, True, True),
+    ("Item", True, True, False),
+    ("Kbd", True, True, False),
+    ("Label", True, True, False),
+    ("Marker", False, True, True),
+    ("Menubar", False, True, True),
+    ("Message", False, True, True),
+    ("Message Scroller", False, True, True),
+    ("Native Select", True, True, False),
+    ("Navigation Menu", False, True, True),
+    ("Pagination", True, True, True),
+    ("Popover", True, True, False),
+    ("Progress", True, True, False),
+    ("Radio Group", True, True, False),
+    ("Resizable", False, True, True),
+    ("Scroll Area", True, True, False),
+    ("Select", True, True, False),
+    ("Separator", False, True, True),
+    ("Sidebar", True, True, False),
+    ("Skeleton", True, True, False),
+    ("Slider", True, True, False),
+    ("Spinner", True, True, True),
+    ("Switch", True, True, False),
+    ("Table", True, True, False),
+    ("Tabs", True, True, False),
+    ("Textarea", True, True, False),
+    ("Theme Switcher", True, False, False),
+    ("Toast", True, True, False),
+    ("Toggle", False, True, True),
+    ("Toggle Group", False, True, True),
+    ("Tooltip", True, True, False),
+    ("Typography", False, True, True),
+    # Neue Einträge NUR ans Ende anhängen — die Nummern 1–69 sind extern referenziert (Review).
+    ("Scrollbar", True, False, True),
+    ("Close Button", False, False, True),
+    ("Color Roles", False, False, True),
+    ("Code Block", False, False, True),
+    ("Editable Table", False, False, True),
 ]
 
 # Demo width per component (natural width like the source pages). Default below.
 DEFAULT_WIDTH = "max-w-2xl"
 WIDTHS = {
     "table": "max-w-3xl", "data-table": "max-w-4xl", "sidebar": "max-w-full",
+    "editable-table": "max-w-3xl",
     "chart": "max-w-3xl", "typography": "max-w-3xl", "calendar": "max-w-md",
     "navigation-menu": "max-w-3xl", "menubar": "max-w-3xl", "resizable": "max-w-3xl",
     "card": "max-w-4xl",
@@ -112,6 +118,94 @@ TAG_STYLE = {
     "S": "bg-neutral-900 text-white dark:bg-white dark:text-neutral-900",
     "C": "bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300",
 }
+
+
+# Abhängigkeits-Signaturen: eindeutige Markup-Marker je Component. Taucht ein Marker im
+# Partial einer ANDEREN Component auf, gilt „nutzt diese Component" (Gegenrichtung =
+# „genutzt von"). Bewusst kuratiert — nur Marker, die zuverlässig Verbau bedeuten;
+# Icon fehlt absichtlich (data-icon-lu steckt in praktisch jedem Partial und wäre
+# nur Rauschen), ebenso reine Utility-Muster (Aspect Ratio, Typography).
+SIGNATURES: dict[str, list[str]] = {
+    "accordion": [r'class="accordion'],
+    "alert": [r'class="alert[" ]'],
+    "alert-dialog": [r'class="alert-dialog'],
+    "avatar": [r'class="avatar'],
+    "badge": [r'class="badge'],
+    "breadcrumb": [r'class="breadcrumb'],
+    "bubble": [r'class="bubble[" ]', r'bubble-group'],
+    "button": [r'class="btn[" ]'],
+    "button-group": [r'class="button-group'],
+    "calendar": [r'data-calendar'],
+    "card": [r'class="card[" ]'],
+    "carousel": [r'data-carousel\b'],
+    "chart": [r'data-chart'],
+    "checkbox": [r'type="checkbox"(?![^>]*role="switch")'],
+    "close-button": [r'btn-close'],
+    "code-block": [r'class="code-block'],
+    "collapsible": [r'class="collapsible'],
+    "combobox": [r'class="combobox', r'combobox-trigger'],
+    "command": [r'class="command[" ]'],
+    "context-menu": [r'class="context-menu'],
+    "data-table": [r'data-datatable'],
+    "date-picker": [r'data-date-input', r'data-clock', r'data-time-stepper'],
+    "dialog": [r'class="dialog[" ]'],
+    "drawer": [r'class="drawer[" ]'],
+    "dropdown-menu": [r'class="dropdown-menu'],
+    "field": [r'class="field[" ]', r'class="fieldset'],
+    "hover-card": [r'hover-card'],
+    "input": [r'<input class="input[^"]*"(?![^>]*type="(?:checkbox|radio|range|hidden)")'],
+    "input-group": [r'class="input-group'],
+    "input-otp": [r'input-otp'],
+    "item": [r'class="item[" ]', r'item-group', r'item-media'],
+    "kbd": [r'class="kbd'],
+    "label": [r'class="label[" ]'],
+    "marker": [r'class="marker[" ]'],
+    "menubar": [r'class="menubar'],
+    "message": [r'class="message[" ]'],
+    "message-scroller": [r'message-scroller'],
+    "native-select": [r'<select[^>]*class="select'],
+    "navigation-menu": [r'navigation-menu'],
+    "pagination": [r'data-pagination'],
+    "popover": [r'data-popover'],
+    "progress": [r'class="progress[" ]', r'progress-ring', r'progress-surface'],
+    "radio-group": [r'type="radio"'],
+    "resizable": [r'data-resize-handle'],
+    "scrollbar": [r'class="scrollbar', r'data-scroll-fade', r'data-scrollbar-inset'],
+    "select": [r'<div class="select', r'aria-haspopup="listbox"'],
+    "separator": [r'class="separator', r'role="separator"', r'field-separator'],
+    "sidebar": [r'class="sidebar'],
+    "skeleton": [r'class="skeleton'],
+    "slider": [r'type="range"'],
+    "spinner": [r'data-icon-lu="loader-circle"'],
+    "switch": [r'role="switch"'],
+    "table": [r'class="table[" ]', r'table-container'],
+    "tabs": [r'role="tablist"'],
+    "textarea": [r'<textarea'],
+    "toast": [r'class="toaster', r'c22Toast\('],
+    "toggle": [r'class="toggle[" ]'],
+    "toggle-group": [r'toggle-group'],
+    "tooltip": [r'data-tooltip'],
+}
+
+
+def dependency_maps(bodies: dict[str, str | None]) -> tuple[dict, dict]:
+    """nutzt/genutzt-von je Component aus den Signaturen im Partial-Markup ableiten."""
+    deps: dict[str, list[str]] = {}
+    used_by: dict[str, list[str]] = {}
+    for slug, body in bodies.items():
+        if not body:
+            continue
+        gefunden = []
+        for anderer, muster in SIGNATURES.items():
+            if anderer == slug or anderer not in bodies:
+                continue
+            if any(re.search(m, body) for m in muster):
+                gefunden.append(anderer)
+        if gefunden:
+            deps[slug] = gefunden
+            for anderer in gefunden:
+                used_by.setdefault(anderer, []).append(slug)
+    return deps, used_by
 
 
 def slug_of(title: str) -> str:
@@ -162,12 +256,12 @@ def doclinks(slug: str, bc: bool, sh: bool) -> str:
 
 
 _CAT_GROUPS = {
-    "Aktion": "button button-group toggle toggle-group",
+    "Aktion": "button button-group toggle toggle-group close-button",
     "Formular": "input textarea label field checkbox radio-group switch select native-select combobox input-group input-otp slider",
-    "Overlay": "dialog alert-dialog drawer sheet popover hover-card tooltip dropdown-menu context-menu menubar command",
+    "Overlay": "dialog alert-dialog drawer popover hover-card tooltip dropdown-menu context-menu menubar command",
     "Navigation": "breadcrumb pagination tabs navigation-menu sidebar",
-    "Anzeige": "table data-table card avatar accordion collapsible item empty separator aspect-ratio carousel chart calendar date-picker badge kbd progress skeleton spinner scroll-area marker resizable typography",
-    "Feedback": "alert toast sonner",
+    "Anzeige": "table data-table card avatar accordion collapsible item empty separator aspect-ratio carousel chart calendar date-picker badge kbd icon progress skeleton spinner scroll-area scrollbar marker resizable typography color-roles code-block",
+    "Feedback": "alert toast",
     "Chat": "bubble message message-scroller attachment",
     "Sonstiges": "direction theme-switcher",
 }
@@ -175,7 +269,7 @@ CATEGORY = {s: cat for cat, lst in _CAT_GROUPS.items() for s in lst.split()}
 INTERACTIVE = set(
     "accordion alert-dialog carousel collapsible combobox command context-menu date-picker "
     "dialog drawer dropdown-menu hover-card menubar navigation-menu popover resizable select "
-    "sheet sidebar slider tabs theme-switcher toast toggle toggle-group tooltip".split())
+    "sidebar slider tabs theme-switcher toast toggle toggle-group tooltip".split())
 
 
 def descriptors(slug: str) -> str:
@@ -191,10 +285,20 @@ def descriptors(slug: str) -> str:
 
 def render() -> tuple[str, int]:
     toc, sections, built = [], [], 0
-    for idx, (title, bc, sh, custom, beta) in enumerate(COMPONENTS):
+    titles_by_slug = {slug_of(t): t for t, *_ in COMPONENTS}
+    bodies = {slug_of(t): partial(t) for t, *_ in COMPONENTS}
+    deps, used_by = dependency_maps(bodies)
+
+    def dep_chips(slugs: list[str]) -> str:
+        return " · ".join(
+            f'<a href="#{s}" class="hover:text-foreground underline-offset-2 hover:underline">'
+            f'{html.escape(titles_by_slug[s])}</a>'
+            for s in sorted(slugs, key=lambda s: titles_by_slug[s]))
+
+    for idx, (title, bc, sh, custom) in enumerate(COMPONENTS):
         slug = slug_of(title)
         num = idx + 1
-        body = partial(title)
+        body = bodies[slug]
         done = body is not None
         built += done
         toc.append(
@@ -203,7 +307,6 @@ def render() -> tuple[str, int]:
             f'<span class="tabular-nums text-muted-foreground/50 w-6 shrink-0 text-right">{num}</span>'
             f'<span class="truncate">{html.escape(title)}</span></a>'
         )
-        beta_badge = ('<span class="badge" data-variant="secondary">Beta</span>' if beta else "")
         num_badge = f'<span class="tabular-nums text-muted-foreground">{num}.</span>'
         demo = (letter_labels(body) if done
                 else '<p class="text-muted-foreground text-sm italic">— noch nicht gebaut —</p>')
@@ -217,11 +320,21 @@ def render() -> tuple[str, int]:
             f'</details>'
         ) if done else ""
         mt = "2rem" if idx == 0 else GAP
+        dep_teile = []
+        if done and deps.get(slug):
+            dep_teile.append(f'<span><span class="text-foreground/70 font-medium">nutzt:</span> {dep_chips(deps[slug])}</span>')
+        if done and used_by.get(slug):
+            dep_teile.append(f'<span><span class="text-foreground/70 font-medium">genutzt von:</span> {dep_chips(used_by[slug])}</span>')
+        dep_html = (
+            f'<div class="text-muted-foreground mx-auto flex w-[820px] max-w-full flex-wrap gap-x-6 gap-y-1 pb-3 text-xs">'
+            + "".join(dep_teile) + '</div>'
+        ) if dep_teile else ""
         sections.append(
             f'<section id="{slug}" class="scroll-mt-6" style="margin-top:{mt}">'
             f'<div class="mx-auto flex w-[820px] max-w-full items-center gap-6 pb-3">'
-            f'<h2 class="flex items-center gap-3 text-xl font-semibold tracking-tight">{num_badge}{html.escape(title)}{beta_badge}</h2>'
+            f'<h2 class="flex items-center gap-3 text-xl font-semibold tracking-tight">{num_badge}{html.escape(title)}</h2>'
             f'</div>'
+            f'{dep_html}'
             f'<div class="mx-auto w-[820px] max-w-full rounded-xl border">'
             f'<div class="flex min-h-64 flex-col items-center justify-center p-10">{demo}</div>'
             f'{code_block}'
@@ -239,8 +352,14 @@ def render() -> tuple[str, int]:
         ("sera", "Sera", ["Großbuchstaben", "eckig"]),
         ("rhea", "Rhea", ["abgerundet", "ruhig"]),
     ]
+    # Cache-Buster: Browser (auch Chrome an einem http.server ohne Cache-Header) cachen CSS/JS
+    # heuristisch — nach einem Rebuild sah man sonst alte Optik/altes Verhalten, bis man hart
+    # neu lud. Die mtime als ?v= macht jede geänderte Datei zu einer neuen URL.
+    def v(rel: str) -> int:
+        return int((ROOT / "c22" / "static" / rel).stat().st_mtime)
+
     pack_links = "".join(
-        f'<link rel="stylesheet" data-pack="{k}" href="../c22/static/css/c22-{k}.css"'
+        f'<link rel="stylesheet" data-pack="{k}" href="../c22/static/css/c22-{k}.css?v={v(f"css/c22-{k}.css")}"'
         f'{"" if i == 0 else " disabled"}>'
         for i, (k, _, _) in enumerate(packs))
     pack_options = "".join(f'<option value="{k}">{lbl}</option>' for k, lbl, _ in packs)
@@ -256,8 +375,9 @@ def render() -> tuple[str, int]:
 <title>C22 — Component-Galerie ({built}/{total})</title>
 <link rel="icon" type="image/png" href="../docs/logo.png">
 {pack_links}
-<script src="../c22/static/js/basecoat.all.min.js" defer></script>
-<script src="../c22/static/js/c22.js" defer></script>
+<script src="../c22/static/js/basecoat.all.min.js?v={v("js/basecoat.all.min.js")}" defer></script>
+<script src="../c22/static/js/icons.js?v={v("js/icons.js")}" defer></script>
+<script src="../c22/static/js/c22.js?v={v("js/c22.js")}" defer></script>
 </head>
 <body class="bg-background text-foreground flex h-screen flex-col overflow-hidden">
 <header class="flex shrink-0 flex-wrap items-center gap-x-6 gap-y-3 border-b px-6 py-3">

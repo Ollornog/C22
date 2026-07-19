@@ -1,0 +1,121 @@
+<!-- basecoat: Scrollbar (.scrollbar / .scrollbar-sm) = eigene, themefolgende Scrollbalken.
+     GLOBALER STANDARD: der pfeillose Token-Balken gilt für JEDE Scrollfläche der Seite
+     (nackte ::-webkit-Pseudos in components.css, Firefox erbt scrollbar-color von :root) —
+     die Klasse .scrollbar braucht es nur noch als Hook für Varianten. Basecoat liefert die
+     Klassen + die Tokens --scrollbar-width/-sm-width/-thumb/-track/-radius (Seam in
+     tokens.css, plus C22-eigenes --scrollbar-inset); C22 dreht die Architektur (PO):
+     PFEILLOS IST DER STANDARD über die ::-webkit-Custom-Route mit ausgeblendeten
+     Schrittknöpfen, Firefox bekommt die Token-Farben über einen eigenen @supports-Zweig
+     (Gecko ist ohnehin immer pfeillos). Varianten per Variant-Contract:
+     data-size="sm"/"lg" (Breite über Token-Override; "sm" = Basecoats .scrollbar-sm),
+     data-track="visible" (sichtbare Rinne), data-buttons="arrows" (native
+     scrollbar-color-Route: Token-Farben + native Systempfeile unter Chromium/Linux — keine
+     eigenen Pfeil-Grafiken). Puffer an Rundungen: Track endet automatisch um
+     --scrollbar-inset vor den Ecken, sobald die Scrollfläche selbst rounded-* trägt;
+     explizit per data-scrollbar-inset (="false" schaltet ab). Alternative ohne Puffer:
+     Rundung + overflow-clip auf eine HÜLLE legen, Scrollfläche ungerundet — die Ecke
+     beschneidet den Balken („verschwindet in der Rundung"). Scrollbar-Pseudos kennen keine
+     z-Ordnung; der Clip ist das Äquivalent, reines Standard-CSS und wirkt — anders als der
+     Track-Puffer (De-facto-WebKit) — auch in Firefox. Zum kompletten Ausblenden:
+     .no-scrollbar (Utility, components.css). Browser-Grenzen: Firefox kennt bei
+     scrollbar-width nur auto/thin/none — "sm" wird thin, "lg" wirkt nicht, Pfeile und
+     Track-Puffer rendert Firefox nie. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Standard (globaler Default — ohne Pfeile; <code class="text-[11px]">.scrollbar</code> nur noch als Varianten-Hook)</span>
+    <div class="scrollbar h-40 w-full max-w-sm overflow-y-auto rounded-md border p-4 text-sm">
+      <p class="font-medium">Über den Wolken</p>
+      <p class="text-muted-foreground mt-2">Die Übertragung größerer Dateien läuft im Hintergrund weiter, während du in Ruhe weiterarbeitest. Sobald ein Anhang vollständig hochgeladen ist, erscheint er in der Übersicht und lässt sich öffnen, teilen oder wieder entfernen.</p>
+      <p class="text-muted-foreground mt-2">Für längere Listen empfiehlt sich ein fester Rahmen mit eigenem Scrollbereich: Der Inhalt bleibt erreichbar, ohne dass die Seite selbst länger wird. Genau dafür gibt es diese Komponente — ein pfeilloser Balken, der in beiden Themes zur Oberfläche passt.</p>
+      <p class="text-muted-foreground mt-2">Prüfe beim Gestalten immer beide Richtungen: vertikales Scrollen für Listen und Protokolle, horizontales für Tabellen und Codeblöcke. Die Tokens sorgen dafür, dass alle Varianten dieselbe Sprache sprechen.</p>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Klein (<code class="text-[11px]">data-size="sm"</code> — ohne Pfeile; Basecoat-Äquivalent <code class="text-[11px]">.scrollbar-sm</code>, in Firefox <code class="text-[11px]">thin</code>)</span>
+    <div class="scrollbar h-40 w-full max-w-sm overflow-y-auto rounded-md border p-4 text-sm" data-size="sm">
+      <p class="font-medium">Änderungsprotokoll</p>
+      <p class="text-muted-foreground mt-2">Der schlanke Balken eignet sich für dichte Oberflächen — Seitenleisten, Dropdowns, Chatverläufe — überall dort, wo der Standardbalken zu viel Raum einnehmen würde.</p>
+      <p class="text-muted-foreground mt-2">Er nutzt dieselben Farbtokens wie der Standard und folgt damit automatisch dem hellen und dunklen Theme.</p>
+      <p class="text-muted-foreground mt-2">Auch längere Absätze bleiben gut lesbar, weil der Balken erst beim Überlauf sichtbar wird und den Inhalt nicht verdrängt.</p>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Dünn (<code class="text-[11px]">data-size="thin"</code> — 4px; in Firefox ebenfalls <code class="text-[11px]">thin</code>)</span>
+    <div class="scrollbar h-40 w-full max-w-sm overflow-y-auto rounded-md border p-4 text-sm" data-size="thin">
+      <p class="font-medium">Änderungsprotokoll</p>
+      <p class="text-muted-foreground mt-2">Der schlanke Balken eignet sich für dichte Oberflächen — Seitenleisten, Dropdowns, Chatverläufe — überall dort, wo der Standardbalken zu viel Raum einnehmen würde.</p>
+      <p class="text-muted-foreground mt-2">Er nutzt dieselben Farbtokens wie der Standard und folgt damit automatisch dem hellen und dunklen Theme.</p>
+      <p class="text-muted-foreground mt-2">Auch längere Absätze bleiben gut lesbar, weil der Balken erst beim Überlauf sichtbar wird und den Inhalt nicht verdrängt.</p>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Groß (<code class="text-[11px]">data-size="lg"</code> — ohne Pfeile; nur Chromium/WebKit, Firefox bleibt bei Standardbreite)</span>
+    <div class="scrollbar h-40 w-full max-w-sm overflow-y-auto rounded-md border p-4 text-sm" data-size="lg">
+      <p class="font-medium">Großflächige Bereiche</p>
+      <p class="text-muted-foreground mt-2">Der breite Balken ist für großflächige Scrollbereiche gedacht — Editoren, Datentabellen, Vorschauflächen — wo eine größere Trefferfläche das Ziehen mit der Maus erleichtert.</p>
+      <p class="text-muted-foreground mt-2">Technisch überschreibt die Variante nur das Token <code class="text-[11px]">--scrollbar-width</code>; Form und Farben bleiben identisch zum Standard.</p>
+      <p class="text-muted-foreground mt-2">Für Fingerbedienung auf Touch-Geräten spielt die Breite kaum eine Rolle — dort blenden die Systeme ihre eigenen Overlay-Balken ein.</p>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Hintergrund (<code class="text-[11px]">data-track="visible"</code> — sichtbare Rinne, ohne Pfeile)</span>
+    <div class="scrollbar h-40 w-full max-w-sm overflow-y-auto rounded-md border p-4 text-sm" data-track="visible">
+      <p class="font-medium">Sichtbare Rinne</p>
+      <p class="text-muted-foreground mt-2">Mit getönter Rinne ist auf einen Blick erkennbar, wie lang der Inhalt insgesamt ist und wo man sich gerade befindet — hilfreich in langen Protokollen und Dokumenten.</p>
+      <p class="text-muted-foreground mt-2">Die Rinne nutzt das <code class="text-[11px]">--muted</code>-Token und bleibt damit in beiden Themes dezent hinter dem Daumen zurück.</p>
+      <p class="text-muted-foreground mt-2">Ohne das Attribut bleibt die Rinne transparent — das ist der Standard.</p>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Pfeilen, mit Hintergrund (<code class="text-[11px]">data-buttons="arrows" data-track="visible"</code> — native Systempfeile, nur Chromium/Linux; Firefox bleibt pfeillos)</span>
+    <div class="scrollbar h-40 w-full max-w-sm overflow-y-auto rounded-md border p-4 text-sm" data-buttons="arrows" data-track="visible">
+      <p class="font-medium">Klassische Schrittpfeile</p>
+      <p class="text-muted-foreground mt-2">Schrittpfeile an beiden Enden erinnern an klassische Desktop-Oberflächen und erlauben zeilenweises Scrollen per Klick — nützlich für präzise Navigation in langen Listen.</p>
+      <p class="text-muted-foreground mt-2">Die Variante wechselt auf die native <code class="text-[11px]">scrollbar-color</code>-Route: das System zeichnet Balken und Pfeile, die Farben kommen weiterhin aus den Tokens. Eigene Pfeil-Grafiken gibt es bewusst nicht.</p>
+      <p class="text-muted-foreground mt-2">Firefox rendert grundsätzlich keine Scrollbalken-Pfeile — dort erscheint schlicht der pfeillose Token-Balken.</p>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Pfeilen, ohne Hintergrund (<code class="text-[11px]">data-buttons="arrows"</code> — transparente Rinne)</span>
+    <div class="scrollbar h-40 w-full max-w-sm overflow-y-auto rounded-md border p-4 text-sm" data-buttons="arrows">
+      <p class="font-medium">Pfeile auf transparenter Rinne</p>
+      <p class="text-muted-foreground mt-2">Dieselbe native Route wie zuvor, nur ohne getönten Track: Daumen und Pfeile stehen frei auf dem Seitenhintergrund — die dezenteste Form mit Schrittpfeilen.</p>
+      <p class="text-muted-foreground mt-2">Auch hier gilt: Balkenform und Pfeile zeichnet das System, die Farben liefern die C22-Tokens.</p>
+      <p class="text-muted-foreground mt-2">Unter Windows und macOS entscheidet das jeweilige System, ob und wie Pfeile erscheinen — verlässlich sind sie nur unter Chromium/Linux.</p>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Horizontal (Standard auf <code class="text-[11px]">overflow-x</code> — ohne Pfeile)</span>
+    <div class="scrollbar w-full max-w-sm overflow-x-auto rounded-md border p-4">
+      <p class="text-sm font-medium whitespace-nowrap">Diese Zeile ist bewusst deutlich länger als ihr Container, damit der horizontale Balken erscheint — etwa für breite Tabellen, Zeitachsen oder Codezeilen, die nicht umbrechen dürfen.</p>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Unsichtbar (<code class="text-[11px]">.no-scrollbar</code> — Utility, scrollt weiter per Rad/Wisch)</span>
+    <div class="no-scrollbar h-40 w-full max-w-sm overflow-y-auto rounded-md border p-4 text-sm">
+      <p class="font-medium">Ohne sichtbaren Balken</p>
+      <p class="text-muted-foreground mt-2">Für Flächen, die rein über Gesten, Buttons oder Autoplay laufen — etwa Carousels — blendet <code class="text-[11px]">.no-scrollbar</code> den Balken komplett aus. Gescrollt wird weiterhin per Mausrad, Trackpad oder Wisch.</p>
+      <p class="text-muted-foreground mt-2">Vorsicht bei langen Textinhalten: Ohne Balken fehlt der visuelle Hinweis, dass es überhaupt weitergeht. Diese Utility gehört deshalb zu gesteuerten Flächen, nicht zu Dokumenten.</p>
+      <p class="text-muted-foreground mt-2">Auch diese Box scrollt — nur eben unsichtbar. Probiere es mit dem Mausrad aus.</p>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Rundung: Puffer (automatisch bei <code class="text-[11px]">rounded-*</code>) · ohne Puffer in der Rundung verschwindend (Clip-Hülle)</span>
+    <div class="flex w-full max-w-xl flex-wrap justify-center gap-3">
+      <div class="scrollbar h-40 w-full max-w-3xs overflow-y-auto rounded-xl border p-4 text-sm">
+        <p class="font-medium">Mit Puffer (automatisch)</p>
+        <p class="text-muted-foreground mt-2">Trägt die Scrollfläche selbst eine Rundung, endet der Track automatisch um <code class="text-[11px]">--scrollbar-inset</code> vor den Ecken — der Daumen läuft nie über die Rundung.</p>
+        <p class="text-muted-foreground mt-2">Der Puffer ist an <code class="text-[11px]">--radius</code> gekoppelt und wächst damit mit der Radius-Achse mit. Sitzt die Rundung auf einem Eltern-Container, setzt man <code class="text-[11px]">data-scrollbar-inset</code> explizit.</p>
+        <p class="text-muted-foreground mt-2">Gilt nur für die Custom-Route — Firefox kennt keine Track-Ränder und zeigt den Balken in voller Länge.</p>
+      </div>
+      <div class="w-full max-w-3xs overflow-clip rounded-xl border">
+        <div class="scrollbar h-40 overflow-y-auto p-4 text-sm">
+          <p class="font-medium">Ohne Puffer (Clip-Hülle)</p>
+          <p class="text-muted-foreground mt-2">Hier läuft der Balken in voller Länge, verschwindet aber in der Rundung: Die Rundung sitzt auf einer Hülle mit <code class="text-[11px]">overflow-clip</code>, die Scrollfläche selbst ist ungerundet — die Ecke schneidet den Balken ab.</p>
+          <p class="text-muted-foreground mt-2">Eine echte z-Ordnung gibt es für Scrollbalken-Pseudos nicht; das Beschneiden durch die Hülle ist das saubere Äquivalent und funktioniert — anders als der Track-Puffer — auch in Firefox.</p>
+          <p class="text-muted-foreground mt-2">Faustregel: Rundung auf der Scrollfläche → Puffer automatisch; Rundung auf der Hülle → Balken taucht in die Ecke ab. <code class="text-[11px]">data-scrollbar-inset="false"</code> schaltet die Automatik im Sonderfall ab.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,4 +1,4 @@
-<!-- basecoat: Scroll Area (Basecoat nennt sie "Scrollbar") = gestylte native Scrollleiste, kein JS/Overlay wie bei Radix. .scrollbar Standard, .scrollbar-sm dünn für Menüs/Listboxen. Container braucht selbst overflow-y-auto/overflow-x-auto + eine Höhen-/Breitenbegrenzung. Farben/Breite über C22-Tokens (--scrollbar-track/-thumb/-width/-sm-width/-radius). Funktioniert mit dir="rtl". -->
+<!-- basecoat: Scroll Area (Basecoat nennt sie "Scrollbar") = gestylte native Scrollleiste, kein JS/Overlay wie bei Radix. .scrollbar Standard, Größen über data-size="sm"/"thin"/"lg" (Kanon, s. scrollbar.html). Container braucht selbst overflow-y-auto/overflow-x-auto + eine Höhen-/Breitenbegrenzung. Farben/Breite über C22-Tokens (--scrollbar-track/-thumb/-width/-sm-width/-radius). Funktioniert mit dir="rtl". -->
 <div class="c22-examples">
   <div class="c22-example">
     <span class="c22-example-label">Standard (<code class="text-[11px]">.scrollbar</code>, vertikal)</span>
@@ -25,8 +25,8 @@
     </div>
   </div>
   <div class="c22-example">
-    <span class="c22-example-label">Kompakt (<code class="text-[11px]">.scrollbar-sm</code>, für Menüs/Listen)</span>
-    <div class="scrollbar-sm h-56 w-full max-w-xs overflow-y-auto rounded-md border p-2">
+    <span class="c22-example-label">Kompakt (<code class="text-[11px]">data-size="sm"</code> — für Menüs/Listen)</span>
+    <div class="scrollbar h-56 w-full max-w-xs overflow-y-auto rounded-md border p-2" data-size="sm">
       <div class="flex flex-col gap-1 text-sm">
         <div class="flex items-center gap-2 rounded-sm p-2"><span class="avatar" data-size="sm"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=64&h=64&fit=crop&crop=faces&q=80" alt="Mara Bauer"><span>MA</span></span><div class="flex flex-col"><span class="font-medium">Mara Bauer</span><span class="text-muted-foreground text-xs">Design</span></div></div>
         <div class="flex items-center gap-2 rounded-sm p-2"><span class="avatar" data-size="sm"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=64&h=64&fit=crop&crop=faces&q=80" alt="Jonas Kramer"><span>JO</span></span><div class="flex flex-col"><span class="font-medium">Jonas Kramer</span><span class="text-muted-foreground text-xs">Backend</span></div></div>
@@ -35,6 +35,25 @@
         <div class="flex items-center gap-2 rounded-sm p-2"><span class="avatar" data-size="sm"><img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=64&h=64&fit=crop&crop=faces&q=80" alt="Sara Nowak"><span>SA</span></span><div class="flex flex-col"><span class="font-medium">Sara Nowak</span><span class="text-muted-foreground text-xs">Support</span></div></div>
         <div class="flex items-center gap-2 rounded-sm p-2"><span class="avatar" data-size="sm"><span>AK</span></span><div class="flex flex-col"><span class="font-medium">Anna Klein</span><span class="text-muted-foreground text-xs">Produkt</span></div></div>
         <div class="flex items-center gap-2 rounded-sm p-2"><span class="avatar" data-size="sm"><span>PM</span></span><div class="flex flex-col"><span class="font-medium">Paul Meyer</span><span class="text-muted-foreground text-xs">QA</span></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Dünn / thin (<code class="text-[11px]">data-size="thin"</code> — 4px, kaum sichtbar)</span>
+    <div class="scrollbar h-56 w-full max-w-xs overflow-y-auto rounded-md border p-4 text-sm" data-size="thin">
+      <h4 class="mb-3 font-medium leading-none">Protokoll</h4>
+      <div class="text-muted-foreground flex flex-col gap-2">
+        <div>09:12 — Deployment gestartet</div>
+        <div>09:13 — Abbild gebaut</div>
+        <div>09:14 — Tests grün</div>
+        <div>09:15 — Rollout Stufe 1</div>
+        <div>09:17 — Rollout Stufe 2</div>
+        <div>09:19 — Healthchecks ok</div>
+        <div>09:20 — Traffic umgeschaltet</div>
+        <div>09:21 — Alte Instanz gestoppt</div>
+        <div>09:22 — Deployment fertig</div>
+        <div>09:25 — Monitoring ruhig</div>
+        <div>09:31 — Bericht verschickt</div>
       </div>
     </div>
   </div>
@@ -88,17 +107,6 @@
           </div>
         </div>
       </section>
-    </div>
-  </div>
-  <div class="c22-example">
-    <span class="c22-example-label">Rechts-nach-links (<code class="text-[11px]">dir="rtl"</code>)</span>
-    <div dir="rtl" class="scrollbar h-40 w-full max-w-xs overflow-y-auto rounded-md border p-4">
-      <div class="flex flex-col gap-3 text-sm">
-        <div>Die Scroll-Leiste spiegelt sich automatisch auf die linke Seite.</div>
-        <div class="border-t pt-3">Kein zusätzliches CSS nötig — <code class="text-[11px]">dir="rtl"</code> reicht.</div>
-        <div class="border-t pt-3">Nützlich für arabische oder hebräische Oberflächen.</div>
-        <div class="border-t pt-3">Der Inhalt selbst bleibt unverändert lesbar.</div>
-      </div>
     </div>
   </div>
 </div>
