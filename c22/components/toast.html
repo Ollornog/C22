@@ -88,10 +88,12 @@
     </div>
   </div>
   <div class="c22-example">
-    <span class="c22-example-label">Eigenes Icon (überschreibt <code class="text-[11px]">category</code>-Icon)</span>
-    <div class="flex justify-center">
+    <span class="c22-example-label">Upload mit Fortschritt (Spinner + Balken, live — mehrere Dateien = mehrere Balken in EINEM Toast)</span>
+    <div class="flex flex-wrap items-center justify-center gap-3">
       <button type="button" class="btn" data-variant="outline"
-        onclick='c22Toast({category:"info",title:"Hochgeladen",description:"3 Dateien wurden übertragen.",icon:"<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 3v12\"/><path d=\"m17 8-5-5-5 5\"/><path d=\"M21 21H3\"/></svg>"})'>Datei-Upload</button>
+        onclick="c22UploadToast(['Quartalsbericht.pdf'])">1 Datei hochladen</button>
+      <button type="button" class="btn" data-variant="outline"
+        onclick="c22UploadToast(['Quartalsbericht.pdf','Logo_final_v3.png','Backup_2026.zip'])">3 Dateien hochladen</button>
     </div>
   </div>
 </div>
@@ -110,5 +112,56 @@
       if (opts.size) el.setAttribute('data-size', opts.size);
     }
     return el;
+  }
+
+  /* Upload-Toast (PO 60i): Spinner als Status-Icon + je Datei ein echter Fortschrittsbalken
+     (progress-Kanon) IM Toast — eine Datei = ein Balken, mehrere Dateien = mehrere Balken in
+     EINEM Toast. Der Fortschritt läuft simuliert (verschiedene Tempi), fertige Balken werden
+     grün; sind alle durch, wechselt das Icon auf den Erfolgs-Haken und der Toast schließt. */
+  var C22_ICO = 'xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
+  var C22_SPIN = '<svg data-icon-lu="loader-circle" class="animate-spin" ' + C22_ICO + '><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>';
+  var C22_DONE = '<svg data-icon-lu="circle-check" class="text-success" ' + C22_ICO + '><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>';
+  function c22UploadToast(namen) {
+    var el = c22Toast({
+      title: namen.length > 1 ? namen.length + ' Dateien werden hochgeladen …' : 'Wird hochgeladen …',
+      icon: C22_SPIN,
+      duration: -1
+    });
+    if (!el) return;
+    var sec = el.querySelector('.toast-content > section');
+    var laeufe = namen.map(function (name, i) {
+      var zeile = document.createElement('div');
+      zeile.className = 'mt-2 grid w-56 gap-1';
+      zeile.innerHTML =
+        '<div class="flex items-center justify-between gap-4 text-xs">' +
+          '<span class="truncate"></span>' +
+          '<output class="text-muted-foreground tabular-nums shrink-0">0 %</output>' +
+        '</div>' +
+        '<div class="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"><span style="width:0%"></span></div>';
+      zeile.querySelector('span.truncate').textContent = name;
+      zeile.querySelector('.progress').setAttribute('aria-label', name);
+      sec.appendChild(zeile);
+      return { p: 0, tempo: [2.6, 1.5, 1.0][i % 3], zeile: zeile };
+    });
+    var timer = setInterval(function () {
+      var fertig = 0;
+      laeufe.forEach(function (l) {
+        if (l.p >= 100) { fertig++; return; }
+        l.p = Math.min(100, l.p + l.tempo);
+        var bar = l.zeile.querySelector('.progress');
+        bar.setAttribute('aria-valuenow', Math.round(l.p));
+        bar.firstChild.style.width = l.p + '%';
+        l.zeile.querySelector('output').textContent = Math.round(l.p) + ' %';
+        if (l.p >= 100) { bar.firstChild.classList.add('bg-success!'); fertig++; }
+      });
+      if (fertig === laeufe.length) {
+        clearInterval(timer);
+        var ico = el.querySelector('.toast-content > svg');
+        if (ico) ico.outerHTML = C22_DONE;
+        var h = el.querySelector('.toast-content h2');
+        if (h) h.textContent = namen.length > 1 ? namen.length + ' Dateien hochgeladen' : 'Hochgeladen';
+        setTimeout(function () { if (el.close) el.close(); }, 2200);
+      }
+    }, 80);
   }
 </script>

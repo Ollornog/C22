@@ -1098,6 +1098,9 @@
     if (root.hasAttribute('data-dt-rowselect') || root.querySelector('[data-dt-select]')) {
       koerper.addEventListener('click', function (e) {
         if (e.target.closest('button, a, input, label, .dropdown-menu')) return;
+        // Editier-Modus (data-edit-table): Klick in eine editierbare Zelle setzt den
+        // Cursor — er darf nicht nebenbei die Zeilenauswahl togglen.
+        if (e.target.closest('td[contenteditable]')) return;
         var zeile = e.target.closest('tr');
         if (!zeile || !koerper.contains(zeile)) return;
         var box = zeile.querySelector('[data-dt-select]');
@@ -1498,6 +1501,9 @@
       } else {
         item.setAttribute('aria-checked', item.getAttribute('aria-checked') === 'true' ? 'false' : 'true');
       }
+      // stopPropagation frisst Inline-Handler auf den Items — wer auf die Auswahl
+      // reagieren will (z.B. Trigger-Text nachziehen), hört auf dieses Event.
+      menu.dispatchEvent(new CustomEvent('c22-menu-check', { detail: { item: item }, bubbles: true }));
     }, true);
   }
 
@@ -2152,6 +2158,61 @@
     update();
   }
 
+  // ---- Nav-Auswahl (Sidebar, PO 51) -----------------------------------------
+  // [data-nav-select] auf einem nav: Klick auf einen Menüpunkt-Link setzt
+  // aria-current="page" um (ein aktiver Punkt pro nav) — macht Demo-Sidebars
+  // funktional, ohne je Link einen Inline-Handler zu wiederholen.
+  function wireNavSelect(nav) {
+    if (nav.dataset.c22NavWired) return;
+    nav.dataset.c22NavWired = '1';
+    nav.addEventListener('click', function (e) {
+      var a = e.target.closest('a[role="menuitem"]');
+      if (!a || !nav.contains(a)) return;
+      e.preventDefault();
+      nav.querySelectorAll('[aria-current="page"]').forEach(function (x) { x.removeAttribute('aria-current'); });
+      a.setAttribute('aria-current', 'page');
+    });
+  }
+
+  // ---- Inline-editierbare Tabelle (PO) --------------------------------------
+  // Markup: [data-edit-table] auf dem .table-container. Alle tbody-Zellen ohne
+  // [data-noedit] werden contenteditable (plaintext-only — kein eingeschlepptes
+  // Markup beim Einfügen). data-editing="false" schaltet den Modus ab; ein
+  // Umschalter im Beispiel setzt nur dieses Attribut, ein MutationObserver zieht
+  // die Zellen nach.
+  function wireEditTable(root) {
+    if (root.dataset.c22EditWired) return;
+    root.dataset.c22EditWired = '1';
+    function anwenden() {
+      var an = root.dataset.editing !== 'false';
+      root.querySelectorAll('tbody td:not([data-noedit])').forEach(function (td) {
+        if (an) td.setAttribute('contenteditable', 'plaintext-only');
+        else td.removeAttribute('contenteditable');
+      });
+    }
+    anwenden();
+    new MutationObserver(anwenden).observe(root, { attributes: true, attributeFilter: ['data-editing'] });
+  }
+
+  // ---- Zeichen-Zähler (Textarea, PO 58) -------------------------------------
+  // Markup: <p data-char-count> im selben .field wie ein Feld mit maxlength —
+  // zählt live beim Tippen („n/max"; ohne maxlength nur „n"). Optional
+  // data-char-count="<id>" für ein Ziel außerhalb des eigenen field.
+  function wireCharCount(p) {
+    if (p.dataset.c22CountWired) return;
+    p.dataset.c22CountWired = '1';
+    var ziel = p.dataset.charCount
+      ? document.getElementById(p.dataset.charCount)
+      : (p.closest('.field') || p.parentElement).querySelector('textarea, input');
+    if (!ziel) return;
+    var max = ziel.getAttribute('maxlength');
+    function malen() {
+      p.textContent = ziel.value.length + (max ? '/' + max : '');
+    }
+    ziel.addEventListener('input', malen);
+    malen();
+  }
+
   // ---- Copy-Button (Codeblock & Co.) ----------------------------------------
   // Markup: ein Button [data-copy] als Geschwister eines <pre><code> in einem relativen
   // Wrapper. Klick kopiert den Textinhalt des zugehörigen <code> in die Zwischenablage
@@ -2358,6 +2419,9 @@
     (root || document).querySelectorAll('[data-carousel]').forEach(wireCarousel);
     (root || document).querySelectorAll('[data-chart]').forEach(wireChart);
     (root || document).querySelectorAll('[data-scroll-fade]').forEach(wireScrollFade);
+    (root || document).querySelectorAll('[data-nav-select]').forEach(wireNavSelect);
+    (root || document).querySelectorAll('[data-edit-table]').forEach(wireEditTable);
+    (root || document).querySelectorAll('[data-char-count]').forEach(wireCharCount);
     (root || document).querySelectorAll('[data-copy]').forEach(wireCopy);
     (root || document).querySelectorAll('[data-reactions]').forEach(wireReactions);
     wireGlobals();

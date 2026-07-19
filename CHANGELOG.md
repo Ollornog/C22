@@ -21,7 +21,113 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   ausgewiesen) und „Breite Variante" (`sm:max-w-lg`) leben jetzt als Drawer-Beispiele
   d/f weiter; der Kopfkommentar von `drawer.html` erklärt die Abdeckung. Galerie 70 → 69.
 
+### Added
+
+- **Neue Component „Editable Table" (#69)** — Tabelleninhalt inline editierbar:
+  `[data-edit-table]` auf dem Container macht alle tbody-Zellen (ohne
+  `[data-noedit]`) `contenteditable="plaintext-only"`; `data-editing="false"`
+  schaltet den Modus ab (ein MutationObserver zieht die Zellen nach — der
+  Umschalter im Beispiel setzt nur das Attribut). Fokussierte Zelle = innerer
+  ring-Ring (Kanon in `components.css`). Drei Beispiele: Standard-Layout,
+  Excel-Look (`data-variant="grid"`), Umschalter Bearbeiten/Schreibgeschützt.
+
 ### Changed — Feinschliff-Runde 4 (PO)
+
+- **Table (#56): Excel-Look** — neue Variante `data-variant="grid"`: Vollgitter
+  (jede Zelle mit Linien in beide Richtungen), Kopf auf muted-Grund; „grid" neu
+  im Varianten-Vokabular. Runde Ecken über den Container (Rahmen + Rundung +
+  overflow-hidden per `:has`-Kanon); die Tabelle versteckt ihre Außenkanten
+  (`border-style: hidden` gewinnt die border-collapse-Konfliktauflösung), sonst
+  doppelten sich die Linien am Rand. Der Linien-Stil zeigt seine zwei Formen
+  (mit Kopf-/Fußzeile · nackt) jetzt als zwei eigene Variantenbuchstaben.
+
+- **Editable Table (#69c): Vollausbau editierbar** — das Umschalter-Beispiel ist
+  jetzt die komplette Data Table aus 21a (Suche, Bulk, Spalten-Filter/-Sortierung,
+  Einstellungen, Rechtsklick); der Bearbeiten-Schalter sitzt als Stift-Toggle
+  (`aria-pressed`) in der Toolbar neben Filter-Reset und Zahnrad; die
+  Checkbox-Spalte ist `data-noedit`. Dazu ein Wiring-Fix: im Editier-Modus setzt
+  ein Klick in eine editierbare Zelle den Cursor und togglet nicht nebenbei die
+  Zeilenauswahl.
+
+- **Sidebar (#51h): komplette g-Anatomie, aber funktional** — Titel wie a
+  (Logo + Name) oben, darunter der Firmen-Button und unten die Profil-Zeile in
+  der g-Optik (`data-size="lg"`, messbar wertgleich); beide öffnen echte
+  Dropdowns **nach rechts** (`data-side="right"`). Der Firmenwechsel wirkt:
+  Auswahl im Menü schreibt Name/Plan in den Trigger (neues
+  `c22-menu-check`-Event aus `wireMenuChecks` — dessen Capture-stopPropagation
+  frisst sonst jeden Inline-Handler auf den Items). Die Profil-Zeile trägt ein
+  rundes Foto (`avatar` in Standardgröße). Beide Trigger zeigen ein
+  `chevron-right` (passend zur Öffnungsrichtung), der Firmen-Button ein
+  Gebäude-Icon (`building-2`); ein `panel-left`-Toggle im Inhaltsbereich blendet
+  die Leiste ein/aus. Bauart: die Dropdown-Hülle liegt auf dem `<li>` selbst
+  (`li.dropdown-menu`), damit der Trigger direktes li-Kind bleibt und die
+  Vendor-Item-Optik voll greift; zwei Reste der Menü-Trigger-Optik
+  (Padding/Radius) stellt `components.css` zurück.
+
+- **Data Table (#21): Überschrift folgt der Spaltenausrichtung** — der
+  Betrag-Kopf im Sortier-Beispiel war linksbündig über rechtsbündigen Zahlen
+  (fehlendes `data-type="number"` am th); repo-weit per Messung geprüft, das war
+  der einzige Ausreißer.
+
+- **Sidebar (#51): neue Variante „Zweigeteilt"** — Kopf mit Seiten-Logo + Titel
+  (bewusst KEINE toten Firmen-/Profil-Buttons), Navigation in zwei Bereichen:
+  oben flache Links, unten hierarchische Auswahlliste (zweistufig verschachtelte
+  `details`). Beide Bereiche funktional über das neue Wiring
+  `wireNavSelect`/`[data-nav-select]` (`c22.js`): Klick auf einen Menüpunkt
+  wandert `aria-current="page"` um — ein aktiver Punkt pro nav, ohne je Link
+  einen Inline-Handler zu wiederholen.
+
+- **Sidebar (#51): neues Beispiel „Komplett" nach der shadcn-Base-Sidebar-Demo** —
+  Team-Switcher im Kopf (Logo-Kachel + zwei Zeilen + `chevrons-up-down`), Gruppe
+  „Plattform" mit vier `details`/`summary`-Untermenüs (eines ausgeklappt),
+  User-Zeile im Fuß und Panel-Trigger im Inhaltsbereich; Demo-Box bewusst höher
+  (`h-128`). Kanon-Ergänzung in `components.css`: Items in `header`/`footer` der
+  Sidebar bekommen dieselbe Flex-Zeilen-Geometrie wie section-Items (der Vendor
+  verflext nur `nav > section ul …` — Kopf-/Fuß-Items blieben sonst gestapelt).
+
+- **Tabs (#57): Marker, Spur und Browser-Reiter** — (c) der aktive Marker der
+  vertikalen Line-Tabs sitzt jetzt LINKS vor dem Reiter (Vendor-Default war
+  rechts, zwischen Liste und Panel); (d, neu) `data-track` zieht eine
+  durchgehende graue Linie über die volle Länge, der foreground-Marker liegt
+  exakt darauf (Geometrie: Marker ±4px, Listen-Padding 3px → 1px-Border landet
+  unter dem 2px-Marker); (h, neu) `data-variant="browser"` zeichnet Tabs als
+  Browser-Reiter im Chrome-Stil: muted-Leiste, aktiver Reiter mit oberen
+  Rundungen und zwei Hohlkehlen (radial-gradient-Ecken) nahtlos zur Fläche
+  darunter, Trennstriche zwischen inaktiven Nachbarn. „browser" neu im
+  geschlossenen Varianten-Vokabular (Hygiene-Regel 12).
+
+- **Textarea (#58): Zeichen-Zähler funktioniert** — neuer Wiring
+  `wireCharCount` (`c22.js`): ein `<p data-char-count>` im selben `.field` zählt
+  live beim Tippen („n/max" aus `maxlength`, ohne nur „n"); optional
+  `data-char-count="<id>"` für ein Ziel außerhalb des eigenen field.
+
+- **Theme Switcher (#59c) / Toggle Group (#62): Gruppen wieder nebeneinander** —
+  Basecoat stellt `[role='radiogroup']` pauschal auf `display:grid` + gap
+  (gedacht für Formular-Radios); das zerlegte Button-/Toggle-Gruppen mit
+  korrekter Radiogroup-Semantik in eine Spalte mit Lücken (59c, 62a/c/e; 62d
+  vertikal mit Abständen). Kanon-Fix: `.button-group[role='radiogroup']` bleibt
+  `inline-flex` ohne gap; vertikal übernimmt wieder die Vendor-column-Regel.
+
+- **Toast (#60i): Upload-Toast ist jetzt echt** — Spinner als Status-Icon plus je
+  Datei ein echter Fortschrittsbalken (progress-Kanon) IM Toast: eine Datei = ein
+  Balken, mehrere Dateien = mehrere Balken in EINEM Toast (verschiedene Tempi);
+  fertige Balken werden grün, sind alle durch, wechselt das Icon auf den
+  Erfolgs-Haken, der Titel auf „hochgeladen" und der Toast schließt sich. Ersetzt
+  das statische „Eigenes Icon"-Beispiel (die `icon:`-Option bleibt API).
+
+- **Tabellen-Kanon: Spaltenbeschriftungen immer fett** (PO, repo-weit) —
+  `.table th` (und Sortier-Buttons darin, da Buttons keine Schriftstärke erben)
+  sind jetzt per Kanon-Regel fett; die 28 `font-bold`-Utilities in
+  `data-table.html` und die `font-medium`-Ausreißer der Dialog-Tabelle sind
+  entfernt (SPOT). Gilt automatisch auch für die Typography-Tabelle (64d).
+
+- **Table (#56): neue Variante „Linien-Stil"** (`data-variant="line"`,
+  Booktabs-artig): keine Flächen (kein Fuß-Grau, kein Hover-/Selected-Grund),
+  die Datenzone wird oben und unten von einer kräftigen 2px-Linie begrenzt
+  (unter dem Kopf bzw. über der Fußzeile — border-collapse lässt sie gegen die
+  feinen Zeilenlinien gewinnen); über dem Kopf und unter der Fußzeile läuft
+  keine Linie. Beispiel zeigt beide Formen: mit Kopf-/Fußzeile und nackte
+  Datenzeilen.
 
 - **Mehrfachauswahl-Kanon: Haken statt Hintergrund** (PO, repo-weit): angehakte
   native Checkboxen zeigen den Haken in Vordergrundfarbe auf transparentem Grund

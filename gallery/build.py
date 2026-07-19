@@ -100,12 +100,14 @@ COMPONENTS: list[tuple[str, bool, bool, bool]] = [
     ("Close Button", False, False, True),
     ("Color Roles", False, False, True),
     ("Code Block", False, False, True),
+    ("Editable Table", False, False, True),
 ]
 
 # Demo width per component (natural width like the source pages). Default below.
 DEFAULT_WIDTH = "max-w-2xl"
 WIDTHS = {
     "table": "max-w-3xl", "data-table": "max-w-4xl", "sidebar": "max-w-full",
+    "editable-table": "max-w-3xl",
     "chart": "max-w-3xl", "typography": "max-w-3xl", "calendar": "max-w-md",
     "navigation-menu": "max-w-3xl", "menubar": "max-w-3xl", "resizable": "max-w-3xl",
     "card": "max-w-4xl",

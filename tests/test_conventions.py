@@ -367,7 +367,7 @@ ERLAUBTE_VARIANTEN = {
     "outline", "ghost", "link", "destructive",
     "success", "warning", "info",
     # Nicht-Farb-Ausführungen derselben Achse (Form/Struktur, keine eigene Farb-Rolle):
-    "line", "label", "elevated", "card", "bordered", "separator", "mono",
+    "line", "label", "elevated", "card", "bordered", "separator", "mono", "browser", "grid",
 }
 VARIANT_ATTR = re.compile(r'data-variant="([^"]*)"')
 

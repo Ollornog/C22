@@ -1783,6 +1783,140 @@
     @apply text-accent-foreground;
   }
 
+  /* Tabellen-Kanon (PO): Spaltenbeschriftungen sind IMMER fett — auch wenn die
+     Beschriftung in einem Sortier-Button steckt (Buttons erben keine Schriftstärke). */
+  .table th {
+    @apply font-bold;
+  }
+  .table th .btn {
+    @apply font-bold;
+  }
+
+  /* Tabelle „line" (PO 56, Booktabs-Stil): keine Flächen (kein Fuß-Grau, kein
+     Hover-/Selected-Grund), die DATENZONE wird oben und unten von einer kräftigen
+     Linie begrenzt (unter dem Kopf bzw. über der Fußzeile — border-collapse lässt
+     die 2px gegen die feinen Zeilenlinien gewinnen); über dem Kopf und unter der
+     Fußzeile läuft KEINE Linie. */
+  .table[data-variant='line'] tbody {
+    @apply border-t-2 border-b-2;
+  }
+  .table[data-variant='line'] tfoot {
+    @apply bg-transparent;
+  }
+  .table[data-variant='line'] tr {
+    @apply hover:bg-transparent data-[state=selected]:bg-transparent;
+  }
+
+  /* Vendor-Konflikt (PO 59c/62): [role='radiogroup'] stellt Basecoat pauschal auf
+     display:grid + gap (gedacht für Formular-Radios) — das zerlegt Button-/Toggle-Gruppen,
+     die semantisch korrekt role="radiogroup" tragen, in eine Spalte. Die Gruppen-Optik
+     gewinnt wieder: nebeneinander, ohne Lücke. */
+  .button-group[role='radiogroup'] {
+    display: inline-flex;
+    gap: 0;
+  }
+
+  /* Sidebar-Items in header/footer (PO 51: Team-Switcher, User-Zeile): der Vendor
+     verflext nur section-Items (`nav > section ul …`) — dieselbe Zeilen-Geometrie
+     gilt auch für Items im Kopf und Fuß der Sidebar. */
+  .sidebar nav > :is(header, footer) ul li > :is(a, button) {
+    @apply flex w-full items-center overflow-hidden;
+  }
+  /* Funktionale User-Zeile (PO 51h): die Dropdown-Hülle liegt auf dem <li> selbst
+     (li.dropdown-menu > button + [data-popover]) — so bleibt der Trigger ein
+     direktes li-Kind und behält die Vendor-Item-Optik (identisch zu g). Zwei
+     Vendor-Reste der Menü-Trigger-Optik müssen zurück auf die Item-Werte. */
+  .sidebar nav > :is(header, footer) ul li.dropdown-menu {
+    display: block;
+    width: 100%;
+  }
+  .sidebar nav > :is(header, footer) ul li.dropdown-menu > button {
+    border-radius: var(--radius-md);
+    padding: calc(var(--spacing) * 2);
+  }
+
+  /* Tabs „line", vertikal (PO 57c): der Marker sitzt LINKS vor dem Reiter (Leserichtung),
+     nicht rechts zwischen Liste und Panel (Vendor-Default inset-inline-end). */
+  .tabs > [role='tablist'][data-variant='line'][aria-orientation='vertical'] > [role='tab']::after {
+    inset-inline-end: auto;
+    inset-inline-start: -4px;
+  }
+
+  /* Tabs „line" mit Spur (PO 57): data-track am tablist zieht eine durchgehende graue
+     Linie über die volle Länge; der foreground-Marker des aktiven Reiters liegt darauf.
+     Geometrie: Marker (2px) sitzt bei ±4px vor der Tab-Kante, tablist-Padding ist 3px —
+     die 1px-Border der Liste landet damit exakt unter dem Marker. */
+  .tabs > [role='tablist'][data-variant='line'][data-track][aria-orientation='vertical'] {
+    @apply border-s;
+  }
+  .tabs > [role='tablist'][data-variant='line'][data-track]:not([aria-orientation='vertical']) {
+    @apply border-b;
+  }
+
+  /* Tabs als Browser-Reiter (PO 57, Chrome-Optik): Leiste auf muted-Grund, Reiter mit
+     oberen Rundungen; der AKTIVE Reiter trägt die background-Fläche und verschmilzt über
+     zwei Hohlkehlen (radial-gradient-Ecken) nahtlos mit der Fläche darunter. Inaktive
+     Nachbarn trennt ein kurzer Strich (wie im Browser). */
+  .tabs:has(> [role='tablist'][data-variant='browser']) {
+    @apply gap-0;
+  }
+  .tabs > [role='tablist'][data-variant='browser'] {
+    @apply h-auto w-full items-end gap-0 rounded-none bg-muted p-0 px-2 pt-1.5;
+  }
+  .tabs > [role='tablist'][data-variant='browser'] > [role='tab'] {
+    @apply relative flex-none rounded-t-lg rounded-b-none border-0 px-4 py-1.5;
+  }
+  .tabs > [role='tablist'][data-variant='browser'] > [role='tab']:not([aria-selected='true']) + [role='tab']:not([aria-selected='true'])::before {
+    content: '';
+    @apply absolute inset-y-1.5 -start-px w-px bg-border;
+  }
+  .tabs > [role='tablist'][data-variant='browser'] > [role='tab'][aria-selected='true'] {
+    @apply bg-background text-foreground shadow-none;
+  }
+  .tabs > [role='tablist'][data-variant='browser'] > [role='tab'][aria-selected='true']::before,
+  .tabs > [role='tablist'][data-variant='browser'] > [role='tab'][aria-selected='true']::after {
+    content: '';
+    @apply absolute bottom-0 size-2 opacity-100;
+  }
+  .tabs > [role='tablist'][data-variant='browser'] > [role='tab'][aria-selected='true']::before {
+    inset-inline-start: -8px;
+    background: radial-gradient(circle at 0 0, transparent 8px, var(--color-background) 8.5px);
+  }
+  .tabs > [role='tablist'][data-variant='browser'] > [role='tab'][aria-selected='true']::after {
+    inset-inline-start: auto;
+    inset-inline-end: -8px;
+    background: radial-gradient(circle at 100% 0, transparent 8px, var(--color-background) 8.5px);
+  }
+
+  /* Tabelle „grid" (PO 56, Excel-Look): Vollgitter — jede Zelle trägt Linien in
+     beide Richtungen (border-collapse kommt global aus dem Preflight), der Kopf
+     steht auf muted-Grund. Runde Ecken (PO): der Container liefert Rahmen +
+     Rundung; die Tabelle selbst versteckt ihre Außenkanten (border-style:hidden
+     gewinnt die border-collapse-Konfliktauflösung), sonst doppelten sich die
+     Linien am Rand und die Rundung würde überzeichnet. */
+  .table[data-variant='grid'] {
+    border-style: hidden;
+  }
+  .table[data-variant='grid'] :is(th, td) {
+    @apply border-border border;
+  }
+  .table[data-variant='grid'] thead th {
+    @apply bg-muted;
+  }
+  .table-container:has(> .table[data-variant='grid']) {
+    @apply border-border overflow-hidden rounded-lg border;
+  }
+
+  /* Inline-editierbare Tabelle (PO): editierbare Zellen zeigen den Text-Cursor,
+     die fokussierte Zelle einen inneren Ring (outline läuft nach innen, damit
+     das Gitter bzw. die Zeilenlinien nicht überdeckt werden). */
+  [data-edit-table] td[contenteditable] {
+    @apply cursor-text;
+  }
+  [data-edit-table] td[contenteditable]:focus {
+    @apply outline-ring bg-background outline-2 -outline-offset-2;
+  }
+
   /* Zahlen-Spalten (PO 21): die AUSRICHTUNG kommt vom Attribut, nicht von Utilities
      je Zelle — data-type="number" an th/td richtet rechtsbündig aus (tabular-nums).
      Die POSITION einer Spalte regelt die Tabelle automatisch (erste sichtbare sitzt
