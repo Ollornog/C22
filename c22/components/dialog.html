@@ -16,6 +16,35 @@
     </dialog>
   </div>
   <div class="c22-example">
+    <span class="c22-example-label">Formular (POST) — das &lt;form&gt; IST der innere Container</span>
+    <!-- FALLE (Praxis-Fund 2026-07-21): basecoat styled dialog > * > header/section/footer.
+         Ein <form> ZWISCHEN dem inneren Container und den Sektionen (<dialog><div><form><header>…)
+         lässt ALLE Dialog-Styles ins Leere laufen — der Inhalt läuft aus der Karte, Grids
+         überlappen. Für echte POST-Formulare ersetzt das <form> deshalb die innere <div>.
+         Zweite Falle: Selects in Dialog-Grids brauchen w-full min-w-0 (und die Felder min-w-0),
+         sonst sprengt langer Optionstext die Grid-Spalte. -->
+    <button type="button" class="btn" data-variant="outline" onclick="document.getElementById('c22-dialog-post').showModal()">Zurückstellen (POST-Formular)</button>
+    <dialog id="c22-dialog-post" class="dialog" aria-labelledby="c22-dp-title" aria-describedby="c22-dp-desc" onclick="if (event.target === this) this.close()">
+      <form method="post" action="#" onsubmit="event.preventDefault(); this.closest('dialog').close()">
+        <header><h2 id="c22-dp-title">Türen zurückstellen</h2><p id="c22-dp-desc">2 Einträge tauchen für die gewählte Zeit nicht mehr unter „Zu erledigen" auf — der Grund wird protokolliert.</p></header>
+        <section class="grid gap-4">
+          <div class="grid grid-cols-2 gap-4">
+            <div class="field min-w-0"><label class="label" for="c22-dp-grund">Grund</label>
+              <select class="select w-full min-w-0" id="c22-dp-grund"><option>Defekt — wartet auf Instandsetzung</option><option>Vereinbarung</option><option>Anderer Grund</option></select></div>
+            <div class="field min-w-0"><label class="label" for="c22-dp-dauer">Dauer</label>
+              <select class="select w-full min-w-0" id="c22-dp-dauer"><option>7 Tage</option><option selected>30 Tage</option><option>90 Tage</option></select></div>
+          </div>
+          <div class="field"><label class="label" for="c22-dp-notiz">Notiz (fürs Protokoll)</label><textarea class="textarea" id="c22-dp-notiz" rows="2"></textarea></div>
+        </section>
+        <footer>
+          <button type="button" class="btn" data-variant="outline" onclick="this.closest('dialog').close()">Abbrechen</button>
+          <button type="submit" class="btn">Zurückstellen</button>
+        </footer>
+        <button type="button" class="btn btn-close" data-variant="ghost" aria-label="Schließen" onclick="this.closest('dialog').close()"><svg data-icon-lu="x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+      </form>
+    </dialog>
+  </div>
+  <div class="c22-example">
     <span class="c22-example-label">Scrollbarer Inhalt (fixierte Fußzeile)</span>
     <button type="button" class="btn" data-variant="outline" onclick="document.getElementById('c22-dialog-scroll').showModal()">AGB lesen</button>
     <dialog id="c22-dialog-scroll" class="dialog" aria-labelledby="c22-ds-title" aria-describedby="c22-ds-desc" onclick="if (event.target === this) this.close()">

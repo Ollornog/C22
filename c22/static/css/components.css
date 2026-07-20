@@ -2197,3 +2197,15 @@
     margin: 0;
   }
 }
+
+@layer components {
+  /* Dropdown-Panel in Scroll-Containern (data-popover-fixed am .dropdown-menu):
+     FIXED entgeht dem Clipping des overflow-Containers; die Koordinaten setzt
+     c22.js synchron VOR dem Öffnen — und sie gehören bewusst NICHT zur
+     Öffnungs-Transition (sonst „fliegt" das Panel beim ersten Öffnen).
+     Praxis-Fund 2026-07-20/21. */
+  .dropdown-menu[data-popover-fixed] > [data-popover] {
+    position: fixed;
+    transition-property: opacity, transform, translate, scale, display;
+  }
+}
