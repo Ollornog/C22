@@ -20,6 +20,14 @@
  */
 
 :root {
+  /* FLÄCHEN (2026-07-20) — Umkehrung der base-Verteilung: die SIDEBAR ist
+     weiß, der Seitengrund leicht grau (base: Grund weiß, Sidebar #FAFAFA).
+     Karten/Popover bleiben weiß (base) und heben sich so vom Grund ab —
+     das shadcn-Dashboard-Muster. Dark braucht nichts: dort liegt die
+     Sidebar (0.205) schon über dem Grund (0.145). */
+  --background: oklch(0.97 0 0);                    /* #F5F5F5 (neutral-100) */
+  --sidebar: oklch(1 0 0);                          /* weiß */
+
   /* PRIMARY — Marken-Blau, aber eine Stufe DUNKLER als die Basis (#2563EB, blue-600):
      Weiß auf #3B82F6 erreicht nur ~3.7:1 (reicht für UI/Large Text, nicht für normale
      Button-Labels) — auf #2563EB liest Weiß mit ~5.2:1 (WCAG-AA-Gedanke). Das reine
