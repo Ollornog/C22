@@ -61,6 +61,13 @@
 }
 
 .dark {
+  /* FLÄCHEN dark (Bugfix 2026-07-21): die :root-Flächenwerte oben gewinnen
+     sonst (gleiche Spezifität, späterer Import) über die .dark-Werte der
+     base — der Seitengrund wäre im Dark HELL bei hellem Text. Hier die
+     base-dark-Verteilung explizit wiederherstellen (Sidebar über Grund). */
+  --background: oklch(0.145 0 0);
+  --sidebar: oklch(0.205 0 0);
+
   /* PRIMARY — im Dark HELLER und ENTSÄTTIGTER als das Light-Primary (blue-500 statt
      blue-600: L 0.623 > 0.546, Chroma 0.214 < 0.245), damit die Fläche auf dunklem
      Grund leuchtet statt zu versumpfen. Weiß trüge darauf nur ~3.7:1, deshalb kippt
