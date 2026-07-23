@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — backlog in the repository (`backlog/`)
+
+Milestones, tasks and **architecture decisions (ADR)** now live as Markdown with frontmatter under
+`backlog/`, checked by the test suite. The switch to Tailwind + Basecoat is recorded as ADR-1 —
+together with the superseded predecessor decision, rather than letting it quietly disappear.
+
 ### Added
 
 - **Galerie als Mehrseiten-Werk (shadcn-artig):** `gallery/build.py` erzeugt jetzt vier
