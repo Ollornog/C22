@@ -15,7 +15,8 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from _kit import hygiene  # noqa: E402
+import subprocess  # noqa: E402
+from _kit import backlog, hygiene  # noqa: E402
 from _kit.report import Report  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -33,7 +34,8 @@ PFLICHT = [
     "pyproject.toml", ".ci-image",
     "scripts/check.sh", "scripts/_residue_check.sh", ".githooks/pre-push",
     ".github/workflows/ci.yml", ".github/dependabot.yml",
-    "tests/_kit/hygiene.py", "tests/run_all.py", "tests/test_repo.py",
+    "tests/_kit/hygiene.py", "tests/_kit/backlog.py",
+    "scripts/_backlog.py", "backlog/README-KONVENTION.md", "tests/run_all.py", "tests/test_repo.py",
     "c22/__init__.py",
 ]
 fehlend = hygiene.pruefe_pflichtdateien(str(ROOT), PFLICHT)
@@ -98,5 +100,13 @@ r.check("run_all.py findet die Suiten automatisch",
 nicht_ausfuehrbar = hygiene.pruefe_ausfuehrbar(
     str(ROOT), ["scripts/check.sh", ".githooks/pre-push", "scripts/_residue_check.sh"])
 r.check("Skripte sind ausführbar", not nicht_ausfuehrbar, " | ".join(nicht_ausfuehrbar))
+
+# ---- Backlog: Struktur, Verweise, generierter Index
+for _v in backlog.alle_pruefungen(str(ROOT)):
+    r.check(f"Backlog: {_v}", False)
+r.check("Backlog hat Eintraege", bool(backlog.lade(str(ROOT))))
+_idx = subprocess.run([sys.executable, "scripts/_backlog.py", "index", "--dry-run"],
+                      cwd=ROOT, capture_output=True, text=True)
+r.check("backlog/README.md ist aktuell (sonst: scripts/_backlog.py index)", _idx.returncode == 0)
 
 sys.exit(r.done())
