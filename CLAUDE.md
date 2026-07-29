@@ -136,7 +136,16 @@ c22/vendor/basecoat/    vendored, pinned Basecoat (reproduce via scripts/vendor-
 gallery/build.py        builds the gallery PAGES (index/blocks/charts/typeset.html, shadcn-style):
                         components from the COMPONENTS list; blocks/charts/typeset are discovered
                         by directory scan — no central registry for them
+gallery/legal.py        imprint + privacy text of the PUBLISHED site (legal.html) — one source
+                        for the mandatory details, rendered with the same typography canon
+scripts/build-site.py   builds the published website into _site/ (GitHub Pages): the same gallery,
+                        built a second time with an empty asset prefix, plus the assets it links
 ```
+
+The website **is** the gallery — not a second work. Locally the pages sit in `gallery/` and address
+their assets as `../c22/…`; on the site they sit at the root and address them as `c22/…`. That prefix
+is the only difference (`ZIEL` / `ASSETS` in `build.py`), so nothing can drift apart. `pages.yml`
+rebuilds and deploys it on every push to `main` — a pull request only builds it, as a check.
 
 ## Changing or adding a component / block / chart / typeset entry
 
