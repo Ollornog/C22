@@ -2509,3 +2509,29 @@
     background-color: var(--card);
   }
 }
+
+@layer components {
+  /* Field-Separator IN einer Karte: das „oder"-Plättchen verdeckt die Trennlinie, indem es die
+     Fläche unter sich nachmalt — Basecoat nimmt dafür fest `--background`. In einer Karte ist die
+     Fläche aber `--card`; wo die beiden Töne auseinanderliegen (Dark, Packs mit grauem Canvas
+     und weissen Cards) stand ein hellerer Balken quer durch die Karte. shadcn flickt das je
+     Aufruf mit einer Utility am Separator (`*:data-[…]:bg-card`) — hier EINMAL, damit jede Karte
+     mit Trenner stimmt (Anmelde-/Registrier-Vollbild, field.html „In einer Karte"). Bei
+     background == card ein No-op. */
+  .card .field-separator > span {
+    background-color: var(--card);
+  }
+
+  /* Marken-Zeichen (Anmelde-/Registrierseiten): der Logo-Block aus Glyph-Plättchen + Wortmarke.
+     Im Vorbild steht in jedem Vollbild-Login dieselbe Utility-Kette (bg-primary + Grösse +
+     Zentrierung + Radius) — fünfmal kopiert wären fünf Gelegenheiten, das Zeichen auseinander
+     laufen zu lassen. `.brand` legt Glyph und Wortmarke auf eine Zeile, `.brand-mark` ist das
+     Plättchen; das Glyph selbst trägt wie jedes freistehende Icon seine `size-*`-Klasse. Farbe
+     kommt aus dem primary-Rollenpaar, der Radius aus der Radius-Achse — Umfärben = Tokens. */
+  .brand {
+    @apply flex items-center gap-2 font-medium;
+  }
+  .brand-mark {
+    @apply bg-primary text-primary-foreground flex size-6 shrink-0 items-center justify-center rounded-md;
+  }
+}
