@@ -1,0 +1,88 @@
+name: pages
+
+# Veröffentlicht die Galerie als Website auf GitHub Pages — dieselbe Galerie, die lokal
+# unter `gallery/` entsteht, nur mit Asset-Adressen ohne `../` (scripts/build-site.py).
+# Die HTML-Dateien liegen deshalb NICHT im Repo: geändert werden die Quellen, gebaut wird hier.
+#
+# Einmalig nötig: Settings → Pages → Source = "GitHub Actions", per API:
+#   gh api -X PUT repos/<owner>/<repo>/pages -f build_type=workflow
+# Steht die Quelle auf "Deploy from a branch", belegt der Automatik-Build das Deployment und
+# dieser Workflow scheitert an "in progress deployment". Prüfen:
+#   gh api repos/<owner>/<repo>/pages --jq '{build_type,source}'
+
+on:
+  push:
+    branches: [main]
+    paths:
+      # Alles, woraus die Seiten entstehen. Die kompilierten Pack-CSS stehen bewusst nicht
+      # dabei — sie sind Build-Output und liegen gar nicht im Repo.
+      - "c22/**"
+      - "gallery/**"
+      - "docs/logo.png"
+      - "scripts/build-site.py"
+      - "scripts/build-gallery.sh"
+      - "scripts/fetch-tailwind.sh"
+      - ".github/workflows/pages.yml"
+  # Auf Pull Requests wird nur GEBAUT, nicht veröffentlicht: ein kaputter Website-Bau soll
+  # vor dem Merge auffallen, nicht danach.
+  pull_request:
+    paths:
+      - "c22/**"
+      - "gallery/**"
+      - "scripts/build-site.py"
+      - "scripts/build-gallery.sh"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Deployments dürfen sich nicht überholen — und ein laufendes nicht abbrechen.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    # Öffentliches Repo ⇒ GitHub-Runner (siehe ci.yml).
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0  # v7.0.0
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1  # v6.3.0
+        with:
+          python-version: "3.12"
+
+      # Basecoat ist vendored, Tailwind nicht — die CLI ist ein Binary und wird geholt.
+      - name: Tailwind-CLI holen
+        run: ./scripts/fetch-tailwind.sh
+
+      # Baut die Galerie, kompiliert die neun Pack-CSS und staffelt beides nach _site/.
+      # Das Skript bricht ab, wenn eine Adresse im HTML ins Leere zeigt.
+      - name: Website bauen
+        run: python3 scripts/build-site.py
+
+      - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d  # v6.0.0
+        if: github.event_name != 'pull_request'
+
+      # include-hidden-files: seit v4 lässt die Action Dotfiles standardmäßig WEG.
+      # build-site.py legt `.nojekyll` an — ohne den Schalter fiele die Datei still aus dem
+      # Artefakt: Lauf grün, Deploy erfolgreich, nur der Inhalt wäre ein anderer.
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9  # v5.0.0
+        if: github.event_name != 'pull_request'
+        with:
+          path: _site
+          include-hidden-files: true
+
+  deploy:
+    needs: build
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128  # v5.0.0

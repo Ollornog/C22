@@ -33,7 +33,9 @@ PFLICHT = [
     "CODE_OF_CONDUCT.md", "i18n/CODE_OF_CONDUCT.de.md",
     "pyproject.toml", ".ci-image",
     "scripts/check.sh", "scripts/_residue_check.sh", ".githooks/pre-push",
-    ".github/workflows/ci.yml", ".github/dependabot.yml",
+    ".github/workflows/ci.yml", ".github/workflows/pages.yml", ".github/dependabot.yml",
+    # Die veröffentlichte Website: Bau-Skript und die Quelle ihrer Pflichtangaben.
+    "scripts/build-site.py", "gallery/legal.py",
     "tests/_kit/hygiene.py", "tests/_kit/backlog.py",
     "scripts/_backlog.py", "backlog/README-KONVENTION.md", "tests/run_all.py", "tests/test_repo.py",
     "c22/__init__.py",
@@ -56,7 +58,11 @@ adressen = hygiene.pruefe_adressen(str(ROOT), DATEIEN, POLICY,
                                                        r"phosphoricons\.com", r"selfh\.st",
                                                        r"(images\.)?unsplash\.com",
                                                        r"basecoatui\.com", r"ui\.shadcn\.com",
-                                                       r"registry\.npmjs\.org"])
+                                                       r"registry\.npmjs\.org",
+                                                       # Die eigene Projektseite (GitHub Pages) und
+                                                       # die Stellen, auf die ihr Impressum verweist.
+                                                       r"[a-z0-9-]+\.github\.io", r"docs\.github\.com",
+                                                       r"lucide\.dev"])
 # Vendored Basecoat (c22/vendor/) ist Upstream verbatim — es darf seine eigenen Ökosystem-Domains
 # (tailwindcss.com) nennen; die Beispieladress-Regel gilt nur für UNSEREN Code.
 adressen = [a for a in adressen if not a.startswith("c22/vendor/")]

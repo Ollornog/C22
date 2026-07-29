@@ -6,6 +6,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — die Galerie ist jetzt eine öffentliche Website (GitHub Pages)
+
+- **`.github/workflows/pages.yml`** baut und veröffentlicht die Galerie bei jeder Änderung an
+  `main` unter `ollornog.github.io/C22`. Pull Requests **bauen** die Seite nur (Prüfung), sie
+  veröffentlichen nichts.
+- **`scripts/build-site.py`** staffelt die Website nach `_site/`: dieselbe Galerie, ein zweites
+  Mal gebaut — mit leerem Asset-Präfix, weil die Seiten dort im Wurzelverzeichnis liegen. Danach
+  prüft es **jede lokale Adresse im gebauten HTML** gegen das Zielverzeichnis und bricht ab, wenn
+  eine fehlt: eine Seite ohne Stylesheet meldet keinen Fehler, sie sieht nur kaputt aus.
+- **`gallery/build.py` kennt Ziel und Asset-Präfix** (`ZIEL`/`ASSETS`, als Argumente übergebbar) —
+  statt Pfade in fertigem HTML zu ersetzen. Der Unterschied zwischen lokalem Stand und Website ist
+  damit genau ein Präfix.
+- **Neue Seite `legal.html`** (Impressum & Datenschutz, Quelle `gallery/legal.py`): Pflichtangaben
+  nach § 5 DDG / § 18 Abs. 2 MStV, dazu Hosting bei GitHub, die von Unsplash nachgeladenen
+  Beispielbilder und der einzige localStorage-Eintrag (`c22-pack`). Kein Reiter in der
+  Seiten-Navigation — verlinkt in der Kopfleiste, die jede Seite trägt.
+- **Kopfleiste** trägt jetzt rechts zwei dezente Verweise: GitHub und Impressum.
+
 ### Added — backlog in the repository (`backlog/`)
 
 Milestones, tasks and **architecture decisions (ADR)** now live as Markdown with frontmatter under

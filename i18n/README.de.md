@@ -21,6 +21,9 @@ oder ein Dashboard einmal zu bauen und nicht immer wieder dieselben Probleme zu 
 Abstände, Kontrast, Responsive-Brüche — und die App-seitigen Adapter dünn zu halten: Ein Redesign heißt
 „neue Tokens + Components, Galerie weiter grün", nicht jede App anfassen.
 
+**👉 [Galerie live ansehen](https://ollornog.github.io/C22/)** — jede Component in ihren Varianten,
+acht Style-Packs, hell und dunkel. Wird bei jeder Änderung an `main` neu gebaut.
+
 ---
 
 ## Was es ist
