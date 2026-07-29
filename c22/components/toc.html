@@ -1,0 +1,178 @@
+<!-- custom: TOC = Inhaltsverzeichnis mit Lesemarke. Kein Basecoat-Gegenstück; entstanden aus der
+     Galerie, die genau das brauchte (links markiert, wo man im Inhalt steht) — als Component,
+     nicht als Sonderlocke. ZWEI Achsen: data-variant = FORM (list/tree/compact/hamburger),
+     data-marker = ART der Markierung (bar/fill/dot/underline/label). Aktiv ist immer
+     `aria-current="true"`, gesetzt von wireToc in c22.js; jede Markierungsart ist reines CSS
+     darauf, eine neue braucht kein JavaScript. Gemessen wird die Lesemarke (letzter Abschnitt,
+     dessen Oberkante sie passiert hat), nicht bloße Sichtbarkeit — ein langer Abschnitt ist
+     sonst minutenlang „sichtbar" und mehrere kurze gleichzeitig. Beobachtet wird der scrollende
+     Container, nicht zwingend das Fenster. Die Lesemarke ist OPT-IN: nur ein Verzeichnis mit `data-toc` wird verdrahtet — ein
+     Verzeichnis ohne behält den Zustand, den das Markup zeigt (die Beispiele c–e unten).
+     `data-toc-title` markiert den Seitentitel-Eintrag:
+     er gilt, solange man noch im Kopfbereich steht. -->
+<div class="c22-examples">
+
+  <div class="c22-example">
+    <span class="c22-example-label">Wie in der Galerie (Balken-Markierung, flache Liste) — im Rahmen scrollen</span>
+    <div class="flex w-full max-w-3xl gap-6 rounded-xl border p-4">
+      <nav class="toc w-44 shrink-0 self-start" data-marker="bar" data-toc="#toc-a-inhalt" aria-label="Inhalt">
+        <a href="#toc-a-1">Einleitung</a>
+        <a href="#toc-a-2">Aufbau</a>
+        <a href="#toc-a-3">Bedienung</a>
+        <a href="#toc-a-4">Grenzen</a>
+      </nav>
+      <div id="toc-a-inhalt" class="h-64 min-w-0 flex-1 overflow-y-auto pe-2">
+        <section id="toc-a-1" class="scroll-mt-2">
+          <h4 class="font-semibold">Einleitung</h4>
+          <p class="text-muted-foreground py-2 text-sm">Beim Scrollen wandert die Markierung links mit. Aktiv ist der Abschnitt, dessen Oberkante die Lesemarke zuletzt passiert hat.</p>
+          <div class="bg-muted/40 h-40 rounded-md"></div>
+        </section>
+        <section id="toc-a-2" class="scroll-mt-2 pt-6">
+          <h4 class="font-semibold">Aufbau</h4>
+          <p class="text-muted-foreground py-2 text-sm">Die Verzeichnis-Form und die Art der Markierung sind zwei getrennte Attribute.</p>
+          <div class="bg-muted/40 h-40 rounded-md"></div>
+        </section>
+        <section id="toc-a-3" class="scroll-mt-2 pt-6">
+          <h4 class="font-semibold">Bedienung</h4>
+          <p class="text-muted-foreground py-2 text-sm">Ein Klick springt und markiert sofort, ohne auf das Scroll-Ereignis zu warten.</p>
+          <div class="bg-muted/40 h-40 rounded-md"></div>
+        </section>
+        <section id="toc-a-4" class="scroll-mt-2 pt-6">
+          <h4 class="font-semibold">Grenzen</h4>
+          <p class="text-muted-foreground py-2 text-sm">Ohne Ziel-Element bleibt ein Eintrag ein gewöhnlicher Link.</p>
+          <div class="bg-muted/40 h-40 rounded-md"></div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Seitentitel und Ebenen (Baum-Form) — der Titel gilt im Kopfbereich</span>
+    <div class="flex w-full max-w-3xl gap-6 rounded-xl border p-4">
+      <nav class="toc w-48 shrink-0 self-start" data-variant="tree" data-marker="bar" data-toc="#toc-b-inhalt" aria-label="Inhalt">
+        <a href="#toc-b-kopf" data-toc-title>Werkstattbericht</a>
+        <a href="#toc-b-1" data-level="2">Ausgangslage</a>
+        <a href="#toc-b-1-1" data-level="3">Drei Grundsätze</a>
+        <a href="#toc-b-2" data-level="2">Umbau</a>
+        <a href="#toc-b-2-1" data-level="3">Tokens</a>
+        <a href="#toc-b-3" data-level="2">Ergebnis</a>
+      </nav>
+      <div id="toc-b-inhalt" class="h-64 min-w-0 flex-1 overflow-y-auto pe-2">
+        <header id="toc-b-kopf" class="scroll-mt-2">
+          <h3 class="text-xl font-bold tracking-tight">Werkstattbericht</h3>
+          <p class="text-muted-foreground py-2 text-sm">Solange man hier oben steht, ist der Seitentitel markiert — nicht der erste Abschnitt.</p>
+          <div class="bg-muted/40 h-28 rounded-md"></div>
+        </header>
+        <section id="toc-b-1" class="scroll-mt-2 pt-6">
+          <h4 class="font-semibold">Ausgangslage</h4>
+          <div class="bg-muted/40 mt-2 h-28 rounded-md"></div>
+        </section>
+        <section id="toc-b-1-1" class="scroll-mt-2 pt-6">
+          <h5 class="font-medium">Drei Grundsätze</h5>
+          <div class="bg-muted/40 mt-2 h-28 rounded-md"></div>
+        </section>
+        <section id="toc-b-2" class="scroll-mt-2 pt-6">
+          <h4 class="font-semibold">Umbau</h4>
+          <div class="bg-muted/40 mt-2 h-28 rounded-md"></div>
+        </section>
+        <section id="toc-b-2-1" class="scroll-mt-2 pt-6">
+          <h5 class="font-medium">Tokens</h5>
+          <div class="bg-muted/40 mt-2 h-28 rounded-md"></div>
+        </section>
+        <section id="toc-b-3" class="scroll-mt-2 pt-6">
+          <h4 class="font-semibold">Ergebnis</h4>
+          <div class="bg-muted/40 mt-2 h-28 rounded-md"></div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Markierungsarten (gefüllte Zeile · Punkt · Plakette) — dieselbe Liste, drei Anmutungen</span>
+    <div class="flex w-full max-w-3xl flex-wrap gap-6 rounded-xl border p-4">
+      <nav class="toc w-40" data-marker="fill" aria-label="Gefüllt">
+        <a href="#toc-a-1" aria-current="true">Einleitung</a>
+        <a href="#toc-a-2">Aufbau</a>
+        <a href="#toc-a-3">Bedienung</a>
+      </nav>
+      <nav class="toc w-40" data-marker="dot" aria-label="Punkt">
+        <a href="#toc-a-1">Einleitung</a>
+        <a href="#toc-a-2" aria-current="true">Aufbau</a>
+        <a href="#toc-a-3">Bedienung</a>
+      </nav>
+      <nav class="toc w-48" data-marker="label" aria-label="Plakette">
+        <a href="#toc-a-1">Einleitung</a>
+        <a href="#toc-a-2">Aufbau</a>
+        <a href="#toc-a-3" aria-current="true" data-hier="hier">Bedienung</a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Waagrecht über dem Inhalt (Unterstrich-Markierung)</span>
+    <nav class="toc w-full max-w-2xl border-b pb-1" data-orientation="horizontal" data-marker="underline" aria-label="Inhalt">
+      <a href="#toc-a-1" aria-current="true">Einleitung</a>
+      <a href="#toc-a-2">Aufbau</a>
+      <a href="#toc-a-3">Bedienung</a>
+      <a href="#toc-a-4">Grenzen</a>
+    </nav>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Eng (viele Einträge in schmaler Spalte)</span>
+    <nav class="toc w-40" data-variant="compact" data-marker="bar" aria-label="Inhalt">
+      <a href="#toc-a-1">Einleitung</a>
+      <a href="#toc-a-2" aria-current="true">Aufbau</a>
+      <a href="#toc-a-3">Bedienung</a>
+      <a href="#toc-a-4">Grenzen</a>
+      <a href="#toc-a-1">Anhang</a>
+      <a href="#toc-a-2">Quellen</a>
+    </nav>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Hamburger: so viele Linien wie Einträge, die aktive Linie markiert — anklicken zum Aufklappen</span>
+    <div class="flex w-full max-w-3xl gap-6 rounded-xl border p-4">
+      <div class="dropdown-menu shrink-0 self-start" id="toc-burger">
+        <button type="button" class="btn" data-variant="outline" data-size="icon" id="toc-burger-trigger"
+                aria-haspopup="menu" aria-controls="toc-burger-menu" aria-expanded="false" aria-label="Inhalt anzeigen">
+          <span data-toc-lines></span>
+        </button>
+        <div id="toc-burger-popover" data-popover aria-hidden="true">
+          <nav class="toc min-w-48 p-1" data-variant="hamburger" data-marker="fill" data-toc="#toc-c-inhalt"
+               id="toc-burger-menu" aria-labelledby="toc-burger-trigger" aria-label="Inhalt">
+            <a href="#toc-c-1">Übersicht</a>
+            <a href="#toc-c-2">Anlagen</a>
+            <a href="#toc-c-3">Prüfungen</a>
+            <a href="#toc-c-4">Meldungen</a>
+            <a href="#toc-c-5">Anhang</a>
+          </nav>
+        </div>
+      </div>
+      <div id="toc-c-inhalt" class="h-64 min-w-0 flex-1 overflow-y-auto pe-2">
+        <section id="toc-c-1" class="scroll-mt-2">
+          <h4 class="font-semibold">Übersicht</h4>
+          <p class="text-muted-foreground py-2 text-sm">Zugeklappt zeigt der Knopf fünf Linien — eine je Eintrag. Beim Scrollen wandert die kräftige Linie mit.</p>
+          <div class="bg-muted/40 h-36 rounded-md"></div>
+        </section>
+        <section id="toc-c-2" class="scroll-mt-2 pt-6">
+          <h4 class="font-semibold">Anlagen</h4>
+          <div class="bg-muted/40 mt-2 h-36 rounded-md"></div>
+        </section>
+        <section id="toc-c-3" class="scroll-mt-2 pt-6">
+          <h4 class="font-semibold">Prüfungen</h4>
+          <div class="bg-muted/40 mt-2 h-36 rounded-md"></div>
+        </section>
+        <section id="toc-c-4" class="scroll-mt-2 pt-6">
+          <h4 class="font-semibold">Meldungen</h4>
+          <div class="bg-muted/40 mt-2 h-36 rounded-md"></div>
+        </section>
+        <section id="toc-c-5" class="scroll-mt-2 pt-6">
+          <h4 class="font-semibold">Anhang</h4>
+          <div class="bg-muted/40 mt-2 h-36 rounded-md"></div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+</div>

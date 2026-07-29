@@ -143,6 +143,7 @@ COMPONENTS: list[tuple[str, bool, bool, bool]] = [
     ("Textarea", True, True, False),
     ("Theme Switcher", True, False, False),
     ("Toast", True, True, False),
+    ("Toc", False, False, True),
     ("Toggle", False, True, True),
     ("Toggle Group", False, True, True),
     ("Tooltip", True, True, False),
@@ -322,10 +323,12 @@ def descriptors(slug: str) -> str:
 # ── Generische Bausteine für alle Seiten ──────────────────────────────────────
 
 def toc_link(anchor: str, label: str, num: int | None = None) -> str:
+    """Ein Eintrag der Inhaltsspalte. Optik und Markierung kommen aus der Toc-Component
+    (`.toc` + `data-marker`), nicht aus einer Utility-Kette hier — die Galerie war der Anlass
+    für diese Component, also benutzt sie sie auch."""
     nummer = (f'<span class="tabular-nums text-muted-foreground/50 w-6 shrink-0 text-right">{num}</span>'
               if num is not None else "")
-    return (f'<a href="#{anchor}" class="flex items-baseline gap-2 truncate rounded-md px-2 py-1 '
-            f'text-sm text-muted-foreground hover:bg-muted hover:text-foreground">'
+    return (f'<a href="#{anchor}" class="flex items-baseline gap-2 truncate">'
             f'{nummer}<span class="truncate">{html.escape(label)}</span></a>')
 
 
@@ -449,8 +452,12 @@ def page_shell(active: str, titel_schluessel: str, toc_html: str, main_html: str
          f'<a href="{datei}" class="rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground">{label}</a>')
         for datei, label in PAGES)
     titel_de, titel_en = i18n.TEXTE[titel_schluessel]
+    # `data-toc="main"`: beobachtet wird der scrollende Inhaltsbereich, nicht das Fenster —
+    # in dieser Hülle scrollt `main`. `data-marker="bar"` = Balken an der Innenkante.
     aside = (f'<aside class="hidden w-64 shrink-0 overflow-y-auto border-r px-3 py-4 lg:block">'
-             f'<nav class="flex flex-col gap-0.5">{toc_html}</nav></aside>') if sidebar else ""
+             f'<nav class="toc" data-marker="bar" data-toc="main" '
+             f'aria-label="{html.escape(i18n.klartext("nav_content"))}">{toc_html}</nav></aside>'
+             ) if sidebar else ""
     return f"""<!doctype html>
 <html lang="de" data-lang="de">
 <head>

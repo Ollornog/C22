@@ -2501,3 +2501,155 @@ document.addEventListener('basecoat:initialized', function (e) {
     });
   }).observe(document.documentElement, { childList: true, subtree: true });
 })();
+
+/* ============================================================================
+ * TOC / Scrollspy — welcher Abschnitt gerade gelesen wird
+ *
+ * Warum eigenes JS: Basecoat hat kein Inhaltsverzeichnis, und die Galerie brauchte genau das
+ * (links markiert, wo man im Inhalt steht). Die Component macht daraus einen Baustein statt
+ * einer Galerie-Sonderlocke.
+ *
+ * Markup-Vertrag (siehe components/toc.html):
+ *   <nav class="toc" data-toc="#inhalt" data-marker="bar">
+ *     <a href="#start" data-toc-title>Seitentitel</a>   ← aktiv, solange man im KOPF steht
+ *     <a href="#abschnitt-1">…</a>                      ← data-level="2|3" rückt ein
+ *   </nav>
+ * Der aktive Eintrag trägt `aria-current="true"` — die Markierung selbst ist CSS-Sache
+ * (`data-marker`), damit eine neue Markierungsart keine JS-Änderung braucht.
+ *
+ * Gemessen wird NICHT reine Sichtbarkeit (ein langer Abschnitt ist minutenlang sichtbar,
+ * mehrere kurze gleichzeitig), sondern die klassische Lesemarke: aktiv ist der letzte
+ * Abschnitt, dessen Oberkante die Marke passiert hat. Beobachtet wird der scrollende
+ * Container — in der Galerie scrollt `main`, nicht das Fenster.
+ * ========================================================================== */
+(function () {
+  'use strict';
+
+  function scrollElter(el) {
+    for (var p = el.parentElement; p; p = p.parentElement) {
+      var s = getComputedStyle(p).overflowY;
+      if ((s === 'auto' || s === 'scroll') && p.scrollHeight > p.clientHeight) return p;
+    }
+    return null;
+  }
+
+  function wireToc(toc) {
+    if (toc.dataset.tocFertig) return;
+    toc.dataset.tocFertig = '1';
+
+    var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+    if (!links.length) return;
+
+    var titelLink = toc.querySelector('[data-toc-title]');
+    var ziele = links.map(function (a) {
+      var id = a.getAttribute('href').slice(1);
+      return { a: a, el: id ? document.getElementById(id) : null, titel: a.hasAttribute('data-toc-title') };
+    }).filter(function (z) { return z.el || z.titel; });
+
+    var inhalt = toc.dataset.toc ? document.querySelector(toc.dataset.toc) : null;
+    var behaelter = scrollElter(inhalt || (ziele[0] && ziele[0].el) || toc);
+
+    // Hamburger: die Linien SIND das Inhaltsverzeichnis. Ihre Anzahl kommt aus den Einträgen,
+    // nicht aus der Gewohnheit „drei Striche". Bei langen Verzeichnissen fasst eine Linie
+    // mehrere Einträge zusammen (data-max-lines), sonst wären es fünfzig Haarlinien.
+    // Beim Hamburger sitzt die Linien-Box im AUSLÖSER, das Verzeichnis selbst im Popover —
+    // sie ist also kein Kind des Navs. Deshalb erst im Nav suchen, dann in der Dropdown-Hülle.
+    var huelle = toc.closest('.dropdown-menu') || toc.parentElement;
+    var linienBox = toc.querySelector('[data-toc-lines]')
+      || (huelle && huelle.querySelector('[data-toc-lines]'));
+    var maxLinien = parseInt(toc.dataset.maxLines || '7', 10);
+    var eintraege = ziele.filter(function (z) { return !z.titel; });
+    var proLinie = Math.max(1, Math.ceil(eintraege.length / maxLinien));
+    var linien = [];
+    if (linienBox) {
+      linienBox.textContent = '';
+      var anzahl = Math.ceil(eintraege.length / proLinie);
+      for (var i = 0; i < anzahl; i++) {
+        var strich = document.createElement('span');
+        strich.setAttribute('data-toc-line', '');
+        linienBox.appendChild(strich);
+        linien.push(strich);
+      }
+      linienBox.setAttribute('data-lines', String(anzahl));
+    }
+
+    function markiere(aktiv) {
+      ziele.forEach(function (z) {
+        if (z.a === aktiv) z.a.setAttribute('aria-current', 'true');
+        else z.a.removeAttribute('aria-current');
+      });
+      if (!linien.length) return;
+      var idx = -1;
+      eintraege.forEach(function (z, i) { if (z.a === aktiv) idx = i; });
+      var treffer = idx < 0 ? -1 : Math.floor(idx / proLinie);
+      linien.forEach(function (s, i) {
+        if (i === treffer) s.setAttribute('data-active', '');
+        else s.removeAttribute('data-active');
+      });
+    }
+
+    function marke() {
+      // Lesemarke: ein Stück unter der Oberkante des Sichtbereichs — nicht am Rand, sonst
+      // schaltet der Eintrag schon, wenn der Abschnitt nur mit dem Rand hereinschaut.
+      var r = behaelter ? behaelter.getBoundingClientRect().top : 0;
+      var h = behaelter ? behaelter.clientHeight : window.innerHeight;
+      return r + Math.min(160, h * 0.28);
+    }
+
+    function pruefe() {
+      var m = marke();
+      var aktiv = null;
+      eintraege.forEach(function (z) {
+        if (z.el && z.el.getBoundingClientRect().top <= m) aktiv = z.a;
+      });
+      // Noch im Kopfbereich: dann gilt der Seitentitel (falls es einen Eintrag dafür gibt).
+      if (!aktiv && titelLink) aktiv = titelLink;
+      if (!aktiv && eintraege.length) aktiv = eintraege[0].a;
+      markiere(aktiv);
+    }
+
+    var geplant = false;
+    function anstossen() {
+      if (geplant) return;
+      geplant = true;
+      requestAnimationFrame(function () { geplant = false; pruefe(); });
+    }
+
+    (behaelter || window).addEventListener('scroll', anstossen, { passive: true });
+    window.addEventListener('resize', anstossen);
+    // Wird die Seite MIT Anker geöffnet, springt der Browser erst nach diesem Skript — ohne
+    // diesen zweiten Blick stünde die Markierung auf dem ersten Abschnitt, obwohl man mitten
+    // im Dokument gelandet ist.
+    window.addEventListener('load', anstossen);
+    pruefe();
+
+    // Ein Klick soll nicht auf das Scroll-Ereignis warten müssen.
+    links.forEach(function (a) {
+      a.addEventListener('click', function () { markiere(a); setTimeout(pruefe, 300); });
+    });
+  }
+
+  function wireAlle(root) {
+    var basis = root && root.querySelectorAll ? root : document;
+    // NUR mit `data-toc` — die Lesemarke ist Opt-in. Sonst griffe sie auch nach
+    // Verzeichnissen, die absichtlich einen festen Zustand zeigen (Galerie-Beispiele), und
+    // überschriebe deren `aria-current` mit der Lesemarke der umgebenden Seite.
+    basis.querySelectorAll('.toc[data-toc]').forEach(wireToc);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { wireAlle(document); });
+  } else {
+    wireAlle(document);
+  }
+  new MutationObserver(function (muts) {
+    muts.forEach(function (m) {
+      Array.prototype.forEach.call(m.addedNodes, function (n) {
+        if (n.nodeType === 1) wireAlle(n);
+      });
+    });
+  }).observe(document.documentElement, { childList: true, subtree: true });
+
+  window.C22 = window.C22 || {};
+  window.C22.initTocs = wireAlle;
+})();

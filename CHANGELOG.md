@@ -6,6 +6,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — Component `Toc`: Inhaltsverzeichnis mit Lesemarke
+
+Entstanden aus der Galerie, die genau das brauchte — links markiert, wo man im Inhalt steht. Als
+**Component**, nicht als Galerie-Sonderlocke: die Galerie-Inhaltsspalte benutzt sie jetzt selbst.
+
+- **Zwei getrennte Achsen:** `data-variant` = die FORM (`list` · `tree` · `compact` · `hamburger`),
+  `data-marker` = die ART der Markierung (`bar` · `fill` · `dot` · `underline` · `label`). Aktiv ist
+  immer `aria-current="true"`; jede Markierungsart ist reines CSS darauf, eine neue braucht **keine
+  Zeile JavaScript**.
+- **Seitentitel-Eintrag** (`data-toc-title`): gilt, solange man noch im Kopfbereich steht — danach
+  greifen erste, zweite, dritte Überschrift (`data-level` rückt ein, gerechnet mit der Dichte-Achse).
+- **Hamburger, dessen Linien das Verzeichnis SIND:** zugeklappt zeigt der Knopf so viele Linien, wie
+  es Einträge gibt (nicht die üblichen drei), und hebt die Linie des Abschnitts hervor, in dem man
+  steht — Fortschrittsanzeige und Menü in einem. Bei langen Verzeichnissen fasst eine Linie mehrere
+  Einträge zusammen (`data-max-lines`), sonst wären es fünfzig Haarlinien. Aufgeklappt zeigt das
+  kanonische Dropdown die Links.
+- **Gemessen wird die Lesemarke**, nicht bloße Sichtbarkeit: aktiv ist der letzte Abschnitt, dessen
+  Oberkante sie passiert hat. Ein langer Abschnitt ist sonst minutenlang „sichtbar" und mehrere
+  kurze gleichzeitig. Beobachtet wird der **scrollende Container** — in der Galerie scrollt `main`,
+  nicht das Fenster.
+- **Die Lesemarke ist Opt-in** (`data-toc`): ein Verzeichnis ohne dieses Attribut behält den
+  Zustand, den das Markup zeigt. Ohne diese Grenze überschrieb der Scrollspy die absichtlich
+  festen Zustände der Galerie-Beispiele.
+- Die aktive Hamburger-Linie ist nicht nur farbig, sondern auch **kräftiger** — Farbe allein wäre
+  bei Farbfehlsicht und im Dunkelmodus zu wenig Unterschied.
+- Das Varianten-Vokabular ist um die vier Formen erweitert (bewusste Entscheidung, wie Regel 12 es
+  verlangt) und in `color-roles.html` als Nicht-Farb-Varianten dokumentiert.
+
 ### Fixed — Nachlese aus der Achsen-Runde (41 Galerie-Positionen nachgeprüft)
 
 Die Positionen wurden einzeln gemessen (gewinnende Regel + Computed-Wert, nicht geraten) und die

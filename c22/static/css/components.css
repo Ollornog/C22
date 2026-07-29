@@ -158,6 +158,111 @@
     @apply rounded-sm px-1 font-semibold leading-tight;
     font-size: calc(var(--text-xs) * 0.84);
   }
+  /* ============================================================
+   * TOC — Inhaltsverzeichnis mit Lesemarke (c22.js: wireToc)
+   *
+   * Zwei getrennte Achsen, damit man sie unabhaengig waehlen kann:
+   *   data-variant  = die FORM des Verzeichnisses (list - tree - compact - hamburger)
+   *   data-marker   = die ART der Markierung (bar - fill - dot - underline - label)
+   * Der aktive Eintrag traegt `aria-current="true"` (setzt das JS) — jede Markierungsart ist
+   * reines CSS darauf. Eine neue Art braucht deshalb keine Zeile JavaScript.
+   * ============================================================ */
+  .toc {
+    @apply flex flex-col gap-0.5;
+  }
+  .toc a {
+    @apply text-muted-foreground hover:text-foreground rounded-md px-2 py-1 text-sm no-underline transition-colors;
+  }
+  .toc a[aria-current='true'] {
+    @apply text-foreground font-medium;
+  }
+
+  /* Der Seitentitel-Eintrag: die Wurzel des Dokuments, deshalb kraeftiger. */
+  .toc a[data-toc-title] {
+    @apply text-foreground font-semibold;
+  }
+
+  /* Ebenen (data-level) ruecken ein — der Einzug rechnet mit der Dichte-Achse. */
+  .toc a[data-level='2'] { padding-inline-start: calc(var(--spacing) * 4); }
+  .toc a[data-level='3'] { padding-inline-start: calc(var(--spacing) * 7); }
+  .toc a[data-level='4'] { padding-inline-start: calc(var(--spacing) * 10); }
+
+  /* ── Markierungsarten ──────────────────────── */
+  /* bar: Balken an der Innenkante — die uebliche Loesung fuer Fliesstext-Verzeichnisse. */
+  .toc[data-marker='bar'] a {
+    @apply border-s-2 border-transparent rounded-none;
+  }
+  .toc[data-marker='bar'] a[aria-current='true'] {
+    @apply border-s-primary bg-accent/40;
+  }
+  /* fill: gefuellte Zeile (wie ein gewaehlter Menuepunkt) — kraeftig bei kurzen Listen. */
+  .toc[data-marker='fill'] a[aria-current='true'] {
+    @apply bg-accent text-accent-foreground;
+  }
+  /* dot: Punkt vor dem Eintrag; die Spur bleibt sichtbar, damit die Zeile nicht springt. */
+  .toc[data-marker='dot'] a {
+    @apply relative;
+    padding-inline-start: calc(var(--spacing) * 5);
+  }
+  .toc[data-marker='dot'] a::before {
+    content: '';
+    @apply bg-border absolute start-1.5 top-1/2 size-1.5 -translate-y-1/2 rounded-full transition-colors;
+  }
+  .toc[data-marker='dot'] a[aria-current='true']::before {
+    @apply bg-primary;
+  }
+  /* underline: Unterstrich unter dem aktiven Eintrag (waagrechte Verzeichnisse). */
+  .toc[data-marker='underline'] a[aria-current='true'] {
+    @apply underline decoration-2 underline-offset-4;
+    text-decoration-color: var(--color-primary);
+  }
+  /* label: der aktive Eintrag bekommt eine Plakette statt einer Flaeche. */
+  .toc[data-marker='label'] a[aria-current='true']::after {
+    content: attr(data-hier);
+    @apply bg-primary text-primary-foreground ms-2 rounded-sm px-1 align-middle;
+    font-size: calc(var(--text-xs) * 0.84);
+  }
+
+  /* ── Formen ───────────────────────────── */
+  /* tree: Ebenen mit durchlaufender Linie — zeigt die Gliederung, nicht nur die Reihenfolge. */
+  .toc[data-variant='tree'] {
+    @apply border-s;
+  }
+  .toc[data-variant='tree'] a {
+    @apply rounded-none;
+  }
+  /* compact: enger und kleiner, fuer lange Verzeichnisse in schmalen Spalten. */
+  .toc[data-variant='compact'] {
+    @apply gap-0;
+  }
+  .toc[data-variant='compact'] a {
+    @apply py-0.5 text-xs;
+  }
+  /* waagrecht: Reiter-artige Zeile (z.B. ueber dem Inhalt statt daneben). */
+  .toc[data-orientation='horizontal'] {
+    @apply flex-row flex-wrap items-center gap-1;
+  }
+
+  /* ── hamburger: die Linien SIND das Verzeichnis ───────── */
+  /* Zugeklappt zeigt der Knopf so viele Linien, wie es Eintraege gibt (nicht die ueblichen
+     drei), und hebt die Linie des Abschnitts hervor, in dem man steht — ein Fortschritts-
+     anzeiger, der zugleich Menue ist. Die Linien erzeugt `wireToc` aus den Eintraegen. */
+  .toc[data-variant='hamburger'] {
+    @apply inline-flex flex-col gap-0;
+  }
+  [data-toc-lines] {
+    @apply flex w-5 flex-col items-stretch justify-center gap-1;
+  }
+  [data-toc-line] {
+    @apply bg-muted-foreground/50 h-0.5 w-full rounded-full transition-all;
+  }
+  [data-toc-line][data-active] {
+    @apply bg-primary;
+    /* Nicht nur farbig, sondern auch kraeftiger — Farbe allein waere bei Farbfehlsicht und im
+       Dunkelmodus zu wenig Unterschied. */
+    height: 3px;
+  }
+
   /* Prosa-Container (Achse „typeset"): Zeilenlänge, Zeilenhöhe und Absatzfluss kommen aus
      Tokens, damit der Typeset-Generator echte Draht-Enden hat. Bewusst KEIN `.prose`-Ersatz
      im Tailwind-Sinn: die Klasse setzt nur diese drei Achsen-Werte, das Aussehen der
