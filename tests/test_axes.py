@@ -35,6 +35,9 @@ ROOT = Path(__file__).resolve().parent.parent
 CSS = ROOT / "c22" / "static" / "css"
 PACK_DIR = CSS / "packs"
 MARKUP_DIRS = ("c22/components", "c22/blocks", "c22/charts", "c22/typeset")
+# Die Kanon-Regeln selbst gehören mit geprüft: eine Component kann ihre Achse auch
+# über eine @apply-Kette in components.css verlieren (so blieb `.bubble` rund).
+KANON = ("c22/static/css/components.css",)
 GENERATOR = ("gallery/build.py", "gallery/landing.py", "gallery/legal.py", "gallery/i18n.py")
 
 r = Report("Achsen — Packs und Components")
@@ -109,7 +112,14 @@ r.check("kein Pack setzt ein abgeleitetes Token direkt", not doppelt, " | ".join
 VERBOTEN: list[tuple[str, str, str]] = [
     # (Achse, Regex, Erklärung)
     ("radius", r"rounded(?:-[a-z]{1,2})?-\[[^\]]+\]", "fester Radius statt --radius"),
-    ("radius", r"border-radius\s*:(?!\s*var\()", "Radius als Festwert (var(--radius) ist richtig)"),
+    # Tailwind leitet NUR sm/md/lg/xl aus `--radius` ab (shadcn-Konvention in base.css).
+    # `rounded-2xl/3xl/4xl` und das nackte `rounded` sind FESTE Werte — sie sehen aus wie
+    # Token-Utilities, hängen aber an keiner Achse. Genau daran blieb `.bubble` in „lyra" rund.
+    # `rounded-none` und `rounded-full` bleiben erlaubt: „immer eckig" bzw. „immer Kreis" ist
+    # eine Aussage über die FORM des Bauteils, keine heimliche Radius-Entscheidung.
+    ("radius", r"rounded-(?:2xl|3xl|4xl)\b", "feste Tailwind-Stufe, nicht an --radius gekoppelt"),
+    ("radius", r"@apply[^;]*\brounded\b(?!-)", "nacktes `rounded` = fester Wert (0.25rem)"),
+    ("radius", r"border-radius\s*:(?!\s*(?:var\(|calc\(|min\(|max\(|clamp\(|inherit|0\b))", "Radius als Festwert (var()/calc()/min() sind richtig)"),
     ("type-scale", r"text-\[(?!11px)[^\]]*(?:px|rem|em)\]", "rohe Schriftgrösse statt --text-*"),
     ("type-scale", r"font-size\s*:(?!\s*(?:var\(|calc\())", "Schriftgrösse als Festwert"),
     ("elevation", r"shadow-\[[^\]]+\]", "fester Schatten statt --shadow-*"),
@@ -129,15 +139,47 @@ def dateien() -> list[Path]:
     for d in MARKUP_DIRS:
         aus += sorted((ROOT / d).rglob("*.html"))
     aus += [ROOT / g for g in GENERATOR]
+    aus += [ROOT / k for k in KANON]
     return [p for p in aus if p.exists()]
+
+
+def ohne_kommentare(text: str):
+    """(Zeilennummer, Inhalt) — Zeilen INNERHALB eines Blockkommentars fallen weg.
+
+    Erste Fassung prüfte nur, ob eine Zeile mit `*` beginnt: die Fortsetzungszeile eines
+    CSS-Blockkommentars, die mit einem Backtick anfängt, schlug damit als Verstoss an. Ein
+    Test, der über sein eigenes Beispiel stolpert, verliert seine Autorität.
+    """
+    im_block = False
+    for nr, zeile in enumerate(text.splitlines(), 1):
+        roh = zeile
+        if im_block:
+            if "*/" in zeile:
+                im_block = False
+                zeile = zeile.split("*/", 1)[1]
+            else:
+                continue
+        while "/*" in zeile:
+            vor, rest = zeile.split("/*", 1)
+            if "*/" in rest:
+                zeile = vor + rest.split("*/", 1)[1]
+            else:
+                zeile = vor
+                im_block = True
+                break
+        if zeile.lstrip().startswith(("#", "//", "<!--")):
+            continue
+        # Bewusste Abweichung, die BENANNT ist (die Sprechblasen-Spitze etwa ist Form, nicht
+        # Radius-Achse). Ohne diesen Weg würde der Test entweder lügen oder ignoriert werden.
+        if "achse-ausnahme:" in roh:
+            continue
+        yield nr, zeile
 
 
 verstoesse: list[str] = []
 for pfad in dateien():
     rel = pfad.relative_to(ROOT)
-    for nr, zeile in enumerate(pfad.read_text(encoding="utf-8").splitlines(), 1):
-        if zeile.lstrip().startswith(("*", "#", "//", "<!--")):
-            continue                        # Kommentare dürfen Beispiele nennen
+    for nr, zeile in ohne_kommentare(pfad.read_text(encoding="utf-8")):
         for achse, muster, warum in VERBOTEN:
             if re.search(muster, zeile):
                 verstoesse.append(f"{rel}:{nr} [{achse}] {warum}")
@@ -149,7 +191,9 @@ r.check(f"kein Markup umgeht eine Achse ({len(dateien())} Dateien)",
 # ── B2: die Ausnahme text-[11px] ist EINE Regel, keine 219 Kopien ─────────────
 # CLAUDE.md erlaubt genau diesen Literalwert für Beispiel-Labels. Erlaubt heisst nicht kopiert:
 # steht er im Markup, ist er 219 Gelegenheiten, ihn uneinheitlich zu machen.
-kopien = sum(z.count("text-[11px]") for p in dateien() for z in p.read_text(encoding="utf-8").splitlines())
+kopien = sum(z.count("text-[11px]")
+             for p in dateien()
+             for _, z in ohne_kommentare(p.read_text(encoding="utf-8")))
 r.check("text-[11px] steht nicht im Markup (Kanon-Klasse statt Kopien)", kopien == 0,
         f"{kopien} Kopien — gehört als Regel nach components.css")
 

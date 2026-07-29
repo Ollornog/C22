@@ -21,7 +21,7 @@
 
 :root {
   /* Vendor setzt rounded-none in 49 eigenen Klassen */
-  --radius: 0;
+  --radius: 0px;   /* mit Einheit: calc()/min() rechnen sonst mit einem einheitenlosen 0 */
 
   /* Vendor setzt font-semibold/uppercase (22×) → schwerer */
   --font-weight-heading: 700;

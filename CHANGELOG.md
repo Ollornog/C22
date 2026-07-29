@@ -6,6 +6,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — Nachlese aus der Achsen-Runde (41 Galerie-Positionen nachgeprüft)
+
+Die Positionen wurden einzeln gemessen (gewinnende Regel + Computed-Wert, nicht geraten) und die
+Restbefunde adversarisch gegengeprüft. Bestätigt und behoben:
+
+- **Eine Pille war rechts runder als links.** `.btn[data-size=sm]` begrenzt den Radius auf
+  `min(var(--radius-md), 10px)`, die Gruppen-Regel des Vendors setzt an der **letzten** Kante aber
+  `var(--radius-md)` — mit `!important` und **ohne** Begrenzung. Ab `--radius` ≈ 0.75rem lief die
+  Gruppe auseinander, in den runden Packs (maia/luma/rhea) also immer. Die Gruppe respektiert
+  jetzt die Rundung ihrer Teile.
+- **`rounded-2xl/3xl/4xl` und das nackte `rounded` sind FESTE Werte** — nur `sm/md/lg/xl` leitet
+  Tailwind aus `--radius` ab. `.bubble` blieb deshalb in „lyra" rund; jetzt rechnet sie mit der
+  Achse (`calc(var(--radius) * 1.6)` — bei vega dieselben 16px wie vorher). Ebenso die drei neuen
+  Kanon-Klassen (`.c22-tag`, `.c22-merkmal`, `.code-inline`).
+- **Der Scrollbalken-Daumen war überall eine Kapsel** (`--scrollbar-radius: 9999px` fest). Folgt
+  jetzt der Achse: bei vega praktisch unverändert, in einem eckigen Pack wird er mit eckig.
+- **`--radius: 0` ohne Einheit** in lyra/sera — in `calc()`/`min()` ist das ein Sonderfall, den man
+  nicht braucht; jetzt `0px`.
+- **Der Test prüft jetzt auch `components.css`** (dort verliert eine Component ihre Achse genauso
+  leicht wie im Markup), erkennt Blockkommentare richtig — er stolperte über sein eigenes
+  Beispiel — und kennt einen **benannten Ausnahme-Weg** (`achse-ausnahme:`) für begründete
+  Abweichungen wie die 2px-Sprechblasenspitze. Ein Test, der lügt, wird ignoriert.
+
+### Changed — Generator
+
+- **Die neun Packs stehen als Voreinstellungen bereit** und stellen ihren **vollen** Achsenzustand
+  her (Basis + eigene Werte) — sonst blieben beim Wechsel Reste des vorigen Packs stehen. Gelesen
+  direkt aus `packs/<pack>.css`: kein zweites Register.
+- **Schieber melden ihre Änderung** (`input`/`change`), auch wenn eine Voreinstellung sie setzt.
+  Basecoats JS rechnet die gefüllte Spur aus `--slider-value` und hört auf `input`; wer `value`
+  still zuweist, verschiebt den Griff und lässt die Füllung stehen.
+
 ### Added — der Generator (`generator.html`): jede Achse als Regler
 
 Vorbild `ui.shadcn.com/create` (Achsen links, echte Seite als Vorschau) und

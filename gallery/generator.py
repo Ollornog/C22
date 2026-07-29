@@ -103,8 +103,50 @@ TEXTFARBEN = [
 ]
 SATZE = {"AKZENTE": AKZENTE, "GRUNDTOENE": GRUNDTOENE, "TEXTFARBEN": TEXTFARBEN}
 
+def pack_voreinstellungen() -> list[tuple[str, str, str, dict[str, str]]]:
+    """Die neun Style-Packs als Voreinstellungen — gelesen aus ihren eigenen Achsenschichten.
+
+    Kein zweites Register: `c22/static/css/packs/<pack>.css` IST der Wertesatz des Packs. Wer dort
+    eine Achse ändert, ändert damit die Voreinstellung im Generator mit. Gelesen wird nur der
+    `:root`-Block (der `.dark`-Block gehört zum Erscheinungsbild, nicht zur Achse) und nur, was
+    der Generator auch drehen kann.
+    """
+    drehbar = {t for t, *_ in DESIGN_ACHSEN} | {t for t, *_ in TYPESET_ACHSEN}
+    basis = _basiswerte(drehbar)
+    aus: list[tuple[str, str, str, dict[str, str]]] = []
+    for datei in sorted((ROOT / "c22" / "static" / "css" / "packs").glob("*.css")):
+        text = datei.read_text(encoding="utf-8")
+        root = re.search(r":root\s*\{(.*?)\n\}", text, re.S)
+        eigen = {}
+        if root:
+            for token, wert in re.findall(r"(--[a-z0-9-]+)\s*:\s*([^;]+);", root.group(1)):
+                if token in drehbar:
+                    eigen[token] = wert.strip()
+        name = datei.stem
+        # VOLLER Zustand: Basis + was das Pack überschreibt. Sonst blieben beim Wechsel von einem
+        # runden auf ein kantiges Pack die Achsen stehen, die das kantige nicht selbst nennt —
+        # man bekäme eine Mischung, die es als Pack nie gibt.
+        aus.append((f"pack-{name}", name.capitalize(), name.capitalize(), {**basis, **eigen}))
+    return aus
+
+
+def _basiswerte(tokens: set[str]) -> dict[str, str]:
+    """Die Ausgangswerte der Achsen, gelesen aus `tokens.css` und Basecoats `base.css`."""
+    werte: dict[str, str] = {}
+    for datei in (ROOT / "c22" / "vendor" / "basecoat" / "dist" / "base" / "base.css",
+                  ROOT / "c22" / "static" / "css" / "tokens.css"):
+        text = datei.read_text(encoding="utf-8")
+        root = re.search(r":root\s*\{(.*?)\n\}", text, re.S)
+        if not root:
+            continue
+        for token, wert in re.findall(r"(--[a-z0-9-]+)\s*:\s*([^;]+);", root.group(1)):
+            if token in tokens:
+                werte[token] = wert.strip()
+    return werte
+
+
 # Voreinstellungen (wie die 01–05 bei shadcn): Sätze, die zusammen etwas ergeben.
-VOREINSTELLUNGEN = [
+CHARAKTERE = [
     ("vega", "Standard", "Default", {}),
     ("kantig", "Kantig", "Sharp",
      {"--radius": "0rem", "--icon-stroke": "2.25", "--default-transition-duration": "100ms",
@@ -118,6 +160,9 @@ VOREINSTELLUNGEN = [
     ("lesbar", "Lesbar", "Readable",
      {"--measure": "62ch", "--leading-body": "1.9", "--flow": "1.5em", "--text-scale": "1.06"}),
 ]
+
+# Was die Leiste anbietet: erst die Charakter-Sätze, dann jedes Pack mit SEINEN Achsenwerten.
+VOREINSTELLUNGEN = CHARAKTERE + pack_voreinstellungen()
 
 
 def _block(datei: Path) -> str:
@@ -198,14 +243,22 @@ def inhalt() -> str:
             "Colours are named oklch values — the same format the repository uses.")}</p>'
         '</section>')
 
+    def gruppe(saetze, beschriftung, erstes_aktiv):
+        return (
+            f'<div class="button-group" role="radiogroup" aria-label="{html.escape(beschriftung)}">'
+            + "".join(
+                f'<button type="button" class="btn" data-variant="outline" data-size="sm" role="radio" '
+                f'aria-checked="{"true" if (erstes_aktiv and i == 0) else "false"}" '
+                f'data-voreinstellung="{k}">{zwei(html.escape(de), html.escape(en))}</button>'
+                for i, (k, de, en, _) in enumerate(saetze))
+            + '</div>')
+
     voreinstellungen = (
-        '<div class="button-group" role="radiogroup" aria-label="'
-        + html.escape("Voreinstellung") + '">'
-        + "".join(
-            f'<button type="button" class="btn" data-variant="outline" data-size="sm" role="radio" '
-            f'aria-checked="{"true" if i == 0 else "false"}" data-voreinstellung="{k}">'
-            f'{zwei(html.escape(de), html.escape(en))}</button>'
-            for i, (k, de, en, _) in enumerate(VOREINSTELLUNGEN))
+        '<div class="flex flex-wrap items-center gap-x-6 gap-y-2">'
+        f'<span class="text-muted-foreground text-xs">{zwei("Charakter", "Character")}</span>'
+        + gruppe(CHARAKTERE, "Charakter", True)
+        + f'<span class="text-muted-foreground text-xs">{zwei("Pack", "Pack")}</span>'
+        + gruppe(pack_voreinstellungen(), "Pack", False)
         + '</div>')
 
     return f"""
@@ -316,11 +369,21 @@ def inhalt() -> str:
   // Das Umschalten der Reiter macht die Tabs-Component selbst (basecoat.all.min.js).
 
   // Voreinstellungen + Würfeln
+  // Ein Wert wird IMMER über das Bedienelement gesetzt und dann als `input`-Ereignis gemeldet.
+  // Grund: die gefüllte Spur eines Schiebers rechnet Basecoats JS aus `--slider-value` — es
+  // hört auf `input`. Wer `el.value` still zuweist, verschiebt den Griff und lässt die Füllung
+  // stehen. Zwei Pfade (manuell/programmatisch) wären zwei Gelegenheiten, das falsch zu machen.
+  function melden(el) {{
+    el.dispatchEvent(new Event('input', {{ bubbles: true }}));
+    el.dispatchEvent(new Event('change', {{ bubbles: true }}));
+  }}
+
   function anwenden(satz) {{
     Object.keys(satz).forEach(function (t) {{
       var el = document.querySelector('[data-achse="' + t + '"]');
-      if (el && el.type === 'range') el.value = parseFloat(satz[t]);
-      if (el && el.tagName === 'SELECT') el.value = satz[t];
+      if (!el) {{ setzen(t, satz[t]); return; }}
+      el.value = el.type === 'range' ? parseFloat(satz[t]) : satz[t];
+      melden(el);
       setzen(t, satz[t]);
     }});
   }}
@@ -338,6 +401,7 @@ def inhalt() -> str:
         var min = parseFloat(el.min), max = parseFloat(el.max), schritt = parseFloat(el.step) || 1;
         var stufen = Math.floor((max - min) / schritt);
         el.value = (min + Math.floor(Math.random() * (stufen + 1)) * schritt).toFixed(4);
+        melden(el);
         setzen(el.dataset.achse, parseFloat(el.value) + einheit(el));
       }});
     }});
