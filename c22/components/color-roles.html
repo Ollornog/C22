@@ -166,4 +166,22 @@
       </div>
     </div>
   </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Nicht-Farb-Varianten (Form/Struktur statt eigener Rolle — dasselbe <code>data-variant</code>, geschlossenes Vokabular)</span>
+    <div class="flex w-full max-w-2xl flex-col gap-3 text-sm">
+      <p class="text-muted-foreground leading-6">Manche <code>data-variant</code>-Werte benennen keine Farbrolle, sondern eine <strong>Ausführung</strong>: <code>line</code> (Tabs mit Unterstrich), <code>card</code>/<code>bordered</code> (Accordion), <code>browser</code> (Chrome-Reiter), <code>grid</code> (Tabellen-Vollgitter), <code>mono</code>, <code>elevated</code>, <code>separator</code>, <code>label</code> — und für das Inhaltsverzeichnis <code>list</code>, <code>tree</code>, <code>compact</code>, <code>hamburger</code>. Sie stehen in derselben Liste, damit ein Tippfehler auffällt statt still zu wirken.</p>
+      <div class="flex flex-wrap items-start gap-6">
+        <nav class="toc w-36" data-marker="bar" aria-label="Beispiel: flach">
+          <a href="#color-roles" aria-current="true">Flach</a>
+          <a href="#color-roles">Zweiter</a>
+        </nav>
+        <nav class="toc w-40" data-variant="tree" data-marker="dot" aria-label="Beispiel: Baum">
+          <a href="#color-roles" data-toc-title>Titel</a>
+          <a href="#color-roles" data-level="2" aria-current="true">Ebene 2</a>
+          <a href="#color-roles" data-level="3">Ebene 3</a>
+        </nav>
+      </div>
+    </div>
+  </div>
 </div>

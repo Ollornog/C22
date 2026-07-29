@@ -375,6 +375,9 @@ ERLAUBTE_VARIANTEN = {
     "success", "warning", "info",
     # Nicht-Farb-Ausführungen derselben Achse (Form/Struktur, keine eigene Farb-Rolle):
     "line", "label", "elevated", "card", "bordered", "separator", "mono", "browser", "grid",
+    # Formen des Inhaltsverzeichnisses (components/toc.html): flache Liste, eingerückter Baum,
+    # enge Fassung, und der Hamburger, dessen Linien selbst das Verzeichnis sind.
+    "list", "tree", "compact", "hamburger",
 }
 VARIANT_ATTR = re.compile(r'data-variant="([^"]*)"')
 

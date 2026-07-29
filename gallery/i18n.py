@@ -33,6 +33,7 @@ TEXTE: dict[str, tuple[str, str]] = {
     "empty": ("— noch keine Inhalte —", "— nothing here yet —"),
     "empty_cat": ("— noch keine Blocks in dieser Kategorie —", "— no blocks in this category yet —"),
     "nav_pages": ("Galerie-Seiten", "Gallery pages"),
+    "nav_content": ("Inhalt dieser Seite", "Contents of this page"),
     "to_start": ("Zur Startseite", "To the start page"),
     "lang_choose": ("Sprache wählen", "Choose language"),
     "theme_choose": ("Erscheinungsbild wählen", "Choose appearance"),
