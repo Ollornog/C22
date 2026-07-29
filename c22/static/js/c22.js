@@ -2526,9 +2526,13 @@ document.addEventListener('basecoat:initialized', function (e) {
   'use strict';
 
   function scrollElter(el) {
-    for (var p = el.parentElement; p; p = p.parentElement) {
+    // Beim ELEMENT SELBST anfangen, nicht beim Elternteil: in der Galerie scrollt `main`
+    // selbst, in den Beispielen der Inhalts-Div selbst. Die erste Fassung begann bei
+    // `parentElement`, fand deshalb nichts und hängte den Listener an `window` — das dort
+    // nie scrollt. Ergebnis: die Markierung stand still, obwohl alles andere stimmte.
+    for (var p = el; p && p !== document.body && p !== document.documentElement; p = p.parentElement) {
       var s = getComputedStyle(p).overflowY;
-      if ((s === 'auto' || s === 'scroll') && p.scrollHeight > p.clientHeight) return p;
+      if ((s === 'auto' || s === 'scroll') && p.scrollHeight > p.clientHeight + 1) return p;
     }
     return null;
   }
@@ -2616,6 +2620,11 @@ document.addEventListener('basecoat:initialized', function (e) {
     }
 
     (behaelter || window).addEventListener('scroll', anstossen, { passive: true });
+    // Netz für alles andere: Scroll-Ereignisse einzelner Container BUBBELN NICHT, sind aber
+    // in der Capture-Phase am Dokument zu sehen. Damit funktionieren beliebig viele
+    // Verzeichnisse auf einer Seite, jedes mit eigenem Inhaltsbereich — und auch ein
+    // Container, der erst später überhaupt scrollbar wird (nachgeladener Inhalt).
+    document.addEventListener('scroll', anstossen, { capture: true, passive: true });
     window.addEventListener('resize', anstossen);
     // Wird die Seite MIT Anker geöffnet, springt der Browser erst nach diesem Skript — ohne
     // diesen zweiten Blick stünde die Markierung auf dem ersten Abschnitt, obwohl man mitten

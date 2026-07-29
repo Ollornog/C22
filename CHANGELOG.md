@@ -6,6 +6,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — die Lesemarke stand beim Scrollen still
+
+`scrollElter()` suchte den scrollenden Container erst beim **Elternteil** — in der Galerie
+scrollt aber `main` **selbst**, in den Beispielen der Inhalts-Div selbst. Gefunden wurde also
+nichts, der Listener landete auf `window`, und das scrollt dort nie: die Markierung blieb auf
+dem ersten Eintrag stehen, obwohl alles andere stimmte. Jetzt beginnt die Suche beim Element
+selbst; dazu ein Netz in der **Capture-Phase** am Dokument, weil Scroll-Ereignisse einzelner
+Container nicht bubbeln. Damit funktionieren beliebig viele Verzeichnisse auf einer Seite,
+jedes mit eigenem Inhaltsbereich — nachgewiesen mit echtem Scrollen (vier Verzeichnisse,
+vier verschiedene Stände, Hamburger-Linie mitgewandert).
+
+Ein Standbild-Test kann diese Fehlerklasse nicht sehen; der Fall ist deshalb als erster
+Kandidat für die visuelle Testebene im Backlog (T-1) festgehalten.
+
 ### Added — Component `Toc`: Inhaltsverzeichnis mit Lesemarke
 
 Entstanden aus der Galerie, die genau das brauchte — links markiert, wo man im Inhalt steht. Als
