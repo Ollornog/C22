@@ -21,3 +21,6 @@ gallery/charts.html
 gallery/typeset.html
 gallery/generator.html
 gallery/legal.html
+
+# Arbeitsverzeichnisse der Agenten-Worktrees (Werkzeug, kein Projektinhalt)
+.claude/

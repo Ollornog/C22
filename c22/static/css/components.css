@@ -155,7 +155,7 @@
   /* Herkunfts-Plakette der Galerie (B/S/C = Basecoat/shadcn/custom): winziger als jede
      Skalenstufe, deshalb gerechnet statt geraten — auch sie folgt der Typo-Achse. */
   .c22-tag {
-    @apply rounded px-1 font-semibold leading-tight;
+    @apply rounded-sm px-1 font-semibold leading-tight;
     font-size: calc(var(--text-xs) * 0.84);
   }
   /* Prosa-Container (Achse „typeset"): Zeilenlänge, Zeilenhöhe und Absatzfluss kommen aus
@@ -181,14 +181,14 @@
   /* Merkmal-Plakette der Galerie („eckig", „brutalist" …) — dieselbe Rechnung wie .c22-tag,
      nur mit mehr Luft, weil sie Wörter trägt statt eines Buchstabens. */
   .c22-merkmal {
-    @apply bg-muted text-muted-foreground rounded px-2 py-0.5 font-medium;
+    @apply bg-muted text-muted-foreground rounded-sm px-2 py-0.5 font-medium;
     font-size: calc(var(--text-xs) * 0.92);
   }
   /* Inline-Code im Fließtext (shadcn-Muster). War 4× als identische Utility-Kette mit
      `px-[0.3rem] py-[0.2rem]` kopiert — feste Abstände gehen an der Dichte-Achse vorbei.
      Jetzt eine Regel, deren Abstände über `--spacing` laufen. */
   .code-inline {
-    @apply bg-muted relative rounded px-1.5 py-0.5 font-mono text-sm font-semibold;
+    @apply bg-muted relative rounded-sm px-1.5 py-0.5 font-mono text-sm font-semibold;
   }
   .c22-example-letter {
     @apply text-foreground font-semibold;
@@ -207,15 +207,19 @@
    * ms-auto + welche Seite die Spitze bekommt. Kein Basecoat-Pendant (shadcn-Referenz
    * "base/bubble"), daher komplett hier definiert wie .badge-split. */
   .bubble {
-    @apply w-fit max-w-[80%] rounded-2xl px-4 py-2 text-sm leading-relaxed break-words;
+    @apply w-fit max-w-[80%] px-4 py-2 text-sm leading-relaxed break-words;
+    /* Eine Chat-Blase ist deutlich runder als eine Karte — aber ABGELEITET, nicht fest:
+       `rounded-2xl` war ein Tailwind-Festwert (1rem) und blieb deshalb in „lyra" rund,
+       obwohl das Pack eckig ist. Faktor 1.6 trifft bei vega dieselben 16px wie vorher. */
+    border-radius: calc(var(--radius) * 1.6);
     --bubble-bg: var(--color-background);
   }
   .bubble:not([data-align]),
   .bubble[data-align='start'] {
-    @apply rounded-tl-[2px];
+    @apply rounded-tl-[2px]; /* achse-ausnahme: die Sprechblasen-SPITZE ist Form, kein Radius (PO) */
   }
   .bubble[data-align='end'] {
-    @apply ms-auto rounded-tr-[2px];
+    @apply ms-auto rounded-tr-[2px]; /* achse-ausnahme: Spitze, s.o. */
   }
   .bubble:not([data-variant]),
   .bubble[data-variant='primary'] {
@@ -257,7 +261,7 @@
     @apply max-w-none;
   }
   .bubble-group > .bubble:not(:first-child) {
-    @apply rounded-2xl;
+    border-radius: calc(var(--radius) * 1.6);
   }
 
   /* Tippt-Indikator (SPOT für Bubble 9 und Message 39): <div class="bubble" data-typing>
@@ -1885,6 +1889,28 @@
   .button-group[role='radiogroup'] {
     display: inline-flex;
     gap: 0;
+  }
+
+  /* Außenkanten einer Gruppe runden GLEICH. Der Vendor begrenzt den Radius kleiner Knöpfe
+     (`.btn[data-size=sm]` → `min(var(--radius-md), 10px)`), setzt an der LETZTEN Kante aber den
+     unbegrenzten Wert — und das mit `!important`. Ab `--radius` ≈ 0.75rem war eine Pille dadurch
+     rechts runder als links; in den runden Packs (maia/luma/rhea) also immer. Hier bekommt die
+     letzte Kante dieselbe Begrenzung wie der Knopf sie sich selbst gibt — die Gruppe respektiert
+     die Rundung ihrer Teile, statt sie an einer Seite zu überstimmen. */
+  .button-group:not([data-orientation='vertical']) > [data-size='sm']:last-child,
+  .button-group:not([data-orientation='vertical']) > [data-size='icon-sm']:last-child {
+    border-start-end-radius: min(var(--radius-md), 10px) !important;
+    border-end-end-radius: min(var(--radius-md), 10px) !important;
+  }
+  .button-group:not([data-orientation='vertical']) > [data-size='xs']:last-child,
+  .button-group:not([data-orientation='vertical']) > [data-size='icon-xs']:last-child {
+    border-start-end-radius: min(var(--radius-md), 8px) !important;
+    border-end-end-radius: min(var(--radius-md), 8px) !important;
+  }
+  /* Dasselbe senkrecht: dort kappt der Vendor die untere Kante nicht. */
+  .button-group[data-orientation='vertical'] > :is([data-size='sm'], [data-size='icon-sm']):last-child {
+    border-end-start-radius: min(var(--radius-md), 10px) !important;
+    border-end-end-radius: min(var(--radius-md), 10px) !important;
   }
 
   /* Sidebar-Items in header/footer (PO 51: Team-Switcher, User-Zeile): der Vendor

@@ -138,7 +138,10 @@
    * laufen, folgen sie dem Dark-Theme automatisch — kein eigener .dark-Wert nötig. */
   --scrollbar-width: 0.625rem;
   --scrollbar-sm-width: 0.375rem;
-  --scrollbar-radius: 9999px;
+  /* Der Daumen folgt der Radius-Achse: bei vega ergibt --radius (10px) auf 10px Breite
+   * praktisch dieselbe Pille wie vorher, in einem eckigen Pack (lyra/sera) wird er
+   * aber mit — vorher waren 9999px fest und der Balken blieb überall eine Kapsel. */
+  --scrollbar-radius: var(--radius);
   --scrollbar-track: transparent;
   --scrollbar-thumb: color-mix(in oklab, var(--muted-foreground) 35%, transparent);
   /* C22-eigenes sechstes Token (nicht Basecoat): Puffer, um den der Track vor den Container-

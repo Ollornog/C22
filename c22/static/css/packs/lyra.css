@@ -21,7 +21,7 @@
 
 :root {
   /* Vendor setzt rounded-none in 66 eigenen Klassen → die Achse muss 0 sein */
-  --radius: 0;
+  --radius: 0px;   /* mit Einheit: calc()/min() rechnen sonst mit einem einheitenlosen 0 */
 
   /* Vendor-Basisgröße ist text-xs (76×), nicht text-sm → engere Skala */
   --text-scale: 0.96;
