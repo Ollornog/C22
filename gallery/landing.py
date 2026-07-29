@@ -77,11 +77,14 @@ ICON_GITHUB = ('<svg data-icon-lu="github" xmlns="http://www.w3.org/2000/svg" vi
                '<path d="M9 18c-4.51 2-5-2-7-2"/></svg>')
 
 
-def inhalt(anzahl: dict[str, int] | None = None) -> str:
+def inhalt(anzahl: dict[str, int] | None = None, assets: str = "../") -> str:
     """Das `main`-Innere der Startseite. Kein Inhaltsverzeichnis — die Seite ist kurz.
 
     `anzahl` bildet Dateiname → Anzahl Einträge ab; der Generator kennt die echten Zahlen.
     Fehlt eine, bleibt die Plakette weg — lieber keine Zahl als eine falsche.
+
+    `assets` ist dasselbe Präfix wie im Rumpf (lokal `../`, auf der Website leer) — die
+    Startseite lädt das Logo aus `docs/`.
     """
     anzahl = anzahl or {}
     karten = "".join(
@@ -107,6 +110,10 @@ def inhalt(anzahl: dict[str, int] | None = None) -> str:
   <section class="flex flex-col items-center gap-5 pt-8 text-center">
     <span class="badge" data-variant="outline">{zwei("In Arbeit — Schnittstellen können sich ändern",
                                                      "Work in progress — interfaces may still change")}</span>
+    <!-- Marke groß: das Logo trägt den Kopf, die Überschrift bleibt der Text daneben.
+         `width`/`height` stehen mit dabei, damit beim Laden nichts springt; `alt=""`, weil
+         die Überschrift direkt darunter dasselbe sagt. -->
+    <img src="{assets}docs/logo.png" alt="" width="512" height="512" class="size-40 sm:size-48">
     <h1 class="scroll-m-20 text-5xl font-extrabold tracking-tight">C22</h1>
     <p class="text-muted-foreground max-w-2xl text-xl leading-8">{zwei(
         "Ein wiederverwendbares Design-System im shadcn-Look — als kanonisches HTML, "
