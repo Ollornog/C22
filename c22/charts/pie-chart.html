@@ -1,0 +1,68 @@
+<!-- c22-title: Kreisdiagramm -->
+<!-- c22-tab: 4 | Kreis | Pie -->
+<!-- custom: ein <div data-chart='{…}'> je Chart, gerendert von c22.js (chartPie); Farben nur über
+     die Tokens --chart-1…5. Torte und Donut sind DIESELBE Geometrie — der Unterschied ist allein
+     "inner" (das Loch als Anteil des Außenradius): 0 = volle Torte, >0 = Ring. "gap" ist der
+     Trenner zwischen den Segmenten (0 = ohne), "start"/"sweep" drehen und beschneiden den Kreis
+     (sweep 180 = Halbkreis). Beschriftung entweder IM Segment (sliceLabels) oder AUSSEN
+     (nameLabels). MEHRERE Serien = konzentrische Ringe (gestapelte Torte); der Tooltip nennt dann
+     Ring und Kategorie. Ohne "values" zeigt der Tooltip den Anteil in Prozent, mit "values":true
+     den absoluten Wert. -->
+<div class="c22-examples">
+
+  <div class="c22-example">
+    <span class="c22-example-label">Torte (<code>type: "pie"</code>)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"pie","labels":["Direkt","Suche","Verweise","Social","Newsletter"],"series":[{"data":[38,25,19,12,6]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Torte ohne Trenner (<code>gap: 0</code>)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"pie","gap":0,"labels":["Direkt","Suche","Verweise","Social","Newsletter"],"series":[{"data":[38,25,19,12,6]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Anteil im Segment (<code>sliceLabels: "percent"</code>)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"pie","sliceLabels":"percent","labels":["Direkt","Suche","Verweise","Social","Newsletter"],"series":[{"data":[38,25,19,12,6]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Werte im Segment (<code>sliceLabels: "value"</code>, <code>values: true</code>)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"pie","sliceLabels":"value","values":true,"unit":" Besuche","labels":["Direkt","Suche","Verweise","Social","Newsletter"],"series":[{"name":"Besuche","data":[3200,2100,1600,1000,500]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Namen außen (<code>nameLabels: true</code> — breitere viewBox, damit nichts abgeschnitten wird)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"pie","nameLabels":true,"labels":["Direkt","Suche","Verweise","Social","Newsletter"],"series":[{"data":[38,25,19,12,6]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Legende (<code>legend: true</code> — runde Charts beschriften die Kategorien, nicht die Serien)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"pie","legend":true,"labels":["Direkt","Suche","Verweise","Social","Newsletter"],"series":[{"data":[38,25,19,12,6]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Donut (<code>type: "donut"</code> — dieselbe Geometrie mit Loch)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"donut","labels":["Direkt","Suche","Verweise","Social","Newsletter"],"series":[{"data":[38,25,19,12,6]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Donut mit Text in der Mitte (<code>center</code>) und Legende</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"donut","legend":true,"unit":"Anteil","labels":["Direkt","Suche","Verweise","Social"],"center":{"value":"8.412","label":"Besuche"},"series":[{"data":[38,25,19,18]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Schmaler Ring (<code>inner: 0.8</code>) — dasselbe Chart, nur ein größeres Loch</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"donut","inner":0.8,"labels":["Direkt","Suche","Verweise","Social","Newsletter"],"series":[{"data":[38,25,19,12,6]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Halbring (<code>start: 180</code>, <code>sweep: 180</code>) — Mittelschrift per <code>center.dy</code> in das offene Halbrund gesetzt</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"donut","start":180,"sweep":180,"inner":0.62,"center":{"value":"8.412","label":"Besuche","dy":-16},"labels":["Direkt","Suche","Verweise","Social"],"series":[{"data":[38,25,19,18]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Gestapelt — zwei Serien als konzentrische Ringe (außen die erste)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"pie","inner":0.35,"values":true,"unit":" Besuche","labels":["Direkt","Suche","Verweise","Social"],"series":[{"name":"Desktop","data":[3200,2100,1600,900]},{"name":"Mobil","data":[1400,2600,700,1800]}]}'></div>
+  </div>
+
+</div>

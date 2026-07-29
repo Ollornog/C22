@@ -100,6 +100,48 @@ Zwei Fehler mit einer gemeinsamen Wurzel — der Generator behandelte Farben wie
   wenn es den Wert kennt, und leere Werte kommen nie in die Ausgabe.
 - Wechselt das Erscheinungsbild, ziehen die Regler auf den Stand des nun geltenden Blocks nach —
   sonst behauptet die Leiste einen Wert, der gerade nicht wirkt.
+### Added — Charts: alle Typen, und die Typen als Reiter
+
+Vorbild sind die Reiter über `ui.shadcn.com/charts` (Area · Bar · Line · Pie · Radar · Radial ·
+Tooltip). Die eigene kleine SVG-Engine (`wireChart` in `c22.js`) kannte davon Fläche, Balken,
+Linie, Donut und Radar — es fehlten Torte, Radial und ein Ort für den Tooltip. Bewusst weiter
+**ohne Diagramm-Bibliothek**: jedes Element bleibt ein DOM-Knoten, gefärbt allein über
+`--chart-1…5` / `--border` / `--muted`.
+
+- **Torte und Donut sind jetzt EIN Renderer** (`chartPie`). Beide sind dieselbe Geometrie — ein
+  Band als gestrichelte Kreislinie, Radius = Bandmitte, Strichbreite = Banddicke. Der Unterschied
+  ist allein `inner` (Loch als Anteil des Außenradius): `0` reicht bis zum Mittelpunkt und ist die
+  volle Torte. Kein zweiter Renderer, kein Ringsektor-Pfad je Segment. Dazu `gap` (Trenner, `0` =
+  ohne), `start`/`sweep` (Halbkreis), Beschriftung im Segment (`sliceLabels`) oder außen
+  (`nameLabels`), und **mehrere Serien als konzentrische Ringe** (gestapelte Torte).
+- **`radial` — Radialbalken** (`chartRadial`): je Kategorie ein konzentrischer Bogen auf einer
+  Spur, Bogenlänge = Wert am Maßstab. Ein Radialbalken IST ein Balken, deshalb zählt der Zeiger je
+  **Ring**, nicht je Winkel. Mit `track`, `grid` (Polargitter), `round`, `barLabels` (Name im
+  Bogen), `center` (Tacho) und `stack` (alle Werte in EINEM Band, Halbkreis mit Summe).
+- **Radar-Ausführungen** wie im Vorbild: `gridShape:"circle"`, `spokes:false`, `grid:false`,
+  `fill:false` (nur Linien), `dots:false`, `rings:<n>`.
+- **Der Tooltip ist eine eigene Achse, kein Anhängsel eines Typs:** `tipIndicator`
+  (`dot`/`line`/`none`), `tipTitle`, `tipLabel:false`, `tipUnit` (gedämpfte Einheit),
+  `tipTotal`/`tipTotalLabel` (Summenzeile), `icon` je Serie — und `tipPin`, das ihn ohne Zeiger
+  sichtbar hält, damit die Galerie ihn überhaupt zeigen kann. Das Aussehen dazu liegt als Regel in
+  `components.css` (SPOT), nicht im Markup. Gilt für jeden Typ, auch die runden.
+- **Neue Partials** `pie-chart.html`, `radial-chart.html`, `radar-chart.html`,
+  `tooltip-chart.html`; `chart.html` zeigt als Übersicht jetzt auch Torte und Radial.
+- **`charts.html` zeigt die Typen als Reiter** — kanonische Tabs-Component, eigener Renderer
+  (`render_charts` in `gallery/build.py`), damit `render_flat` für Typeset unberührt bleibt.
+  Welcher Reiter ein Partial aufnimmt, sagt das Partial selbst (`<!-- c22-tab: … -->`): der
+  Verzeichnis-Scan bleibt die Quelle, eine Datei hineinlegen genügt weiter. Ohne Angabe landet ein
+  Partial im Reiter „Weitere" — es verschwindet nie stillschweigend.
+- **Reiter sind deep-linkbar** (`data-tab-hash` in `c22.js`): zeigt der Anker auf einen Reiter oder
+  auf ein Element in einem Panel, geht dieser Reiter auf. Ohne das wäre `charts.html#radial-chart`
+  wirkungslos, weil verborgene Panels `hidden` tragen.
+
+### Fixed — Chart-Tooltip wuchs nicht mit seinem Inhalt
+
+Basecoat gibt dem Tooltip nur eine Mindestbreite; weil seine Zeilen `width:100%` tragen, löste der
+Browser die zirkuläre Breite über genau dieses Minimum auf. Jede zusätzliche Angabe (Einheit,
+Summenzeile) brach dadurch um statt zu verbreitern. `.chart-tooltip { width: max-content }` macht
+die Mindestbreite wieder zu einem Minimum.
 
 ### Added — Toc: `rail` und `rail-overlay` (Striche statt Text, Beschriftung bei Hover)
 

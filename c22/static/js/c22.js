@@ -1843,7 +1843,17 @@
   // Markup:  <div data-chart='{ "type":"bar", "labels":["Jan",…],
   //            "series":[{"name":"Besuche","data":[…],"color":"chart-1"}],
   //            "axis":true, "grid":true, "legend":false, "area":false, "max":1000, "unit":"" }'></div>
-  // type: bar | bars | stacked | line | lines | step | smooth | donut | radar
+  // type: bar | bars | stacked | line | lines | step | smooth | pie | donut | radial | radar
+  //   pie/donut   Kreis (chartPie) — EINE Geometrie, "inner" ist das Loch (0 = volle Torte)
+  //   radial      Radialbalken (chartRadial) — je Kategorie ein konzentrischer Bogen auf einer Spur
+  //   radar       Netzdiagramm (chartRadar)
+  // Tooltip-Ausführungen (alle Typen, Vorbild shadcn-Reiter „Tooltips"):
+  //   tipIndicator "dot" (Standard) | "line" | "none"   ·   tipLabel:false = ohne Titelzeile
+  //   tipTitle "…" = eigener Titel   ·   tipUnit "kcal" = gedämpfte Einheit hinter dem Wert
+  //   tipTotal:true = Summenzeile im Fuß (tipTotalLabel)   ·   Serie mit "icon":"<phosphor>" = Icon
+  //   statt Farbfleck   ·   tipPin:<index> = Tooltip dauerhaft sichtbar (Galerie/Doku zeigen ihn
+  //   ohne Zeiger; die Platzierung zieht per ResizeObserver nach, sobald das Element Maße hat —
+  //   in einem noch verborgenen Reiter-Panel wäre sie sonst 0).
   // SVG-Teile werden mit inline var(--token) gefärbt (NICHT mit Tailwind-Utilities) — Tailwind
   // scannt Quellen, JS-generierte Klassen kämen nicht in den Build. Der Tooltip wird in ECHTEN
   // Pixeln (getBoundingClientRect) gesetzt -> skalierungsunabhängig/responsiv.
@@ -1883,12 +1893,42 @@
     root.appendChild(tip);
     return tip;
   }
-  function chTipHtml(title, rows) {
+  // Tooltip-Inhalt. Der Marker links ist die einzige Stelle mit drei Ausführungen: Farbfleck
+  // (Standard), schmaler Strich (tipIndicator "line") oder gar keiner ("none") — das Aussehen
+  // dazu liegt in components.css, hier steht nur die Entscheidung. Ein Icon in der Zeile
+  // (Serie mit "icon") ersetzt den Marker.
+  function chTipHtml(title, rows, cfg, total) {
+    cfg = cfg || {};
+    var ind = cfg.tipIndicator || 'dot';
+    var kopf = cfg.tipLabel === false ? ''
+      : '<div class="chart-tooltip-title">' + calEsc(cfg.tipTitle != null ? cfg.tipTitle : title) + '</div>';
+    function wert(v, suffix) {
+      return '<span class="chart-tooltip-value">' + calEsc(v) +
+        (suffix ? '<span class="chart-tooltip-unit">' + calEsc(suffix) + '</span>' : '') + '</span>';
+    }
     var items = rows.map(function (r) {
-      return '<div class="chart-tooltip-item"><span class="chart-tooltip-indicator" style="--chart-indicator-color:' + r.color +
-        '"></span><span class="chart-tooltip-label">' + calEsc(r.label) + '</span><span class="chart-tooltip-value">' + calEsc(r.value) + '</span></div>';
+      var marke = '';
+      if (r.icon) marke = '<span class="chart-tooltip-icon" style="color:' + r.color + '">' + phIcon(r.icon) + '</span>';
+      else if (ind !== 'none') marke = '<span class="chart-tooltip-indicator"' + (ind === 'line' ? ' data-variant="line"' : '') +
+        ' style="--chart-indicator-color:' + r.color + '"></span>';
+      return '<div class="chart-tooltip-item">' + marke +
+        '<span class="chart-tooltip-label">' + calEsc(r.label) + '</span>' + wert(r.value, r.suffix) + '</div>';
     }).join('');
-    return '<div class="chart-tooltip-title">' + calEsc(title) + '</div><div class="chart-tooltip-items">' + items + '</div>';
+    var fuss = total
+      ? '<div class="chart-tooltip-total"><span class="chart-tooltip-label">' + calEsc(total.label) + '</span>' +
+        wert(total.value, total.suffix) + '</div>'
+      : '';
+    return kopf + '<div class="chart-tooltip-items">' + items + '</div>' + fuss;
+  }
+  // Summenzeile (tipTotal) — die Werte einer Kategorie über alle Serien addiert.
+  function chTotal(cfg, series, i) {
+    if (!cfg.tipTotal) return null;
+    var summe = series.reduce(function (a, se) { return a + (se.data[i] || 0); }, 0);
+    return {
+      label: cfg.tipTotalLabel || 'Gesamt',
+      value: chNum(summe) + (cfg.unit || ''),
+      suffix: cfg.tipUnit,
+    };
   }
   // Tooltip in echten Pixeln über einem SVG-Punkt (viewBox-Koordinaten) platzieren.
   function chPlace(tip, svgEl, root, vx, vy, vbW, vbH) {
@@ -1940,7 +1980,8 @@
   function chLegend(cfg) {
     if (!cfg.legend) return '';
     var items;
-    if (cfg.type === 'donut') {
+    // Runde Charts beschriften die KATEGORIEN (eine Serie, viele Farben), kartesische die SERIEN.
+    if (cfg.type === 'donut' || cfg.type === 'pie' || cfg.type === 'radial') {
       items = (cfg.labels || []).map(function (l, i) { return chLegItem(l, chCol(((cfg.series[0] || {}).colors || [])[i], i)); });
     } else {
       items = (cfg.series || []).map(function (se, i) { return chLegItem(se.name || '', chCol(se.color, i)); });
@@ -1948,9 +1989,15 @@
     return '<ul class="chart-legend" style="margin-top:12px">' + items.join('') + '</ul>';
   }
   // Serien -> Tooltip-Zeilen (Farbe/Name/Wert+Einheit); geteilt von kartesischen Charts und Radar.
-  function chRows(series, i, unit) {
+  function chRows(series, i, unit, cfg) {
     return series.map(function (se, si) {
-      return { color: chCol(se.color, si), label: se.name || '', value: chNum(se.data[i] || 0) + (unit || '') };
+      return {
+        color: chCol(se.color, si),
+        label: se.name || '',
+        value: chNum(se.data[i] || 0) + (unit || ''),
+        suffix: cfg && cfg.tipUnit,
+        icon: se.icon,
+      };
     });
   }
   // Skalen-Maximum aus allen Serienwerten (schön gerundet), oder cfg.max wenn gesetzt.
@@ -1964,11 +2011,21 @@
     return { svgEl: root.querySelector('svg'), tip: chTooltip(root) };
   }
   // Hover verdrahten: pointerenter je [data-hit] -> show(i), Zeiger verlässt das SVG -> hide().
-  function chHover(svgEl, show, hide) {
+  // cfg.tipPin heftet den Tooltip an einen Index: er ist ohne Zeiger sichtbar und kehrt nach dem
+  // Hover dorthin zurück. Platziert wird per ResizeObserver statt einmalig — ein Chart in einem
+  // noch verborgenen Reiter-Panel hat Maße 0, und chPlace rechnet in echten Pixeln; sobald das
+  // Panel aufgeht, meldet der Observer die neue Größe und der Tooltip sitzt richtig.
+  function chHover(svgEl, show, hide, cfg) {
     [].slice.call(svgEl.querySelectorAll('[data-hit]')).forEach(function (h, i) {
       h.addEventListener('pointerenter', function () { show(i); });
     });
-    svgEl.addEventListener('pointerleave', hide);
+    var pin = cfg && cfg.tipPin;
+    svgEl.addEventListener('pointerleave', function () {
+      if (pin != null) show(pin); else hide();
+    });
+    if (pin == null) return;
+    if (window.ResizeObserver) new ResizeObserver(function () { show(pin); }).observe(svgEl);
+    else requestAnimationFrame(function () { show(pin); });
   }
 
   function chartCartesian(root, cfg) {
@@ -2045,9 +2102,9 @@
     var focusDots = [].slice.call(svgEl.querySelectorAll('[data-focus-dot]'));
 
     function show(i) {
-      var rows = chRows(series, i, cfg.unit);
+      var rows = chRows(series, i, cfg.unit, cfg);
       if (type === 'stacked') rows.reverse();
-      tip.innerHTML = chTipHtml(labels[i], rows);
+      tip.innerHTML = chTipHtml(labels[i], rows, cfg, chTotal(cfg, series, i));
       var topVal = type === 'stacked'
         ? series.reduce(function (a, se) { return a + (se.data[i] || 0); }, 0)
         : Math.max.apply(null, series.map(function (se) { return se.data[i] || 0; }));
@@ -2062,57 +2119,268 @@
       if (focusLine) focusLine.setAttribute('opacity', '0');
       focusDots.forEach(function (d) { d.setAttribute('opacity', '0'); });
     }
-    chHover(svgEl, show, hide);
+    chHover(svgEl, show, hide, cfg);
   }
 
-  function chartDonut(root, cfg) {
+  // Höhe der viewBox runder Charts. Ein Halbkreis (sweep <= 180 ab 180 Grad) füllt nur die OBERE
+  // Hälfte — die untere bliebe leer und das Chart hinge in einem halb leeren Kasten. Nur dieser
+  // eine, geläufige Fall wird beschnitten; alles andere behält den vollen Kasten (eine
+  // Bounding-Box je Geometrie auszurechnen wäre viel Rechnerei für wenig Gewinn).
+  function chHalbHoehe(cy, VBH, startDeg, sweepDeg) {
+    var oben = sweepDeg <= 180 && ((startDeg % 360) + 360) % 360 === 180;
+    return oben ? Math.round(cy + 14) : VBH;
+  }
+
+  // Mittelschrift runder Charts (Donut-Loch, Radial-Mitte) — eine Quelle für beide Renderer.
+  function chCenterText(cx, cy, center) {
+    if (!center) return '';
+    var dy = center.dy || 0, s = '';
+    if (center.value != null) s += '<text x="' + cx + '" y="' + (cy - 2 + dy) + '" text-anchor="middle" fill="var(--foreground)" style="font-size:17px;font-weight:600">' + calEsc(center.value) + '</text>';
+    if (center.label != null) s += '<text x="' + cx + '" y="' + (cy + 13 + dy) + '" text-anchor="middle" fill="var(--muted-foreground)" style="font-size:9px">' + calEsc(center.label) + '</text>';
+    return s;
+  }
+
+  // ---- Kreis: Torte UND Donut aus EINER Geometrie ---------------------------
+  // Ein Band wird als gestrichelte Kreislinie gezeichnet: Radius = Bandmitte, Strichbreite =
+  // Banddicke. Damit deckt derselbe Code beide Formen ab — "inner" ist das Loch als Anteil des
+  // Außenradius: 0 lässt die Strichbreite bis zum Mittelpunkt reichen (volle Torte), >0 lässt ein
+  // Loch (Donut). Kein zweiter Renderer für Torten, kein Ringsektor-Pfad je Segment.
+  // Optionen: inner · gap (Lücke zwischen Segmenten, 0 = ohne Trenner) · start/sweep (Grad,
+  // sweep 180 = Halbkreis) · values:true (absolute Werte statt Anteil im Tooltip) ·
+  // sliceLabels "percent"|"value"|"name" (IM Segment) · nameLabels:true (Namen AUSSEN) ·
+  // center {value,label,dy}. MEHRERE Serien = konzentrische Ringe (gestapelte Torte).
+  function chartPie(root, cfg) {
+    var labels = cfg.labels || [];
+    var reihen = (cfg.series && cfg.series.length ? cfg.series : [{ data: [] }]);
+    var nameLab = !!cfg.nameLabels;
+    // Namen AUSSEN brauchen Rand: dann dieselbe weite viewBox wie das Radar (240x188), sonst der
+    // knappe Kreiskasten. Der Kreis bleibt in beiden Fällen gleich groß (rOut), nur der Rahmen
+    // wächst — das svg skaliert über die Breite mit.
+    var VBW = nameLab ? 240 : 140, VBH = nameLab ? 188 : 140;
+    var cx = VBW / 2, cy = VBH / 2, rOut = 62;
+    // Standard-Loch: Donut wie bisher (42/62 -> R 52, Strichbreite 20), Torte ohne Loch.
+    var inner = cfg.inner != null ? cfg.inner : (cfg.type === 'donut' ? 42 / 62 : 0);
+    var rIn = rOut * inner;
+    var startDeg = cfg.start != null ? cfg.start : -90;
+    var sweepDeg = Math.min(360, cfg.sweep != null ? cfg.sweep : 360);
+    var gap = cfg.gap != null ? cfg.gap : 1.5;
+    var ringGap = 3;
+    var pitch = (rOut - rIn) / reihen.length;
+    var bh = Math.max(3, pitch - (reihen.length > 1 ? ringGap : 0));
+
+    var segs = '', hits = '', labs = '', hitMap = [], geo = [];
+    reihen.forEach(function (se, si) {
+      var data = se.data || [], colors = se.colors || [];
+      var bandOut = rOut - si * pitch, R = bandOut - bh / 2, C = 2 * Math.PI * R;
+      var summe = data.reduce(function (a, b) { return a + b; }, 0) || 1;
+      var voll = C * sweepDeg / 360;
+      var off = 0;
+      geo.push({ R: R, bh: bh, summe: summe, data: data, colors: colors, mid: [] });
+      data.forEach(function (v, i) {
+        var len = v / summe * voll, sicht = Math.max(0, len - gap);
+        segs += '<circle data-seg="' + hitMap.length + '" cx="' + cx + '" cy="' + cy + '" r="' + R.toFixed(2) +
+          '" fill="none" stroke="' + chCol(colors[i] || se.color, i) + '" stroke-width="' + bh.toFixed(2) +
+          '" stroke-dasharray="' + sicht.toFixed(2) + ' ' + Math.max(0.01, C - sicht).toFixed(2) +
+          '" stroke-dashoffset="' + (-off).toFixed(2) + '" transform="rotate(' + startDeg + ' ' + cx + ' ' + cy + ')"/>';
+        var a0 = startDeg * Math.PI / 180 + off / C * 2 * Math.PI;
+        var a1 = startDeg * Math.PI / 180 + (off + len) / C * 2 * Math.PI;
+        var mid = (a0 + a1) / 2;
+        geo[si].mid.push(mid);
+        // Treffer: Ringsektor über GENAU diesem Band (Keil außen minus Keil innen als zweiter
+        // Pfad wäre teuer — ein Keil bis Bandaußenrand genügt, weil die Bänder disjunkt sind
+        // und der innere Keil vom nächsten Ring überdeckt wird; Reihenfolge außen -> innen).
+        hits += '<path data-hit="' + hitMap.length + '" d="' + chWedge(cx, cy, bandOut + 2, a0, a1) + '" fill="transparent"/>';
+        hitMap.push({ si: si, i: i });
+        // Beschriftung IM Segment nur, wenn das Segment sie trägt: unter ~8 % des Kreises läuft
+        // der Text über die Nachbarn und macht die Stelle unlesbar — dann lieber keine Zahl
+        // (der Tooltip nennt sie ohnehin).
+        if (cfg.sliceLabels && v > 0 && len / voll >= 0.08) {
+          var txt = cfg.sliceLabels === 'value' ? chNum(v)
+            : cfg.sliceLabels === 'name' ? (labels[i] || '')
+              : Math.round(v / summe * 100) + ' %';
+          labs += '<text x="' + (cx + R * Math.cos(mid)).toFixed(1) + '" y="' + (cy + R * Math.sin(mid) + 3).toFixed(1) +
+            '" text-anchor="middle" fill="var(--background)" style="font-size:9px;font-weight:600">' + calEsc(txt) + '</text>';
+        }
+        off += len;
+      });
+      if (nameLab && si === 0) data.forEach(function (v, i) {
+        var mid = geo[si].mid[i], dx = Math.cos(mid);
+        var anchor = Math.abs(dx) < 0.3 ? 'middle' : (dx > 0 ? 'start' : 'end');
+        labs += chText((cx + rOut * 1.14 * dx).toFixed(1), (cy + rOut * 1.14 * Math.sin(mid) + 3).toFixed(1), labels[i] || '', anchor, 9);
+      });
+    });
+
+    // Treffer außen -> innen ins Markup, damit der äußere Keil den inneren nicht verdeckt:
+    // sie liegen in Serien-Reihenfolge, der spätere (innere) gewinnt beim Zeiger.
+    var svg = '<svg viewBox="0 0 ' + VBW + ' ' + chHalbHoehe(cy, VBH, startDeg, sweepDeg) +
+      '" style="display:block;margin:0 auto;width:' + (nameLab ? 240 : 160) + 'px" fill="none">' + segs + labs +
+      chCenterText(cx, cy, cfg.center) + hits + '</svg>';
+    var m = chMount(root, cfg, svg);
+    var svgEl = m.svgEl, tip = m.tip;
+    var segEls = [].slice.call(svgEl.querySelectorAll('[data-seg]'));
+    function show(k) {
+      var z = hitMap[k], g = geo[z.si], v = g.data[z.i] || 0;
+      var farbe = chCol(g.colors[z.i] || reihen[z.si].color, z.i);
+      var wert = cfg.values ? chNum(v) + (cfg.unit || '') : Math.round(v / g.summe * 100) + ' %';
+      var name = reihen.length > 1 ? (reihen[z.si].name || '') : (cfg.values ? (reihen[0].name || '') : (cfg.unit || 'Anteil'));
+      tip.innerHTML = chTipHtml(labels[z.i] || '', [{ color: farbe, label: name, value: wert, suffix: cfg.tipUnit }], cfg);
+      chPlaceRadial(tip, svgEl, root, cx, cy, g.mid[z.i], VBW, g.R + g.bh / 2);   // Kreis-Referenz: Bandaußenrand
+      segEls.forEach(function (e, j) { e.style.opacity = j === k ? '1' : '0.3'; });
+    }
+    function hide() { tip.style.opacity = '0'; segEls.forEach(function (e) { e.style.opacity = '1'; }); }
+    chHover(svgEl, show, hide, cfg);
+  }
+
+  // ---- Radial: Balken auf Kreisbögen --------------------------------------
+  // Je Kategorie EIN konzentrischer Bogen (außen = erste Kategorie) auf einer vollen Spur; die
+  // Bogenlänge ist der Wert am Maßstab (max). Technik wie beim Kreis: gestrichelte Kreislinie,
+  // Strichbreite = Bandhöhe — deshalb kein eigener Pfad-Generator.
+  // Optionen: max · inner (Lochanteil) · start/sweep (Grad; sweep 180 = Halbkreis) ·
+  // track:false (ohne Spur) · grid:true (Polargitter) · round:false (eckige Enden) ·
+  // barLabels:true (Name IM Bogen am Anfang) · center {value,label,dy} ·
+  // stack:true (EIN Band, Werte hintereinander gestapelt statt je Kategorie ein Ring).
+  function chartRadial(root, cfg) {
     var labels = cfg.labels || [];
     var se0 = (cfg.series && cfg.series[0]) || { data: [] };
     var data = se0.data || [], colors = se0.colors || [];
-    var total = data.reduce(function (a, b) { return a + b; }, 0) || 1;
-    var cx = 70, cy = 70, R = 52, sw = 20, C = 2 * Math.PI * R, VB = 140, gap = 1.5;
-    var rHit = R + sw / 2 + 2;                 // Keil bis knapp über den Ring
-    var off = 0, segs = '', hits = '', midAngles = [];
-    data.forEach(function (v, i) {
-      var len = v / total * C;
-      segs += '<circle data-seg="' + i + '" cx="' + cx + '" cy="' + cy + '" r="' + R + '" fill="none" stroke="' + chCol(colors[i], i) +
-        '" stroke-width="' + sw + '" stroke-dasharray="' + Math.max(0, len - gap).toFixed(2) + ' ' + (C - Math.max(0, len - gap)).toFixed(2) +
-        '" stroke-dashoffset="' + (-off).toFixed(2) + '" transform="rotate(-90 ' + cx + ' ' + cy + ')"/>';
-      var a0 = -Math.PI / 2 + off / C * 2 * Math.PI, a1 = -Math.PI / 2 + (off + len) / C * 2 * Math.PI;
-      midAngles.push((a0 + a1) / 2);
-      hits += '<path data-hit="' + i + '" d="' + chWedge(cx, cy, rHit, a0, a1) + '" fill="transparent"/>';
-      off += len;
-    });
-    var center = cfg.center || {}, ctext = '';
-    if (center.value != null) ctext += '<text x="' + cx + '" y="' + (cy - 2) + '" text-anchor="middle" fill="var(--foreground)" style="font-size:17px;font-weight:600">' + calEsc(center.value) + '</text>';
-    if (center.label != null) ctext += '<text x="' + cx + '" y="' + (cy + 13) + '" text-anchor="middle" fill="var(--muted-foreground)" style="font-size:9px">' + calEsc(center.label) + '</text>';
-    var m = chMount(root, cfg, '<svg viewBox="0 0 ' + VB + ' ' + VB + '" style="display:block;margin:0 auto;width:160px" fill="none">' + segs + ctext + hits + '</svg>');
+    var VB = 150, cx = VB / 2, cy = VB / 2, rOut = 66;
+    var inner = cfg.inner != null ? cfg.inner : 0.3;
+    var rIn = rOut * inner;
+    var startDeg = cfg.start != null ? cfg.start : -90;
+    var sweepDeg = Math.min(360, cfg.sweep != null ? cfg.sweep : 360);
+    var kappe = cfg.round === false ? 'butt' : 'round';
+    var stack = !!cfg.stack;
+    var max = cfg.max || (stack
+      ? chNiceMax(data.reduce(function (a, b) { return a + b; }, 0) || 1)
+      : chNiceMax(Math.max.apply(null, data) || 1));
+
+    var n = stack ? 1 : Math.max(1, data.length);
+    var pitch = (rOut - rIn) / n;
+    var bh = Math.max(3, pitch - (n > 1 ? 3 : 0));
+    // Ein Band je Kategorie (bzw. EIN Band beim Stapel): Radius der Bandmitte + Kreisumfang.
+    function band(k) {
+      var bandOut = rOut - k * pitch, R = bandOut - bh / 2;
+      return { bandOut: bandOut, R: R, C: 2 * Math.PI * R, voll: 2 * Math.PI * R * sweepDeg / 360 };
+    }
+    function bogen(b, laenge, off, farbe, breite, index) {
+      var sicht = Math.max(0, laenge);
+      return '<circle' + (index != null ? ' data-seg="' + index + '"' : '') + ' cx="' + cx + '" cy="' + cy +
+        '" r="' + b.R.toFixed(2) + '" fill="none" stroke="' + farbe + '" stroke-width="' + breite.toFixed(2) +
+        '" stroke-linecap="' + kappe + '" stroke-dasharray="' + sicht.toFixed(2) + ' ' +
+        Math.max(0.01, b.C - sicht).toFixed(2) + '" stroke-dashoffset="' + (-off).toFixed(2) +
+        '" transform="rotate(' + startDeg + ' ' + cx + ' ' + cy + ')"/>';
+    }
+
+    var gitter = '', spuren = '', segs = '', hits = '', labs = '', ziele = [];
+    if (cfg.grid) {
+      for (var g = 0; g <= n; g++) {
+        var rg = rIn + (rOut - rIn) * g / n;
+        gitter += '<circle cx="' + cx + '" cy="' + cy + '" r="' + rg.toFixed(2) + '" fill="none" stroke="var(--border)" stroke-width="1"/>';
+      }
+      var speichen = Math.max(4, labels.length || 6);
+      for (var s2 = 0; s2 < speichen; s2++) {
+        var a = startDeg * Math.PI / 180 + s2 * sweepDeg / speichen * Math.PI / 180;
+        gitter += '<line x1="' + (cx + rIn * Math.cos(a)).toFixed(1) + '" y1="' + (cy + rIn * Math.sin(a)).toFixed(1) +
+          '" x2="' + (cx + rOut * Math.cos(a)).toFixed(1) + '" y2="' + (cy + rOut * Math.sin(a)).toFixed(1) +
+          '" stroke="var(--border)" stroke-width="1"/>';
+      }
+    }
+
+    if (stack) {
+      var b0 = band(0), offS = 0;
+      if (cfg.track !== false) spuren += bogen(b0, b0.voll, 0, 'var(--muted)', bh);
+      data.forEach(function (v, i) {
+        var len = Math.max(0, v) / max * b0.voll;
+        segs += bogen(b0, len, offS, chCol(colors[i] || se0.color, i), bh, i);
+        var aMitte = startDeg * Math.PI / 180 + (offS + len / 2) / b0.C * 2 * Math.PI;
+        hits += '<path data-hit="' + i + '" d="' + chWedge(cx, cy, b0.bandOut + 2,
+          startDeg * Math.PI / 180 + offS / b0.C * 2 * Math.PI,
+          startDeg * Math.PI / 180 + (offS + len) / b0.C * 2 * Math.PI) + '" fill="transparent"/>';
+        ziele.push({ R: b0.R, a: aMitte, v: v, farbe: chCol(colors[i] || se0.color, i) });
+        offS += len;
+      });
+    } else {
+      data.forEach(function (v, i) {
+        var b = band(i), len = Math.max(0, v) / max * b.voll;
+        if (cfg.track !== false) spuren += bogen(b, b.voll, 0, 'var(--muted)', bh);
+        segs += bogen(b, len, 0, chCol(colors[i] || se0.color, i), bh, i);
+        var aEnd = startDeg * Math.PI / 180 + len / b.C * 2 * Math.PI;
+        // Trefferfläche: das ganze Band über die volle Umdrehung — der Zeiger zählt je RING,
+        // nicht je Winkel (ein Radialbalken ist ein Balken, kein Segment).
+        hits += '<circle data-hit="' + i + '" cx="' + cx + '" cy="' + cy + '" r="' + b.R.toFixed(2) +
+          '" fill="none" stroke="transparent" stroke-width="' + bh.toFixed(2) + '" stroke-dasharray="' +
+          b.voll.toFixed(2) + ' ' + Math.max(0.01, b.C - b.voll).toFixed(2) +
+          '" transform="rotate(' + startDeg + ' ' + cx + ' ' + cy + ')"/>';
+        ziele.push({ R: b.R, a: aEnd, v: v, farbe: chCol(colors[i] || se0.color, i) });
+        if (cfg.barLabels) {
+          // Beschriftung IM Bogen, kurz hinter dem Anfang (wie Recharts „insideStart"). Zwei
+          // Feinheiten, ohne die der Text nicht auf dem Balken liegt:
+          //  • Schrift an die BANDHÖHE gebunden statt fest — bei vielen Ringen sind die Bänder
+          //    schmal, eine feste Größe würde die Nachbarzeile überschreiben.
+          //  • Ausrichtung nach der LAUFRICHTUNG des Bogens: der Bogen läuft im Uhrzeigersinn,
+          //    seine Tangente am Anfang zeigt (-sin, cos). Zeigt sie nach links (Anfang unten),
+          //    muss der Text nach links hängen ("end") — sonst läuft er aus dem Farbband heraus
+          //    ins Leere und ist weiß auf weiß nicht mehr lesbar.
+          var fs = Math.min(9, bh * 0.8);
+          var a0 = startDeg * Math.PI / 180;
+          var aL = a0 + 9 / b.R;
+          labs += '<text x="' + (cx + b.R * Math.cos(aL)).toFixed(1) + '" y="' + (cy + b.R * Math.sin(aL) + fs / 3).toFixed(1) +
+            '" text-anchor="' + (-Math.sin(a0) < 0 ? 'end' : 'start') + '" fill="var(--background)" style="font-size:' +
+            fs.toFixed(1) + 'px;font-weight:600">' + calEsc(labels[i] || '') + '</text>';
+        }
+      });
+    }
+
+    var svg = '<svg viewBox="0 0 ' + VB + ' ' + chHalbHoehe(cy, VB, startDeg, sweepDeg) +
+      '" style="display:block;margin:0 auto;width:200px" fill="none">' +
+      gitter + spuren + segs + labs + chCenterText(cx, cy, cfg.center) + hits + '</svg>';
+    var m = chMount(root, cfg, svg);
     var svgEl = m.svgEl, tip = m.tip;
     var segEls = [].slice.call(svgEl.querySelectorAll('[data-seg]'));
     function show(i) {
-      tip.innerHTML = chTipHtml(labels[i] || '', [{ color: chCol(colors[i], i), label: cfg.unit || 'Anteil', value: Math.round(data[i] / total * 100) + ' %' }]);
-      chPlaceRadial(tip, svgEl, root, cx, cy, midAngles[i], VB, R + sw / 2);   // Kreis-Referenz: Ring um Mitte
+      var z = ziele[i];
+      tip.innerHTML = chTipHtml(labels[i] || '', [{
+        color: z.farbe, label: se0.name || labels[i] || '',
+        value: chNum(z.v) + (cfg.unit || ''), suffix: cfg.tipUnit, icon: se0.icon,
+      }], cfg);
+      // Punkt-Referenz: Bogenende auf der Bandmitte (extraR = halbe Bandhöhe, damit der
+      // Tooltip nicht auf dem Band klebt).
+      chPlaceRadial(tip, svgEl, root, cx + z.R * Math.cos(z.a), cy + z.R * Math.sin(z.a), z.a, VB, bh / 2);
       segEls.forEach(function (e, j) { e.style.opacity = j === i ? '1' : '0.3'; });
     }
     function hide() { tip.style.opacity = '0'; segEls.forEach(function (e) { e.style.opacity = '1'; }); }
-    chHover(svgEl, show, hide);
+    chHover(svgEl, show, hide, cfg);
   }
 
+  // Netzdiagramm. Ausführungen: grid:false (ohne Netz) · gridShape:"circle" (Kreisringe statt
+  // Vielecke) · spokes:false (Ringe ohne Speichen) · fill:false (nur Linien) · dots:false (ohne
+  // Punkte) · rings:<anzahl> (Ringe des Netzes, Standard 3).
   function chartRadar(root, cfg) {
     var labels = cfg.labels || [], series = cfg.series || [], n = labels.length;
     var VBW = 240, VBH = 188, cx = VBW / 2, cy = 94, R = 62;   // breite viewBox -> Achsenlabels ragen nicht raus
     var max = chSeriesMax(cfg, series);
+    var mitPunkten = cfg.dots !== false;
     function ang(i) { return -Math.PI / 2 + i * 2 * Math.PI / n; }
     function pt(i, frac) { var a = ang(i); return [cx + R * frac * Math.cos(a), cy + R * frac * Math.sin(a)]; }
     function ring(k) { var p = []; for (var i = 0; i < n; i++) { var q = pt(i, k); p.push(q[0].toFixed(1) + ',' + q[1].toFixed(1)); } return p.join(' '); }
     var s = '';
-    [0.33, 0.66, 1].forEach(function (k) { s += '<polygon points="' + ring(k) + '" stroke="var(--border)" stroke-width="1" fill="none"/>'; });
-    for (var i = 0; i < n; i++) { var p = pt(i, 1); s += '<line x1="' + cx + '" y1="' + cy + '" x2="' + p[0].toFixed(1) + '" y2="' + p[1].toFixed(1) + '" stroke="var(--border)" stroke-width="1"/>'; }
+    if (cfg.grid !== false) {
+      var anzahl = cfg.rings || 3, stufen = [];
+      for (var k = 1; k <= anzahl; k++) stufen.push(k / anzahl);
+      stufen.forEach(function (k) {
+        s += cfg.gridShape === 'circle'
+          ? '<circle cx="' + cx + '" cy="' + cy + '" r="' + (R * k).toFixed(1) + '" stroke="var(--border)" stroke-width="1" fill="none"/>'
+          : '<polygon points="' + ring(k) + '" stroke="var(--border)" stroke-width="1" fill="none"/>';
+      });
+      if (cfg.spokes !== false) for (var i = 0; i < n; i++) { var p = pt(i, 1); s += '<line x1="' + cx + '" y1="' + cy + '" x2="' + p[0].toFixed(1) + '" y2="' + p[1].toFixed(1) + '" stroke="var(--border)" stroke-width="1"/>'; }
+    }
     series.forEach(function (se, si) {
       var col = chCol(se.color, si);
       var pts = se.data.map(function (v, i) { return pt(i, v / max); });
-      s += '<polygon points="' + pts.map(function (p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' ') + '" fill="' + col + '" fill-opacity="0.2" stroke="' + col + '" stroke-width="2.5" stroke-linejoin="round"/>';
-      pts.forEach(function (p, i) { s += '<circle data-dot="' + si + '-' + i + '" cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="3" fill="' + col + '"/>'; });
+      s += '<polygon points="' + pts.map(function (p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' ') +
+        '" fill="' + col + '" fill-opacity="' + (cfg.fill === false ? '0' : '0.2') + '" stroke="' + col +
+        '" stroke-width="2.5" stroke-linejoin="round"/>';
+      if (mitPunkten) pts.forEach(function (p, i) { s += '<circle data-dot="' + si + '-' + i + '" cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="3" fill="' + col + '"/>'; });
     });
     for (var i = 0; i < n; i++) {
       var p = pt(i, 1.16), dx = Math.cos(ang(i));
@@ -2123,13 +2391,13 @@
     var m = chMount(root, cfg, '<svg viewBox="0 0 ' + VBW + ' ' + VBH + '" style="display:block;margin:0 auto;width:230px" fill="none">' + s + '</svg>');
     var svgEl = m.svgEl, tip = m.tip;
     function show(i) {
-      tip.innerHTML = chTipHtml(labels[i], chRows(series, i, cfg.unit));
+      tip.innerHTML = chTipHtml(labels[i], chRows(series, i, cfg.unit, cfg), cfg, chTotal(cfg, series, i));
       var vtx = pt(i, 1);                              // Punkt-Referenz: Polygon-Vertex auf der Achse (extraR=0)
       chPlaceRadial(tip, svgEl, root, vtx[0], vtx[1], ang(i), VBW);
       series.forEach(function (se, si) { var d = svgEl.querySelector('[data-dot="' + si + '-' + i + '"]'); if (d) d.setAttribute('r', '5'); });
     }
     function hide() { tip.style.opacity = '0'; [].slice.call(svgEl.querySelectorAll('[data-dot]')).forEach(function (d) { d.setAttribute('r', '3'); }); }
-    chHover(svgEl, show, hide);
+    chHover(svgEl, show, hide, cfg);
   }
 
   function wireChart(root) {
@@ -2137,9 +2405,49 @@
     root.dataset.c22ChartWired = '1';
     var cfg;
     try { cfg = JSON.parse(root.dataset.chart || '{}'); } catch (e) { return; }
-    if (cfg.type === 'donut') return chartDonut(root, cfg);
+    if (cfg.type === 'pie' || cfg.type === 'donut') return chartPie(root, cfg);
+    if (cfg.type === 'radial') return chartRadial(root, cfg);
     if (cfg.type === 'radar') return chartRadar(root, cfg);
     chartCartesian(root, cfg);
+  }
+
+  // ---- Reiter per Adresse (Deep-Link) ---------------------------------------
+  // [data-tab-hash] auf einem .tabs: zeigt der Anker der Adresse auf einen Reiter-Knopf ODER auf
+  // ein Element IN einem Panel, wird dieser Reiter geöffnet und das Ziel angesprungen. Ohne das
+  // ist ein Link in ein verborgenes Panel wirkungslos (das Panel trägt `hidden`, der Browser kann
+  // nicht dorthin springen) — Galerie-Screenshots und teilbare Adressen brauchen genau das.
+  // BEWUSST NUR LESEND: ein Klick auf einen Reiter ändert die Adresse nicht, damit die
+  // Zurück-Taste nicht zur Reiter-Historie verkommt.
+  function wireTabHash(tabs) {
+    if (tabs.dataset.c22TabHashWired) return;
+    tabs.dataset.c22TabHashWired = '1';
+    function anwenden() {
+      var id = (location.hash || '').slice(1);
+      if (!id) return;
+      var ziel = document.getElementById(id);
+      if (!ziel || !tabs.contains(ziel)) return;
+      var knopf = ziel.getAttribute('role') === 'tab' ? ziel : null;
+      if (!knopf) {
+        var panel = ziel.closest('[role="tabpanel"]');
+        if (!panel || !panel.id) return;
+        knopf = tabs.querySelector('[role="tab"][aria-controls="' + panel.id + '"]');
+      }
+      if (!knopf) return;
+      if (knopf.getAttribute('aria-selected') !== 'true') {
+        // Basecoats eigene API, wenn sie schon da ist (beide Skripte laufen mit defer, Basecoat
+        // verdrahtet zuerst); sonst der Klick, an dem dasselbe JS hängt.
+        if (typeof tabs.select === 'function') tabs.select(knopf);
+        else knopf.click();
+      }
+      if (ziel !== knopf) ziel.scrollIntoView();
+    }
+    // ZWEIMAL, und das ist Absicht: welches Skript zuerst initialisiert, ist nicht garantiert.
+    // Läuft Basecoats Reiter-JS noch nicht, gibt es weder `select` noch einen Klick-Handler — der
+    // erste Versuch verpufft dann still. Der zweite im nächsten Frame trifft es sicher; ist der
+    // Reiter schon offen, tut er nichts (idempotent).
+    anwenden();
+    requestAnimationFrame(anwenden);
+    window.addEventListener('hashchange', anwenden);
   }
 
   // Scroll-Kanten-Fade: pflegt data-at-start/-end auf [data-scroll-fade]-Containern
@@ -2418,6 +2726,7 @@
     (root || document).querySelectorAll('[data-resize-handle]').forEach(wireResizeHandle);
     (root || document).querySelectorAll('[data-carousel]').forEach(wireCarousel);
     (root || document).querySelectorAll('[data-chart]').forEach(wireChart);
+    (root || document).querySelectorAll('[data-tab-hash]').forEach(wireTabHash);
     (root || document).querySelectorAll('[data-scroll-fade]').forEach(wireScrollFade);
     (root || document).querySelectorAll('[data-nav-select]').forEach(wireNavSelect);
     (root || document).querySelectorAll('[data-edit-table]').forEach(wireEditTable);

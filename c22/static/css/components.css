@@ -728,6 +728,27 @@
   [data-chart] [data-seg] { transition: opacity 0.12s; }
   [data-chart] [data-dot] { transition: r 0.12s; }
 
+  /* Tooltip-Ausführungen an EINEM Ort (Vorbild: shadcn-Reiter „Tooltips"). c22.js entscheidet nur,
+     WELCHE Marke eine Zeile bekommt — wie sie aussieht, steht hier. Basecoat liefert den Farbfleck
+     (.chart-tooltip-indicator, 10px, leicht gerundet); dazu kommen:
+       data-variant="line"  schmaler Strich statt Fleck (Linien-Charts lesen sich damit ruhiger)
+       .chart-tooltip-icon  Icon statt Farbfleck — der Rahmen sitzt hier, das Icon füllt ihn
+       .chart-tooltip-unit  gedämpfte Einheit hinter dem Wert („380 kcal")
+       .chart-tooltip-total Summenzeile im Fuß, über eine Trennlinie abgesetzt
+     „Kein Indikator" braucht keine Regel — dann baut c22.js die Marke gar nicht. */
+  /* Der Tooltip WÄCHST mit seinem Inhalt. Basecoat gibt ihm nur eine Mindestbreite; weil die
+     Zeilen `width:100%` tragen, löst der Browser die zirkuläre Breite über genau dieses Minimum
+     auf — jede zusätzliche Angabe (Einheit, Summenzeile) bricht dann um statt zu verbreitern.
+     `w-max` macht die Mindestbreite wieder zu einem Minimum. */
+  .chart-tooltip { @apply w-max; }
+  .chart-tooltip-indicator[data-variant="line"] { @apply h-3.5 w-0.5 rounded-full; }
+  .chart-tooltip-icon { @apply flex size-3.5 shrink-0 items-center justify-center; }
+  .chart-tooltip-icon svg { @apply size-full; }
+  .chart-tooltip-unit { @apply text-muted-foreground ms-1 font-normal; }
+  .chart-tooltip-total {
+    @apply border-border/50 mt-1.5 flex w-full items-center gap-2 border-t pt-1.5 font-medium;
+  }
+
   /* SPOT-Rundung: JEDES Folien-Bild eines Carousels ist einheitlich gerundet — ein Ort, Backup
      für alle Varianten, damit kein Bild irgendwo eckig bleibt (kein rounded-lg mehr je Bild im
      Markup). Gilt auch für gerahmte/eingepasste Bilder (die Regel trifft das <img> selbst, egal ob

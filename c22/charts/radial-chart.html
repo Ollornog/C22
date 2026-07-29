@@ -1,0 +1,48 @@
+<!-- c22-title: Radialdiagramm -->
+<!-- c22-tab: 7 | Radial | Radial -->
+<!-- custom: ein <div data-chart='{…}'> je Chart, gerendert von c22.js (chartRadial); Farben nur über
+     die Tokens --chart-1…5, Spur über --muted, Gitter über --border. Ein Radialbalken IST ein
+     Balken — nur auf einem Kreisbogen: je Kategorie ein konzentrischer Ring (außen die erste), die
+     Bogenlänge ist der Wert am Maßstab "max". Deshalb zählt der Zeiger je RING, nicht je Winkel.
+     "track":false nimmt die Spur weg, "grid":true legt ein Polargitter darunter, "round":false
+     macht die Enden eckig, "barLabels":true schreibt den Namen in den Bogen. "start"/"sweep" drehen
+     und beschneiden (sweep 180 = Halbkreis), "inner" ist das Loch. "stack":true legt alle Werte
+     hintereinander in EIN Band — das ist der gestapelte Radialbalken, nicht ein Ring je Kategorie. -->
+<div class="c22-examples">
+
+  <div class="c22-example">
+    <span class="c22-example-label">Radial (<code>type: "radial"</code> — ein Ring je Kategorie auf voller Spur)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"radial","max":100,"unit":" %","labels":["Direkt","Suche","Verweise","Social","Newsletter"],"series":[{"name":"Zielerreichung","data":[86,72,58,44,26]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Beschriftung im Bogen (<code>barLabels: true</code>, <code>start: 90</code> — Anfang unten; <code>inner: 0.2</code> macht die Bänder breit genug, kurze Namen halten sie lesbar)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"radial","barLabels":true,"start":90,"inner":0.2,"max":100,"unit":" %","labels":["Direkt","Suche","Social","Mail","Sonst"],"series":[{"name":"Zielerreichung","data":[86,72,58,44,26]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Polargitter, ohne Spur (<code>grid: true</code>, <code>track: false</code>)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"radial","grid":true,"track":false,"max":100,"unit":" %","labels":["Direkt","Suche","Verweise","Social","Newsletter"],"series":[{"name":"Zielerreichung","data":[86,72,58,44,26]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Ein Wert mit Text in der Mitte (<code>inner: 0.62</code>, <code>center</code>) — die Tacho-Ausführung</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"radial","inner":0.62,"max":100,"unit":" %","center":{"value":"74 %","label":"Auslastung"},"labels":["Auslastung"],"series":[{"name":"Auslastung","data":[74]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Halbkreis mit eckigen Enden (<code>start: 180</code>, <code>sweep: 180</code>, <code>round: false</code>)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"radial","start":180,"sweep":180,"round":false,"inner":0.5,"max":100,"unit":" %","labels":["Direkt","Suche","Verweise"],"series":[{"name":"Zielerreichung","data":[86,72,58]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Gestapelt im Halbkreis (<code>stack: true</code>) — alle Werte in EINEM Band, Summe in der Mitte</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"radial","stack":true,"start":180,"sweep":180,"inner":0.62,"max":10000,"unit":" Besuche","center":{"value":"8.412","label":"Besuche","dy":-16},"labels":["Direkt","Suche","Verweise","Social"],"series":[{"data":[3200,2100,1600,1512]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Legende (<code>legend: true</code> — beschriftet die Kategorien, nicht die Serie)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"radial","legend":true,"max":100,"unit":" %","labels":["Direkt","Suche","Verweise","Social","Newsletter"],"series":[{"name":"Zielerreichung","data":[86,72,58,44,26]}]}'></div>
+  </div>
+
+</div>
