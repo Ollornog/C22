@@ -321,11 +321,22 @@ def toc_link(anchor: str, label: str, num: int | None = None) -> str:
             f'{nummer}<span class="truncate">{html.escape(label)}</span></a>')
 
 
+def normalisiere_assets(markup: str) -> str:
+    """Adressen im Partial auf das Asset-Präfix der Seite umstellen.
+
+    Ein Partial adressiert Beilagen aus SEINER Sicht (`../docs/logo.png`) — das stimmt, solange
+    die Seite in `gallery/` liegt. Auf der Website liegt sie im Wurzelverzeichnis; dieselbe
+    Adresse zeigte dort aus der Site heraus und liefe ins Leere. Der Generator zieht sie deshalb
+    mit, statt sie in jedem Partial doppelt zu pflegen.
+    """
+    return markup.replace('"../docs/', f'"{ASSETS}docs/').replace('"../c22/', f'"{ASSETS}c22/')
+
+
 def section(slug: str, num: int, title: str, body: str | None, *, first: bool,
             width: str, code_extra: str = "", pre_html: str = "") -> str:
     """Eine Galerie-Sektion: Kopf, optionale Zusatzzeile, Demo-Rahmen, Code-Klappe."""
     done = body is not None
-    demo = (letter_labels(strip_title_comment(body)) if done
+    demo = (normalisiere_assets(letter_labels(strip_title_comment(body))) if done
             else '<p class="text-muted-foreground text-sm italic">— noch nicht gebaut —</p>')
     code_block = (
         f'<details>'

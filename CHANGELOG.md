@@ -24,6 +24,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Seiten-Navigation — verlinkt in der Kopfleiste, die jede Seite trägt.
 - **Kopfleiste** trägt jetzt rechts zwei dezente Verweise: GitHub und Impressum.
 
+### Fixed — beim Bau der Website gefunden
+
+- **Adressen aus Partials werden mitgezogen** (`normalisiere_assets` in `gallery/build.py`):
+  `sidebar.html` adressiert das Beispiel-Logo als `../docs/logo.png` — richtig, solange die Seite
+  in `gallery/` liegt, auf der Website aber ein Verweis aus der Site heraus (404). Der Generator
+  stellt solche Adressen jetzt auf das Asset-Präfix der Seite um, statt sie im Partial doppelt zu
+  pflegen; `build-site.py` meldet einen Verweis aus der Site heraus als benannten Fehler.
+- **Die Website nimmt nur mit, worauf ihre Seiten zeigen** — kein Verzeichnis wird pauschal
+  kopiert. Sonst wandert alles mit, was im Arbeitsbaum liegt: ein lokal gebautes Pack-CSS wäre
+  mitveröffentlicht worden. Schriften werden zusätzlich aus den `url()`-Angaben der Stylesheets
+  aufgelöst.
+
 ### Added — backlog in the repository (`backlog/`)
 
 Milestones, tasks and **architecture decisions (ADR)** now live as Markdown with frontmatter under
