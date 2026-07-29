@@ -49,6 +49,8 @@ TEXTE: dict[str, tuple[str, str]] = {
     "title_blocks": ("C22 — Blocks", "C22 — Blocks"),
     "title_charts": ("C22 — Charts", "C22 — Charts"),
     "title_typeset": ("C22 — Typeset", "C22 — Typeset"),
+    "title_generator": ("C22 — Generator (Design & Typografie)",
+                        "C22 — Generator (design & typography)"),
     "title_legal": ("C22 — Impressum & Datenschutz", "C22 — Imprint & privacy"),
 }
 

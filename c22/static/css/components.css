@@ -158,6 +158,26 @@
     @apply rounded px-1 font-semibold leading-tight;
     font-size: calc(var(--text-xs) * 0.84);
   }
+  /* Prosa-Container (Achse „typeset"): Zeilenlänge, Zeilenhöhe und Absatzfluss kommen aus
+     Tokens, damit der Typeset-Generator echte Draht-Enden hat. Bewusst KEIN `.prose`-Ersatz
+     im Tailwind-Sinn: die Klasse setzt nur diese drei Achsen-Werte, das Aussehen der
+     Elemente bleibt bei den Utilities auf dem semantischen HTML (Repo-Konvention). */
+  .typeset {
+    max-width: var(--measure);
+    line-height: var(--leading-body);
+  }
+  .typeset > :is(p, ul, ol, blockquote, pre, table, figure) + :is(p, ul, ol, blockquote, pre, table, figure) {
+    margin-top: var(--flow);
+  }
+  /* Vor einer Überschrift braucht es mehr Luft als zwischen zwei Absätzen — aber abgeleitet
+     aus derselben Achse, damit ein Regler beides zugleich stimmig hält. */
+  .typeset > :not(:first-child):is(h2, h3, h4) {
+    margin-top: calc(var(--flow) * 1.8);
+  }
+  .typeset > :is(h2, h3, h4) + * {
+    margin-top: calc(var(--flow) * 0.5);
+  }
+
   /* Merkmal-Plakette der Galerie („eckig", „brutalist" …) — dieselbe Rechnung wie .c22-tag,
      nur mit mehr Luft, weil sie Wörter trägt statt eines Buchstabens. */
   .c22-merkmal {

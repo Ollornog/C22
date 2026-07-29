@@ -19,6 +19,7 @@
  * @achse elevation: erbt — der Standardwert passt zum Charakter dieses Packs.
  * @achse motion: erbt — der Standardwert passt zum Charakter dieses Packs.
  * @achse icon-weight: erbt — der Standardwert passt zum Charakter dieses Packs.
+ * @achse typeset: erbt — Zeilenlänge/Leading/Absatzfluss der Basis.
  */
 
 :root {

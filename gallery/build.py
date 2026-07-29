@@ -30,6 +30,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import generator  # noqa: E402  — die Generator-Seite
 import i18n  # noqa: E402  — Sprachsystem + die zwei Pillen
 import landing  # noqa: E402  — Inhalt der Startseite
 import legal  # noqa: E402  — Texte der Rechtsseite, eine Quelle
@@ -66,6 +67,7 @@ PAGES = [
     ("blocks.html", "Blocks"),
     ("charts.html", "Charts"),
     ("typeset.html", "Typeset"),
+    ("generator.html", "Generator"),
 ]
 
 # Block-Kategorien in Anzeige-Reihenfolge: (Verzeichnis, Schlüssel in i18n.TEXTE)
@@ -601,6 +603,16 @@ def render_flat(datei: str, titel_schluessel: str, directory: Path, width: str) 
     return datei, len(eintraege)
 
 
+def render_generator() -> tuple[str, int]:
+    """Generator — Regler links, echte Seite als Vorschau, fertige Achsenschicht als Ausgabe.
+
+    Ohne Inhaltsspalte: die Achsen-Leiste IST die Navigation dieser Seite.
+    """
+    page = page_shell("generator.html", "title_generator", "", generator.inhalt(), sidebar=False)
+    (ZIEL / "generator.html").write_text(page, encoding="utf-8")
+    return "generator.html", len(generator.DESIGN_ACHSEN) + len(generator.TYPESET_ACHSEN)
+
+
 def render_legal() -> tuple[str, int]:
     """Impressum + Datenschutz — Pflichtangaben der veröffentlichten Seite (§ 18 MStV).
 
@@ -633,6 +645,7 @@ def main(ziel: Path = GALLERY, assets: str = "../") -> None:
         render_blocks(),
         render_flat("charts.html", "title_charts", CHARTS_DIR, "w-[900px]"),
         render_flat("typeset.html", "title_typeset", TYPESET_DIR, "w-[820px]"),
+        render_generator(),
         render_legal(),
     ]
     ergebnisse.insert(0, render_landing(dict(ergebnisse)))

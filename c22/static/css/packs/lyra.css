@@ -16,6 +16,7 @@
  * @achse font: erbt — alle Packs teilen die eingebettete Inter (tokens.css).
  * @achse density: erbt — der Standardwert passt zum Charakter dieses Packs.
  * @achse motion: teilweise — die DAUER trägt den Charakter, die Kurve bleibt die der Basis.
+ * @achse typeset: erbt — Zeilenlänge/Leading/Absatzfluss der Basis.
  */
 
 :root {

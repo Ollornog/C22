@@ -15,6 +15,7 @@
  * @achse menu-accent: erbt — dieses Pack ist ein FORM-Pack und lässt die Farbrollen der Basis stehen.
  * @achse font: erbt — alle Packs teilen die eingebettete Inter (tokens.css).
  * @achse motion: teilweise — die DAUER trägt den Charakter, die Kurve bleibt die der Basis.
+ * @achse typeset: erbt — Zeilenlänge/Leading/Absatzfluss der Basis.
  */
 
 :root {

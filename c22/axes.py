@@ -37,8 +37,9 @@ class Achse:
     abgeleitet: tuple[str, ...] = field(default=())
 
 
-# Axis 1 (style) is the pack itself and axis 8 (icon library) lives in the markup — neither is a
-# token, so neither appears here. Everything else is expressed as custom properties.
+# Axis 1 (style) is the pack itself and the icon LIBRARY choice lives in the markup — neither is
+# a token, so neither appears here. Axis 8 is C22's own: the three values a typesetting
+# generator actually turns (line length, leading, paragraph flow). Everything else is a token.
 ACHSEN: tuple[Achse, ...] = (
     Achse(2, "base-color", "the neutral surfaces everything sits on",
           ("--background", "--foreground", "--card", "--card-foreground",
@@ -58,6 +59,8 @@ ACHSEN: tuple[Achse, ...] = (
           ("--text-scale", "--font-weight-heading", "--tracking-heading"),
           ("--text-xs", "--text-sm", "--text-base", "--text-lg", "--text-xl",
            "--text-2xl", "--text-3xl", "--text-4xl", "--text-5xl")),
+    Achse(8, "typeset", "prose typography: line length, leading and the gap between paragraphs",
+          ("--measure", "--leading-body", "--flow")),
     Achse(9, "radius", "how round everything is, as ONE knob",
           ("--radius",), ("--radius-sm", "--radius-md", "--radius-lg", "--radius-xl")),
     Achse(10, "menu", "the sidebar colour scheme (NOT the dropdown accent — see CLAUDE.md)",

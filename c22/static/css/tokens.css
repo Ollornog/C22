@@ -109,6 +109,15 @@
    * (sera) braucht mehr Laufweite, ein enges Pack weniger. */
   --tracking-heading: -0.025em;
 
+  /* Prosa-Achse (Achse 8) — die drei Werte, die ein Typeset-Generator wirklich dreht:
+   * Zeilenlänge, Zeilenhöhe des Fließtextes und der Abstand zwischen Absätzen. Sie wirken
+   * über die Kanon-Klasse `.typeset` (components.css), nicht über Utilities im Markup —
+   * sonst wäre ein Regler dafür ein Knopf ohne Draht.
+   * 68ch ≈ die klassische Empfehlung von 60–75 Zeichen je Zeile. */
+  --measure: 68ch;
+  --leading-body: 1.75;
+  --flow: 1.25em;
+
   /* Dichte-Achse (docs/theming.md, Achse 12): Tailwinds Spacing-Basis. ALLE Abstands-,
    * Größen- und Lücken-Utilities (p-*, gap-*, h-*, size-*) rechnen `calc(var(--spacing) * n)`.
    * 0.25rem = Tailwind-Standard; ein dichtes Pack senkt den Wert, ein luftiges hebt ihn. */

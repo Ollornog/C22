@@ -153,4 +153,26 @@ kopien = sum(z.count("text-[11px]") for p in dateien() for z in p.read_text(enco
 r.check("text-[11px] steht nicht im Markup (Kanon-Klasse statt Kopien)", kopien == 0,
         f"{kopien} Kopien — gehört als Regel nach components.css")
 
+# ── C: kein Bedienelement ohne Draht ──────────────────────────────────────────
+# Der Generator verdrahtet seine Regler über `data-`Attribute. Spricht das Skript ein Attribut
+# an, das im erzeugten Markup nicht vorkommt, ist der Regler ein Knopf, der nichts tut — und
+# genau diese Fehlerklasse hatten wir in dieser Runde zweimal (unsichtbarer Zustand, Achse ohne
+# Token). Die Gegenrichtung zählt ebenso: ein `data-achse` im Markup, das kein Token der
+# Register-Liste nennt, dreht an nichts.
+generator_py = (ROOT / "gallery" / "generator.py").read_text(encoding="utf-8")
+angesprochen = set(re.findall(r"\[data-([a-z-]+)[\]=]", generator_py))
+# Die Attribute stehen im Python-Quelltext, aus dem das Markup entsteht — dieselbe Datei,
+# beide Seiten: was `querySelectorAll` sucht, muss ein `_regler`/`inhalt` auch schreiben.
+geschrieben = set(re.findall(r"data-([a-z-]+)=", generator_py)) | set(
+    re.findall(r"\bdata-([a-z-]+)\b(?=[ >])", generator_py))
+ohne_draht = sorted(a for a in angesprochen if a not in geschrieben)
+r.check(f"kein Bedienelement ohne Draht ({len(angesprochen)} Attribute)",
+        not ohne_draht, ", ".join(ohne_draht))
+
+tokens_im_generator = set(re.findall(r'data-achse="(--[a-z0-9-]+)"', generator_py)) | set(
+    re.findall(r'\("(--[a-z0-9-]+)",', generator_py))
+unbekannt = sorted(t for t in tokens_im_generator if t not in axes.ALLE_TOKENS)
+r.check(f"jeder Regler dreht an einer registrierten Achse ({len(tokens_im_generator)} Regler)",
+        not unbekannt, ", ".join(unbekannt))
+
 sys.exit(r.done())

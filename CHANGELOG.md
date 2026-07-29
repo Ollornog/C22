@@ -6,6 +6,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — der Generator (`generator.html`): jede Achse als Regler
+
+Vorbild `ui.shadcn.com/create` (Achsen links, echte Seite als Vorschau) und
+`ui.shadcn.com/typeset` (Measure · Heading · Body · Mono · Size · Leading · Flow, Musterartikel
+als Vorschau). Zwei Reiter in der kanonischen Tabs-Component:
+
+- **Design** — Rundung, Dichte, Schriftgröße, Strichstärke, Tempo, Überschrift-Fettung, Akzent
+  und Grundton. Vorschau ist der **Dashboard-Block** aus der Galerie, kein Sonderbau.
+- **Typografie** — Zeilenlänge, Schrift für Überschrift/Fließtext/Monospace, Größe, Zeilenhöhe,
+  Absatzabstand, Laufweite, Textfarbe. Vorschau ist der **Prosa-Musterartikel**.
+- **Ausgabe = eine C22-Achsenschicht** im Format `packs/<name>.css`: was herausfällt, kann man
+  unverändert einchecken. Farben stehen als benannte **oklch**-Sätze zur Wahl (kein Hex-Farbfeld,
+  das eine zweite Wahrheit über denselben Wert wäre). Dazu fünf Voreinstellungen und „Würfeln".
+- **Neue Achse `typeset`** (`--measure` · `--leading-body` · `--flow`) samt Kanon-Klasse
+  `.typeset` — sonst wären Zeilenlänge, Zeilenhöhe und Absatzfluss Regler ohne Draht. Der
+  Prosa-Musterartikel nutzt sie jetzt statt eigener Utilities.
+- **`tests/test_axes.py` prüft die Verdrahtung mit:** jedes `data-`Attribut, das das
+  Generator-Skript anspricht, muss im Markup vorkommen — und jeder Regler muss an einer Achse
+  aus dem Register drehen. Ein Knopf, der nichts tut, fällt damit im Test auf, nicht im Betrieb.
+
 ### Fixed — die Achsen greifen jetzt WIRKLICH (jedes Pack, jedes Element)
 
 Der Befund, der das ausgelöst hat: `rounded-sm/md/lg/xl` sind bei Basecoat an `--radius`
