@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
 """C22 gallery generator — the Live-Container / SPOT, als Mehrseiten-Galerie.
 
-Seiten (shadcn-artig, PO 2026-07-19):
-  index.html    Components — jede Basis-Component in ihren Varianten
-  blocks.html   Blocks — größere Kompositionen, gruppiert nach Themen
-                (Navigation · Komplette Seite · Login & Signup · Tabellen)
-  charts.html   Charts — Diagramm-Muster auf --chart-1…5-Tokens
-  typeset.html  Typeset — Typografie im Zusammenhang (Basis für den späteren Generator)
+Seiten (shadcn-artig):
+  index.html      Startseite — was C22 ist, Einstiege, GitHub + Impressum (gallery/landing.py)
+  components.html Components — jede Basis-Component in ihren Varianten
+  blocks.html     Blocks — größere Kompositionen, gruppiert nach Themen
+  charts.html     Charts — Diagramm-Muster auf --chart-1…5-Tokens
+  typeset.html    Typeset — Typografie im Zusammenhang (Basis für den späteren Generator)
+  legal.html      Impressum & Datenschutz der veröffentlichten Seite (gallery/legal.py)
+
+Zweisprachig (Deutsch · Englisch): jede Seite trägt beide Sprachen, das Sprach-CSS zeigt eine —
+siehe `gallery/i18n.py`. Die Beispieltexte IN den Components bleiben deutsch (Demo-Inhalt).
 
 Engine-neutral: kanonisches HTML liegt in `c22/components/`, `c22/blocks/<kategorie>/`,
 `c22/charts/` und `c22/typeset/`; dieses Skript stitcht nur. Blocks/Charts/Typeset werden
@@ -15,7 +19,7 @@ per Verzeichnis-Scan entdeckt (kein zentrales Register) — Titel aus der ersten
 
     python3 gallery/build.py
     scripts/build-gallery.sh          # inkl. Pack-CSS
-    webshot <url>/gallery/index.html out.png --net host
+    webshot <url>/gallery/components.html out.png --net host
 """
 from __future__ import annotations
 
@@ -26,7 +30,10 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import i18n  # noqa: E402  — Sprachsystem + die zwei Pillen
+import landing  # noqa: E402  — Inhalt der Startseite
 import legal  # noqa: E402  — Texte der Rechtsseite, eine Quelle
+from i18n import t, zwei  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 COMPONENTS_DIR = ROOT / "c22" / "components"
@@ -48,20 +55,25 @@ SHADCN = "https://ui.shadcn.com/docs/components/base/{slug}"
 BASECOAT = "https://basecoatui.com/components/{slug}"
 REPO = "https://github.com/Ollornog/C22"
 
-# Seiten der Galerie: (Dateiname, Reiter-Beschriftung)
+# Startseite = `index.html` (Landing). Die Reiter führen in das Werk selbst; die Landing hat
+# keinen Reiter, sie hängt am Logo links — wie überall im Web.
+LANDING = "index.html"
+
+# Seiten der Galerie: (Dateiname, Reiter-Beschriftung). Die Beschriftungen sind Eigennamen und
+# bleiben in beiden Sprachen gleich.
 PAGES = [
-    ("index.html", "Components"),
+    ("components.html", "Components"),
     ("blocks.html", "Blocks"),
     ("charts.html", "Charts"),
     ("typeset.html", "Typeset"),
 ]
 
-# Block-Kategorien in Anzeige-Reihenfolge: (Verzeichnis, deutscher Titel)
+# Block-Kategorien in Anzeige-Reihenfolge: (Verzeichnis, Schlüssel in i18n.TEXTE)
 BLOCK_KATEGORIEN = [
-    ("navigation", "Navigation"),
-    ("full-page", "Komplette Seite"),
-    ("login-signup", "Login & Signup"),
-    ("tables", "Tabellen"),
+    ("navigation", "cat_navigation"),
+    ("full-page", "cat_full_page"),
+    ("login-signup", "cat_login_signup"),
+    ("tables", "cat_tables"),
 ]
 
 # (title, basecoat, shadcn, custom) — alphabetisch sortiert (Neusortierung 2026-07-19;
@@ -337,11 +349,11 @@ def section(slug: str, num: int, title: str, body: str | None, *, first: bool,
     """Eine Galerie-Sektion: Kopf, optionale Zusatzzeile, Demo-Rahmen, Code-Klappe."""
     done = body is not None
     demo = (normalisiere_assets(letter_labels(strip_title_comment(body))) if done
-            else '<p class="text-muted-foreground text-sm italic">— noch nicht gebaut —</p>')
+            else f'<p class="text-muted-foreground text-sm italic">{t("not_built")}</p>')
     code_block = (
         f'<details>'
         f'<summary class="flex cursor-pointer select-none list-none items-center justify-between gap-4 px-4 py-2 [&::-webkit-details-marker]:hidden">'
-        f'<span class="text-muted-foreground hover:text-foreground text-xs font-medium">Code</span>'
+        f'<span class="text-muted-foreground hover:text-foreground text-xs font-medium">{t("code")}</span>'
         f'{code_extra}'
         f'</summary>'
         f'<pre class="bg-muted/40 overflow-x-auto rounded-b-xl p-4 text-xs leading-relaxed"><code>{html.escape(body.strip())}</code></pre>'
@@ -391,16 +403,17 @@ def discover(directory: Path) -> list[tuple[str, str, str]]:
 
 # ── Seiten-Hülle (Header mit Seiten-Nav + Pack-Umschalter) ────────────────────
 
+# (Schlüssel, Anzeigename, Merkmale je Sprache) — die Merkmale beschreiben den Charakter des Packs.
 PACKS = [
-    ("vega", "Vega", ["neutral", "Standard"]),
-    ("spica", "Spica", ["Marke", "blau"]),
-    ("nova", "Nova", ["rund", "weich"]),
-    ("maia", "Maia", ["sehr rund", "freundlich"]),
-    ("lyra", "Lyra", ["eckig", "brutalist"]),
-    ("mira", "Mira", ["kompakt", "dezent"]),
-    ("luma", "Luma", ["luftig", "sehr rund"]),
-    ("sera", "Sera", ["Großbuchstaben", "eckig"]),
-    ("rhea", "Rhea", ["abgerundet", "ruhig"]),
+    ("vega", "Vega", {"de": ["neutral", "Standard"], "en": ["neutral", "default"]}),
+    ("spica", "Spica", {"de": ["Marke", "blau"], "en": ["brand", "blue"]}),
+    ("nova", "Nova", {"de": ["rund", "weich"], "en": ["round", "soft"]}),
+    ("maia", "Maia", {"de": ["sehr rund", "freundlich"], "en": ["very round", "friendly"]}),
+    ("lyra", "Lyra", {"de": ["eckig", "brutalist"], "en": ["square", "brutalist"]}),
+    ("mira", "Mira", {"de": ["kompakt", "dezent"], "en": ["compact", "subtle"]}),
+    ("luma", "Luma", {"de": ["luftig", "sehr rund"], "en": ["airy", "very round"]}),
+    ("sera", "Sera", {"de": ["Großbuchstaben", "eckig"], "en": ["uppercase", "square"]}),
+    ("rhea", "Rhea", {"de": ["abgerundet", "ruhig"], "en": ["rounded", "calm"]}),
 ]
 
 
@@ -412,57 +425,67 @@ def v(rel: str) -> int:
     return int(p.stat().st_mtime) if p.exists() else 0
 
 
-def page_shell(active: str, subtitle: str, toc_html: str, main_html: str) -> str:
+def _pack_badges(attrs_je_sprache: dict[str, list[str]]) -> str:
+    """Merkmale des Packs als Plaketten — zweisprachig, das CSS zeigt eine Sprache."""
+    return "".join(
+        '<span class="bg-muted text-muted-foreground rounded px-2 py-0.5 text-[11px] font-medium">'
+        + zwei(html.escape(de), html.escape(en)) + '</span>'
+        for de, en in zip(attrs_je_sprache["de"], attrs_je_sprache["en"]))
+
+
+def page_shell(active: str, titel_schluessel: str, toc_html: str, main_html: str, *,
+               sidebar: bool = True) -> str:
+    """Der gemeinsame Rumpf aller Seiten: Kopfleiste, optionale Inhaltsspalte, Inhalt.
+
+    Die Kopfleiste nennt **keinen Seitentitel** — welche Seite offen ist, sagt der markierte
+    Reiter. Rechts stehen die drei Umschalter (Pack · Sprache · Erscheinungsbild) und sonst
+    nichts: GitHub und Impressum gehören auf die Startseite, nicht in jede Leiste.
+    """
     pack_links = "".join(
         f'<link rel="stylesheet" data-pack="{k}" href="{ASSETS}c22/static/css/c22-{k}.css?v={v(f"css/c22-{k}.css")}"'
         f'{"" if i == 0 else " disabled"}>'
         for i, (k, _, _) in enumerate(PACKS))
     pack_options = "".join(f'<option value="{k}">{lbl}</option>' for k, lbl, _ in PACKS)
     pack_attrs_js = json.dumps({k: attrs for k, _, attrs in PACKS}, ensure_ascii=False)
-    pack_badges_html = "".join(
-        f'<span class="bg-muted text-muted-foreground rounded px-2 py-0.5 text-[11px] font-medium">{html.escape(a)}</span>'
-        for a in PACKS[0][2])
     seiten_nav = "".join(
         (f'<a href="{datei}" aria-current="page" class="rounded-md bg-accent px-3 py-1.5 text-sm font-medium text-accent-foreground">{label}</a>'
          if datei == active else
          f'<a href="{datei}" class="rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground">{label}</a>')
         for datei, label in PAGES)
+    titel_de, titel_en = i18n.TEXTE[titel_schluessel]
+    aside = (f'<aside class="hidden w-64 shrink-0 overflow-y-auto border-r px-3 py-4 lg:block">'
+             f'<nav class="flex flex-col gap-0.5">{toc_html}</nav></aside>') if sidebar else ""
     return f"""<!doctype html>
-<html lang="de">
+<html lang="de" data-lang="de">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>C22 — {html.escape(subtitle)}</title>
+<title>{html.escape(titel_de)}</title>
 <link rel="icon" type="image/png" href="{ASSETS}docs/logo.png">
 {pack_links}
+<style>{i18n.LANG_CSS}</style>
 <script src="{ASSETS}c22/static/js/basecoat.all.min.js?v={v("js/basecoat.all.min.js")}" defer></script>
 <script src="{ASSETS}c22/static/js/icons.js?v={v("js/icons.js")}" defer></script>
 <script src="{ASSETS}c22/static/js/c22.js?v={v("js/c22.js")}" defer></script>
+{i18n.kopf_skript({"de": titel_de, "en": titel_en})}
 </head>
 <body class="bg-background text-foreground flex h-screen flex-col overflow-hidden">
 <header class="flex shrink-0 flex-wrap items-center gap-x-6 gap-y-3 border-b px-6 py-3">
-  <div class="flex items-center gap-3">
+  <a href="{LANDING}" class="flex items-center gap-3" aria-label="{html.escape(i18n.klartext("to_start"))}">
     <img src="{ASSETS}docs/logo.png" alt="C22" class="size-8">
-    <div class="text-lg font-bold tracking-tight">C22
-      <span class="text-muted-foreground text-sm font-normal">{html.escape(subtitle)}</span>
-    </div>
-  </div>
-  <nav class="flex items-center gap-1" aria-label="Galerie-Seiten">{seiten_nav}</nav>
-  <div class="ms-auto flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
-    <label class="flex items-center gap-2"><span class="text-muted-foreground">Pack</span>
+    <span class="text-lg font-bold tracking-tight">C22</span>
+  </a>
+  <nav class="flex items-center gap-1" aria-label="{html.escape(i18n.klartext("nav_pages"))}">{seiten_nav}</nav>
+  <div class="ms-auto flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+    <label class="flex items-center gap-2"><span class="text-muted-foreground">{t("pack")}</span>
       <select class="select w-32" onchange="c22SetPack(this.value)">{pack_options}</select></label>
-    <span id="c22-pack-attrs" class="flex flex-wrap items-center gap-1">{pack_badges_html}</span>
-    <button type="button" class="btn" data-variant="outline" data-size="sm" onclick="document.documentElement.classList.toggle('dark')">Hell / Dunkel</button>
-    <span class="text-muted-foreground flex items-center gap-3 text-xs">
-      <a href="{REPO}" class="hover:text-foreground underline-offset-2 hover:underline">GitHub</a>
-      <a href="legal.html" class="hover:text-foreground underline-offset-2 hover:underline">Impressum</a>
-    </span>
+    <span id="c22-pack-attrs" class="flex flex-wrap items-center gap-1">{_pack_badges(PACKS[0][2])}</span>
+    {i18n.pille_sprache()}
+    {i18n.pille_theme()}
   </div>
 </header>
 <div class="flex min-h-0 flex-1">
-  <aside class="hidden w-64 shrink-0 overflow-y-auto border-r px-3 py-4 lg:block">
-    <nav class="flex flex-col gap-0.5">{toc_html}</nav>
-  </aside>
+  {aside}
   <main class="relative min-w-0 flex-1 overflow-y-auto px-6 py-8">
     {main_html}
   </main>
@@ -472,11 +495,19 @@ var C22_PACK_ATTRS = {pack_attrs_js};
 function c22RenderPackAttrs(name) {{
   var el = document.getElementById('c22-pack-attrs');
   if (!el) return;
+  var merkmale = C22_PACK_ATTRS[name];
+  if (!merkmale) return;
   el.innerHTML = '';
-  (C22_PACK_ATTRS[name] || []).forEach(function (a) {{
+  merkmale.de.forEach(function (de, i) {{
+    // Beide Sprachen ins DOM, das Sprach-CSS zeigt eine — wie im statisch gebauten Markup.
     var s = document.createElement('span');
     s.className = 'bg-muted text-muted-foreground rounded px-2 py-0.5 text-[11px] font-medium';
-    s.textContent = a;
+    ['de', 'en'].forEach(function (l) {{
+      var inner = document.createElement('span');
+      inner.className = 'l-' + l;
+      inner.textContent = merkmale[l][i];
+      s.appendChild(inner);
+    }});
     el.appendChild(s);
   }});
 }}
@@ -523,9 +554,9 @@ def render_components() -> tuple[str, int]:
         toc.append(toc_link(slug, title, num))
         dep_teile = []
         if body and deps.get(slug):
-            dep_teile.append(f'<span><span class="text-foreground/70 font-medium">nutzt:</span> {dep_chips(deps[slug])}</span>')
+            dep_teile.append(f'<span><span class="text-foreground/70 font-medium">{t("uses")}</span> {dep_chips(deps[slug])}</span>')
         if body and used_by.get(slug):
-            dep_teile.append(f'<span><span class="text-foreground/70 font-medium">genutzt von:</span> {dep_chips(used_by[slug])}</span>')
+            dep_teile.append(f'<span><span class="text-foreground/70 font-medium">{t("used_by")}</span> {dep_chips(used_by[slug])}</span>')
         pre_html = (
             f'<div class="text-muted-foreground mx-auto flex w-[820px] max-w-full flex-wrap gap-x-6 gap-y-1 pb-3 text-xs">'
             + "".join(dep_teile) + '</div>'
@@ -533,24 +564,24 @@ def render_components() -> tuple[str, int]:
         sections.append(section(
             slug, num, title, body, first=idx == 0, width="w-[820px]",
             code_extra=doclinks(slug, bc, sh), pre_html=pre_html))
-    page = page_shell("index.html", f"Components · {built}/{len(COMPONENTS)}",
-                      "".join(toc), "".join(sections))
-    (ZIEL / "index.html").write_text(page, encoding="utf-8")
-    return "index.html", built
+    page = page_shell("components.html", "title_components", "".join(toc), "".join(sections))
+    (ZIEL / "components.html").write_text(page, encoding="utf-8")
+    return "components.html", built
 
 
 def render_blocks() -> tuple[str, int]:
     toc, sections, num, first = [], [], 0, True
-    for verzeichnis, kategorie in BLOCK_KATEGORIEN:
+    for verzeichnis, kat_schluessel in BLOCK_KATEGORIEN:
         eintraege = discover(BLOCKS_DIR / verzeichnis)
         anker = f"kategorie-{verzeichnis}"
-        toc.append(f'<div class="mt-4 px-2 pb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground first:mt-0">{html.escape(kategorie)}</div>')
+        kategorie = t(kat_schluessel)
+        toc.append(f'<div class="mt-4 px-2 pb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground first:mt-0">{kategorie}</div>')
         sections.append(
             f'<div id="{anker}" class="mx-auto w-[1240px] max-w-full scroll-mt-6" style="margin-top:{"0" if first else GAP}">'
-            f'<h2 class="border-b pb-2 text-2xl font-bold tracking-tight">{html.escape(kategorie)}</h2></div>')
+            f'<h2 class="border-b pb-2 text-2xl font-bold tracking-tight">{kategorie}</h2></div>')
         if not eintraege:
             sections.append(
-                f'<p class="text-muted-foreground mx-auto mt-6 w-[1240px] max-w-full text-sm italic">— noch keine Blocks in dieser Kategorie —</p>')
+                f'<p class="text-muted-foreground mx-auto mt-6 w-[1240px] max-w-full text-sm italic">{t("empty_cat")}</p>')
         for i, (slug, titel, body) in enumerate(eintraege):
             num += 1
             anchor = f"{verzeichnis}-{slug}"
@@ -558,20 +589,20 @@ def render_blocks() -> tuple[str, int]:
             # erster Block einer Kategorie rückt an die Überschrift heran
             sections.append(section(anchor, num, titel, body, first=i == 0, width="w-[1240px]"))
         first = False
-    page = page_shell("blocks.html", f"Blocks · {num}", "".join(toc), "".join(sections))
+    page = page_shell("blocks.html", "title_blocks", "".join(toc), "".join(sections))
     (ZIEL / "blocks.html").write_text(page, encoding="utf-8")
     return "blocks.html", num
 
 
-def render_flat(datei: str, untertitel: str, directory: Path, width: str) -> tuple[str, int]:
+def render_flat(datei: str, titel_schluessel: str, directory: Path, width: str) -> tuple[str, int]:
     toc, sections = [], []
     eintraege = discover(directory)
     for idx, (slug, titel, body) in enumerate(eintraege):
         toc.append(toc_link(slug, titel, idx + 1))
         sections.append(section(slug, idx + 1, titel, body, first=idx == 0, width=width))
     if not eintraege:
-        sections.append('<p class="text-muted-foreground text-sm italic">— noch keine Inhalte —</p>')
-    page = page_shell(datei, f"{untertitel} · {len(eintraege)}", "".join(toc), "".join(sections))
+        sections.append(f'<p class="text-muted-foreground text-sm italic">{t("empty")}</p>')
+    page = page_shell(datei, titel_schluessel, "".join(toc), "".join(sections))
     (ZIEL / datei).write_text(page, encoding="utf-8")
     return datei, len(eintraege)
 
@@ -580,12 +611,23 @@ def render_legal() -> tuple[str, int]:
     """Impressum + Datenschutz — Pflichtangaben der veröffentlichten Seite (§ 18 MStV).
 
     Kein Reiter in der Seiten-Navigation: die Seite gehört zur Website, nicht zum Werk.
-    Erreichbar über den Verweis in der Kopfleiste, der auf jeder Seite steht.
+    Erreichbar über den Verweis auf der Startseite.
     """
     toc, main_html = legal.inhalt()
-    page = page_shell("legal.html", "Impressum & Datenschutz", toc, main_html)
+    page = page_shell("legal.html", "title_legal", toc, main_html)
     (ZIEL / "legal.html").write_text(page, encoding="utf-8")
     return "legal.html", len(legal.ABSCHNITTE)
+
+
+def render_landing(anzahl: dict[str, int]) -> tuple[str, int]:
+    """Startseite — ohne Inhaltsspalte, ohne markierten Reiter (sie ist keine Galerie-Seite).
+
+    Läuft NACH den Galerie-Seiten: die Plaketten auf den Karten nennen die Zahlen, die die
+    Renderer wirklich gebaut haben, nicht gepflegte.
+    """
+    page = page_shell(LANDING, "title_start", "", landing.inhalt(anzahl), sidebar=False)
+    (ZIEL / LANDING).write_text(page, encoding="utf-8")
+    return LANDING, len(landing.EINSTIEGE)
 
 
 def main(ziel: Path = GALLERY, assets: str = "../") -> None:
@@ -595,10 +637,11 @@ def main(ziel: Path = GALLERY, assets: str = "../") -> None:
     ergebnisse = [
         render_components(),
         render_blocks(),
-        render_flat("charts.html", "Charts", CHARTS_DIR, "w-[900px]"),
-        render_flat("typeset.html", "Typeset", TYPESET_DIR, "w-[820px]"),
+        render_flat("charts.html", "title_charts", CHARTS_DIR, "w-[900px]"),
+        render_flat("typeset.html", "title_typeset", TYPESET_DIR, "w-[820px]"),
         render_legal(),
     ]
+    ergebnisse.insert(0, render_landing(dict(ergebnisse)))
     wo = ZIEL.relative_to(ROOT) if ZIEL.is_relative_to(ROOT) else ZIEL
     for datei, anzahl in ergebnisse:
         print(f"Galerie-Seite geschrieben -> {wo}/{datei}  ({anzahl} Einträge)")
