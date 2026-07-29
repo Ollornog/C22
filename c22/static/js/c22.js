@@ -2453,3 +2453,51 @@ document.addEventListener('basecoat:initialized', function (e) {
   var input = el.querySelector('header input');
   if (input) input.removeAttribute('aria-activedescendant');
 }, true);
+
+/* C22: Dropdown-Panel in SCROLL-CONTAINERN (data-popover-fixed am .dropdown-menu).
+   overflow-Container clippen die absolut positionierten Panels; das Muster hier:
+   Panel liegt FIXED (CSS in components.css) und bekommt seine Koordinaten SYNCHRON
+   VOR basecoats Öffnen gesetzt (capture-Click) sowie einmal beim Verdrahten — die
+   Koordinaten sind bewusst NICHT Teil der Öffnungs-Transition, sonst fliegt das
+   Panel beim ERSTEN Öffnen von seiner Standardposition quer über den Schirm.
+   Praxis-Fund 2026-07-20/21 (Optionen-Menü in einer scrollenden Sidebar). */
+(function () {
+  function position(wrapper) {
+    var trigger = wrapper.querySelector(':scope > button, :scope > [aria-haspopup]');
+    var panel = wrapper.querySelector(':scope > [data-popover]');
+    if (!trigger || !panel) return;
+    var r = trigger.getBoundingClientRect();
+    var luft = 4;
+    var side = panel.getAttribute('data-side') || 'bottom';
+    if (side === 'right') {
+      panel.style.left = (r.right + luft) + 'px';
+      panel.style.top = Math.max(8, Math.min(r.top, window.innerHeight - 280)) + 'px';
+    } else if (side === 'left') {
+      panel.style.right = (window.innerWidth - r.left + luft) + 'px';
+      panel.style.top = Math.max(8, Math.min(r.top, window.innerHeight - 280)) + 'px';
+    } else {
+      var align = panel.getAttribute('data-align') || 'start';
+      if (align === 'end') panel.style.right = (window.innerWidth - r.right) + 'px';
+      else panel.style.left = r.left + 'px';
+      panel.style.top = (r.bottom + luft) + 'px';
+    }
+  }
+  function wire(root) {
+    var basis = root && root.querySelectorAll ? root : document;
+    basis.querySelectorAll('.dropdown-menu[data-popover-fixed]').forEach(position);
+  }
+  document.addEventListener('click', function (e) {
+    var wrapper = e.target.closest && e.target.closest('.dropdown-menu[data-popover-fixed]');
+    if (wrapper) position(wrapper);
+  }, true);
+  window.addEventListener('resize', function () { wire(document); });
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { wire(document); });
+  else wire(document);
+  new MutationObserver(function (muts) {
+    muts.forEach(function (m) {
+      Array.prototype.forEach.call(m.addedNodes, function (n) {
+        if (n.nodeType === 1) wire(n);
+      });
+    });
+  }).observe(document.documentElement, { childList: true, subtree: true });
+})();

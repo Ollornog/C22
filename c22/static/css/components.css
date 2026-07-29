@@ -2197,3 +2197,32 @@
     margin: 0;
   }
 }
+
+@layer components {
+  /* Dropdown-Panel in Scroll-Containern (data-popover-fixed am .dropdown-menu):
+     FIXED entgeht dem Clipping des overflow-Containers; die Koordinaten setzt
+     c22.js synchron VOR dem Öffnen — und sie gehören bewusst NICHT zur
+     Öffnungs-Transition (sonst „fliegt" das Panel beim ersten Öffnen).
+     Praxis-Fund 2026-07-20/21. */
+  .dropdown-menu[data-popover-fixed] > [data-popover] {
+    position: fixed;
+    transition-property: opacity, transform, translate, scale, display;
+  }
+}
+
+@layer components {
+  /* Form-Controls sitzen auf der SURFACE (--card), nicht auf --background:
+     robust über Packs, deren Seitengrund vom Card-Ton abweicht (ein Pack mit
+     grauem Canvas + weißen Cards) — sonst „verschwinden" transparente Inputs/
+     Selects/Outline-Buttons auf dem Canvas und wirken inaktiv. Wo
+     background == card (Standard-Packs) ist es ein No-op; im Dark hebt es die
+     Controls leicht vom Grund ab (shadcn-nah). Checkboxen/Radios ausgenommen:
+     ihr Hintergrund zeigt Haken/Punkt. Praxis-Fund 2026-07-21. */
+  .input:not([type='checkbox']):not([type='radio']),
+  .input-group,
+  .select,
+  .textarea,
+  .btn[data-variant='outline'] {
+    background-color: var(--card);
+  }
+}

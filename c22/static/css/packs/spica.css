@@ -20,6 +20,14 @@
  */
 
 :root {
+  /* FLÄCHEN (2026-07-20) — Umkehrung der base-Verteilung: die SIDEBAR ist
+     weiß, der Seitengrund leicht grau (base: Grund weiß, Sidebar #FAFAFA).
+     Karten/Popover bleiben weiß (base) und heben sich so vom Grund ab —
+     das shadcn-Dashboard-Muster. Dark braucht nichts: dort liegt die
+     Sidebar (0.205) schon über dem Grund (0.145). */
+  --background: oklch(0.97 0 0);                    /* #F5F5F5 (neutral-100) */
+  --sidebar: oklch(1 0 0);                          /* weiß */
+
   /* PRIMARY — Marken-Blau, aber eine Stufe DUNKLER als die Basis (#2563EB, blue-600):
      Weiß auf #3B82F6 erreicht nur ~3.7:1 (reicht für UI/Large Text, nicht für normale
      Button-Labels) — auf #2563EB liest Weiß mit ~5.2:1 (WCAG-AA-Gedanke). Das reine
@@ -53,6 +61,13 @@
 }
 
 .dark {
+  /* FLÄCHEN dark (Bugfix 2026-07-21): die :root-Flächenwerte oben gewinnen
+     sonst (gleiche Spezifität, späterer Import) über die .dark-Werte der
+     base — der Seitengrund wäre im Dark HELL bei hellem Text. Hier die
+     base-dark-Verteilung explizit wiederherstellen (Sidebar über Grund). */
+  --background: oklch(0.145 0 0);
+  --sidebar: oklch(0.205 0 0);
+
   /* PRIMARY — im Dark HELLER und ENTSÄTTIGTER als das Light-Primary (blue-500 statt
      blue-600: L 0.623 > 0.546, Chroma 0.214 < 0.245), damit die Fläche auf dunklem
      Grund leuchtet statt zu versumpfen. Weiß trüge darauf nur ~3.7:1, deshalb kippt
