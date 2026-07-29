@@ -25,6 +25,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Startseite trägt die Marke groß:** das Logo (512er PNG) steht als Kopf über dem Titel.
+- **Gewähltes Segment einer Pille trägt `primary`** statt nur der etwas helleren Accent-Fläche
+  (`components.css`): in einer segmentierten Gruppe *ist* „welches Segment gilt" die ganze
+  Aussage des Bauteils — anders als bei einem einzelnen Toggle, wo der Kontext mitspricht.
 - **Kopfleiste nennt keinen Seitentitel mehr** (vorher „Components · 65/65"): welche Seite offen
   ist, sagt der markierte Reiter. Sie trägt jetzt Logo, Reiter und die drei Umschalter — nichts sonst.
 
@@ -34,6 +38,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   setzt selbst eine Hintergrundfarbe und gewann bei gleicher Spezifität gegen den
   Pressed/Checked-Kanon — ein **gewählter** Segment-Knopf in einer Outline-Button-Group sah
   deshalb aus wie die ungewählten (betraf auch die Variante „Segmentiert" des `theme-switcher`).
+- **Zustand war im Dunkelmodus unsichtbar:** das Pack setzt `html.dark .btn[data-variant="outline"]`
+  (Spezifität 0,3,1) und schlug damit den Checked-Kanon (0,3,0) — hell war der gewählte Knopf
+  markiert, dunkel nicht. Der Kanon trägt die Aussage jetzt in beiden Erscheinungsbildern
+  (`:is(html.dark *)`, dasselbe Muster, das der Vendor dafür nutzt).
 - **Hell/Dunkel bleibt jetzt erhalten:** Basecoat 1.0.2 *schreibt* `localStorage.themeMode` beim
   Umschalten, liest den Wert aber nie zurück (`getItem` kommt in seinem Bundle nicht vor) — die
   Wahl war nach jedem Seitenwechsel weg. Das Kopf-Skript setzt sie jetzt vor dem Zeichnen; ohne

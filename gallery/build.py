@@ -625,7 +625,7 @@ def render_landing(anzahl: dict[str, int]) -> tuple[str, int]:
     Läuft NACH den Galerie-Seiten: die Plaketten auf den Karten nennen die Zahlen, die die
     Renderer wirklich gebaut haben, nicht gepflegte.
     """
-    page = page_shell(LANDING, "title_start", "", landing.inhalt(anzahl), sidebar=False)
+    page = page_shell(LANDING, "title_start", "", landing.inhalt(anzahl, ASSETS), sidebar=False)
     (ZIEL / LANDING).write_text(page, encoding="utf-8")
     return LANDING, len(landing.EINSTIEGE)
 

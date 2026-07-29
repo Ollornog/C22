@@ -1493,8 +1493,27 @@
      ein gewählter Segment-Knopf in einer Outline-Button-Group sah damit aus wie die
      ungewählten. Der Zustand MUSS die Variante schlagen: er ist die stärkere Aussage. */
   .btn[data-variant][aria-pressed='true'],
-  .btn[data-variant][aria-checked='true'] {
+  .btn[data-variant][aria-checked='true'],
+  /* … und dasselbe im Dunkelmodus. Das Pack setzt dort `html.dark .btn[data-variant="outline"]`
+     (0,3,1) und schlug die Zeile darüber (0,3,0): hell war der Zustand sichtbar, dunkel nicht.
+     Der Vendor nutzt für diesen Zweck selbst `:is(html.dark *)` — hier genauso, damit die
+     Aussage in beiden Erscheinungsbildern gleich stark ist. */
+  .btn[data-variant][aria-pressed='true']:is(html.dark *),
+  .btn[data-variant][aria-checked='true']:is(html.dark *) {
     @apply bg-accent text-accent-foreground;
+  }
+
+  /* Segmentierte Gruppe (Pille): hier IST „welches Segment gilt" die ganze Aussage des
+     Bauteils — anders als bei einem einzelnen Toggle, wo der Kontext mitspricht. Der
+     gewählte Abschnitt trägt deshalb das volle Rollenpaar `primary`, nicht nur die etwas
+     hellere Accent-Fläche: erkennbar in jedem Pack und in beiden Erscheinungsbildern. */
+  .button-group[role='radiogroup'] .btn[aria-checked='true'],
+  .button-group[role='radiogroup'] .btn[aria-checked='true']:is(html.dark *) {
+    @apply bg-primary text-primary-foreground;
+  }
+
+  .button-group[role='radiogroup'] .btn[aria-checked='true']:hover {
+    @apply bg-primary text-primary-foreground brightness-110;
   }
 
   /* Hover-Card-Fläche: das schwebende Popover-Panel (Farbe, Rahmen, Schatten,
