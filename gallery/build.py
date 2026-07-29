@@ -22,7 +22,11 @@ from __future__ import annotations
 import html
 import json
 import re
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import legal  # noqa: E402  — Texte der Rechtsseite, eine Quelle
 
 ROOT = Path(__file__).resolve().parent.parent
 COMPONENTS_DIR = ROOT / "c22" / "components"
@@ -32,8 +36,17 @@ TYPESET_DIR = ROOT / "c22" / "typeset"
 GALLERY = ROOT / "gallery"
 GAP = "7rem"  # space before each section container
 
+# Wohin geschrieben wird und wie die Seiten ihre Assets (CSS/JS/Logo) adressieren.
+# Lokal liegen die Seiten in `gallery/`, die Assets eine Ebene höher — also `../`.
+# Für die veröffentlichte Website (scripts/build-site.py) liegen die Seiten im
+# Wurzelverzeichnis der Site, das Präfix ist dann leer. Ein Präfix statt zweier
+# HTML-Varianten: dieselbe Seite, nur andere Adressen.
+ZIEL = GALLERY
+ASSETS = "../"
+
 SHADCN = "https://ui.shadcn.com/docs/components/base/{slug}"
 BASECOAT = "https://basecoatui.com/components/{slug}"
+REPO = "https://github.com/Ollornog/C22"
 
 # Seiten der Galerie: (Dateiname, Reiter-Beschriftung)
 PAGES = [
@@ -308,11 +321,22 @@ def toc_link(anchor: str, label: str, num: int | None = None) -> str:
             f'{nummer}<span class="truncate">{html.escape(label)}</span></a>')
 
 
+def normalisiere_assets(markup: str) -> str:
+    """Adressen im Partial auf das Asset-Präfix der Seite umstellen.
+
+    Ein Partial adressiert Beilagen aus SEINER Sicht (`../docs/logo.png`) — das stimmt, solange
+    die Seite in `gallery/` liegt. Auf der Website liegt sie im Wurzelverzeichnis; dieselbe
+    Adresse zeigte dort aus der Site heraus und liefe ins Leere. Der Generator zieht sie deshalb
+    mit, statt sie in jedem Partial doppelt zu pflegen.
+    """
+    return markup.replace('"../docs/', f'"{ASSETS}docs/').replace('"../c22/', f'"{ASSETS}c22/')
+
+
 def section(slug: str, num: int, title: str, body: str | None, *, first: bool,
             width: str, code_extra: str = "", pre_html: str = "") -> str:
     """Eine Galerie-Sektion: Kopf, optionale Zusatzzeile, Demo-Rahmen, Code-Klappe."""
     done = body is not None
-    demo = (letter_labels(strip_title_comment(body)) if done
+    demo = (normalisiere_assets(letter_labels(strip_title_comment(body))) if done
             else '<p class="text-muted-foreground text-sm italic">— noch nicht gebaut —</p>')
     code_block = (
         f'<details>'
@@ -390,7 +414,7 @@ def v(rel: str) -> int:
 
 def page_shell(active: str, subtitle: str, toc_html: str, main_html: str) -> str:
     pack_links = "".join(
-        f'<link rel="stylesheet" data-pack="{k}" href="../c22/static/css/c22-{k}.css?v={v(f"css/c22-{k}.css")}"'
+        f'<link rel="stylesheet" data-pack="{k}" href="{ASSETS}c22/static/css/c22-{k}.css?v={v(f"css/c22-{k}.css")}"'
         f'{"" if i == 0 else " disabled"}>'
         for i, (k, _, _) in enumerate(PACKS))
     pack_options = "".join(f'<option value="{k}">{lbl}</option>' for k, lbl, _ in PACKS)
@@ -409,16 +433,16 @@ def page_shell(active: str, subtitle: str, toc_html: str, main_html: str) -> str
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>C22 — {html.escape(subtitle)}</title>
-<link rel="icon" type="image/png" href="../docs/logo.png">
+<link rel="icon" type="image/png" href="{ASSETS}docs/logo.png">
 {pack_links}
-<script src="../c22/static/js/basecoat.all.min.js?v={v("js/basecoat.all.min.js")}" defer></script>
-<script src="../c22/static/js/icons.js?v={v("js/icons.js")}" defer></script>
-<script src="../c22/static/js/c22.js?v={v("js/c22.js")}" defer></script>
+<script src="{ASSETS}c22/static/js/basecoat.all.min.js?v={v("js/basecoat.all.min.js")}" defer></script>
+<script src="{ASSETS}c22/static/js/icons.js?v={v("js/icons.js")}" defer></script>
+<script src="{ASSETS}c22/static/js/c22.js?v={v("js/c22.js")}" defer></script>
 </head>
 <body class="bg-background text-foreground flex h-screen flex-col overflow-hidden">
 <header class="flex shrink-0 flex-wrap items-center gap-x-6 gap-y-3 border-b px-6 py-3">
   <div class="flex items-center gap-3">
-    <img src="../docs/logo.png" alt="C22" class="size-8">
+    <img src="{ASSETS}docs/logo.png" alt="C22" class="size-8">
     <div class="text-lg font-bold tracking-tight">C22
       <span class="text-muted-foreground text-sm font-normal">{html.escape(subtitle)}</span>
     </div>
@@ -429,6 +453,10 @@ def page_shell(active: str, subtitle: str, toc_html: str, main_html: str) -> str
       <select class="select w-32" onchange="c22SetPack(this.value)">{pack_options}</select></label>
     <span id="c22-pack-attrs" class="flex flex-wrap items-center gap-1">{pack_badges_html}</span>
     <button type="button" class="btn" data-variant="outline" data-size="sm" onclick="document.documentElement.classList.toggle('dark')">Hell / Dunkel</button>
+    <span class="text-muted-foreground flex items-center gap-3 text-xs">
+      <a href="{REPO}" class="hover:text-foreground underline-offset-2 hover:underline">GitHub</a>
+      <a href="legal.html" class="hover:text-foreground underline-offset-2 hover:underline">Impressum</a>
+    </span>
   </div>
 </header>
 <div class="flex min-h-0 flex-1">
@@ -507,7 +535,7 @@ def render_components() -> tuple[str, int]:
             code_extra=doclinks(slug, bc, sh), pre_html=pre_html))
     page = page_shell("index.html", f"Components · {built}/{len(COMPONENTS)}",
                       "".join(toc), "".join(sections))
-    (GALLERY / "index.html").write_text(page, encoding="utf-8")
+    (ZIEL / "index.html").write_text(page, encoding="utf-8")
     return "index.html", built
 
 
@@ -531,7 +559,7 @@ def render_blocks() -> tuple[str, int]:
             sections.append(section(anchor, num, titel, body, first=i == 0, width="w-[1240px]"))
         first = False
     page = page_shell("blocks.html", f"Blocks · {num}", "".join(toc), "".join(sections))
-    (GALLERY / "blocks.html").write_text(page, encoding="utf-8")
+    (ZIEL / "blocks.html").write_text(page, encoding="utf-8")
     return "blocks.html", num
 
 
@@ -544,20 +572,40 @@ def render_flat(datei: str, untertitel: str, directory: Path, width: str) -> tup
     if not eintraege:
         sections.append('<p class="text-muted-foreground text-sm italic">— noch keine Inhalte —</p>')
     page = page_shell(datei, f"{untertitel} · {len(eintraege)}", "".join(toc), "".join(sections))
-    (GALLERY / datei).write_text(page, encoding="utf-8")
+    (ZIEL / datei).write_text(page, encoding="utf-8")
     return datei, len(eintraege)
 
 
-def main() -> None:
+def render_legal() -> tuple[str, int]:
+    """Impressum + Datenschutz — Pflichtangaben der veröffentlichten Seite (§ 18 MStV).
+
+    Kein Reiter in der Seiten-Navigation: die Seite gehört zur Website, nicht zum Werk.
+    Erreichbar über den Verweis in der Kopfleiste, der auf jeder Seite steht.
+    """
+    toc, main_html = legal.inhalt()
+    page = page_shell("legal.html", "Impressum & Datenschutz", toc, main_html)
+    (ZIEL / "legal.html").write_text(page, encoding="utf-8")
+    return "legal.html", len(legal.ABSCHNITTE)
+
+
+def main(ziel: Path = GALLERY, assets: str = "../") -> None:
+    global ZIEL, ASSETS
+    ZIEL, ASSETS = Path(ziel), assets
+    ZIEL.mkdir(parents=True, exist_ok=True)
     ergebnisse = [
         render_components(),
         render_blocks(),
         render_flat("charts.html", "Charts", CHARTS_DIR, "w-[900px]"),
         render_flat("typeset.html", "Typeset", TYPESET_DIR, "w-[820px]"),
+        render_legal(),
     ]
+    wo = ZIEL.relative_to(ROOT) if ZIEL.is_relative_to(ROOT) else ZIEL
     for datei, anzahl in ergebnisse:
-        print(f"Galerie-Seite geschrieben -> gallery/{datei}  ({anzahl} Einträge)")
+        print(f"Galerie-Seite geschrieben -> {wo}/{datei}  ({anzahl} Einträge)")
 
 
 if __name__ == "__main__":
-    main()
+    # python3 gallery/build.py [zielverzeichnis] [asset-praefix]
+    argumente = sys.argv[1:]
+    main(Path(argumente[0]) if argumente else GALLERY,
+         argumente[1] if len(argumente) > 1 else "../")

@@ -21,6 +21,9 @@ or a dashboard once and stop re-solving the same problems — overflow, spacing,
 breakage — while keeping app-side adapters thin: a redesign becomes "new tokens + components, gallery
 still green", not touching every app.
 
+**👉 [Live gallery](https://ollornog.github.io/C22/)** — every component in its variants, eight style
+packs, light and dark. Rebuilt from `main` on every change.
+
 ---
 
 ## What it is
