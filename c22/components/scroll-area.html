@@ -1,7 +1,7 @@
 <!-- basecoat: Scroll Area (Basecoat nennt sie "Scrollbar") = gestylte native Scrollleiste, kein JS/Overlay wie bei Radix. .scrollbar Standard, Größen über data-size="sm"/"thin"/"lg" (Kanon, s. scrollbar.html). Container braucht selbst overflow-y-auto/overflow-x-auto + eine Höhen-/Breitenbegrenzung. Farben/Breite über C22-Tokens (--scrollbar-track/-thumb/-width/-sm-width/-radius). Funktioniert mit dir="rtl". -->
 <div class="c22-examples">
   <div class="c22-example">
-    <span class="c22-example-label">Standard (<code class="text-[11px]">.scrollbar</code>, vertikal)</span>
+    <span class="c22-example-label">Standard (<code>.scrollbar</code>, vertikal)</span>
     <div class="scrollbar h-72 w-full max-w-xs overflow-y-auto rounded-md border p-4">
       <h4 class="mb-4 text-sm font-medium leading-none">Versionen</h4>
       <div class="flex flex-col gap-3 text-sm">
@@ -25,7 +25,7 @@
     </div>
   </div>
   <div class="c22-example">
-    <span class="c22-example-label">Kompakt (<code class="text-[11px]">data-size="sm"</code> — für Menüs/Listen)</span>
+    <span class="c22-example-label">Kompakt (<code>data-size="sm"</code> — für Menüs/Listen)</span>
     <div class="scrollbar h-56 w-full max-w-xs overflow-y-auto rounded-md border p-2" data-size="sm">
       <div class="flex flex-col gap-1 text-sm">
         <div class="flex items-center gap-2 rounded-sm p-2"><span class="avatar" data-size="sm"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=64&h=64&fit=crop&crop=faces&q=80" alt="Mara Bauer"><span>MA</span></span><div class="flex flex-col"><span class="font-medium">Mara Bauer</span><span class="text-muted-foreground text-xs">Design</span></div></div>
@@ -39,7 +39,7 @@
     </div>
   </div>
   <div class="c22-example">
-    <span class="c22-example-label">Dünn / thin (<code class="text-[11px]">data-size="thin"</code> — 4px, kaum sichtbar)</span>
+    <span class="c22-example-label">Dünn / thin (<code>data-size="thin"</code> — 4px, kaum sichtbar)</span>
     <div class="scrollbar h-56 w-full max-w-xs overflow-y-auto rounded-md border p-4 text-sm" data-size="thin">
       <h4 class="mb-3 font-medium leading-none">Protokoll</h4>
       <div class="text-muted-foreground flex flex-col gap-2">
@@ -58,7 +58,7 @@
     </div>
   </div>
   <div class="c22-example">
-    <span class="c22-example-label">Horizontal (<code class="text-[11px]">overflow-x-auto</code>)</span>
+    <span class="c22-example-label">Horizontal (<code>overflow-x-auto</code>)</span>
     <div class="scrollbar w-full max-w-md overflow-x-auto rounded-md">
       <div class="flex w-max gap-4 p-4">
         <figure class="w-40 shrink-0">

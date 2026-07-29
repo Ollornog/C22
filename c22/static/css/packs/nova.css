@@ -1,0 +1,40 @@
+/* C22-Achsenschicht des Packs „Nova" (rund · weich).
+ *
+ * Diese Datei ist die STELLE, an der das Pack seine Achsen entscheidet (c22/axes.py ist das
+ * Register, docs/theming.md die Begründung). Ohne sie trüge das Pack seinen Charakter nur in
+ * den Klassenregeln des Vendors — alles, was C22 selbst gestaltet, folgte ihm nicht.
+ *
+ * Jede Achse ist hier genannt: entweder mit Werten oder ausdrücklich als „erbt" (dann gilt
+ * die Basis aus base.css/tokens.css). Nur Custom Properties, keine Component-Regeln.
+ *
+ * @achse base-color: erbt — dieses Pack ist ein FORM-Pack und lässt die Farbrollen der Basis stehen.
+ * @achse accent: erbt — dieses Pack ist ein FORM-Pack und lässt die Farbrollen der Basis stehen.
+ * @achse status: erbt — dieses Pack ist ein FORM-Pack und lässt die Farbrollen der Basis stehen.
+ * @achse chart: erbt — dieses Pack ist ein FORM-Pack und lässt die Farbrollen der Basis stehen.
+ * @achse menu: erbt — dieses Pack ist ein FORM-Pack und lässt die Farbrollen der Basis stehen.
+ * @achse menu-accent: erbt — dieses Pack ist ein FORM-Pack und lässt die Farbrollen der Basis stehen.
+ * @achse font: erbt — alle Packs teilen die eingebettete Inter (tokens.css).
+ * @achse type-scale: erbt — der Standardwert passt zum Charakter dieses Packs.
+ * @achse density: erbt — der Standardwert passt zum Charakter dieses Packs.
+ * @achse motion: teilweise — die DAUER trägt den Charakter, die Kurve bleibt die der Basis.
+ */
+
+:root {
+  /* Vendor-Karten: rounded-xl, Knöpfe rounded-lg */
+  --radius: 0.75rem;
+
+  /* weicher Strich */
+  --icon-stroke: 1.75;
+
+  /* weiche, langsamere Bewegung */
+  --default-transition-duration: 200ms;
+
+  /* Elevation: mehr Streuung, weniger Kante. */
+  --shadow-2xs: 0 1px rgb(0 0 0 / 0.05);
+  --shadow-xs: 0 2px 4px 0 rgb(0 0 0 / 0.05);
+  --shadow-sm: 0 2px 6px 0 rgb(0 0 0 / 0.09);
+  --shadow-md: 0 6px 12px -2px rgb(0 0 0 / 0.10);
+  --shadow-lg: 0 14px 22px -4px rgb(0 0 0 / 0.10);
+  --shadow-xl: 0 24px 32px -6px rgb(0 0 0 / 0.10);
+  --shadow-2xl: 0 32px 60px -14px rgb(0 0 0 / 0.22);
+}

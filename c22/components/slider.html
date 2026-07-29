@@ -5,7 +5,7 @@
     <input type="range" class="input w-full max-w-sm" min="0" max="100" value="60" aria-label="Lautstärke">
   </div>
   <div class="c22-example">
-    <span class="c22-example-label">Mit Wertanzeige (Label · <code class="text-[11px]">&lt;output&gt;</code>, live)</span>
+    <span class="c22-example-label">Mit Wertanzeige (Label · <code>&lt;output&gt;</code>, live)</span>
     <div class="grid w-full max-w-sm gap-1">
       <div class="flex items-center justify-between gap-2">
         <label class="label" for="c22-slider-value">Helligkeit</label>
@@ -23,7 +23,7 @@
     </div>
   </div>
   <div class="c22-example">
-    <span class="c22-example-label">Mit Stummschalter (<code class="text-[11px]">data-mute</code> — Klick in den Regler entstummt)</span>
+    <span class="c22-example-label">Mit Stummschalter (<code>data-mute</code> — Klick in den Regler entstummt)</span>
     <div class="flex w-full max-w-sm items-center gap-3" data-mute-group>
       <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" data-mute aria-label="Stumm schalten" aria-pressed="false">
         <svg data-icon-lu="volume-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/></svg>
@@ -33,7 +33,7 @@
     </div>
   </div>
   <div class="c22-example">
-    <span class="c22-example-label">Schritte (<code class="text-[11px]">step="20"</code> mit Skala)</span>
+    <span class="c22-example-label">Schritte (<code>step="20"</code> mit Skala)</span>
     <div class="w-full max-w-sm">
       <input type="range" class="input w-full" min="0" max="100" step="20" value="40" list="c22-slider-ticks" aria-label="Stufen">
       <datalist id="c22-slider-ticks"><option value="0"></option><option value="20"></option><option value="40"></option><option value="60"></option><option value="80"></option><option value="100"></option></datalist>
@@ -55,7 +55,7 @@
     <input type="range" class="input w-full max-w-sm" min="0" max="100" value="50" disabled aria-label="Deaktiviert">
   </div>
   <div class="c22-example">
-    <span class="c22-example-label">Bereich (zwei Griffe, <code class="text-[11px]">data-slider-multi</code>)</span>
+    <span class="c22-example-label">Bereich (zwei Griffe, <code>data-slider-multi</code>)</span>
     <div class="w-full max-w-xs" data-slider-multi>
       <input type="range" class="input" min="0" max="100" step="5" value="25" aria-label="Untergrenze">
       <input type="range" class="input" min="0" max="100" step="5" value="50" aria-label="Obergrenze">
@@ -70,7 +70,7 @@
     </div>
   </div>
   <div class="c22-example">
-    <span class="c22-example-label">Vertikal (<code class="text-[11px]">data-orientation="vertical"</code>)</span>
+    <span class="c22-example-label">Vertikal (<code>data-orientation="vertical"</code>)</span>
     <div class="flex items-center justify-center gap-6">
       <input type="range" class="input" data-orientation="vertical" min="0" max="100" value="50" aria-label="Pegel links">
       <input type="range" class="input" data-orientation="vertical" min="0" max="100" value="25" aria-label="Pegel rechts">

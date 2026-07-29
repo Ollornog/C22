@@ -1,0 +1,47 @@
+/* C22-Achsenschicht des Packs „Luma" (luftig · sehr rund).
+ *
+ * Diese Datei ist die STELLE, an der das Pack seine Achsen entscheidet (c22/axes.py ist das
+ * Register, docs/theming.md die Begründung). Ohne sie trüge das Pack seinen Charakter nur in
+ * den Klassenregeln des Vendors — alles, was C22 selbst gestaltet, folgte ihm nicht.
+ *
+ * Jede Achse ist hier genannt: entweder mit Werten oder ausdrücklich als „erbt" (dann gilt
+ * die Basis aus base.css/tokens.css). Nur Custom Properties, keine Component-Regeln.
+ *
+ * @achse base-color: erbt — dieses Pack ist ein FORM-Pack und lässt die Farbrollen der Basis stehen.
+ * @achse accent: erbt — dieses Pack ist ein FORM-Pack und lässt die Farbrollen der Basis stehen.
+ * @achse status: erbt — dieses Pack ist ein FORM-Pack und lässt die Farbrollen der Basis stehen.
+ * @achse chart: erbt — dieses Pack ist ein FORM-Pack und lässt die Farbrollen der Basis stehen.
+ * @achse menu: erbt — dieses Pack ist ein FORM-Pack und lässt die Farbrollen der Basis stehen.
+ * @achse menu-accent: erbt — dieses Pack ist ein FORM-Pack und lässt die Farbrollen der Basis stehen.
+ * @achse font: erbt — alle Packs teilen die eingebettete Inter (tokens.css).
+ * @achse motion: teilweise — die DAUER trägt den Charakter, die Kurve bleibt die der Basis.
+ */
+
+:root {
+  /* Vendor-Karten: rounded-4xl (2rem) */
+  --radius: 1.75rem;
+
+  /* luftiger Charakter trägt eine Spur größere Schrift */
+  --text-scale: 1.02;
+
+  /* leichtere Überschriften passen zum luftigen Bild */
+  --font-weight-heading: 500;
+  --tracking-heading: -0.01em;
+
+  /* Vendor: h-9, px-3 (29×) → das luftigste Pack */
+  --spacing: 0.28rem;
+
+  /* feinster Strich der Sammlung */
+  --icon-stroke: 1.5;
+
+  --default-transition-duration: 260ms;
+
+  /* Elevation: weit gestreut, sehr geringe Deckkraft — das luftigste Bild. */
+  --shadow-2xs: 0 1px rgb(0 0 0 / 0.04);
+  --shadow-xs: 0 2px 6px 0 rgb(0 0 0 / 0.05);
+  --shadow-sm: 0 4px 10px 0 rgb(0 0 0 / 0.08);
+  --shadow-md: 0 10px 20px -4px rgb(0 0 0 / 0.09);
+  --shadow-lg: 0 20px 34px -8px rgb(0 0 0 / 0.10);
+  --shadow-xl: 0 32px 48px -10px rgb(0 0 0 / 0.10);
+  --shadow-2xl: 0 44px 80px -20px rgb(0 0 0 / 0.20);
+}

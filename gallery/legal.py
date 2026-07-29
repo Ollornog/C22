@@ -34,8 +34,7 @@ REPO_URL = "https://github.com/Ollornog/C22"
 H2 = 'class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight"'
 P = 'class="leading-7"'
 LINK = 'class="font-medium underline underline-offset-4"'
-CODE = ('class="bg-muted relative rounded px-[0.3rem] py-[0.2rem] '
-        'font-mono text-sm font-semibold"')
+CODE = 'class="code-inline"'
 
 GITHUB_PRIVACY = ("https://docs.github.com/en/site-policy/privacy-policies/"
                   "github-general-privacy-statement")

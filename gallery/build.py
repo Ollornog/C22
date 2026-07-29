@@ -155,11 +155,6 @@ WIDTHS = {
     "card": "max-w-4xl",
 }
 
-TAG_STYLE = {
-    "B": "bg-sky-100 text-sky-700 dark:bg-sky-950 dark:text-sky-300",
-    "S": "bg-neutral-900 text-white dark:bg-white dark:text-neutral-900",
-    "C": "bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300",
-}
 
 
 # Abhängigkeits-Signaturen: eindeutige Markup-Marker je Component. Taucht ein Marker im
@@ -276,8 +271,7 @@ def tags(bc: bool, sh: bool, custom: bool) -> str:
     out = []
     for key, on in (("B", bc), ("S", sh), ("C", custom)):
         cls = "bg-foreground text-background" if on else "bg-muted text-muted-foreground/40"
-        out.append(f'<span class="rounded px-1 text-[10px] font-semibold leading-tight {cls}" '
-                   f'title="{names[key]}">{key}</span>')
+        out.append(f'<span class="c22-tag {cls}" title="{names[key]}">{key}</span>')
     return f'<span class="ml-auto flex shrink-0 gap-0.5">{"".join(out)}</span>'
 
 
@@ -319,7 +313,7 @@ def descriptors(slug: str) -> str:
         badges.append(cat)
     badges.append("interaktiv" if slug in INTERACTIVE else "statisch")
     return "".join(
-        f'<span class="bg-muted text-muted-foreground rounded px-2 py-0.5 text-[11px] font-medium">{b}</span>'
+        f'<span class="c22-merkmal">{b}</span>'
         for b in badges)
 
 
@@ -428,7 +422,7 @@ def v(rel: str) -> int:
 def _pack_badges(attrs_je_sprache: dict[str, list[str]]) -> str:
     """Merkmale des Packs als Plaketten — zweisprachig, das CSS zeigt eine Sprache."""
     return "".join(
-        '<span class="bg-muted text-muted-foreground rounded px-2 py-0.5 text-[11px] font-medium">'
+        '<span class="c22-merkmal">'
         + zwei(html.escape(de), html.escape(en)) + '</span>'
         for de, en in zip(attrs_je_sprache["de"], attrs_je_sprache["en"]))
 
@@ -501,7 +495,7 @@ function c22RenderPackAttrs(name) {{
   merkmale.de.forEach(function (de, i) {{
     // Beide Sprachen ins DOM, das Sprach-CSS zeigt eine — wie im statisch gebauten Markup.
     var s = document.createElement('span');
-    s.className = 'bg-muted text-muted-foreground rounded px-2 py-0.5 text-[11px] font-medium';
+    s.className = 'c22-merkmal';
     ['de', 'en'].forEach(function (l) {{
       var inner = document.createElement('span');
       inner.className = 'l-' + l;

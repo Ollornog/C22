@@ -14,6 +14,22 @@
  * Gleiche Selektoren (:root / .dark) wie der Vendor (base.css); weil später
  * importiert, gewinnt dieses Pack im Spezifitäts-Gleichstand.
  *
+ * @c22-form: vega   (die FORM kommt von vega; dieses Pack ist ein FARB-Pack)
+ *
+ * @achse base-color: gesetzt — Seitengrund/Sidebar umgekehrt (siehe FLÄCHEN unten).
+ * @achse accent: gesetzt — Marken-Blau als primary/ring/accent.
+ * @achse status: erbt — die Ampel-Rollen bleiben wie in tokens.css.
+ * @achse chart: gesetzt — Marken-Blau als chart-1 plus kühle Nachbartöne.
+ * @achse font: erbt — die eingebettete Inter.
+ * @achse type-scale: erbt — Form wie vega.
+ * @achse radius: erbt — Form wie vega.
+ * @achse menu: gesetzt — sidebar-primary/-ring auf die Marke.
+ * @achse menu-accent: erbt — Intensität wie in der Basis.
+ * @achse density: erbt — Form wie vega.
+ * @achse elevation: erbt — Form wie vega.
+ * @achse motion: erbt — Form wie vega.
+ * @achse icon-weight: erbt — Form wie vega.
+ *
  * Farbwerte: durchgehend oklch (wie base.css/tokens.css). Abstufungen sind aus dem
  * Marken-Blau #3B82F6 (Tailwind blue-500 ≈ oklch(0.623 0.214 259.815)) über die
  * Tailwind-v4-Blau-Leiter abgeleitet; die Hex-Herkunft steht je Wert im Kommentar.

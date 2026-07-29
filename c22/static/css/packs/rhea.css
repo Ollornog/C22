@@ -1,0 +1,42 @@
+/* C22-Achsenschicht des Packs „Rhea" (abgerundet · ruhig).
+ *
+ * Diese Datei ist die STELLE, an der das Pack seine Achsen entscheidet (c22/axes.py ist das
+ * Register, docs/theming.md die Begründung). Ohne sie trüge das Pack seinen Charakter nur in
+ * den Klassenregeln des Vendors — alles, was C22 selbst gestaltet, folgte ihm nicht.
+ *
+ * Jede Achse ist hier genannt: entweder mit Werten oder ausdrücklich als „erbt" (dann gilt
+ * die Basis aus base.css/tokens.css). Nur Custom Properties, keine Component-Regeln.
+ *
+ * @achse base-color: erbt — dieses Pack ist ein FORM-Pack und lässt die Farbrollen der Basis stehen.
+ * @achse accent: erbt — dieses Pack ist ein FORM-Pack und lässt die Farbrollen der Basis stehen.
+ * @achse status: erbt — dieses Pack ist ein FORM-Pack und lässt die Farbrollen der Basis stehen.
+ * @achse chart: erbt — dieses Pack ist ein FORM-Pack und lässt die Farbrollen der Basis stehen.
+ * @achse menu: erbt — dieses Pack ist ein FORM-Pack und lässt die Farbrollen der Basis stehen.
+ * @achse menu-accent: erbt — dieses Pack ist ein FORM-Pack und lässt die Farbrollen der Basis stehen.
+ * @achse font: erbt — alle Packs teilen die eingebettete Inter (tokens.css).
+ * @achse type-scale: erbt — der Standardwert passt zum Charakter dieses Packs.
+ * @achse motion: teilweise — die DAUER trägt den Charakter, die Kurve bleibt die der Basis.
+ */
+
+:root {
+  /* Vendor-Karten: rounded-2xl/3xl (1–1.5rem) */
+  --radius: 1rem;
+
+  --tracking-heading: -0.02em;
+
+  --spacing: 0.26rem;
+
+  --icon-stroke: 1.75;
+
+  /* gemessen: der Vendor setzt selbst duration-200 (12×) */
+  --default-transition-duration: 200ms;
+
+  /* Elevation: gleichmäßig, ohne Dramatik. */
+  --shadow-2xs: 0 1px rgb(0 0 0 / 0.05);
+  --shadow-xs: 0 1px 3px 0 rgb(0 0 0 / 0.06);
+  --shadow-sm: 0 2px 5px 0 rgb(0 0 0 / 0.09);
+  --shadow-md: 0 5px 10px -2px rgb(0 0 0 / 0.10);
+  --shadow-lg: 0 12px 18px -4px rgb(0 0 0 / 0.10);
+  --shadow-xl: 0 20px 28px -6px rgb(0 0 0 / 0.10);
+  --shadow-2xl: 0 28px 52px -12px rgb(0 0 0 / 0.20);
+}

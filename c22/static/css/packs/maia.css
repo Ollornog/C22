@@ -1,0 +1,42 @@
+/* C22-Achsenschicht des Packs „Maia" (sehr rund · freundlich).
+ *
+ * Diese Datei ist die STELLE, an der das Pack seine Achsen entscheidet (c22/axes.py ist das
+ * Register, docs/theming.md die Begründung). Ohne sie trüge das Pack seinen Charakter nur in
+ * den Klassenregeln des Vendors — alles, was C22 selbst gestaltet, folgte ihm nicht.
+ *
+ * Jede Achse ist hier genannt: entweder mit Werten oder ausdrücklich als „erbt" (dann gilt
+ * die Basis aus base.css/tokens.css). Nur Custom Properties, keine Component-Regeln.
+ *
+ * @achse base-color: erbt — dieses Pack ist ein FORM-Pack und lässt die Farbrollen der Basis stehen.
+ * @achse accent: erbt — dieses Pack ist ein FORM-Pack und lässt die Farbrollen der Basis stehen.
+ * @achse status: erbt — dieses Pack ist ein FORM-Pack und lässt die Farbrollen der Basis stehen.
+ * @achse chart: erbt — dieses Pack ist ein FORM-Pack und lässt die Farbrollen der Basis stehen.
+ * @achse menu: erbt — dieses Pack ist ein FORM-Pack und lässt die Farbrollen der Basis stehen.
+ * @achse menu-accent: erbt — dieses Pack ist ein FORM-Pack und lässt die Farbrollen der Basis stehen.
+ * @achse font: erbt — alle Packs teilen die eingebettete Inter (tokens.css).
+ * @achse type-scale: erbt — der Standardwert passt zum Charakter dieses Packs.
+ * @achse motion: teilweise — die DAUER trägt den Charakter, die Kurve bleibt die der Basis.
+ */
+
+:root {
+  /* Vendor-Karten: rounded-2xl/4xl (1–2rem) */
+  --radius: 1.25rem;
+
+  --tracking-heading: -0.015em;
+
+  /* Vendor: h-9, px-3, py-2 → mehr Luft */
+  --spacing: 0.27rem;
+
+  --icon-stroke: 1.75;
+
+  --default-transition-duration: 220ms;
+
+  /* Elevation: weich und großzügig — passend zu den sehr runden Formen. */
+  --shadow-2xs: 0 1px rgb(0 0 0 / 0.05);
+  --shadow-xs: 0 2px 5px 0 rgb(0 0 0 / 0.06);
+  --shadow-sm: 0 3px 8px 0 rgb(0 0 0 / 0.09);
+  --shadow-md: 0 8px 16px -3px rgb(0 0 0 / 0.10);
+  --shadow-lg: 0 18px 28px -6px rgb(0 0 0 / 0.11);
+  --shadow-xl: 0 28px 40px -8px rgb(0 0 0 / 0.11);
+  --shadow-2xl: 0 36px 68px -16px rgb(0 0 0 / 0.22);
+}

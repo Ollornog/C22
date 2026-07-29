@@ -8,18 +8,26 @@ cd "$(dirname "$0")/.."
 
 python3 gallery/build.py
 
-# Eigene Packs (c22/static/css/packs/<name>.css) sind reine TOKEN-Overrides über
-# der vega-Form (Pack-Entmonolithisierung Phase B): sie laden vega als Vendor-
-# Schicht und legen ihre Tokens als LETZTEN Import obendrauf (gewinnt im
-# Gleichstand). Vendor-Packs laden ihre eigene styles/<name>.css.
+# Jedes Pack hat eine C22-ACHSENSCHICHT (c22/static/css/packs/<name>.css): dort entscheidet
+# es Radius, Dichte, Typo-Skala, Schatten, Bewegung und Strichstärke — die Achsen, die die
+# vendorten Packs selbst NICHT als Token führen (sie tragen ihren Charakter in Klassenregeln,
+# weshalb C22-eigene Flächen ihnen früher nicht folgten). Register: c22/axes.py.
+#
+# Die FORM (welche Vendor-Style-Datei) ist normalerweise das gleichnamige Pack. Ein FARB-Pack
+# wie spica hat keine eigene Vendor-Datei und nennt seine Form im Kopf: `@c22-form: vega`.
 PACKS=(vega spica nova maia lyra mira luma sera rhea)
 for pack in "${PACKS[@]}"; do
   in="c22/static/css/_in-$pack.css"
   vendor_style="$pack"
   eigener_pack=""
-  if [ -f "c22/static/css/packs/$pack.css" ]; then
-    vendor_style="vega"
+  achsen="c22/static/css/packs/$pack.css"
+  if [ -f "$achsen" ]; then
     eigener_pack="@import \"./packs/$pack.css\";"
+    form="$(sed -n 's/.*@c22-form:[[:space:]]*\([a-z][a-z0-9-]*\).*/\1/p' "$achsen" | head -1)"
+    [ -n "$form" ] && vendor_style="$form"
+  else
+    echo "Pack '$pack' hat keine Achsenschicht ($achsen) — jedes Pack muss seine Achsen angeben." >&2
+    exit 1
   fi
   # Layer-Entmachtung (PO 2026-07-18): die Vendor-KOMPONENTEN-Regeln liegen in einer eigenen
   # Ebene UNTER components — jede C22-Regel gewinnt per Kaskaden-Layer, egal wie spezifisch

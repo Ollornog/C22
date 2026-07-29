@@ -144,6 +144,32 @@
   .c22-example-label {
     @apply text-muted-foreground text-xs font-medium;
   }
+  /* Code-Schnipsel IN einer Beispiel-Beschriftung: eine Spur kleiner als das Label, damit
+     `data-variant="outline"` die Zeile nicht sprengt. Stand vorher 256× als `text-[11px]`
+     im Markup — derselbe Wert, 256 Gelegenheiten, ihn uneinheitlich zu machen, und an der
+     Typo-Achse vorbei. Hier EINMAL, und über die Skala gerechnet: dreht ein Pack
+     `--text-scale`, geht der Schnipsel mit. */
+  .c22-example-label code {
+    font-size: calc(var(--text-xs) * 0.92);
+  }
+  /* Herkunfts-Plakette der Galerie (B/S/C = Basecoat/shadcn/custom): winziger als jede
+     Skalenstufe, deshalb gerechnet statt geraten — auch sie folgt der Typo-Achse. */
+  .c22-tag {
+    @apply rounded px-1 font-semibold leading-tight;
+    font-size: calc(var(--text-xs) * 0.84);
+  }
+  /* Merkmal-Plakette der Galerie („eckig", „brutalist" …) — dieselbe Rechnung wie .c22-tag,
+     nur mit mehr Luft, weil sie Wörter trägt statt eines Buchstabens. */
+  .c22-merkmal {
+    @apply bg-muted text-muted-foreground rounded px-2 py-0.5 font-medium;
+    font-size: calc(var(--text-xs) * 0.92);
+  }
+  /* Inline-Code im Fließtext (shadcn-Muster). War 4× als identische Utility-Kette mit
+     `px-[0.3rem] py-[0.2rem]` kopiert — feste Abstände gehen an der Dichte-Achse vorbei.
+     Jetzt eine Regel, deren Abstände über `--spacing` laufen. */
+  .code-inline {
+    @apply bg-muted relative rounded px-1.5 py-0.5 font-mono text-sm font-semibold;
+  }
   .c22-example-letter {
     @apply text-foreground font-semibold;
   }

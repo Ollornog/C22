@@ -6,6 +6,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — die Achsen greifen jetzt WIRKLICH (jedes Pack, jedes Element)
+
+Der Befund, der das ausgelöst hat: `rounded-sm/md/lg/xl` sind bei Basecoat an `--radius`
+gekoppelt — aber **kein Pack setzte `--radius` global**. `lyra` und `sera` machen „eckig"
+ausschließlich, indem sie `rounded-none` in 66 bzw. 49 ihrer **eigenen** Klassen schreiben;
+`maia`/`luma`/`rhea` setzen `--radius` nur *lokal* in einzelnen Klassen. Folge: alles, was C22
+selbst gestaltet — 229 `rounded-*`-Stellen in 37 Dateien plus der Galerie-Rumpf — folgte dem Pack
+**nicht**. Ein Container blieb in `lyra` rund und in `maia` zu kantig. Dasselbe galt für Dichte,
+Typo-Skala, Schatten, Bewegung und Strichstärke: die Achsen waren dokumentiert, aber unbespielt.
+
+- **`c22/axes.py` — das Achsen-Register als eine Quelle:** welche Achse aus welchen Tokens besteht
+  (Pflicht vs. abgeleitet). `docs/theming.md` begründet, dieses Modul ist die maschinenlesbare
+  Hälfte derselben Aussage; Tests, Galerie-Build und der kommende Generator lesen daraus.
+- **Jedes Pack hat eine Achsenschicht** (`c22/static/css/packs/<pack>.css`) und **nennt dort jede
+  Achse** — mit Werten oder ausdrücklich als `@achse …: erbt`. „Vergessen" ist damit kein
+  möglicher Zustand mehr. Die Werte sind **aus dem Vendor-Pack gemessen**, nicht geraten: `lyra`
+  → `--radius: 0` (66× `rounded-none`), `mira` → dichter (`h-7` statt `h-8`, `px-2`), `luma` →
+  luftig (`h-9`, `px-3`, 29×), `rhea` → `200ms` (setzt der Vendor selbst 12× so).
+- **Typo-Skala und Dichte als je EIN Knopf:** `--text-scale` (die `--text-*`-Stufen rechnen mit)
+  und `--spacing`. Ein Pack dreht eine Zahl, die ganze UI folgt.
+- **`--tracking-heading` wird auch gelesen** — ein Token, das niemand liest, ist toter Text.
+- **`scripts/build-gallery.sh` verlangt die Achsenschicht** und liest die *Form* eines Farb-Packs
+  aus dessen `@c22-form:`-Marker, statt sie pauschal auf `vega` zu setzen.
+
+### Added — `tests/test_axes.py`: die Achsen werden in BEIDE Richtungen geprüft
+
+- **Jedes Pack gibt jede Achse an** — inklusive „ist die geerbte Achse überhaupt gedeckt" und
+  „kein Pack setzt ein abgeleitetes Token direkt" (zwei Wahrheiten über eine Achse).
+- **Kein Markup umgeht eine Achse** — kein fester Radius, keine rohe Schriftgröße, kein fester
+  Schatten, keine Dauer in Millisekunden, keine Paletten-Farbe; **auch im Galerie-Generator**, der
+  Markup schreibt (bisher ungeprüft). Token-gebundene Utilities (`rounded-lg`, `text-sm`, `p-4`)
+  sind ausdrücklich der richtige Weg.
+- Der Test fand sofort, was er finden sollte: **256 Kopien** von `text-[11px]`, die kopierte
+  Inline-Code-Kette mit `px-[0.3rem]`, die winzige Herkunftsplakette mit `text-[10px]` und einen
+  toten `TAG_STYLE`-Block mit Paletten-Farben. Alle vier sind jetzt Kanon-Regeln in
+  `components.css` (`.c22-example-label code`, `.code-inline`, `.c22-tag`, `.c22-merkmal`) — und
+  sie **rechnen mit der Typo-/Dichte-Achse**, statt sie zu umgehen.
+
 ### Added — Startseite, zwei Sprachen, zwei Pillen
 
 - **Startseite `index.html`** (`gallery/landing.py`): was C22 ist, vier Einstiege in Components /
