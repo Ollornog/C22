@@ -136,11 +136,21 @@ c22/vendor/basecoat/    vendored, pinned Basecoat (reproduce via scripts/vendor-
 gallery/build.py        builds the gallery PAGES (index/blocks/charts/typeset.html, shadcn-style):
                         components from the COMPONENTS list; blocks/charts/typeset are discovered
                         by directory scan — no central registry for them
+gallery/landing.py      the start page (index.html): what C22 is, entry points, GitHub + imprint
 gallery/legal.py        imprint + privacy text of the PUBLISHED site (legal.html) — one source
                         for the mandatory details, rendered with the same typography canon
+gallery/i18n.py         the site's two languages (de/en) and the two pill switches. Every page
+                        carries BOTH languages, CSS shows one (`?lang=`, remembered). Website
+                        text is bilingual; the example copy INSIDE components stays German
 scripts/build-site.py   builds the published website into _site/ (GitHub Pages): the same gallery,
                         built a second time with an empty asset prefix, plus the assets it links
 ```
+
+The gallery pages are `components.html` / `blocks.html` / `charts.html` / `typeset.html`;
+`index.html` is the start page and `legal.html` the imprint. The header names **no page title** —
+the highlighted tab already says which page is open — and carries only the three switches
+(pack · language · appearance). `?pack=`, `?lang=` and `?theme=` deep-link any combination, which
+is also how a visual test pins a state.
 
 The website **is** the gallery — not a second work. Locally the pages sit in `gallery/` and address
 their assets as `../c22/…`; on the site they sit at the root and address them as `c22/…`. That prefix

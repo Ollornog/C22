@@ -1487,7 +1487,13 @@
      Toggle-Semantiken (Button-Toggle = aria-pressed, Radio = aria-checked) teilen
      denselben Look, greifen auf denselben aria-Attributen, die das Demo-JS toggelt. */
   .btn[aria-pressed='true'],
-  .btn[aria-checked='true'] {
+  .btn[aria-checked='true'],
+  /* … und dieselbe Aussage variantenfest: `.btn[data-variant="outline"]` (und Geschwister)
+     setzen selbst eine Hintergrundfarbe und schlagen den Zustand bei gleicher Spezifität —
+     ein gewählter Segment-Knopf in einer Outline-Button-Group sah damit aus wie die
+     ungewählten. Der Zustand MUSS die Variante schlagen: er ist die stärkere Aussage. */
+  .btn[data-variant][aria-pressed='true'],
+  .btn[data-variant][aria-checked='true'] {
     @apply bg-accent text-accent-foreground;
   }
 

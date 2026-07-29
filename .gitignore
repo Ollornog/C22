@@ -15,6 +15,7 @@ tools/tailwindcss
 c22/static/css/c22.css
 c22/static/css/c22-*.css
 gallery/index.html
+gallery/components.html
 gallery/blocks.html
 gallery/charts.html
 gallery/typeset.html

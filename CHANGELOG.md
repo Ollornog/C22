@@ -6,6 +6,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — Startseite, zwei Sprachen, zwei Pillen
+
+- **Startseite `index.html`** (`gallery/landing.py`): was C22 ist, vier Einstiege in Components /
+  Blocks / Charts / Typeset, wie man es einbindet — und **hier** stehen GitHub, Changelog und
+  Impressum. Die Components sind auf `components.html` gezogen; das Logo links führt zur
+  Startseite. Die Plaketten auf den Karten nennen die Zahlen, die der Generator **wirklich
+  gebaut** hat (eine gepflegte Zahl im Text veraltet still).
+- **Zweisprachig (Deutsch · Englisch)** nach dem TinySesam-Muster (`gallery/i18n.py`): jede Seite
+  trägt beide Sprachen, das CSS zeigt eine; `?lang=de|en` schaltet, die Wahl wird gespeichert und
+  überlebt den Seitenwechsel. Übersetzt ist, was die **Website** sagt (Kopf, Startseite, Impressum,
+  Beschriftungen, Pack-Merkmale) — die Beispieltexte **in** den Components bleiben deutsch
+  (Demo-Inhalt, Repo-Konvention). Die Browsersprache zählt bewusst nicht.
+- **Zwei Pillen-Umschalter** im kanonischen Radiogroup-Stil (`.button-group[role=radiogroup]` +
+  `.btn`), kein neuer Look: **DE · EN** und **Hell · Dunkel**.
+- **`?theme=light|dark` und `?pack=`** machen jeden Zustand deep-linkbar — und damit für die
+  kommende visuelle Testebene festnagelbar.
+
+### Changed
+
+- **Kopfleiste nennt keinen Seitentitel mehr** (vorher „Components · 65/65"): welche Seite offen
+  ist, sagt der markierte Reiter. Sie trägt jetzt Logo, Reiter und die drei Umschalter — nichts sonst.
+
+### Fixed
+
+- **Gewählter Zustand schlägt die Variante** (`components.css`): `.btn[data-variant="outline"]`
+  setzt selbst eine Hintergrundfarbe und gewann bei gleicher Spezifität gegen den
+  Pressed/Checked-Kanon — ein **gewählter** Segment-Knopf in einer Outline-Button-Group sah
+  deshalb aus wie die ungewählten (betraf auch die Variante „Segmentiert" des `theme-switcher`).
+- **Hell/Dunkel bleibt jetzt erhalten:** Basecoat 1.0.2 *schreibt* `localStorage.themeMode` beim
+  Umschalten, liest den Wert aber nie zurück (`getItem` kommt in seinem Bundle nicht vor) — die
+  Wahl war nach jedem Seitenwechsel weg. Das Kopf-Skript setzt sie jetzt vor dem Zeichnen; ohne
+  gespeicherte Wahl gilt die Systemeinstellung.
+
 ### Added — die Galerie ist jetzt eine öffentliche Website (GitHub Pages)
 
 - **`.github/workflows/pages.yml`** baut und veröffentlicht die Galerie bei jeder Änderung an
