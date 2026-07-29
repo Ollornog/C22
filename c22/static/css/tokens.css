@@ -98,6 +98,31 @@
    * gesetzten Utilities (font-extrabold/-semibold in typography.html) weiterhin je Ebene. */
   --font-weight-heading: 600;
 
+  /* Typo-Skalen-Achse (docs/theming.md, Achse 7) als EIN Knopf: `--text-scale` streckt oder
+   * staucht die gesamte Schriftskala, die abgeleiteten `--text-*` unten rechnen mit. Ein Pack
+   * (oder ein Generator) dreht nur diese eine Zahl — würde jede Stufe einzeln gesetzt, hätte man
+   * sieben Werte zu pflegen und sechs Gelegenheiten, sie widersprüchlich zu machen. 1 = die
+   * Tailwind-Standardskala, also optisch unverändert. */
+  --text-scale: 1;
+
+  /* Tracking der Überschriften — gehört zur Typo-Achse: ein Pack mit Großbuchstaben-Headings
+   * (sera) braucht mehr Laufweite, ein enges Pack weniger. */
+  --tracking-heading: -0.025em;
+
+  /* Prosa-Achse (Achse 8) — die drei Werte, die ein Typeset-Generator wirklich dreht:
+   * Zeilenlänge, Zeilenhöhe des Fließtextes und der Abstand zwischen Absätzen. Sie wirken
+   * über die Kanon-Klasse `.typeset` (components.css), nicht über Utilities im Markup —
+   * sonst wäre ein Regler dafür ein Knopf ohne Draht.
+   * 68ch ≈ die klassische Empfehlung von 60–75 Zeichen je Zeile. */
+  --measure: 68ch;
+  --leading-body: 1.75;
+  --flow: 1.25em;
+
+  /* Dichte-Achse (docs/theming.md, Achse 12): Tailwinds Spacing-Basis. ALLE Abstands-,
+   * Größen- und Lücken-Utilities (p-*, gap-*, h-*, size-*) rechnen `calc(var(--spacing) * n)`.
+   * 0.25rem = Tailwind-Standard; ein dichtes Pack senkt den Wert, ein luftiges hebt ihn. */
+  --spacing: 0.25rem;
+
   /* Z-Index-Leiter (Hygiene): benannte Stapelstufen statt nackter Magic-Numbers. --z-popover spiegelt
    * die 50 aus Basecoat (Popover/Dropdown/Select), --z-context liegt eine Stufe darüber, damit ein
    * Kontextmenü über einem offenen Popover erscheint. Genutzt in components.css (context-menu). */
@@ -151,6 +176,9 @@
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
     font-weight: var(--font-weight-heading);
+    /* Laufweite gehört zur Typo-Achse: ein Pack mit Großbuchstaben-Headings braucht mehr,
+       ein enges weniger. Ein Token, das niemand liest, wäre toter Text. */
+    letter-spacing: var(--tracking-heading);
   }
 }
 
@@ -198,8 +226,22 @@
   --shadow-lg: var(--shadow-lg);
 }
 
-/* Typografie-Skala als Achse (docs/theming.md): Tailwind v4 emittiert text-sm/text-xl … als
- * font-size: var(--text-sm) usw. — die Skala ist also bereits var-basiert. Ein Generator
- * überschreibt sie hier (Beispiel):
- *   :root { --text-sm: 0.9rem; --text-sm--line-height: 1.5; … }
+/* Typografie-Skala als Achse (docs/theming.md, Achse 7) — jetzt WIRKSAM, nicht nur beschrieben:
+ * jede Stufe rechnet mit `--text-scale`. `inline` ist hier Absicht — so inlinet Tailwind den
+ * calc()-Ausdruck an jeder Nutzungsstelle, und die Variable wirkt zur LAUFZEIT (ein Pack, ein
+ * `data-`-Schalter oder der Generator dreht eine Zahl, die ganze UI folgt). Ohne `inline` wären
+ * die Stufen zur Build-Zeit ausgerechnet und die Achse wäre wieder toter Text.
+ * Basiswerte = Tailwind-v4-Standard, `--text-scale: 1` also optisch unverändert.
+ * Line-heights bleiben unangetastet (relativ, skalieren von selbst mit der Größe).
  * Components tragen deshalb NIE rohe Größen (text-[13px]), nur Skala-Utilities. */
+@theme inline {
+  --text-xs:   calc(0.75rem  * var(--text-scale));
+  --text-sm:   calc(0.875rem * var(--text-scale));
+  --text-base: calc(1rem     * var(--text-scale));
+  --text-lg:   calc(1.125rem * var(--text-scale));
+  --text-xl:   calc(1.25rem  * var(--text-scale));
+  --text-2xl:  calc(1.5rem   * var(--text-scale));
+  --text-3xl:  calc(1.875rem * var(--text-scale));
+  --text-4xl:  calc(2.25rem  * var(--text-scale));
+  --text-5xl:  calc(3rem     * var(--text-scale));
+}

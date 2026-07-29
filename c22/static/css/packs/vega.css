@@ -1,0 +1,28 @@
+/* C22-Achsenschicht des Packs „Vega" (neutral · Standard).
+ *
+ * Diese Datei ist die STELLE, an der das Pack seine Achsen entscheidet (c22/axes.py ist das
+ * Register, docs/theming.md die Begründung). Ohne sie trüge das Pack seinen Charakter nur in
+ * den Klassenregeln des Vendors — alles, was C22 selbst gestaltet, folgte ihm nicht.
+ *
+ * Jede Achse ist hier genannt: entweder mit Werten oder ausdrücklich als „erbt" (dann gilt
+ * die Basis aus base.css/tokens.css). Nur Custom Properties, keine Component-Regeln.
+ *
+ * @achse base-color: erbt — dieses Pack ist ein FORM-Pack und lässt die Farbrollen der Basis stehen.
+ * @achse accent: erbt — dieses Pack ist ein FORM-Pack und lässt die Farbrollen der Basis stehen.
+ * @achse status: erbt — dieses Pack ist ein FORM-Pack und lässt die Farbrollen der Basis stehen.
+ * @achse chart: erbt — dieses Pack ist ein FORM-Pack und lässt die Farbrollen der Basis stehen.
+ * @achse menu: erbt — dieses Pack ist ein FORM-Pack und lässt die Farbrollen der Basis stehen.
+ * @achse menu-accent: erbt — dieses Pack ist ein FORM-Pack und lässt die Farbrollen der Basis stehen.
+ * @achse font: erbt — alle Packs teilen die eingebettete Inter (tokens.css).
+ * @achse type-scale: erbt — der Standardwert passt zum Charakter dieses Packs.
+ * @achse density: erbt — der Standardwert passt zum Charakter dieses Packs.
+ * @achse elevation: erbt — der Standardwert passt zum Charakter dieses Packs.
+ * @achse motion: erbt — der Standardwert passt zum Charakter dieses Packs.
+ * @achse icon-weight: erbt — der Standardwert passt zum Charakter dieses Packs.
+ * @achse typeset: erbt — Zeilenlänge/Leading/Absatzfluss der Basis.
+ */
+
+:root {
+  /* Vendor-Karten: rounded-xl (= --radius + 4px) → Standardwert */
+  --radius: 0.625rem;
+}

@@ -37,6 +37,12 @@ EINSTIEGE: list[tuple[str, str, tuple[str, str], tuple[str, str]]] = [
      ("Typografie im Zusammenhang: die komplette Text-Hierarchie einer echten Seite.",
       "Typography in context: the full text hierarchy of a real page."),
      ("Muster", "patterns")),
+    ("generator.html", "Generator",
+     ("Jede Achse als Regler — Rundung, Dichte, Schrift, Tempo — mit echter Seite als Vorschau "
+      "und fertiger Achsenschicht als Ausgabe.",
+      "Every axis as a control — rounding, density, type, motion — with a real page as preview "
+      "and a ready-to-commit axis layer as output."),
+     ("Regler", "controls")),
 ]
 
 # Was C22 ausmacht — (Titel de/en, Text de/en)
@@ -63,7 +69,7 @@ MERKMALE: list[tuple[tuple[str, str], tuple[str, str]]] = [
       "The rules don't rely on good intentions.")),
 ]
 
-CODE = ('class="bg-muted relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold"')
+CODE = ('class="code-inline"')
 
 ICON_ARROW = ('<svg data-icon-lu="arrow-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" '
               'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" '

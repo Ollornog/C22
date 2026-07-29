@@ -30,6 +30,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import generator  # noqa: E402  — die Generator-Seite
 import i18n  # noqa: E402  — Sprachsystem + die zwei Pillen
 import landing  # noqa: E402  — Inhalt der Startseite
 import legal  # noqa: E402  — Texte der Rechtsseite, eine Quelle
@@ -66,6 +67,7 @@ PAGES = [
     ("blocks.html", "Blocks"),
     ("charts.html", "Charts"),
     ("typeset.html", "Typeset"),
+    ("generator.html", "Generator"),
 ]
 
 # Block-Kategorien in Anzeige-Reihenfolge: (Verzeichnis, Schlüssel in i18n.TEXTE)
@@ -155,11 +157,6 @@ WIDTHS = {
     "card": "max-w-4xl",
 }
 
-TAG_STYLE = {
-    "B": "bg-sky-100 text-sky-700 dark:bg-sky-950 dark:text-sky-300",
-    "S": "bg-neutral-900 text-white dark:bg-white dark:text-neutral-900",
-    "C": "bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300",
-}
 
 
 # Abhängigkeits-Signaturen: eindeutige Markup-Marker je Component. Taucht ein Marker im
@@ -276,8 +273,7 @@ def tags(bc: bool, sh: bool, custom: bool) -> str:
     out = []
     for key, on in (("B", bc), ("S", sh), ("C", custom)):
         cls = "bg-foreground text-background" if on else "bg-muted text-muted-foreground/40"
-        out.append(f'<span class="rounded px-1 text-[10px] font-semibold leading-tight {cls}" '
-                   f'title="{names[key]}">{key}</span>')
+        out.append(f'<span class="c22-tag {cls}" title="{names[key]}">{key}</span>')
     return f'<span class="ml-auto flex shrink-0 gap-0.5">{"".join(out)}</span>'
 
 
@@ -319,7 +315,7 @@ def descriptors(slug: str) -> str:
         badges.append(cat)
     badges.append("interaktiv" if slug in INTERACTIVE else "statisch")
     return "".join(
-        f'<span class="bg-muted text-muted-foreground rounded px-2 py-0.5 text-[11px] font-medium">{b}</span>'
+        f'<span class="c22-merkmal">{b}</span>'
         for b in badges)
 
 
@@ -428,7 +424,7 @@ def v(rel: str) -> int:
 def _pack_badges(attrs_je_sprache: dict[str, list[str]]) -> str:
     """Merkmale des Packs als Plaketten — zweisprachig, das CSS zeigt eine Sprache."""
     return "".join(
-        '<span class="bg-muted text-muted-foreground rounded px-2 py-0.5 text-[11px] font-medium">'
+        '<span class="c22-merkmal">'
         + zwei(html.escape(de), html.escape(en)) + '</span>'
         for de, en in zip(attrs_je_sprache["de"], attrs_je_sprache["en"]))
 
@@ -501,7 +497,7 @@ function c22RenderPackAttrs(name) {{
   merkmale.de.forEach(function (de, i) {{
     // Beide Sprachen ins DOM, das Sprach-CSS zeigt eine — wie im statisch gebauten Markup.
     var s = document.createElement('span');
-    s.className = 'bg-muted text-muted-foreground rounded px-2 py-0.5 text-[11px] font-medium';
+    s.className = 'c22-merkmal';
     ['de', 'en'].forEach(function (l) {{
       var inner = document.createElement('span');
       inner.className = 'l-' + l;
@@ -607,6 +603,16 @@ def render_flat(datei: str, titel_schluessel: str, directory: Path, width: str) 
     return datei, len(eintraege)
 
 
+def render_generator() -> tuple[str, int]:
+    """Generator — Regler links, echte Seite als Vorschau, fertige Achsenschicht als Ausgabe.
+
+    Ohne Inhaltsspalte: die Achsen-Leiste IST die Navigation dieser Seite.
+    """
+    page = page_shell("generator.html", "title_generator", "", generator.inhalt(), sidebar=False)
+    (ZIEL / "generator.html").write_text(page, encoding="utf-8")
+    return "generator.html", len(generator.DESIGN_ACHSEN) + len(generator.TYPESET_ACHSEN)
+
+
 def render_legal() -> tuple[str, int]:
     """Impressum + Datenschutz — Pflichtangaben der veröffentlichten Seite (§ 18 MStV).
 
@@ -639,6 +645,7 @@ def main(ziel: Path = GALLERY, assets: str = "../") -> None:
         render_blocks(),
         render_flat("charts.html", "title_charts", CHARTS_DIR, "w-[900px]"),
         render_flat("typeset.html", "title_typeset", TYPESET_DIR, "w-[820px]"),
+        render_generator(),
         render_legal(),
     ]
     ergebnisse.insert(0, render_landing(dict(ergebnisse)))

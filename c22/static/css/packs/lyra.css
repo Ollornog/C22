@@ -1,0 +1,47 @@
+/* C22-Achsenschicht des Packs „Lyra" (eckig · brutalist).
+ *
+ * Diese Datei ist die STELLE, an der das Pack seine Achsen entscheidet (c22/axes.py ist das
+ * Register, docs/theming.md die Begründung). Ohne sie trüge das Pack seinen Charakter nur in
+ * den Klassenregeln des Vendors — alles, was C22 selbst gestaltet, folgte ihm nicht.
+ *
+ * Jede Achse ist hier genannt: entweder mit Werten oder ausdrücklich als „erbt" (dann gilt
+ * die Basis aus base.css/tokens.css). Nur Custom Properties, keine Component-Regeln.
+ *
+ * @achse base-color: erbt — dieses Pack ist ein FORM-Pack und lässt die Farbrollen der Basis stehen.
+ * @achse accent: erbt — dieses Pack ist ein FORM-Pack und lässt die Farbrollen der Basis stehen.
+ * @achse status: erbt — dieses Pack ist ein FORM-Pack und lässt die Farbrollen der Basis stehen.
+ * @achse chart: erbt — dieses Pack ist ein FORM-Pack und lässt die Farbrollen der Basis stehen.
+ * @achse menu: erbt — dieses Pack ist ein FORM-Pack und lässt die Farbrollen der Basis stehen.
+ * @achse menu-accent: erbt — dieses Pack ist ein FORM-Pack und lässt die Farbrollen der Basis stehen.
+ * @achse font: erbt — alle Packs teilen die eingebettete Inter (tokens.css).
+ * @achse density: erbt — der Standardwert passt zum Charakter dieses Packs.
+ * @achse motion: teilweise — die DAUER trägt den Charakter, die Kurve bleibt die der Basis.
+ * @achse typeset: erbt — Zeilenlänge/Leading/Absatzfluss der Basis.
+ */
+
+:root {
+  /* Vendor setzt rounded-none in 66 eigenen Klassen → die Achse muss 0 sein */
+  --radius: 0;
+
+  /* Vendor-Basisgröße ist text-xs (76×), nicht text-sm → engere Skala */
+  --text-scale: 0.96;
+
+  --font-weight-heading: 700;
+  /* keine negative Laufweite — kantig */
+  --tracking-heading: 0;
+
+  /* brutalistischer, kräftigerer Strich */
+  --icon-stroke: 2.25;
+
+  /* hart und schnell statt weich */
+  --default-transition-duration: 100ms;
+
+  /* Elevation: kein Blur, klare Kante — der brutalistische Schatten sitzt als Versatz. */
+  --shadow-2xs: 0 1px 0 0 rgb(0 0 0 / 0.08);
+  --shadow-xs: 0 1px 0 0 rgb(0 0 0 / 0.12);
+  --shadow-sm: 0 2px 0 0 rgb(0 0 0 / 0.14);
+  --shadow-md: 0 3px 0 0 rgb(0 0 0 / 0.16);
+  --shadow-lg: 0 4px 0 0 rgb(0 0 0 / 0.18);
+  --shadow-xl: 0 6px 0 0 rgb(0 0 0 / 0.20);
+  --shadow-2xl: 0 8px 0 0 rgb(0 0 0 / 0.24);
+}
