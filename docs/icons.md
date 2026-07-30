@@ -90,3 +90,11 @@ brand. Rule 11 of the hygiene suite enforces both directions: a brand name in `d
 and `data-icon-brand` exempts the element from the Lucide naming requirement. The rule carries a
 self-test, and its brand list deliberately omits `x` — that is Lucide's close cross, not Twitter.
 
+**Markup of a brand mark**: the official path is a solid shape, so it is *filled*, not stroked —
+`viewBox="0 0 24 24" fill="currentColor"` and **no** `stroke`/`stroke-width`/`stroke-linecap`
+attributes. Everything else follows the normal icon rules (no `width`/`height`; a standalone mark
+carries its `size-*` class, inside a `.btn`/`.badge` the component sizes it). Until 2026-07-30 the
+GitHub mark was rendered with `fill="none" stroke="currentColor"` — the outline of a filled logo,
+which at 16 px reads as a headset rather than the Octocat. Same path, one attribute pair, right
+shape: `badge.html` and the two login/signup full-page blocks now use it.
+

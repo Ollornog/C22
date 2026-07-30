@@ -88,6 +88,7 @@ COMPONENTS: list[tuple[str, bool, bool, bool]] = [
     ("Attachment", False, True, True),
     ("Avatar", True, True, False),
     ("Badge", True, True, False),
+    ("Brand", False, False, True),
     ("Breadcrumb", True, True, False),
     ("Bubble", False, True, True),
     ("Button", True, True, False),
@@ -297,7 +298,7 @@ _CAT_GROUPS = {
     "Formular": "input textarea label field checkbox radio-group switch select native-select combobox input-group input-otp slider",
     "Overlay": "dialog alert-dialog drawer popover hover-card tooltip dropdown-menu context-menu menubar command",
     "Navigation": "breadcrumb pagination tabs navigation-menu sidebar",
-    "Anzeige": "table card avatar accordion collapsible item empty separator aspect-ratio carousel calendar date-picker badge kbd icon progress skeleton spinner scroll-area scrollbar marker resizable color-roles code-block",
+    "Anzeige": "table card avatar accordion collapsible item empty separator aspect-ratio carousel calendar date-picker badge brand kbd icon progress skeleton spinner scroll-area scrollbar marker resizable color-roles code-block",
     "Feedback": "alert toast",
     "Chat": "bubble message message-scroller attachment",
     "Sonstiges": "direction theme-switcher",
@@ -388,11 +389,30 @@ def file_title(path: Path, body: str) -> str:
     return path.stem.replace("-", " ").title()
 
 
+def _reihenfolge(p: Path) -> list[str]:
+    """Sortierschlüssel der Verzeichnis-Abtastung: das GRUNDMUSTER vor seinen Ausführungen.
+
+    Der Dateiname ist die einzige Ordnungsangabe (es gibt bewusst kein Register für
+    Blocks/Charts/Typeset). Rein alphabetisch sortiert stellt der Bindestrich die Ausführung VOR
+    ihr Grundmuster — `-` (0x2D) liegt vor `.` (0x2E), also kam „Anmeldung — Vollbild"
+    (`login-vollbild.html`) vor „Anmeldung" (`login.html`). Gelesen wird aber vom Einfachen zum
+    Zusammengesetzten: erst die Karte, dann das Seitengerüst darum.
+
+    Der Schlüssel zerlegt den Namen an den Bindestrichen; ein kürzerer Anfang gewinnt, damit
+    `login` vor `login-vollbild` steht — und `signup` erst nach beiden. Umbenennen wäre der
+    Alternativweg gewesen, hätte aber entweder die öffentlichen Sprungmarken der bestehenden
+    Einträge geändert (`blocks.html#login-signup-login`) oder die Paare auseinandergerissen.
+    Auf alle anderen Verzeichnisse wirkt der Schlüssel nicht (dort ist er identisch zur
+    alphabetischen Reihenfolge).
+    """
+    return p.stem.split("-")
+
+
 def discover(directory: Path) -> list[tuple[str, str, str]]:
     """(slug, titel, body) je HTML-Datei eines Seiten-Verzeichnisses."""
     eintraege = []
     if directory.exists():
-        for p in sorted(directory.glob("*.html")):
+        for p in sorted(directory.glob("*.html"), key=_reihenfolge):
             body = p.read_text(encoding="utf-8")
             if not body.strip():
                 continue

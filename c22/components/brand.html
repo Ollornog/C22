@@ -1,0 +1,75 @@
+<!-- custom: Marken-Zeichen (.brand + .brand-mark) — der Logo-Block einer App: Glyph-Plättchen
+     plus Wortmarke, meist als Link auf die Startseite. Sitzt im Kopf einer Anmeldeseite, über
+     einer zentrierten Karte, in der Spalte einer Marken-Fläche. Der Grund für die Component ist
+     SPOT: im Vorbild (shadcn login/signup) steht in jeder Ausführung dieselbe Utility-Kette
+     (`flex items-center gap-2 font-medium` + `bg-primary … rounded-md` am Plättchen) — fünfmal
+     kopiert wären fünf Gelegenheiten, das Zeichen auseinander laufen zu lassen. Hier EINMAL, in
+     components.css.
+     .brand         = Glyph und Wortmarke auf einer Zeile (font-medium, gap aus der Dichte).
+     data-orientation="vertical" = Glyph ÜBER der Wortmarke (schmale Spalte ohne Karte).
+     .brand-mark    = das Plättchen; Farbe aus dem primary-Rollenpaar, Radius aus der
+                      Radius-Achse (in „lyra" folgerichtig eckig, in „maia" rund).
+     Das Glyph trägt wie jedes freistehende Icon seine `size-*`-Klasse. Auf einer farbigen Fläche
+     (bg-primary) fällt das Plättchen weg — es wäre unsichtbar; das Glyph steht dann blank und
+     erbt die Vordergrundfarbe der Fläche. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Standard (Plättchen + Wortmarke, als Link)</span>
+    <div class="flex flex-wrap items-center gap-10">
+      <a href="#" class="brand">
+        <span class="brand-mark"><svg data-icon-lu="gallery-vertical-end" class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2h10"/><path d="M5 6h14"/><rect width="18" height="12" x="3" y="10" rx="2"/></svg></span>
+        Acme GmbH
+      </a>
+      <span class="brand">
+        <span class="brand-mark"><svg data-icon-lu="command" class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3"/></svg></span>
+        Musterwerk
+      </span>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Senkrecht (<code>data-orientation="vertical"</code>) — mit Plättchen · nur Glyph, Name als <code>sr-only</code> (schmale Anmelde-Spalte)</span>
+    <div class="flex flex-wrap items-start gap-10">
+      <a href="#" class="brand" data-orientation="vertical">
+        <span class="brand-mark"><svg data-icon-lu="gallery-vertical-end" class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2h10"/><path d="M5 6h14"/><rect width="18" height="12" x="3" y="10" rx="2"/></svg></span>
+        Acme GmbH
+      </a>
+      <a href="#" class="brand" data-orientation="vertical">
+        <svg data-icon-lu="gallery-vertical-end" class="size-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2h10"/><path d="M5 6h14"/><rect width="18" height="12" x="3" y="10" rx="2"/></svg>
+        <span class="sr-only">Acme GmbH</span>
+      </a>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Auf farbiger Fläche (kein Plättchen — das Glyph steht blank)</span>
+    <div class="bg-primary text-primary-foreground flex w-full max-w-sm items-center rounded-lg p-6">
+      <a href="#" class="brand">
+        <svg data-icon-lu="gallery-vertical-end" class="size-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2h10"/><path d="M5 6h14"/><rect width="18" height="12" x="3" y="10" rx="2"/></svg>
+        Acme GmbH
+      </a>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Im Einsatz: über einer Karte (wie auf der Anmeldeseite)</span>
+    <div class="bg-muted flex w-full max-w-sm flex-col gap-6 rounded-lg p-6">
+      <a href="#" class="brand self-center">
+        <span class="brand-mark"><svg data-icon-lu="gallery-vertical-end" class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2h10"/><path d="M5 6h14"/><rect width="18" height="12" x="3" y="10" rx="2"/></svg></span>
+        Acme GmbH
+      </a>
+      <div class="card">
+        <header class="text-center">
+          <h3 class="card-title text-xl">Willkommen zurück</h3>
+          <p class="card-description">Mit E-Mail und Passwort anmelden.</p>
+        </header>
+        <section>
+          <div class="field" role="group">
+            <label for="c22-brand-mail">E-Mail</label>
+            <input class="input" type="email" id="c22-brand-mail" name="email" placeholder="mara@example.com" autocomplete="username">
+          </div>
+        </section>
+        <footer>
+          <button type="button" class="btn w-full">Anmelden</button>
+        </footer>
+      </div>
+    </div>
+  </div>
+</div>

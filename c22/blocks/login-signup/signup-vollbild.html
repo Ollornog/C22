@@ -1,0 +1,228 @@
+<!-- c22-title: Registrierung — Vollbild -->
+<!-- custom: die VOLLBILD-Registrierungsseiten (shadcn signup-02…05) — Gegenstück zu
+     login-vollbild.html, gleiche vier Gerüste: geteilter Bildschirm mit Marken-Spalte, zentrierte
+     Karte auf gedämpftem Grund, Karte mit Bildhälfte, schmale Spalte ohne Karte. Ergänzt
+     signup.html (dort die Karte allein, plus der zweistufige Ablauf).
+
+     GALERIE-RAHMEN: wie in login-vollbild.html steckt jedes Beispiel im Ersatz-Viewport
+     `h-<N> overflow-hidden rounded-lg border`; im Projekt fällt er weg und der äusserste
+     Container trägt `min-h-svh` statt `h-full`.
+
+     Registrierungs-Besonderheiten gegenüber der Anmeldung: `autocomplete="name|email|
+     new-password"`, Hilfetexte am Feld (per `.field > p`, also ohne aria-describedby-Handarbeit
+     dort, wo der Text zum Feld gehört), Passwort + Bestätigung als zwei Spalten in EINEM Feld
+     und die AGB-Zustimmung als Checkbox-Feld.
+
+     AGB-HAKEN: der Satztext steckt in einem <span>, nicht blank im <label>. `.field > label` ist
+     ein Flex-Container mit Abstand — ein Link direkt darin wäre ein eigenes Flex-Item, bekäme
+     also den Wortabstand als Lücke („die  AGB") und der Satz könnte nicht mehr umbrechen. EIN
+     Flex-Item = normaler Fluss (dieselbe Bauart wie das Karten-Beispiel in checkbox.html).
+
+     Marken-Zeichen aus der Component `brand.html` (`.brand`/`.brand-mark`, senkrecht per
+     `data-orientation="vertical"`); der GitHub-Mark trägt `data-icon-brand="github"` — ein
+     Markenlogo ist kein Lucide-Icon und steht ausserhalb der Icon-Library-Achse. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Geteilter Bildschirm mit Marken-Spalte (Formular links, Bild rechts über die ganze Höhe)</span>
+    <div class="bg-background h-208 w-full overflow-hidden rounded-lg border">
+      <div class="grid h-full lg:grid-cols-2">
+        <div class="flex flex-col gap-4 p-6 md:p-10">
+          <div class="flex justify-center lg:justify-start">
+            <a href="#" class="brand">
+              <span class="brand-mark"><svg data-icon-lu="gallery-vertical-end" class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2h10"/><path d="M5 6h14"/><rect width="18" height="12" x="3" y="10" rx="2"/></svg></span>
+              Acme GmbH
+            </a>
+          </div>
+          <div class="flex flex-1 items-center justify-center">
+            <form class="w-full max-w-xs" method="post" action="#">
+              <fieldset class="fieldset">
+                <div class="flex flex-col items-center gap-1 text-center">
+                  <h1 class="text-2xl font-bold">Konto erstellen</h1>
+                  <p class="text-muted-foreground text-sm text-balance">Fülle das Formular aus, dann geht es los.</p>
+                </div>
+                <div class="field" role="group">
+                  <label for="c22-blk-svb-a-name">Name</label>
+                  <input class="input" type="text" id="c22-blk-svb-a-name" name="name" placeholder="Vor- und Nachname" autocomplete="name" required>
+                </div>
+                <div class="field" role="group">
+                  <label for="c22-blk-svb-a-mail">E-Mail</label>
+                  <input class="input" type="email" id="c22-blk-svb-a-mail" name="email" placeholder="mara@example.com" autocomplete="email" required>
+                  <p>Damit erreichen wir dich — wir geben die Adresse nicht weiter.</p>
+                </div>
+                <div class="field" role="group">
+                  <label for="c22-blk-svb-a-pw">Passwort</label>
+                  <input class="input" type="password" id="c22-blk-svb-a-pw" name="password" autocomplete="new-password" minlength="8" required>
+                  <p>Mindestens 8 Zeichen, mit Zahl und Sonderzeichen.</p>
+                </div>
+                <div class="field" role="group">
+                  <label for="c22-blk-svb-a-pw2">Passwort bestätigen</label>
+                  <input class="input" type="password" id="c22-blk-svb-a-pw2" name="password_confirm" autocomplete="new-password" minlength="8" required>
+                  <p>Bitte dasselbe Passwort noch einmal eingeben.</p>
+                </div>
+                <button type="submit" class="btn w-full">Konto erstellen</button>
+                <div class="field-separator"><hr role="separator"><span>oder weiter mit</span></div>
+                <button type="button" class="btn w-full" data-variant="outline">
+                  <svg data-icon-brand="github" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2 0 1.9 1.2 1.9 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6 0-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8 0 3.2.9.8 1.3 1.9 1.3 3.2 0 4.6-2.8 5.6-5.5 5.9.5.4.9 1 .9 2.2v3.3c0 .3.1.7.8.6A12 12 0 0 0 12 .3"/></svg>
+                  Mit GitHub registrieren
+                </button>
+                <p class="text-muted-foreground text-center text-sm">Schon dabei? <a href="#" class="text-foreground underline underline-offset-4">Anmelden</a></p>
+              </fieldset>
+            </form>
+          </div>
+        </div>
+        <div class="bg-muted relative hidden lg:block">
+          <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200&h=1600&fit=crop&q=80" alt="Schreibtisch von oben mit Notizbuch und Laptop" class="absolute inset-0 h-full w-full object-cover dark:brightness-50 dark:grayscale">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Zentrierte Karte auf ganzer Höhe (Passwort und Bestätigung als zwei Spalten in EINEM Feld)</span>
+    <div class="bg-muted h-176 w-full overflow-hidden rounded-lg border">
+      <div class="flex h-full flex-col items-center justify-center gap-6 p-6 md:p-10">
+        <div class="flex w-full max-w-sm flex-col gap-6">
+          <a href="#" class="brand self-center">
+            <span class="brand-mark"><svg data-icon-lu="gallery-vertical-end" class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2h10"/><path d="M5 6h14"/><rect width="18" height="12" x="3" y="10" rx="2"/></svg></span>
+            Acme GmbH
+          </a>
+          <form class="card" method="post" action="#">
+            <header class="text-center">
+              <h3 class="card-title text-xl">Konto erstellen</h3>
+              <p class="card-description">Wenige Angaben, dann steht dein Arbeitsbereich.</p>
+            </header>
+            <section>
+              <fieldset class="fieldset">
+                <div class="field" role="group">
+                  <label for="c22-blk-svb-b-name">Name</label>
+                  <input class="input" type="text" id="c22-blk-svb-b-name" name="name" placeholder="Vor- und Nachname" autocomplete="name" required>
+                </div>
+                <div class="field" role="group">
+                  <label for="c22-blk-svb-b-mail">E-Mail</label>
+                  <input class="input" type="email" id="c22-blk-svb-b-mail" name="email" placeholder="mara@example.com" autocomplete="email" required>
+                </div>
+                <div class="field" role="group">
+                  <div class="grid grid-cols-2 gap-4">
+                    <div class="field" role="group">
+                      <label for="c22-blk-svb-b-pw">Passwort</label>
+                      <input class="input" type="password" id="c22-blk-svb-b-pw" name="password" autocomplete="new-password" minlength="8" required>
+                    </div>
+                    <div class="field" role="group">
+                      <label for="c22-blk-svb-b-pw2">Bestätigen</label>
+                      <input class="input" type="password" id="c22-blk-svb-b-pw2" name="password_confirm" autocomplete="new-password" minlength="8" required>
+                    </div>
+                  </div>
+                  <p>Mindestens 8 Zeichen, mit Zahl und Sonderzeichen.</p>
+                </div>
+                <button type="submit" class="btn w-full">Konto erstellen</button>
+                <p class="text-muted-foreground text-center text-sm">Schon dabei? <a href="#" class="text-foreground underline underline-offset-4">Anmelden</a></p>
+              </fieldset>
+            </section>
+          </form>
+          <p class="text-muted-foreground text-center text-sm">Mit „Konto erstellen" stimmst du den <a href="#" class="underline underline-offset-4">AGB</a> und der <a href="#" class="underline underline-offset-4">Datenschutzerklärung</a> zu.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Karte mit Bildhälfte auf gedämpfter Fläche (AGB-Haken im Formular · Sozial-Wege als Icon-Reihe)</span>
+    <div class="bg-muted h-176 w-full overflow-hidden rounded-lg border">
+      <div class="flex h-full flex-col items-center justify-center p-6 md:p-10">
+        <div class="flex w-full max-w-sm flex-col gap-6 md:max-w-4xl">
+          <div class="card overflow-hidden p-0">
+            <div class="grid md:grid-cols-2">
+              <form class="p-6 md:p-8" method="post" action="#">
+                <fieldset class="fieldset">
+                  <div class="flex flex-col items-center gap-2 text-center">
+                    <h1 class="text-2xl font-bold">Konto erstellen</h1>
+                    <p class="text-muted-foreground text-balance">Leg dein Acme-Konto in einer Minute an.</p>
+                  </div>
+                  <div class="field" role="group">
+                    <label for="c22-blk-svb-c-mail">E-Mail</label>
+                    <input class="input" type="email" id="c22-blk-svb-c-mail" name="email" placeholder="mara@example.com" autocomplete="email" required>
+                    <p>Damit erreichen wir dich — wir geben die Adresse nicht weiter.</p>
+                  </div>
+                  <div class="field" role="group">
+                    <div class="grid grid-cols-2 gap-4">
+                      <div class="field" role="group">
+                        <label for="c22-blk-svb-c-pw">Passwort</label>
+                        <input class="input" type="password" id="c22-blk-svb-c-pw" name="password" autocomplete="new-password" minlength="8" required>
+                      </div>
+                      <div class="field" role="group">
+                        <label for="c22-blk-svb-c-pw2">Bestätigen</label>
+                        <input class="input" type="password" id="c22-blk-svb-c-pw2" name="password_confirm" autocomplete="new-password" minlength="8" required>
+                      </div>
+                    </div>
+                    <p>Mindestens 8 Zeichen, mit Zahl und Sonderzeichen.</p>
+                  </div>
+                  <div role="group" class="field" data-orientation="horizontal">
+                    <input class="input" type="checkbox" id="c22-blk-svb-c-agb" name="terms" required>
+                    <label for="c22-blk-svb-c-agb" class="font-normal"><span>Ich akzeptiere die <a href="#" class="underline underline-offset-4">AGB</a></span></label>
+                  </div>
+                  <button type="submit" class="btn w-full">Konto erstellen</button>
+                  <div class="field-separator"><hr role="separator"><span>oder weiter mit</span></div>
+                  <div class="grid grid-cols-3 gap-4">
+                    <button type="button" class="btn w-full" data-variant="outline">
+                      <svg data-icon-brand="github" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2 0 1.9 1.2 1.9 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6 0-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8 0 3.2.9.8 1.3 1.9 1.3 3.2 0 4.6-2.8 5.6-5.5 5.9.5.4.9 1 .9 2.2v3.3c0 .3.1.7.8.6A12 12 0 0 0 12 .3"/></svg>
+                      <span class="sr-only">Mit GitHub registrieren</span>
+                    </button>
+                    <button type="button" class="btn w-full" data-variant="outline">
+                      <svg data-icon-lu="mail" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                      <span class="sr-only">Registrierungslink per E-Mail</span>
+                    </button>
+                    <button type="button" class="btn w-full" data-variant="outline">
+                      <svg data-icon-lu="lock" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                      <span class="sr-only">Mit Single-Sign-on registrieren</span>
+                    </button>
+                  </div>
+                  <p class="text-muted-foreground text-center text-sm">Schon dabei? <a href="#" class="text-foreground underline underline-offset-4">Anmelden</a></p>
+                </fieldset>
+              </form>
+              <div class="bg-muted relative hidden md:block">
+                <img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=1200&h=1400&fit=crop&q=80" alt="Modernes Büro mit Fensterfront" class="absolute inset-0 h-full w-full object-cover dark:brightness-50 dark:grayscale">
+              </div>
+            </div>
+          </div>
+          <p class="text-muted-foreground text-center text-sm">Mit „Konto erstellen" stimmst du den <a href="#" class="underline underline-offset-4">AGB</a> und der <a href="#" class="underline underline-offset-4">Datenschutzerklärung</a> zu.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Schmale Spalte ohne Karte (Marken-Glyph · nur E-Mail · zwei Registrierwege nebeneinander)</span>
+    <div class="bg-background h-160 w-full overflow-hidden rounded-lg border">
+      <div class="flex h-full flex-col items-center justify-center gap-6 p-6 md:p-10">
+        <div class="flex w-full max-w-sm flex-col gap-6">
+          <form method="post" action="#">
+            <fieldset class="fieldset">
+              <div class="flex flex-col items-center gap-2 text-center">
+                <a href="#" class="brand" data-orientation="vertical">
+                  <svg data-icon-lu="gallery-vertical-end" class="size-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2h10"/><path d="M5 6h14"/><rect width="18" height="12" x="3" y="10" rx="2"/></svg>
+                  <span class="sr-only">Acme GmbH</span>
+                </a>
+                <h1 class="text-xl font-bold">Willkommen bei Acme</h1>
+                <p class="text-muted-foreground text-sm">Schon dabei? <a href="#" class="text-foreground underline underline-offset-4">Anmelden</a></p>
+              </div>
+              <div class="field" role="group">
+                <label for="c22-blk-svb-d-mail">E-Mail</label>
+                <input class="input" type="email" id="c22-blk-svb-d-mail" name="email" placeholder="mara@example.com" autocomplete="email" required>
+              </div>
+              <button type="submit" class="btn w-full">Konto erstellen</button>
+              <div class="field-separator"><hr role="separator"><span>oder</span></div>
+              <div class="grid gap-4 sm:grid-cols-2">
+                <button type="button" class="btn w-full" data-variant="outline">
+                  <svg data-icon-brand="github" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2 0 1.9 1.2 1.9 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6 0-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8 0 3.2.9.8 1.3 1.9 1.3 3.2 0 4.6-2.8 5.6-5.5 5.9.5.4.9 1 .9 2.2v3.3c0 .3.1.7.8.6A12 12 0 0 0 12 .3"/></svg>
+                  Mit GitHub
+                </button>
+                <button type="button" class="btn w-full" data-variant="outline">
+                  <svg data-icon-lu="lock" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                  Single-Sign-on
+                </button>
+              </div>
+            </fieldset>
+          </form>
+          <p class="text-muted-foreground text-center text-sm">Mit „Konto erstellen" stimmst du den <a href="#" class="underline underline-offset-4">AGB</a> und der <a href="#" class="underline underline-offset-4">Datenschutzerklärung</a> zu.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
