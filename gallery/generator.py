@@ -103,6 +103,12 @@ TEXTFARBEN = [
 ]
 SATZE = {"AKZENTE": AKZENTE, "GRUNDTOENE": GRUNDTOENE, "TEXTFARBEN": TEXTFARBEN}
 
+# Achsen, deren Wert nur in EINEM Erscheinungsbild gilt. Alles andere (Radius, Dichte, Tempo …)
+# ist bildunabhängig und gehört in `:root`.
+FARB_TOKENS = {"--primary", "--background", "--foreground", "--card", "--popover", "--muted",
+               "--accent", "--border", "--input", "--ring", "--sidebar", "--chart-1", "--chart-2",
+               "--chart-3", "--chart-4", "--chart-5"}
+
 def pack_voreinstellungen() -> list[tuple[str, str, str, dict[str, str]]]:
     """Die neun Style-Packs als Voreinstellungen — gelesen aus ihren eigenen Achsenschichten.
 
@@ -113,36 +119,44 @@ def pack_voreinstellungen() -> list[tuple[str, str, str, dict[str, str]]]:
     """
     drehbar = {t for t, *_ in DESIGN_ACHSEN} | {t for t, *_ in TYPESET_ACHSEN}
     basis = _basiswerte(drehbar)
-    aus: list[tuple[str, str, str, dict[str, str]]] = []
+    aus: list[tuple[str, str, str, dict[str, dict[str, str]]]] = []
     for datei in sorted((ROOT / "c22" / "static" / "css" / "packs").glob("*.css")):
-        text = datei.read_text(encoding="utf-8")
-        root = re.search(r":root\s*\{(.*?)\n\}", text, re.S)
-        eigen = {}
-        if root:
-            for token, wert in re.findall(r"(--[a-z0-9-]+)\s*:\s*([^;]+);", root.group(1)):
-                if token in drehbar:
-                    eigen[token] = wert.strip()
+        eigen = _bloecke(datei.read_text(encoding="utf-8"), drehbar)
         name = datei.stem
-        # VOLLER Zustand: Basis + was das Pack überschreibt. Sonst blieben beim Wechsel von einem
-        # runden auf ein kantiges Pack die Achsen stehen, die das kantige nicht selbst nennt —
-        # man bekäme eine Mischung, die es als Pack nie gibt.
-        aus.append((f"pack-{name}", name.capitalize(), name.capitalize(), {**basis, **eigen}))
+        # VOLLER Zustand: Basis + was das Pack überschreibt, und zwar JE ERSCHEINUNGSBILD.
+        # Sonst blieben beim Wechsel Achsen des vorigen Packs stehen — und die Farben eines
+        # Packs gelten nur in dem Bild, für das es sie nennt.
+        aus.append((f"pack-{name}", name.capitalize(), name.capitalize(), {
+            "root": {**basis["root"], **eigen["root"]},
+            "dark": {**basis["dark"], **eigen["dark"]},
+        }))
     return aus
 
 
-def _basiswerte(tokens: set[str]) -> dict[str, str]:
-    """Die Ausgangswerte der Achsen, gelesen aus `tokens.css` und Basecoats `base.css`."""
-    werte: dict[str, str] = {}
+def _bloecke(text: str, tokens: set[str]) -> dict[str, dict[str, str]]:
+    """Die interessanten Tokens getrennt nach `:root` (hell) und `.dark` (dunkel).
+
+    Warum getrennt: eine Farbe gilt nur in einem Erscheinungsbild. Ein Generator, der
+    `--background` global setzt, macht im Dunkelmodus die Seite hell — das war genau der Fehler.
+    """
+    aus = {"root": {}, "dark": {}}
+    for schluessel, muster in (("root", r":root\s*\{(.*?)\n\}"), ("dark", r"\.dark\s*\{(.*?)\n\}")):
+        for block in re.findall(muster, text, re.S):
+            for token, wert in re.findall(r"(--[a-z0-9-]+)\s*:\s*([^;]+);", block):
+                if token in tokens:
+                    aus[schluessel][token] = wert.strip()
+    return aus
+
+
+def _basiswerte(tokens: set[str]) -> dict[str, dict[str, str]]:
+    """Ausgangswerte der Achsen — aus Basecoats `base.css` und `tokens.css`, beide Bilder."""
+    aus = {"root": {}, "dark": {}}
     for datei in (ROOT / "c22" / "vendor" / "basecoat" / "dist" / "base" / "base.css",
                   ROOT / "c22" / "static" / "css" / "tokens.css"):
-        text = datei.read_text(encoding="utf-8")
-        root = re.search(r":root\s*\{(.*?)\n\}", text, re.S)
-        if not root:
-            continue
-        for token, wert in re.findall(r"(--[a-z0-9-]+)\s*:\s*([^;]+);", root.group(1)):
-            if token in tokens:
-                werte[token] = wert.strip()
-    return werte
+        teil = _bloecke(datei.read_text(encoding="utf-8"), tokens)
+        aus["root"].update(teil["root"])
+        aus["dark"].update(teil["dark"])
+    return aus
 
 
 # Voreinstellungen (wie die 01–05 bei shadcn): Sätze, die zusammen etwas ergeben.
@@ -162,7 +176,14 @@ CHARAKTERE = [
 ]
 
 # Was die Leiste anbietet: erst die Charakter-Sätze, dann jedes Pack mit SEINEN Achsenwerten.
-VOREINSTELLUNGEN = CHARAKTERE + pack_voreinstellungen()
+def _als_bloecke(satz: dict[str, str]) -> dict[str, dict[str, str]]:
+    """Ein Charakter-Satz betrifft nur FORM-Achsen — die gelten in beiden Erscheinungsbildern."""
+    return {"root": dict(satz), "dark": {}}
+
+
+# Was die Leiste anbietet: erst die Charakter-Sätze, dann jedes Pack mit SEINEN Achsenwerten.
+VOREINSTELLUNGEN = [(k, de, en, _als_bloecke(w)) for k, de, en, w in CHARAKTERE] \
+    + pack_voreinstellungen()
 
 
 def _block(datei: Path) -> str:
@@ -297,8 +318,21 @@ def inhalt() -> str:
 <script>
 (function () {{
   var VOREINSTELLUNGEN = {json.dumps({k: v for k, _, _, v in VOREINSTELLUNGEN}, ensure_ascii=False)};
+  var FARB_ACHSEN = {json.dumps(sorted(FARB_TOKENS), ensure_ascii=False)};
   var wurzel = document.documentElement;
-  var werte = {{}};
+  // Zwei Blöcke statt Inline-Styles am <html>: eine FARBE gilt nur in ihrem Erscheinungsbild.
+  // Ein Inline-Style am Wurzelelement schlägt `.dark` immer — damit wurde die Seite im
+  // Dunkelmodus hell, sobald ein Pack-Preset seine Light-Farben setzte. Form-Achsen (Radius,
+  // Dichte, Tempo …) sind bildunabhängig und stehen deshalb in `:root`.
+  var werte = {{ root: {{}}, dark: {{}} }};
+  var blatt = document.createElement('style');
+  blatt.id = 'c22-generator';
+  document.head.appendChild(blatt);
+
+  function dunkel() {{ return wurzel.classList.contains('dark'); }}
+  function bereich(token) {{
+    return FARB_ACHSEN.indexOf(token) >= 0 ? (dunkel() ? 'dark' : 'root') : 'root';
+  }}
 
   function einheit(el) {{ return el.dataset.einheit || ''; }}
 
@@ -309,17 +343,27 @@ def inhalt() -> str:
   }}
 
   function setzen(token, wert) {{
-    werte[token] = wert;
-    wurzel.style.setProperty(token, wert);
+    if (wert === null || wert === undefined || String(wert).trim() === '') return;  // nie leer
+    werte[bereich(token)][token] = wert;
     anzeigen(token, wert);
     ausgeben();
   }}
 
+  function block(auswahl, satz) {{
+    var namen = Object.keys(satz).sort();
+    if (!namen.length) return '';
+    return auswahl + ' {{\\n'
+      + namen.map(function (t) {{ return '  ' + t + ': ' + satz[t] + ';'; }}).join('\\n')
+      + '\\n}}\\n';
+  }}
+
   function ausgeben() {{
-    var namen = Object.keys(werte).sort();
-    var zeilen = namen.map(function (t) {{ return '  ' + t + ': ' + werte[t] + ';'; }});
-    var text = zeilen.length
-      ? '/* C22-Achsenschicht — vom Generator erzeugt */\\n:root {{\\n' + zeilen.join('\\n') + '\\n}}\\n'
+    var css = block(':root', werte.root) + block('.dark', werte.dark);
+    // Dasselbe CSS wirkt in der Vorschau UND steht als Ergebnis da — eine Quelle, kein
+    // zweiter Weg, der abweichen könnte.
+    blatt.textContent = css;
+    var text = css
+      ? '/* C22-Achsenschicht — vom Generator erzeugt */\\n' + css
       : '/* Noch nichts geändert. */\\n';
     document.querySelectorAll('[data-ausgabe]').forEach(function (c) {{ c.textContent = text; }});
   }}
@@ -373,18 +417,50 @@ def inhalt() -> str:
   // Grund: die gefüllte Spur eines Schiebers rechnet Basecoats JS aus `--slider-value` — es
   // hört auf `input`. Wer `el.value` still zuweist, verschiebt den Griff und lässt die Füllung
   // stehen. Zwei Pfade (manuell/programmatisch) wären zwei Gelegenheiten, das falsch zu machen.
+  // Nur SCHIEBER müssen ihre Änderung melden: Basecoat rechnet daraus die gefüllte Spur.
+  // Bei einem Auswahlfeld wäre das Meldung schädlich — steht der Wert nicht in seinen Optionen,
+  // setzt der Browser `value` auf LEER, das change-Ereignis schreibt diesen leeren Wert zurück,
+  // und aus `--primary` wird `--primary: ;`. Genau so wurde die Pille im Dunkelmodus
+  // unsichtbar (transparente Fläche) und `--font-heading` leer.
   function melden(el) {{
+    if (el.type !== 'range') return;
     el.dispatchEvent(new Event('input', {{ bubbles: true }}));
-    el.dispatchEvent(new Event('change', {{ bubbles: true }}));
+  }}
+
+  function regler_stellen(el, wert) {{
+    if (el.type === 'range') {{
+      el.value = parseFloat(wert);
+      melden(el);
+      return el.value;
+    }}
+    // Auswahlfeld: nur stellen, wenn der Wert wirklich zur Wahl steht. Sonst bleibt die
+    // Anzeige, wie sie ist — ein Feld, das den geltenden Wert nicht kennt, darf ihn nicht
+    // überschreiben.
+    for (var i = 0; i < el.options.length; i++) {{
+      if (el.options[i].value.replace(/\s+/g, '') === String(wert).replace(/\s+/g, '')) {{
+        el.selectedIndex = i;
+        return el.options[i].textContent;
+      }}
+    }}
+    return null;
   }}
 
   function anwenden(satz) {{
-    Object.keys(satz).forEach(function (t) {{
-      var el = document.querySelector('[data-achse="' + t + '"]');
-      if (!el) {{ setzen(t, satz[t]); return; }}
-      el.value = el.type === 'range' ? parseFloat(satz[t]) : satz[t];
-      melden(el);
-      setzen(t, satz[t]);
+    // Ein Preset ersetzt den Zustand, es ergänzt ihn nicht: sonst blieben Achsen des vorigen
+    // Packs stehen und man sähe eine Mischung, die es als Pack nie gibt.
+    werte = {{ root: {{}}, dark: {{}} }};
+    ['root', 'dark'].forEach(function (bereich_) {{
+      var teil = satz[bereich_] || {{}};
+      Object.keys(teil).forEach(function (t) {{ werte[bereich_][t] = teil[t]; }});
+    }});
+    ausgeben();
+    // Die Regler auf den Stand des jeweils SICHTBAREN Erscheinungsbilds ziehen.
+    document.querySelectorAll('[data-achse]').forEach(function (el) {{
+      var t = el.dataset.achse;
+      var wert = (werte[bereich(t)] || {{}})[t] || (werte.root || {{}})[t];
+      if (!wert) return;
+      var gezeigt = regler_stellen(el, wert);
+      anzeigen(t, gezeigt === null ? wert : (el.type === 'range' ? gezeigt + einheit(el) : gezeigt));
     }});
   }}
   document.querySelectorAll('[data-voreinstellung]').forEach(function (b) {{
@@ -413,6 +489,18 @@ def inhalt() -> str:
       var code = document.querySelector('[data-ausgabe]');
       if (!code) return;
       navigator.clipboard && navigator.clipboard.writeText(code.textContent);
+    }});
+  }});
+
+  // Wechselt das Erscheinungsbild, gelten die Farbwerte des anderen Blocks — die Regler müssen
+  // das zeigen, sonst behauptet die Leiste einen Wert, der gerade nicht wirkt.
+  document.addEventListener('basecoat:themechange', function () {{
+    document.querySelectorAll('[data-achse]').forEach(function (el) {{
+      var t = el.dataset.achse;
+      var wert = (werte[bereich(t)] || {{}})[t];
+      if (!wert) return;
+      var gezeigt = regler_stellen(el, wert);
+      anzeigen(t, gezeigt === null ? wert : (el.type === 'range' ? gezeigt + einheit(el) : gezeigt));
     }});
   }});
 

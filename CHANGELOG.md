@@ -6,6 +6,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — Generator: Pack-Wechsel im Dunkelmodus, und leere Token-Werte
+
+Zwei Fehler mit einer gemeinsamen Wurzel — der Generator behandelte Farben wie Formwerte.
+
+- **Farben gelten nur in EINEM Erscheinungsbild.** Der Generator setzte alle Achsen als
+  Inline-Style am `<html>`; ein Inline-Style schlägt `.dark` immer. Ein Pack-Preset trägt aber die
+  **hellen** Farbwerte — im Dunkelmodus kippte die Seite dadurch in eine Mischung, und der
+  Rückwechsel auf `vega` half nicht mehr. Jetzt schreibt der Generator ein `<style>`-Element mit
+  **zwei Blöcken** (`:root` und `.dark`): Formachsen (Radius, Dichte, Tempo …) sind
+  bildunabhängig, Farbachsen landen im Block des gerade sichtbaren Bildes. Pack-Presets lesen
+  beide Blöcke der Pack-Datei — dasselbe Format, in dem die Packs im Repo stehen. Dasselbe CSS
+  wirkt in der Vorschau **und** ist das Ergebnis: eine Quelle statt zweier Wege.
+- **Ein Auswahlfeld schrieb leere Werte zurück.** Beim Nachziehen der Regler setzte der Generator
+  `select.value` auf einen Wert, der nicht in den Optionen stand (etwa den Dunkel-Akzent); der
+  Browser macht daraus `''`, das gemeldete `change` schrieb den leeren Wert zurück, und aus
+  `--primary` wurde `--primary: ;`. Sichtbare Folge: die Sprach-Pille war im Dunkelmodus eine
+  **transparente Fläche mit dunklem Text**, `--font-heading` war leer. Jetzt melden nur Schieber
+  ihre Änderung (dafür brauchen sie es — die gefüllte Spur), ein Auswahlfeld wird nur gestellt,
+  wenn es den Wert kennt, und leere Werte kommen nie in die Ausgabe.
+- Wechselt das Erscheinungsbild, ziehen die Regler auf den Stand des nun geltenden Blocks nach —
+  sonst behauptet die Leiste einen Wert, der gerade nicht wirkt.
+
 ### Added — Toc: `rail` und `rail-overlay` (Striche statt Text, Beschriftung bei Hover)
 
 Zwei Ausführungen, weil sich „verschiebt es das Layout?" nicht allgemein beantworten lässt:
