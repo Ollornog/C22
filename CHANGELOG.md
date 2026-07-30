@@ -6,6 +6,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — bei „Rundung 0" blieb überall eine Minimalrundung
+
+Basecoat/shadcn leitet `--radius-sm/md/xl` **additiv** ab (`calc(var(--radius) ± Npx)`). Damit
+schliesst die Achse nicht: bei `--radius: 0` ist `--radius-xl` noch `calc(0px + 4px)` = **4px** —
+jede Karte, jeder Container mit `rounded-xl` behielt in einem eckigen Pack eine Restrundung.
+Die Ableitung ist jetzt **multiplikativ** (`× 0.6 / × 0.8 / × 1 / × 1.4`): bei der Vorgabe
+`0.625rem` ergibt das genau die bisherigen Werte (6 / 8 / 10 / 14 px), und bei 0 wird es wirklich 0.
+`docs/theming.md` führte „`calc(… - 4px)` vs `× 0.6`" als offene Frage — hiermit entschieden, mit
+dem Argument, das die Quellen nicht liefern: nur die Multiplikation kann die Achse zu Ende drehen.
+
+### Fixed — Toc: Hamburger-Dropdown öffnete nicht
+
+Das Menü lag als `nav.toc` im Popover — Basecoats Dropdown verdrahtet aber `[role="menu"]`. Ohne
+diese Rolle passierte beim Klick nichts. Jetzt trägt das Verzeichnis `role="menu"`, seine Einträge
+`role="menuitem"` (nachgewiesen mit programmatischem Klick: `aria-hidden` true→false,
+`aria-expanded` true, Panel sichtbar). Der Auslöser ist zudem **rahmenlos** (`data-variant="ghost"`)
+— die Linien sind das Bedienelement, ein Kasten drumherum wäre doppelt.
+
+### Added — Toc-Variante `rail`: Linien links, Text bei Hover
+
+Im Ruhezustand nur Striche; ihre **Länge zeigt die Ebene**, der aktive ist kräftiger. Beim
+Überfahren (oder Tastatur-Fokus irgendwo darin) wächst die Leiste und gibt die Beschriftung frei —
+ohne eine Zeile JavaScript, nur `:hover`/`:focus-within` und eine Breite, die mit der Motion-Achse
+überblendet.
+
 ### Fixed — die Lesemarke stand beim Scrollen still
 
 `scrollElter()` suchte den scrollenden Container erst beim **Elternteil** — in der Galerie

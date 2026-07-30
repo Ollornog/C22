@@ -377,7 +377,7 @@ ERLAUBTE_VARIANTEN = {
     "line", "label", "elevated", "card", "bordered", "separator", "mono", "browser", "grid",
     # Formen des Inhaltsverzeichnisses (components/toc.html): flache Liste, eingerückter Baum,
     # enge Fassung, und der Hamburger, dessen Linien selbst das Verzeichnis sind.
-    "list", "tree", "compact", "hamburger",
+    "list", "tree", "compact", "hamburger", "rail",
 }
 VARIANT_ATTR = re.compile(r'data-variant="([^"]*)"')
 

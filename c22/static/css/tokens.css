@@ -103,6 +103,20 @@
    * (oder ein Generator) dreht nur diese eine Zahl — würde jede Stufe einzeln gesetzt, hätte man
    * sieben Werte zu pflegen und sechs Gelegenheiten, sie widersprüchlich zu machen. 1 = die
    * Tailwind-Standardskala, also optisch unverändert. */
+  /* Radius-Ableitung MULTIPLIKATIV statt additiv (PO-Fund 2026-07-30). Basecoat/shadcn leitet
+   * `--radius-sm/md/xl` mit `calc(var(--radius) ± Npx)` ab — damit schliesst die Achse bei 0
+   * NICHT: `--radius-xl` blieb `calc(0px + 4px)` = 4px, und jede Karte behielt bei „eckig" eine
+   * Minimalrundung. Multiplikativ geht die Achse sauber auf 0 und bleibt bei vega optisch
+   * gleich: 0.625rem → sm 6px · md 8px · lg 10px · xl 14px, genau die bisherigen Werte.
+   * (docs/theming.md nannte „calc(… - 4px) vs × 0.6" als offene Frage — hiermit entschieden,
+   * mit dem Argument, das die Quellen nicht liefern: nur × kann die Achse zu Ende drehen.)
+   * Bleiben :root-Variablen (kein `@theme inline`), weil Vendor-Regeln und components.css
+   * `var(--radius-md)` direkt lesen — als inline-Theme wären sie dort leer. */
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+
   --text-scale: 1;
 
   /* Tracking der Überschriften — gehört zur Typo-Achse: ein Pack mit Großbuchstaben-Headings
