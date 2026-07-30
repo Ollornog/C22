@@ -6,6 +6,79 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — Anmeldung/Registrierung als VOLLBILD-Blocks (`login-vollbild`, `signup-vollbild`)
+
+Vorbild `ui.shadcn.com/blocks/login` und `…/signup` (je fünf Ausführungen). Bisher zeigte die
+Kategorie „Login & Signup" nur die Karte im Ausschnitt — das Seitengerüst drumherum fehlte, also
+genau das, was eine App tatsächlich baut. Die bestehenden Einträge bleiben unberührt; zwei neue
+Dateien ergänzen die Vollbild-Muster (9 Ausführungen):
+
+- **Geteilter Bildschirm** — Formular mit Marken-Zeichen oben, Bildspalte über die ganze Höhe
+  (`grid lg:grid-cols-2`, Bild `absolute inset-0 object-cover`, im Dark gedimmt und entfärbt).
+- **Geteilter Bildschirm mit Marken-Fläche statt Bild** — Zitat auf `bg-primary`, Spalten
+  getauscht: die „Farbfläche"-Ausführung kommt ohne Foto aus und bleibt reine Token-Arbeit.
+- **Zentrierte Karte auf ganzer Höhe** — gedämpfter Grund, Marke über der Karte, Rechtstext
+  darunter; Sozial-Wege oben, Trenner, dann E-Mail/Passwort.
+- **Karte mit Bildhälfte** — Formular und Bild in EINER Karte (`overflow-hidden p-0` +
+  `grid md:grid-cols-2`), Sozial-Wege als Icon-Reihe (`grid-cols-3`, Beschriftung `sr-only`).
+- **Schmale Spalte ohne Karte** — Marken-Glyph, nur E-Mail, zwei Anmeldewege nebeneinander.
+- Registrierungs-Seite dazu mit ihren Eigenheiten: `autocomplete="name|email|new-password"`,
+  Hilfetext am Feld, **Passwort + Bestätigung als zwei Spalten in EINEM `.field`** (der Hinweis
+  gilt für beide) und die AGB-Zustimmung als Checkbox-Feld.
+- **Galerie-Rahmen statt `min-h-svh`:** jedes Beispiel steckt in einem Ersatz-Viewport
+  (`h-<N> overflow-hidden rounded-lg border`) — dasselbe Mittel wie bei `full-page/admin-page`.
+  Der Dateikopf sagt, was im Projekt zu tauschen ist (`min-h-svh` statt `h-full`), damit die
+  Rahmen-Krücke nicht mitkopiert wird.
+- Die Sozial-Knöpfe des Vorbilds (Apple/Google/Meta) sind hier auf drei Wege eingekürzt: GitHub,
+  Anmeldelink per E-Mail, Single-Sign-on. Der **GitHub-Mark ist ein Markenlogo** und trägt
+  `data-icon-brand="github"`; Marken stehen ausserhalb der Icon-Library-Achse und werden nicht
+  ersetzt (`docs/icons.md`), Anmeldelink und SSO sind Lucide-Icons. *Berichtigung:* die erste
+  Fassung dieses Eintrags behauptete „Lucide-Wege ohne Fremdmarken" — das war falsch, der Pfad
+  war der offizielle GitHub-Mark, ausgezeichnet als `data-icon-lu="github"`. Regel 11 der
+  Konventions-Suite schlägt darauf inzwischen an.
+- **Marken-Mark wird gefüllt gezeichnet:** `fill="currentColor"`, keine `stroke`-Attribute. Der
+  Pfad ist eine Füllform; mit `fill="none" stroke="currentColor"` blieb davon die Outline übrig,
+  die bei 16 px wie ein Headset aussieht statt wie der Octocat. Gilt jetzt auch für `badge.html`
+  (Shields-Beispiel) — eine Antwort im Repo, festgehalten in `docs/icons.md`.
+- **AGB-Haken:** der Satztext steckt in einem `<span>`, nicht blank im `<label>`. `.field > label`
+  ist ein Flex-Container mit Abstand — ein Link direkt darin wäre ein eigenes Flex-Item, bekäme
+  also den Wortabstand als Lücke („die  AGB") und der Satz könnte nicht mehr umbrechen.
+- **Reihenfolge in der Galerie:** die Verzeichnis-Abtastung sortiert jetzt das Grundmuster vor
+  seine Ausführungen (`_reihenfolge` in `gallery/build.py`) — rein alphabetisch stand
+  „Anmeldung — Vollbild" vor „Anmeldung", weil `-` vor `.` liegt. Gelesen wird aber vom Einfachen
+  zum Zusammengesetzten. Der Alternativweg (umbenennen) hätte entweder die öffentlichen
+  Sprungmarken der bestehenden Einträge geändert oder die Paare auseinandergerissen; auf alle
+  anderen Verzeichnisse wirkt der Schlüssel nicht.
+
+### Fixed — Field-Separator in einer Karte trug den falschen Grund
+
+Das „oder"-Plättchen des `.field-separator` verdeckt die Trennlinie, indem es die Fläche unter sich
+nachmalt — Basecoat nimmt dafür fest `--background`. In einer Karte ist die Fläche aber `--card`;
+wo die beiden Töne auseinanderliegen (Dark-Modus, Packs mit grauem Canvas und weissen Cards) stand
+ein hellerer Balken quer durch die Karte. shadcn flickt das je Aufruf mit einer Utility am
+Separator; C22 löst es **einmal** in `components.css` (`.card .field-separator > span`) — betrifft
+neben den neuen Vollbild-Blocks auch `login.html` und `field.html` („In einer Karte").
+
+### Added — Component `Brand`: das Marken-Zeichen als Kanon (`.brand` / `.brand-mark`)
+
+Der Logo-Block aus Glyph-Plättchen und Wortmarke steht im Vorbild in jedem Vollbild-Login als
+dieselbe Utility-Kette (`bg-primary` + Grösse + Zentrierung + Radius) — fünfmal kopiert wären fünf
+Gelegenheiten, das Zeichen auseinanderlaufen zu lassen. Jetzt zwei Regeln in `components.css`;
+Farbe kommt aus dem primary-Rollenpaar, der Radius aus der Radius-Achse, das Glyph trägt wie jedes
+freistehende Icon seine eigene `size-*`-Klasse.
+
+- **Senkrechte Ausführung am Kanon statt daneben:** `data-orientation="vertical"` (Glyph über der
+  Wortmarke, die schmale Spalte ohne Karte). Der Varianten-Vertrag verlangt genau das — Attribut
+  an der semantischen Klasse, keine zweite Utility-Kette. Die drei Stellen, die den Kanon im
+  selben Zug noch umgingen (`flex items-center gap-2 font-medium` bzw. dieselbe Kette mit
+  `flex-col`), benutzen ihn jetzt: ein Kanon, der im eigenen Commit dreimal umgangen wird, ist
+  keiner.
+- **In der Galerie sichtbar:** eigener Component-Eintrag `Brand` (`c22/components/brand.html`,
+  Reiter *Components*) mit den vier Ausführungen — waagerecht mit Plättchen, senkrecht, nur Glyph
+  mit `sr-only`-Namen, und ohne Plättchen auf farbiger Fläche (dort wäre es unsichtbar) — plus
+  eine Zeile in der Foundation-Tabelle der `CLAUDE.md`. Eine Designfrage, die nur in
+  `components.css` steht und nur in Blocks vorkommt, findet niemand wieder.
+
 ### Fixed — Generator: Pack-Wechsel im Dunkelmodus, und leere Token-Werte
 
 Zwei Fehler mit einer gemeinsamen Wurzel — der Generator behandelte Farben wie Formwerte.
@@ -1700,49 +1773,6 @@ kept thin. Basecoat is vendored under `c22/vendor/basecoat/` (reproducible via
   (headings follow it via one base rule; default = body font), the chart palette moved from hex to
   oklch (same colours, generator-settable), and the documented override seam for the Tailwind v4
   `--text-*` type-scale tokens.
-
-### Added — Anmeldung/Registrierung als VOLLBILD-Blocks (`login-vollbild`, `signup-vollbild`)
-
-Vorbild `ui.shadcn.com/blocks/login` und `…/signup` (je fünf Ausführungen). Bisher zeigte die
-Kategorie „Login & Signup" nur die Karte im Ausschnitt — das Seitengerüst drumherum fehlte, also
-genau das, was eine App tatsächlich baut. Die bestehenden Einträge bleiben unberührt; zwei neue
-Dateien ergänzen die Vollbild-Muster (9 Ausführungen):
-
-- **Geteilter Bildschirm** — Formular mit Marken-Zeichen oben, Bildspalte über die ganze Höhe
-  (`grid lg:grid-cols-2`, Bild `absolute inset-0 object-cover`, im Dark gedimmt und entfärbt).
-- **Geteilter Bildschirm mit Marken-Fläche statt Bild** — Zitat auf `bg-primary`, Spalten
-  getauscht: die „Farbfläche"-Ausführung kommt ohne Foto aus und bleibt reine Token-Arbeit.
-- **Zentrierte Karte auf ganzer Höhe** — gedämpfter Grund, Marke über der Karte, Rechtstext
-  darunter; Sozial-Wege oben, Trenner, dann E-Mail/Passwort.
-- **Karte mit Bildhälfte** — Formular und Bild in EINER Karte (`overflow-hidden p-0` +
-  `grid md:grid-cols-2`), Sozial-Wege als Icon-Reihe (`grid-cols-3`, Beschriftung `sr-only`).
-- **Schmale Spalte ohne Karte** — Marken-Glyph, nur E-Mail, zwei Anmeldewege nebeneinander.
-- Registrierungs-Seite dazu mit ihren Eigenheiten: `autocomplete="name|email|new-password"`,
-  Hilfetext am Feld, **Passwort + Bestätigung als zwei Spalten in EINEM `.field`** (der Hinweis
-  gilt für beide) und die AGB-Zustimmung als Checkbox-Feld.
-- **Galerie-Rahmen statt `min-h-svh`:** jedes Beispiel steckt in einem Ersatz-Viewport
-  (`h-<N> overflow-hidden rounded-lg border`) — dasselbe Mittel wie bei `full-page/admin-page`.
-  Der Dateikopf sagt, was im Projekt zu tauschen ist (`min-h-svh` statt `h-full`), damit die
-  Rahmen-Krücke nicht mitkopiert wird.
-- Die Sozial-Knöpfe des Vorbilds (Apple/Google/Meta) sind hier **Lucide-Wege ohne Fremdmarken**
-  (GitHub, Anmeldelink per E-Mail, Single-Sign-on) — das Repo bleibt bei einer Icon-Bibliothek.
-
-### Fixed — Field-Separator in einer Karte trug den falschen Grund
-
-Das „oder"-Plättchen des `.field-separator` verdeckt die Trennlinie, indem es die Fläche unter sich
-nachmalt — Basecoat nimmt dafür fest `--background`. In einer Karte ist die Fläche aber `--card`;
-wo die beiden Töne auseinanderliegen (Dark-Modus, Packs mit grauem Canvas und weissen Cards) stand
-ein hellerer Balken quer durch die Karte. shadcn flickt das je Aufruf mit einer Utility am
-Separator; C22 löst es **einmal** in `components.css` (`.card .field-separator > span`) — betrifft
-neben den neuen Vollbild-Blocks auch `login.html` und `field.html` („In einer Karte").
-
-### Added — `.brand` / `.brand-mark`: das Marken-Zeichen als Kanon
-
-Der Logo-Block aus Glyph-Plättchen und Wortmarke steht im Vorbild in jedem Vollbild-Login als
-dieselbe Utility-Kette (`bg-primary` + Grösse + Zentrierung + Radius) — fünfmal kopiert wären fünf
-Gelegenheiten, das Zeichen auseinanderlaufen zu lassen. Jetzt zwei Regeln in `components.css`;
-Farbe kommt aus dem primary-Rollenpaar, der Radius aus der Radius-Achse, das Glyph trägt wie jedes
-freistehende Icon seine eigene `size-*`-Klasse.
 
 ## [0.2.0] - 2026-07-12
 

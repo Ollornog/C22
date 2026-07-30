@@ -11,7 +11,16 @@
      Registrierungs-Besonderheiten gegenüber der Anmeldung: `autocomplete="name|email|
      new-password"`, Hilfetexte am Feld (per `.field > p`, also ohne aria-describedby-Handarbeit
      dort, wo der Text zum Feld gehört), Passwort + Bestätigung als zwei Spalten in EINEM Feld
-     und die AGB-Zustimmung als Checkbox-Feld. -->
+     und die AGB-Zustimmung als Checkbox-Feld.
+
+     AGB-HAKEN: der Satztext steckt in einem <span>, nicht blank im <label>. `.field > label` ist
+     ein Flex-Container mit Abstand — ein Link direkt darin wäre ein eigenes Flex-Item, bekäme
+     also den Wortabstand als Lücke („die  AGB") und der Satz könnte nicht mehr umbrechen. EIN
+     Flex-Item = normaler Fluss (dieselbe Bauart wie das Karten-Beispiel in checkbox.html).
+
+     Marken-Zeichen aus der Component `brand.html` (`.brand`/`.brand-mark`, senkrecht per
+     `data-orientation="vertical"`); der GitHub-Mark trägt `data-icon-brand="github"` — ein
+     Markenlogo ist kein Lucide-Icon und steht ausserhalb der Icon-Library-Achse. -->
 <div class="c22-examples">
   <div class="c22-example">
     <span class="c22-example-label">Geteilter Bildschirm mit Marken-Spalte (Formular links, Bild rechts über die ganze Höhe)</span>
@@ -53,7 +62,7 @@
                 <button type="submit" class="btn w-full">Konto erstellen</button>
                 <div class="field-separator"><hr role="separator"><span>oder weiter mit</span></div>
                 <button type="button" class="btn w-full" data-variant="outline">
-                  <svg data-icon-lu="github" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2 0 1.9 1.2 1.9 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6 0-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8 0 3.2.9.8 1.3 1.9 1.3 3.2 0 4.6-2.8 5.6-5.5 5.9.5.4.9 1 .9 2.2v3.3c0 .3.1.7.8.6A12 12 0 0 0 12 .3"/></svg>
+                  <svg data-icon-brand="github" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2 0 1.9 1.2 1.9 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6 0-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8 0 3.2.9.8 1.3 1.9 1.3 3.2 0 4.6-2.8 5.6-5.5 5.9.5.4.9 1 .9 2.2v3.3c0 .3.1.7.8.6A12 12 0 0 0 12 .3"/></svg>
                   Mit GitHub registrieren
                 </button>
                 <p class="text-muted-foreground text-center text-sm">Schon dabei? <a href="#" class="text-foreground underline underline-offset-4">Anmelden</a></p>
@@ -147,13 +156,13 @@
                   </div>
                   <div role="group" class="field" data-orientation="horizontal">
                     <input class="input" type="checkbox" id="c22-blk-svb-c-agb" name="terms" required>
-                    <label for="c22-blk-svb-c-agb" class="font-normal">Ich akzeptiere die <a href="#" class="underline underline-offset-4">AGB</a></label>
+                    <label for="c22-blk-svb-c-agb" class="font-normal"><span>Ich akzeptiere die <a href="#" class="underline underline-offset-4">AGB</a></span></label>
                   </div>
                   <button type="submit" class="btn w-full">Konto erstellen</button>
                   <div class="field-separator"><hr role="separator"><span>oder weiter mit</span></div>
                   <div class="grid grid-cols-3 gap-4">
                     <button type="button" class="btn w-full" data-variant="outline">
-                      <svg data-icon-lu="github" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2 0 1.9 1.2 1.9 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6 0-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8 0 3.2.9.8 1.3 1.9 1.3 3.2 0 4.6-2.8 5.6-5.5 5.9.5.4.9 1 .9 2.2v3.3c0 .3.1.7.8.6A12 12 0 0 0 12 .3"/></svg>
+                      <svg data-icon-brand="github" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2 0 1.9 1.2 1.9 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6 0-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8 0 3.2.9.8 1.3 1.9 1.3 3.2 0 4.6-2.8 5.6-5.5 5.9.5.4.9 1 .9 2.2v3.3c0 .3.1.7.8.6A12 12 0 0 0 12 .3"/></svg>
                       <span class="sr-only">Mit GitHub registrieren</span>
                     </button>
                     <button type="button" class="btn w-full" data-variant="outline">
@@ -186,7 +195,7 @@
           <form method="post" action="#">
             <fieldset class="fieldset">
               <div class="flex flex-col items-center gap-2 text-center">
-                <a href="#" class="flex flex-col items-center gap-2 font-medium">
+                <a href="#" class="brand" data-orientation="vertical">
                   <svg data-icon-lu="gallery-vertical-end" class="size-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2h10"/><path d="M5 6h14"/><rect width="18" height="12" x="3" y="10" rx="2"/></svg>
                   <span class="sr-only">Acme GmbH</span>
                 </a>
@@ -201,7 +210,7 @@
               <div class="field-separator"><hr role="separator"><span>oder</span></div>
               <div class="grid gap-4 sm:grid-cols-2">
                 <button type="button" class="btn w-full" data-variant="outline">
-                  <svg data-icon-lu="github" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2 0 1.9 1.2 1.9 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6 0-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8 0 3.2.9.8 1.3 1.9 1.3 3.2 0 4.6-2.8 5.6-5.5 5.9.5.4.9 1 .9 2.2v3.3c0 .3.1.7.8.6A12 12 0 0 0 12 .3"/></svg>
+                  <svg data-icon-brand="github" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2 0 1.9 1.2 1.9 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6 0-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8 0 3.2.9.8 1.3 1.9 1.3 3.2 0 4.6-2.8 5.6-5.5 5.9.5.4.9 1 .9 2.2v3.3c0 .3.1.7.8.6A12 12 0 0 0 12 .3"/></svg>
                   Mit GitHub
                 </button>
                 <button type="button" class="btn w-full" data-variant="outline">

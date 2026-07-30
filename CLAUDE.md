@@ -30,6 +30,7 @@ the look per component.
 | Checkbox / radio | `class="input"` with `type=` | `checkbox.html`, `radio-group.html` |
 | Keyboard shortcut | `<kbd class="kbd">` — one cap per key | `kbd.html` |
 | Badge / avatar | `class="badge"` / `class="avatar"` | `badge.html`, `avatar.html` |
+| Brand mark (logo lockup: glyph plate + wordmark) | `class="brand"` (+ `data-orientation="vertical"`), glyph plate `class="brand-mark"` — on a coloured surface the plate is dropped and the glyph stands bare | `brand.html` |
 | Divider | `class="separator"` or `<hr role="separator">` | `separator.html` |
 | Multi-line code block | `<pre class="code-block"><code>…</code>` — copy button via `.btn.code-block-copy` + `[data-copy]`, line numbers via `data-line-numbers` | `code-block.html` |
 | Scrollable area | the token scrollbar is the **global default** (arrowless) — no class needed; variants via `class="scrollbar"` + `data-size`/`data-track`/`data-buttons`; rounded scroll containers get the track inset automatically (`data-scrollbar-inset` to force/disable) | `scrollbar.html` |
