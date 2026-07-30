@@ -2140,10 +2140,15 @@
   // Rückgabe: viewBox-Zeichenkette + Faktor f = Kastenbreite/VBW. Die CSS-Breite wird mit f
   // multipliziert, damit der Beschnitt nur Leerraum wegnimmt und den MASSSTAB nicht ändert —
   // sonst würde ein Halbkreis größer gezeichnet als der ganze Kreis daneben.
-  function chRundBox(cx, cy, rMax, startDeg, sweepDeg, VBW, VBH, rand) {
+  // `vorlaufDeg`: Grad VOR dem Startwinkel, die zum Inhalt gehören. Nötig, weil die
+  // Radial-Beschriftung vor dem Balkenanfang sitzt — ohne diesen Zuschlag schnitt der Kasten bei
+  // sweep < 360 genau die Namen ab (gemessen: bei start:-90/sweep:180 lagen alle Label-Kästen
+  // links außerhalb der viewBox). Ein Kasten, der den Inhalt beschneidet, ist schlimmer als ein
+  // etwas zu großer.
+  function chRundBox(cx, cy, rMax, startDeg, sweepDeg, VBW, VBH, rand, vorlaufDeg) {
     rand = rand == null ? 14 : rand;
     if (!(sweepDeg < 360)) return { vb: '0 0 ' + VBW + ' ' + VBH, f: 1, x: 0, y: 0, w: VBW, h: VBH };
-    var a0 = startDeg, a1 = startDeg + sweepDeg, xs = [0], ys = [0];
+    var a0 = startDeg - (vorlaufDeg || 0), a1 = startDeg + sweepDeg, xs = [0], ys = [0];
     function nimm(deg) {
       var a = deg * Math.PI / 180;
       xs.push(rMax * Math.cos(a)); ys.push(rMax * Math.sin(a));
@@ -2236,8 +2241,17 @@
           var txt = cfg.sliceLabels === 'value' ? chNum(v)
             : cfg.sliceLabels === 'name' ? (labels[i] || '')
               : Math.round(v / summe * 100) + ' %';
+          // Text AUF einer Datenfarbe: eine feste Füllfarbe kann hier nicht funktionieren —
+          // --chart-1…5 laufen über die halbe Helligkeitsskala, gemessen 1.80:1 (hell auf
+          // chart-1) bzw. 2.27:1 (dunkel auf chart-5), also unter jeder Schwelle. Statt zu
+          // raten, welche Farbe „meistens" trägt: der Text nimmt die normale Textfarbe und
+          // bekommt eine Kontur in der Grundfläche (paint-order legt sie HINTER die Füllung).
+          // Damit liest er auf jedem Segment jeder Palette, in hell wie dunkel — dieselbe
+          // Technik, die Kartenbeschriftungen seit je benutzen.
           labs += '<text x="' + (cx + R * Math.cos(mid)).toFixed(1) + '" y="' + (cy + R * Math.sin(mid) + 3).toFixed(1) +
-            '" text-anchor="middle" fill="var(--background)" style="font-size:9px;font-weight:600">' + calEsc(txt) + '</text>';
+            '" text-anchor="middle" fill="var(--foreground)" stroke="var(--background)"' +
+            ' stroke-width="2.5" stroke-linejoin="round" style="font-size:9px;font-weight:600;' +
+            'paint-order:stroke fill">' + calEsc(txt) + '</text>';
         }
         off += len;
       });
@@ -2279,7 +2293,9 @@
   // Strichbreite = Bandhöhe — deshalb kein eigener Pfad-Generator.
   // Optionen: max · inner (Lochanteil) · start/sweep (Grad; sweep 180 = Halbkreis) ·
   // track:false (ohne Spur) · grid:true (Polargitter) · round:false (eckige Enden; ein Stapel
-  // rechnet immer mit eckigen) · barLabels:true (Name dem Bogen folgend vor dem Balkenanfang) ·
+  // rechnet immer mit eckigen) · barLabels:true (Name dem Bogen folgend vor dem Balkenanfang;
+  // im STAPEL ohne Wirkung — dort liegen alle Werte auf EINEM Band, ein Name hätte keinen
+  // eigenen Bogen davor. Das ist eine Grenze, keine Panne: der Tooltip nennt die Namen) ·
   // center {value,label,dy} · stack:true (EIN Band, Werte hintereinander gestapelt statt je
   // Kategorie ein Ring) · tipTotal (Summenzeile: Stapel = das Band, sonst alle Ringe).
   function chartRadial(root, cfg) {
@@ -2329,6 +2345,8 @@
     // Serienfarben --chart-1…5 laufen über die halbe Helligkeitsskala, dort ist keine feste
     // Textfarbe in beiden Erscheinungsbildern lesbar (var(--background) war im Dunkelmodus
     // fast schwarz auf dunklem Band).
+    var labelVorlaufDeg = 0;   // wird von radialLabel gefüllt, vom Kasten gelesen
+
     function radialLabel(b, len, txt) {
       if (!txt) return '';
       var fs = Math.min(9, bh * 0.8);                       // an die BANDHÖHE gebunden, nicht fest
@@ -2339,6 +2357,8 @@
       var brauch = txt.length * fs * 0.58;                  // Schätzung der Textbreite
       if (frei < brauch) return '';                         // kein Platz -> lieber nichts (der Tooltip nennt den Namen)
       var aEnd = a0 - luft / b.R, dA = brauch / b.R;
+      // Grösster Vorlauf über alle Balken — der Kasten rechnet damit (s. chRundBox-Aufruf).
+      labelVorlaufDeg = Math.max(labelVorlaufDeg, ((luft + brauch) / b.R) * 180 / Math.PI);
       // Laufrichtung entscheidet, wie der Text STEHT: auf der unteren Hälfte stünde er im
       // Uhrzeigersinn auf dem Kopf, dort muss der Pfad gegen den Uhrzeigersinn laufen.
       var unten = Math.sin(aEnd - dA / 2) > 0;
@@ -2395,7 +2415,10 @@
       });
     }
 
-    var box = chRundBox(cx, cy, rOut, startDeg, sweepDeg, VB, VB);
+    // Der Kasten muss den Label-VORLAUF kennen: die Namen sitzen vor dem Balkenanfang, also
+    // ausserhalb von [start, start+sweep]. radialLabel merkt sich den grössten benötigten
+    // Winkel; ohne diesen Zuschlag schnitt der Kasten bei sweep < 360 genau die Namen ab.
+    var box = chRundBox(cx, cy, rOut, startDeg, sweepDeg, VB, VB, null, labelVorlaufDeg);
     var svg = '<svg viewBox="' + box.vb +
       '" style="display:block;margin:0 auto;width:' + Math.round(200 * box.f) + 'px" fill="none">' +
       gitter + spuren + segs + labs + chCenterText(cx, cy, cfg.center) + hits + '</svg>';

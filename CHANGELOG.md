@@ -6,6 +6,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — Charts: Nachlese aus der Abnahme
+
+- **Beschriftung im Segment war unlesbar.** Der erste Entwurf färbte sie mit
+  `fill="var(--background)"` mitten auf der Serienfarbe — gemessen **1,80:1** (hell auf
+  `--chart-1`) und **2,27:1** (dunkel auf `--chart-5`), also unter jeder Schwelle, selbst der für
+  Großtext. Eine feste Füllfarbe kann dort nicht funktionieren: `--chart-1…5` laufen über die halbe
+  Helligkeitsskala. Statt zu raten, welche Farbe „meistens" trägt, nimmt der Text jetzt die normale
+  Textfarbe und bekommt eine **Kontur in der Grundfläche** (`paint-order: stroke`) — dieselbe
+  Technik, mit der Karten ihre Ortsnamen über beliebigen Untergrund setzen. Nachgemessen im DOM:
+  `fill oklch(0.985)` / `stroke oklch(0.145)` im Dunkelmodus.
+- **`barLabels` wurde bei `sweep < 360` abgeschnitten.** Der Kasten rechnete nur über
+  `[start, start+sweep]`, die Namen sitzen aber **vor** dem Balkenanfang — bei
+  `start:-90, sweep:180` lagen alle Label-Kästen außerhalb der viewBox. `chRundBox` kennt jetzt
+  einen **Vorlauf**, den die Beschriftung selbst meldet.
+- **`barLabels` + `stack` tat still nichts** — im Stapel liegen alle Werte auf einem Band, ein Name
+  hätte keinen eigenen Bogen davor. Das ist jetzt als **Grenze benannt** (Optionsliste und
+  Kopfkommentar), nicht mehr eine Option, die schweigend nichts tut.
+
 ### Added — Anmeldung/Registrierung als VOLLBILD-Blocks (`login-vollbild`, `signup-vollbild`)
 
 Vorbild `ui.shadcn.com/blocks/login` und `…/signup` (je fünf Ausführungen). Bisher zeigte die
