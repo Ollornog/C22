@@ -376,10 +376,20 @@ def section(slug: str, num: int, title: str, body: str | None, *, first: bool,
 
 
 TITLE_RE = re.compile(r'^\s*<!--\s*c22-title:\s*(.+?)\s*-->\s*', re.S)
+# Reiter-Zuordnung eines Partials (nur Charts): `<!-- c22-tab: <rang> | <deutsch> | <englisch> -->`.
+# Steht beim Inhalt statt in einem zentralen Register — so bleibt es beim Verzeichnis-Scan
+# (Datei hineinlegen genügt), und Reihenfolge wie Beschriftung pflegt man dort, wo das Chart lebt.
+TAB_RE = re.compile(r'\s*<!--\s*c22-tab:\s*(\d+)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*-->\s*')
 
 
 def strip_title_comment(body: str) -> str:
-    return TITLE_RE.sub("", body, count=1)
+    """Führende Steuer-Kommentare (c22-title, c22-tab) aus dem ANGEZEIGTEN Markup nehmen."""
+    return TAB_RE.sub("", TITLE_RE.sub("", body, count=1), count=1)
+
+
+def tab_of(body: str) -> tuple[int, str, str] | None:
+    m = TAB_RE.search(body)
+    return (int(m.group(1)), m.group(2), m.group(3)) if m else None
 
 
 def file_title(path: Path, body: str) -> str:
@@ -630,6 +640,58 @@ def render_flat(datei: str, titel_schluessel: str, directory: Path, width: str) 
     return datei, len(eintraege)
 
 
+def render_charts() -> tuple[str, int]:
+    """Charts — die Diagrammtypen als REITER (Vorbild: die Reiter über ui.shadcn.com/charts).
+
+    Eigener Renderer statt einer Erweiterung von `render_flat`: nur diese Seite braucht Reiter,
+    und Typeset soll davon nichts merken. Gebaut wird die kanonische Tabs-Component
+    (`.tabs > nav[role=tablist] + [role=tabpanel]`) — kein eigener Reiter-Look, das Verhalten
+    kommt aus Basecoats Tabs-JS.
+
+    Welcher Reiter ein Partial aufnimmt, sagt das Partial selbst (`<!-- c22-tab: … -->`, siehe
+    TAB_RE) — der Verzeichnis-Scan bleibt damit die Quelle: eine Datei hineinlegen genügt.
+    Mehrere Partials dürfen sich einen Reiter teilen (Torte und Donut sind ein Thema). Ohne
+    Angabe landet ein Partial im letzten Reiter „Weitere" — es verschwindet nie stillschweigend.
+
+    Ohne Inhaltsspalte: die Reiter SIND die Navigation dieser Seite (wie beim Generator). Damit
+    Anker trotzdem tragen, hängt `data-tab-hash` am Container — c22.js öffnet den Reiter, in dem
+    das Anker-Ziel liegt (charts.html#radial-chart), sonst wäre ein Link in ein verborgenes Panel
+    wirkungslos.
+    """
+    # Nach BESCHRIFTUNG gruppieren, nicht nach Rang: mehrere Partials teilen sich einen Reiter
+    # (Torte und Donut sind ein Thema) und stehen darin in Rang-Reihenfolge. Der Reiter selbst
+    # sitzt am kleinsten Rang seiner Partials — so bestimmt eine Zahl je Datei beides.
+    gruppen: dict[tuple[str, str], list[tuple[int, str, str, str]]] = {}
+    for slug, titel, body in discover(CHARTS_DIR):
+        rang, de, en = tab_of(body) or (999, "Weitere", "More")
+        gruppen.setdefault((de, en), []).append((rang, slug, titel, body))
+    ordnung = sorted(gruppen, key=lambda k: min(e[0] for e in gruppen[k]))
+
+    nav, panels, nummer = [], [], 0
+    for idx, schluessel in enumerate(ordnung):
+        de, en = schluessel
+        tab_id, panel_id = f"reiter-{slug_of(en)}", f"panel-{slug_of(en)}"
+        aktiv = idx == 0
+        nav.append(
+            f'<button type="button" role="tab" id="{tab_id}" aria-controls="{panel_id}" '
+            f'aria-selected="{"true" if aktiv else "false"}" tabindex="{"0" if aktiv else "-1"}">'
+            f'{zwei(html.escape(de), html.escape(en))}</button>')
+        abschnitte = []
+        for i, (_, slug, titel, body) in enumerate(sorted(gruppen[schluessel])):
+            nummer += 1
+            abschnitte.append(section(slug, nummer, titel, body, first=i == 0, width="w-[900px]"))
+        panels.append(
+            f'<div role="tabpanel" id="{panel_id}" aria-labelledby="{tab_id}" tabindex="-1"'
+            f'{"" if aktiv else " hidden"}>{"".join(abschnitte)}</div>')
+
+    main_html = (f'<div class="tabs" id="charts" data-tab-hash>'
+                 f'<nav role="tablist" data-variant="line" aria-label="{html.escape(i18n.klartext("nav_chart_types"))}">'
+                 f'{"".join(nav)}</nav>{"".join(panels)}</div>')
+    page = page_shell("charts.html", "title_charts", "", main_html, sidebar=False)
+    (ZIEL / "charts.html").write_text(page, encoding="utf-8")
+    return "charts.html", nummer
+
+
 def render_generator() -> tuple[str, int]:
     """Generator — Regler links, echte Seite als Vorschau, fertige Achsenschicht als Ausgabe.
 
@@ -670,7 +732,7 @@ def main(ziel: Path = GALLERY, assets: str = "../") -> None:
     ergebnisse = [
         render_components(),
         render_blocks(),
-        render_flat("charts.html", "title_charts", CHARTS_DIR, "w-[900px]"),
+        render_charts(),
         render_flat("typeset.html", "title_typeset", TYPESET_DIR, "w-[820px]"),
         render_generator(),
         render_legal(),

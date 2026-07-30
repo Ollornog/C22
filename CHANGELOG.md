@@ -6,6 +6,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — Charts: Nachlese aus der Abnahme
+
+- **Beschriftung im Segment war unlesbar.** Der erste Entwurf färbte sie mit
+  `fill="var(--background)"` mitten auf der Serienfarbe — gemessen **1,80:1** (hell auf
+  `--chart-1`) und **2,27:1** (dunkel auf `--chart-5`), also unter jeder Schwelle, selbst der für
+  Großtext. Eine feste Füllfarbe kann dort nicht funktionieren: `--chart-1…5` laufen über die halbe
+  Helligkeitsskala. Statt zu raten, welche Farbe „meistens" trägt, nimmt der Text jetzt die normale
+  Textfarbe und bekommt eine **Kontur in der Grundfläche** (`paint-order: stroke`) — dieselbe
+  Technik, mit der Karten ihre Ortsnamen über beliebigen Untergrund setzen. Nachgemessen im DOM:
+  `fill oklch(0.985)` / `stroke oklch(0.145)` im Dunkelmodus.
+- **`barLabels` wurde bei `sweep < 360` abgeschnitten.** Der Kasten rechnete nur über
+  `[start, start+sweep]`, die Namen sitzen aber **vor** dem Balkenanfang — bei
+  `start:-90, sweep:180` lagen alle Label-Kästen außerhalb der viewBox. `chRundBox` kennt jetzt
+  einen **Vorlauf**, den die Beschriftung selbst meldet.
+- **`barLabels` + `stack` tat still nichts** — im Stapel liegen alle Werte auf einem Band, ein Name
+  hätte keinen eigenen Bogen davor. Das ist jetzt als **Grenze benannt** (Optionsliste und
+  Kopfkommentar), nicht mehr eine Option, die schweigend nichts tut.
+
 ### Added — Anmeldung/Registrierung als VOLLBILD-Blocks (`login-vollbild`, `signup-vollbild`)
 
 Vorbild `ui.shadcn.com/blocks/login` und `…/signup` (je fünf Ausführungen). Bisher zeigte die
@@ -100,6 +118,72 @@ Zwei Fehler mit einer gemeinsamen Wurzel — der Generator behandelte Farben wie
   wenn es den Wert kennt, und leere Werte kommen nie in die Ausgabe.
 - Wechselt das Erscheinungsbild, ziehen die Regler auf den Stand des nun geltenden Blocks nach —
   sonst behauptet die Leiste einen Wert, der gerade nicht wirkt.
+### Added — Charts: alle Typen, und die Typen als Reiter
+
+Vorbild sind die Reiter über `ui.shadcn.com/charts` (Area · Bar · Line · Pie · Radar · Radial ·
+Tooltip). Die eigene kleine SVG-Engine (`wireChart` in `c22.js`) kannte davon Fläche, Balken,
+Linie, Donut und Radar — es fehlten Torte, Radial und ein Ort für den Tooltip. Bewusst weiter
+**ohne Diagramm-Bibliothek**: jedes Element bleibt ein DOM-Knoten, gefärbt allein über
+`--chart-1…5` / `--border` / `--muted`.
+
+- **Torte und Donut sind jetzt EIN Renderer** (`chartPie`). Beide sind dieselbe Geometrie — ein
+  Band als gestrichelte Kreislinie, Radius = Bandmitte, Strichbreite = Banddicke. Der Unterschied
+  ist allein `inner` (Loch als Anteil des Außenradius): `0` reicht bis zum Mittelpunkt und ist die
+  volle Torte. Kein zweiter Renderer, kein Ringsektor-Pfad je Segment. Dazu `gap` (Trenner, `0` =
+  ohne), `start`/`sweep` (Halbkreis), Beschriftung im Segment (`sliceLabels`) oder außen
+  (`nameLabels`), und **mehrere Serien als konzentrische Ringe** (gestapelte Torte).
+- **`radial` — Radialbalken** (`chartRadial`): je Kategorie ein konzentrischer Bogen auf einer
+  Spur, Bogenlänge = Wert am Maßstab. Ein Radialbalken IST ein Balken, deshalb zählt der Zeiger je
+  **Ring**, nicht je Winkel. Mit `track`, `grid` (Polargitter), `round`, `barLabels`,
+  `center` (Tacho) und `stack` (alle Werte in EINEM Band, Halbkreis mit Summe).
+- **`barLabels` folgt dem Bogen** (`<textPath>` auf einem `<path>` mit ID) und steht **vor** dem
+  Balkenanfang auf der Spur. Gerader Text auf gekrümmtem Band hängt halb daneben; und weil alle
+  Bänder am gleichen Winkel beginnen, stapelten sich die Namen sonst zu einer senkrechten Säule.
+  Entlang des Bogens läuft jeder Name auf seinem eigenen Ring und stößt nie an den Nachbarn. Die
+  Laufrichtung des Pfades kippt auf der unteren Hälfte, sonst stünde der Text dort auf dem Kopf.
+  Gefärbt über das **Rollen-Paar** `muted`/`muted-foreground`, das in hell und dunkel liest — auf
+  dem Balken selbst wäre das unmöglich: `--chart-1…5` laufen über die halbe Helligkeitsskala, keine
+  feste Textfarbe deckt beide Enden. Ist kein Platz, bleibt der Name weg (der Tooltip nennt ihn).
+- **Gestapelte Radialsegmente rechnen mit eckigen Kappen.** Eine runde Kappe ragt eine halbe
+  Bandbreite über jedes Segmentende hinaus — auf EINEM Band überlappen sich dadurch die Nachbarn
+  und die Grenzen wandern sichtbar. Das ist keine Voreinstellung, sondern Geometrie: `round` wäre
+  dort falsch gerechnet.
+- **Der Zeichenkasten runder Charts wird aus `start`/`sweep` gerechnet** — die echte Bounding-Box
+  des Winkelbereichs (Extrema an den Rändern und an jedem Vielfachen von 90°, Mittelpunkt immer
+  dabei). Vorher war nur „`start` genau 180°" behandelt und nur die Höhe beschnitten; ein Halbkreis
+  als `start:-90`/`sweep:180` hing in einem halb leeren Kasten. Die CSS-Breite wird mit dem
+  Beschnitt-Faktor multipliziert, damit nur Leerraum wegfällt und der **Maßstab** gleich bleibt —
+  sonst wäre ein Halbkreis größer gezeichnet als der ganze Kreis daneben.
+- **Radar-Ausführungen** wie im Vorbild: `gridShape:"circle"`, `spokes:false`, `grid:false`,
+  `fill:false` (nur Linien), `dots:false`, `rings:<n>`.
+- **Der Tooltip ist eine eigene Achse, kein Anhängsel eines Typs:** `tipIndicator`
+  (`dot`/`line`/`none`), `tipTitle`, `tipLabel:false`, `tipUnit` (gedämpfte Einheit),
+  `tipTotal`/`tipTotalLabel` (Summenzeile), `icon` je Serie — und `tipPin`, das ihn ohne Zeiger
+  sichtbar hält, damit die Galerie ihn überhaupt zeigen kann. Das Aussehen dazu liegt als Regel in
+  `components.css` (SPOT), nicht im Markup. Gilt für jeden Typ, auch die runden.
+- **`tipTotal` gilt wirklich für jeden Typ.** Die Summenzeile baut ein gemeinsamer `chTotalVon`, den
+  alle Renderer füttern — das „Ganze" ist je Geometrie ein anderes: kartesisch die Kategorie über
+  alle Serien, beim Kreis der Ring, auf den sich der Anteil bezieht, beim Radial das Band (Stapel)
+  bzw. alle Ringe. Ohne diese eine Stelle nahmen `chartPie`/`chartRadial` das Argument gar nicht an
+  und die dokumentierte Option tat dort **still nichts** — genau die Fehlerklasse, die wir überall
+  ausräumen.
+- **Neue Partials** `pie-chart.html`, `radial-chart.html`, `radar-chart.html`,
+  `tooltip-chart.html`; `chart.html` zeigt als Übersicht jetzt auch Torte und Radial.
+- **`charts.html` zeigt die Typen als Reiter** — kanonische Tabs-Component, eigener Renderer
+  (`render_charts` in `gallery/build.py`), damit `render_flat` für Typeset unberührt bleibt.
+  Welcher Reiter ein Partial aufnimmt, sagt das Partial selbst (`<!-- c22-tab: … -->`): der
+  Verzeichnis-Scan bleibt die Quelle, eine Datei hineinlegen genügt weiter. Ohne Angabe landet ein
+  Partial im Reiter „Weitere" — es verschwindet nie stillschweigend.
+- **Reiter sind deep-linkbar** (`data-tab-hash` in `c22.js`): zeigt der Anker auf einen Reiter oder
+  auf ein Element in einem Panel, geht dieser Reiter auf. Ohne das wäre `charts.html#radial-chart`
+  wirkungslos, weil verborgene Panels `hidden` tragen.
+
+### Fixed — Chart-Tooltip wuchs nicht mit seinem Inhalt
+
+Basecoat gibt dem Tooltip nur eine Mindestbreite; weil seine Zeilen `width:100%` tragen, löste der
+Browser die zirkuläre Breite über genau dieses Minimum auf. Jede zusätzliche Angabe (Einheit,
+Summenzeile) brach dadurch um statt zu verbreitern. `.chart-tooltip { width: max-content }` macht
+die Mindestbreite wieder zu einem Minimum.
 
 ### Added — Toc: `rail` und `rail-overlay` (Striche statt Text, Beschriftung bei Hover)
 

@@ -1,0 +1,51 @@
+<!-- c22-title: Netzdiagramm (Radar) -->
+<!-- c22-tab: 6 | Radar | Radar -->
+<!-- custom: ein <div data-chart='{…}'> je Chart, gerendert von c22.js (chartRadar); Farben nur über
+     die Tokens --chart-1…5, Netz und Speichen über --border. Das Netz hat zwei Formen — Vielecke
+     (Standard) und Kreisringe (gridShape "circle") — und lässt sich abschalten (grid:false) bzw.
+     ohne Speichen zeichnen (spokes:false); "rings" bestimmt, wie viele Ringe es sind. Die Fläche
+     (fill:false = nur Linien) und die Punkte (dots:false) sind unabhängig davon. Ein gesetztes
+     "max" macht mehrere Charts vergleichbar; ohne max rundet die Engine selbst auf. -->
+<div class="c22-examples">
+
+  <div class="c22-example">
+    <span class="c22-example-label">Radar (<code>type: "radar"</code>, <code>dots: false</code> — Fläche über dem Vieleck-Netz)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"radar","dots":false,"max":100,"labels":["Tempo","Reichweite","Preis","Support","Qualität","Ökobilanz"],"series":[{"name":"Modell A","data":[82,64,90,52,74,58]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Punkten (Standard — jeder Messwert ist ein Punkt und ein Hover-Ziel)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"radar","max":100,"labels":["Tempo","Reichweite","Preis","Support","Qualität","Ökobilanz"],"series":[{"name":"Modell A","data":[82,64,90,52,74,58]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Nur Linien (<code>fill: false</code>)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"radar","fill":false,"dots":false,"max":100,"labels":["Tempo","Reichweite","Preis","Support","Qualität","Ökobilanz"],"series":[{"name":"Modell A","color":"chart-2","data":[82,64,90,52,74,58]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Ohne Netz (<code>grid: false</code>)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"radar","grid":false,"max":100,"labels":["Tempo","Reichweite","Preis","Support","Qualität","Ökobilanz"],"series":[{"name":"Modell A","data":[82,64,90,52,74,58]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Kreisnetz (<code>gridShape: "circle"</code>)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"radar","gridShape":"circle","max":100,"labels":["Tempo","Reichweite","Preis","Support","Qualität","Ökobilanz"],"series":[{"name":"Modell A","data":[82,64,90,52,74,58]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Kreisnetz ohne Speichen (<code>gridShape: "circle"</code>, <code>spokes: false</code>)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"radar","gridShape":"circle","spokes":false,"max":100,"labels":["Tempo","Reichweite","Preis","Support","Qualität","Ökobilanz"],"series":[{"name":"Modell A","data":[82,64,90,52,74,58]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Feineres Netz (<code>rings: 5</code>)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"radar","rings":5,"dots":false,"max":100,"labels":["Tempo","Reichweite","Preis","Support","Qualität","Ökobilanz"],"series":[{"name":"Modell A","data":[82,64,90,52,74,58]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Zwei Serien im Vergleich (<code>legend: true</code>)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"radar","legend":true,"max":100,"labels":["Tempo","Reichweite","Preis","Support","Qualität","Ökobilanz"],"series":[{"name":"Modell A","data":[82,64,90,52,74,58]},{"name":"Modell B","color":"chart-4","data":[58,88,62,80,66,84]}]}'></div>
+  </div>
+
+</div>

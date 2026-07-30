@@ -1,3 +1,5 @@
+<!-- c22-title: Alle Typen im Überblick -->
+<!-- c22-tab: 9 | Übersicht | Overview -->
 <!-- custom: datengetriebene SVG-Diagramme. Jedes Chart ist EIN <div data-chart='{…}'> mit einer
      JSON-Config (Daten-Array) — c22.js (wireChart) rechnet daraus Skala, Achse, Formen, Legende UND
      Tooltip: eine Quelle der Wahrheit (SPOT), keine handberechneten Koordinaten. Warum SVG statt
@@ -44,13 +46,23 @@
   </div>
 
   <div class="c22-example">
+    <span class="c22-example-label">Torte (<code>type: "pie"</code> — dieselbe Geometrie wie der Donut, nur ohne Loch)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"pie","labels":["Direkt","Suche","Verweise","Social"],"series":[{"data":[38,25,19,18]}]}'></div>
+  </div>
+
+  <div class="c22-example">
     <span class="c22-example-label">Kreis / Donut (<code>type: "donut"</code> + Zentrum + Legende)</span>
     <div class="mx-auto w-full max-w-md" data-chart='{"type":"donut","legend":true,"unit":"Anteil","labels":["Direkt","Suche","Verweise","Social"],"center":{"value":"8.412","label":"Besuche"},"series":[{"data":[38,25,19,18]}]}'></div>
   </div>
 
   <div class="c22-example">
+    <span class="c22-example-label">Radial (<code>type: "radial"</code> — ein Bogen je Kategorie auf einer Spur)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"radial","max":100,"unit":" %","labels":["Direkt","Suche","Verweise","Social"],"series":[{"name":"Zielerreichung","data":[86,72,58,44]}]}'></div>
+  </div>
+
+  <div class="c22-example">
     <span class="c22-example-label">Radar (<code>type: "radar"</code>, <code>max: 100</code> + Legende)</span>
-    <div class="mx-auto w-full max-w-md" data-chart='{"type":"radar","legend":true,"max":100,"labels":["Speed","Reichweite","Preis","Support","Qualität"],"series":[{"name":"Kanal A","data":[80,60,90,50,70]}]}'></div>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"radar","legend":true,"max":100,"labels":["Tempo","Reichweite","Preis","Support","Qualität"],"series":[{"name":"Kanal A","data":[80,60,90,50,70]}]}'></div>
   </div>
 
   <div class="c22-example">

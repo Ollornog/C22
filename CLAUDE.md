@@ -127,7 +127,9 @@ c22/components/*.html   canonical HTML partials — one file per component, vari
 c22/blocks/<cat>/*.html Blocks — larger compositions, grouped by category directory
                         (navigation / full-page / login-signup / tables); first line
                         <!-- c22-title: … --> names the entry, otherwise the filename does
-c22/charts/*.html       chart patterns (one file per chart type, --chart-1…5 tokens only)
+c22/charts/*.html       chart patterns (one file per chart type, --chart-1…5 tokens only); a second
+                        line `<!-- c22-tab: <rank> | <German> | <English> -->` says which TAB of the
+                        charts page takes the file (several files may share one tab, ordered by rank)
 c22/typeset/*.html      typography in context (typeset page; base for the future typeset generator)
 c22/static/css/
   tokens.css            the token definitions (the look)
@@ -169,7 +171,9 @@ rebuilds and deploys it on every push to `main` — a pull request only builds i
    New **block/chart/typeset** entry → just drop an `.html` file into the right directory
    (`c22/blocks/<category>/`, `c22/charts/`, `c22/typeset/`) with a `<!-- c22-title: … -->` first line —
    the gallery discovers it on rebuild. New block CATEGORY → extend `BLOCK_KATEGORIEN` in `gallery/build.py`.
-   All conventions below apply to those directories too (the hygiene suite scans them).
+   New **chart** entry → additionally a `<!-- c22-tab: … -->` line for the tab it belongs to; without it
+   the entry still shows up, in the trailing "Weitere/More" tab. All conventions below apply to those
+   directories too (the hygiene suite scans them).
 2. Rebuild the gallery (`scripts/build-gallery.sh`) and **look at it** (screenshot or browser, light *and*
    dark) before deciding it's done — don't build UI blind.
 3. Any styling that more than one component needs goes into `components.css` (or a token), not copied inline.

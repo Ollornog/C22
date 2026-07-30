@@ -1,0 +1,63 @@
+<!-- c22-title: Chart-Tooltip -->
+<!-- c22-tab: 8 | Tooltip | Tooltip -->
+<!-- custom: derselbe Tooltip in seinen Ausführungen — EIN Datensatz, damit man nur den Unterschied
+     sieht. Der Tooltip gehört keinem Chart-Typ, sondern der Engine: jede Option hier gilt auch für
+     Torte, Radar und Radial. Alle Beispiele setzen "tipPin", damit der Tooltip OHNE Zeiger sichtbar
+     ist (im Betrieb erscheint er beim Hover; angeheftet kehrt er nach dem Hover an den festen Index
+     zurück). Die Marke links hat drei Ausführungen — Farbfleck (Standard), Strich
+     (tipIndicator "line") und keine ("none"); ein Icon in der Serie ersetzt sie. Das Aussehen dazu
+     liegt in components.css, nicht hier im Markup. "max" ist bewusst gesetzt: so bleibt über den
+     Balken Platz, der Tooltip steht IM Chart statt darüber. -->
+<div class="c22-examples">
+
+  <div class="c22-example">
+    <span class="c22-example-label">Standard — Farbfleck je Zeile (<code>tipPin: 3</code> hält ihn offen)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"stacked","tipPin":3,"max":1400,"labels":["Mo","Di","Mi","Do","Fr","Sa"],"series":[{"name":"Laufen","data":[420,360,300,380,520,460]},{"name":"Schwimmen","data":[260,300,180,420,340,280]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Strich-Indikator (<code>tipIndicator: "line"</code>)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"stacked","tipPin":3,"tipIndicator":"line","max":1400,"labels":["Mo","Di","Mi","Do","Fr","Sa"],"series":[{"name":"Laufen","data":[420,360,300,380,520,460]},{"name":"Schwimmen","data":[260,300,180,420,340,280]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Ohne Indikator (<code>tipIndicator: "none"</code>)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"stacked","tipPin":3,"tipIndicator":"none","max":1400,"labels":["Mo","Di","Mi","Do","Fr","Sa"],"series":[{"name":"Laufen","data":[420,360,300,380,520,460]},{"name":"Schwimmen","data":[260,300,180,420,340,280]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Eigener Titel (<code>tipTitle: "Aktivitäten"</code> — statt der Kategorie)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"stacked","tipPin":3,"tipTitle":"Aktivitäten","max":1400,"labels":["Mo","Di","Mi","Do","Fr","Sa"],"series":[{"name":"Laufen","data":[420,360,300,380,520,460]},{"name":"Schwimmen","data":[260,300,180,420,340,280]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Ohne Titelzeile (<code>tipLabel: false</code>)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"stacked","tipPin":3,"tipLabel":false,"max":1400,"labels":["Mo","Di","Mi","Do","Fr","Sa"],"series":[{"name":"Laufen","data":[420,360,300,380,520,460]},{"name":"Schwimmen","data":[260,300,180,420,340,280]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Einheit hinter dem Wert (<code>tipUnit: "kcal"</code> — gedämpft, damit die Zahl führt)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"stacked","tipPin":3,"tipUnit":"kcal","max":1400,"labels":["Mo","Di","Mi","Do","Fr","Sa"],"series":[{"name":"Laufen","data":[420,360,300,380,520,460]},{"name":"Schwimmen","data":[260,300,180,420,340,280]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Summenzeile (<code>tipTotal: true</code>, Beschriftung über <code>tipTotalLabel</code>)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"stacked","tipPin":3,"tipTotal":true,"tipTotalLabel":"Gesamt","max":1400,"labels":["Mo","Di","Mi","Do","Fr","Sa"],"series":[{"name":"Laufen","data":[420,360,300,380,520,460]},{"name":"Schwimmen","data":[260,300,180,420,340,280]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Icons statt Farbfleck (<code>"icon"</code> je Serie — Name aus der Icon-Bibliothek)</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"stacked","tipPin":3,"max":1400,"labels":["Mo","Di","Mi","Do","Fr","Sa"],"series":[{"name":"Laufen","icon":"pulse","data":[420,360,300,380,520,460]},{"name":"Schwimmen","icon":"clock","data":[260,300,180,420,340,280]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Alles zusammen — Icons, Einheit und Summenzeile</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"stacked","tipPin":3,"tipUnit":"kcal","tipTotal":true,"tipTitle":"Aktivitäten","max":1400,"labels":["Mo","Di","Mi","Do","Fr","Sa"],"series":[{"name":"Laufen","icon":"pulse","data":[420,360,300,380,520,460]},{"name":"Schwimmen","icon":"clock","data":[260,300,180,420,340,280]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Derselbe Tooltip an einem runden Chart (Donut) — die Optionen gelten für jeden Typ</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"donut","tipPin":0,"tipIndicator":"line","values":true,"labels":["Direkt","Suche","Verweise","Social"],"series":[{"name":"Besuche","data":[3200,2100,1600,1512]}]}'></div>
+  </div>
+
+</div>
