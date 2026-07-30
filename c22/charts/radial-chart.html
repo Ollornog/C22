@@ -5,9 +5,13 @@
      Balken — nur auf einem Kreisbogen: je Kategorie ein konzentrischer Ring (außen die erste), die
      Bogenlänge ist der Wert am Maßstab "max". Deshalb zählt der Zeiger je RING, nicht je Winkel.
      "track":false nimmt die Spur weg, "grid":true legt ein Polargitter darunter, "round":false
-     macht die Enden eckig, "barLabels":true schreibt den Namen in den Bogen. "start"/"sweep" drehen
-     und beschneiden (sweep 180 = Halbkreis), "inner" ist das Loch. "stack":true legt alle Werte
-     hintereinander in EIN Band — das ist der gestapelte Radialbalken, nicht ein Ring je Kategorie. -->
+     macht die Enden eckig. "barLabels":true setzt den Namen dem Bogen FOLGEND vor den
+     Balkenanfang — also auf die Spur, nicht auf den Balken: die Serienfarben laufen über die halbe
+     Helligkeitsskala, dort wäre keine feste Textfarbe in hell und dunkel lesbar. Ist auf dem Ring
+     kein Platz, bleibt der Name weg (der Tooltip nennt ihn). "start"/"sweep" drehen und
+     beschneiden (sweep 180 = Halbkreis, egal an welcher Kante), "inner" ist das Loch.
+     "stack":true legt alle Werte hintereinander in EIN Band — das ist der gestapelte
+     Radialbalken, nicht ein Ring je Kategorie; er rechnet immer mit eckigen Kappen. -->
 <div class="c22-examples">
 
   <div class="c22-example">
@@ -16,8 +20,13 @@
   </div>
 
   <div class="c22-example">
-    <span class="c22-example-label">Mit Beschriftung im Bogen (<code>barLabels: true</code>, <code>start: 90</code> — Anfang unten; <code>inner: 0.2</code> macht die Bänder breit genug, kurze Namen halten sie lesbar)</span>
-    <div class="mx-auto w-full max-w-md" data-chart='{"type":"radial","barLabels":true,"start":90,"inner":0.2,"max":100,"unit":" %","labels":["Direkt","Suche","Social","Mail","Sonst"],"series":[{"name":"Zielerreichung","data":[86,72,58,44,26]}]}'></div>
+    <span class="c22-example-label">Beschriftung dem Bogen folgend (<code>barLabels: true</code>) — der Name steht vor dem Balken auf der Spur und krümmt mit; wenige Kategorien halten die Bänder dick genug für lesbare Schrift</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"radial","barLabels":true,"inner":0.25,"max":100,"unit":" %","labels":["Direkt","Suche","Social"],"series":[{"name":"Zielerreichung","data":[86,62,34]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Dieselbe Beschriftung mit Anfang unten (<code>start: 90</code>) — der Text folgt dem Bogen und steht auch dort richtig, nicht auf dem Kopf</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"radial","barLabels":true,"start":90,"inner":0.25,"max":100,"unit":" %","labels":["Direkt","Suche","Social"],"series":[{"name":"Zielerreichung","data":[86,62,34]}]}'></div>
   </div>
 
   <div class="c22-example">
@@ -36,8 +45,18 @@
   </div>
 
   <div class="c22-example">
-    <span class="c22-example-label">Gestapelt im Halbkreis (<code>stack: true</code>) — alle Werte in EINEM Band, Summe in der Mitte</span>
+    <span class="c22-example-label">Gestapelt im Halbkreis (<code>stack: true</code>) — alle Werte in EINEM Band, Summe in der Mitte; gestapelte Segmente bekommen eckige Kappen, weil runde eine halbe Bandbreite über jedes Ende ragen und die Nachbarn überlappen würden</span>
     <div class="mx-auto w-full max-w-md" data-chart='{"type":"radial","stack":true,"start":180,"sweep":180,"inner":0.62,"max":10000,"unit":" Besuche","center":{"value":"8.412","label":"Besuche","dy":-16},"labels":["Direkt","Suche","Verweise","Social"],"series":[{"data":[3200,2100,1600,1512]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Halbkreis an einer anderen Kante (<code>start: -90</code>, <code>sweep: 180</code>) — der Zeichenkasten wird aus <code>start</code>/<code>sweep</code> gerechnet, also auch seitlich beschnitten; der Maßstab bleibt derselbe</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"radial","start":-90,"sweep":180,"inner":0.4,"max":100,"unit":" %","labels":["Direkt","Suche","Verweise"],"series":[{"name":"Zielerreichung","data":[86,72,58]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Summenzeile im Tooltip (<code>tipTotal: true</code>) — beim Stapel ist das Ganze das Band, sonst alle Ringe; <code>tipPin</code> hält den Tooltip offen</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"radial","stack":true,"tipTotal":true,"tipTotalLabel":"Gesamt","tipPin":0,"start":180,"sweep":180,"inner":0.62,"max":10000,"unit":" Besuche","labels":["Direkt","Suche","Verweise","Social"],"series":[{"name":"Besuche","data":[3200,2100,1600,1512]}]}'></div>
   </div>
 
   <div class="c22-example">

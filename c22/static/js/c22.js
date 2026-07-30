@@ -1850,7 +1850,9 @@
   // Tooltip-Ausführungen (alle Typen, Vorbild shadcn-Reiter „Tooltips"):
   //   tipIndicator "dot" (Standard) | "line" | "none"   ·   tipLabel:false = ohne Titelzeile
   //   tipTitle "…" = eigener Titel   ·   tipUnit "kcal" = gedämpfte Einheit hinter dem Wert
-  //   tipTotal:true = Summenzeile im Fuß (tipTotalLabel)   ·   Serie mit "icon":"<phosphor>" = Icon
+  //   tipTotal:true = Summenzeile im Fuß (tipTotalLabel); das „Ganze" ist je Geometrie ein anderes
+  //   — kartesisch die Kategorie über alle Serien, beim Kreis der Ring, beim Radial Band/Ringe
+  //   ·   Serie mit "icon":"<phosphor>" = Icon
   //   statt Farbfleck   ·   tipPin:<index> = Tooltip dauerhaft sichtbar (Galerie/Doku zeigen ihn
   //   ohne Zeiger; die Platzierung zieht per ResizeObserver nach, sobald das Element Maße hat —
   //   in einem noch verborgenen Reiter-Panel wäre sie sonst 0).
@@ -1920,15 +1922,21 @@
       : '';
     return kopf + '<div class="chart-tooltip-items">' + items + '</div>' + fuss;
   }
-  // Summenzeile (tipTotal) — die Werte einer Kategorie über alle Serien addiert.
-  function chTotal(cfg, series, i) {
+  // Summenzeile (tipTotal) aus einer fertigen Summe — EINE Stelle für alle Typen. Die runden
+  // Charts zeigen je Zeiger nur EINEN Wert; ihre Summe ist deshalb nicht „über die Serien",
+  // sondern die des Rings bzw. des Stapels (das Ganze, auf das sich der Anteil bezieht). Ohne
+  // diesen gemeinsamen Bauer taten tipTotal/tipTotalLabel auf pie/donut/radial still nichts.
+  function chTotalVon(cfg, summe) {
     if (!cfg.tipTotal) return null;
-    var summe = series.reduce(function (a, se) { return a + (se.data[i] || 0); }, 0);
     return {
       label: cfg.tipTotalLabel || 'Gesamt',
       value: chNum(summe) + (cfg.unit || ''),
       suffix: cfg.tipUnit,
     };
+  }
+  // Summenzeile kartesischer Charts — die Werte einer Kategorie über alle Serien addiert.
+  function chTotal(cfg, series, i) {
+    return chTotalVon(cfg, series.reduce(function (a, se) { return a + (se.data[i] || 0); }, 0));
   }
   // Tooltip in echten Pixeln über einem SVG-Punkt (viewBox-Koordinaten) platzieren.
   function chPlace(tip, svgEl, root, vx, vy, vbW, vbH) {
@@ -2122,14 +2130,41 @@
     chHover(svgEl, show, hide, cfg);
   }
 
-  // Höhe der viewBox runder Charts. Ein Halbkreis (sweep <= 180 ab 180 Grad) füllt nur die OBERE
-  // Hälfte — die untere bliebe leer und das Chart hinge in einem halb leeren Kasten. Nur dieser
-  // eine, geläufige Fall wird beschnitten; alles andere behält den vollen Kasten (eine
-  // Bounding-Box je Geometrie auszurechnen wäre viel Rechnerei für wenig Gewinn).
-  function chHalbHoehe(cy, VBH, startDeg, sweepDeg) {
-    var oben = sweepDeg <= 180 && ((startDeg % 360) + 360) % 360 === 180;
-    return oben ? Math.round(cy + 14) : VBH;
+  // Zeichenkasten runder Charts: so groß, wie die Geometrie WIRKLICH reicht. Ein angeschnittener
+  // Kreis (sweep < 360) füllt das Quadrat nicht — ohne Beschnitt hängt das Chart in einer halb
+  // leeren Fläche. Vorher wurde nur der eine Fall „start genau 180°" behandelt, und zwar nur in
+  // der Höhe; ein Halbkreis als start:-90/sweep:180 (rechte Hälfte) blieb im leeren Kasten.
+  // Jetzt allgemein: die echte Bounding-Box des Winkelbereichs. Extrema eines Bogens liegen an
+  // den Rändern und an jedem Vielfachen von 90° dazwischen; der Mittelpunkt gehört immer dazu
+  // (Treffer-Keile laufen dorthin, die Mittelschrift sitzt dort).
+  // Rückgabe: viewBox-Zeichenkette + Faktor f = Kastenbreite/VBW. Die CSS-Breite wird mit f
+  // multipliziert, damit der Beschnitt nur Leerraum wegnimmt und den MASSSTAB nicht ändert —
+  // sonst würde ein Halbkreis größer gezeichnet als der ganze Kreis daneben.
+  function chRundBox(cx, cy, rMax, startDeg, sweepDeg, VBW, VBH, rand) {
+    rand = rand == null ? 14 : rand;
+    if (!(sweepDeg < 360)) return { vb: '0 0 ' + VBW + ' ' + VBH, f: 1, x: 0, y: 0, w: VBW, h: VBH };
+    var a0 = startDeg, a1 = startDeg + sweepDeg, xs = [0], ys = [0];
+    function nimm(deg) {
+      var a = deg * Math.PI / 180;
+      xs.push(rMax * Math.cos(a)); ys.push(rMax * Math.sin(a));
+    }
+    nimm(a0); nimm(a1);
+    for (var k = Math.ceil(a0 / 90) * 90; k <= a1; k += 90) nimm(k);
+    var x0 = Math.max(0, Math.floor(cx + Math.min.apply(null, xs) - rand));
+    var x1 = Math.min(VBW, Math.ceil(cx + Math.max.apply(null, xs) + rand));
+    var y0 = Math.max(0, Math.floor(cy + Math.min.apply(null, ys) - rand));
+    var y1 = Math.min(VBH, Math.ceil(cy + Math.max.apply(null, ys) + rand));
+    return { vb: x0 + ' ' + y0 + ' ' + (x1 - x0) + ' ' + (y1 - y0), f: (x1 - x0) / VBW, x: x0, y: y0, w: x1 - x0, h: y1 - y0 };
   }
+  // Bogenpfad für <textPath>: von Winkel a nach b (Radiant) auf Radius R. Die LAUFRICHTUNG
+  // entscheidet, wie der Text steht — deshalb ist sie ein Parameter und keine Konstante.
+  function chArcPath(cx, cy, R, a, b) {
+    var large = Math.abs(b - a) > Math.PI ? 1 : 0;
+    return 'M' + (cx + R * Math.cos(a)).toFixed(2) + ',' + (cy + R * Math.sin(a)).toFixed(2) +
+      'A' + R.toFixed(2) + ' ' + R.toFixed(2) + ' 0 ' + large + ' ' + (b > a ? 1 : 0) + ' ' +
+      (cx + R * Math.cos(b)).toFixed(2) + ',' + (cy + R * Math.sin(b)).toFixed(2);
+  }
+  var chUid = 0;   // eindeutige IDs für <textPath href> — mehrere Charts pro Seite sind der Normalfall
 
   // Mittelschrift runder Charts (Donut-Loch, Radial-Mitte) — eine Quelle für beide Renderer.
   function chCenterText(cx, cy, center) {
@@ -2172,10 +2207,13 @@
     reihen.forEach(function (se, si) {
       var data = se.data || [], colors = se.colors || [];
       var bandOut = rOut - si * pitch, R = bandOut - bh / 2, C = 2 * Math.PI * R;
-      var summe = data.reduce(function (a, b) { return a + b; }, 0) || 1;
+      // "summe" ist der TEILER für den Anteil (darf nie 0 werden), "roh" die echte Summe für die
+      // Summenzeile — sonst behauptete ein leerer Ring im Tooltip eine Gesamtmenge von 1.
+      var roh = data.reduce(function (a, b) { return a + b; }, 0);
+      var summe = roh || 1;
       var voll = C * sweepDeg / 360;
       var off = 0;
-      geo.push({ R: R, bh: bh, summe: summe, data: data, colors: colors, mid: [] });
+      geo.push({ R: R, bh: bh, summe: summe, roh: roh, data: data, colors: colors, mid: [] });
       data.forEach(function (v, i) {
         var len = v / summe * voll, sicht = Math.max(0, len - gap);
         segs += '<circle data-seg="' + hitMap.length + '" cx="' + cx + '" cy="' + cy + '" r="' + R.toFixed(2) +
@@ -2212,8 +2250,10 @@
 
     // Treffer außen -> innen ins Markup, damit der äußere Keil den inneren nicht verdeckt:
     // sie liegen in Serien-Reihenfolge, der spätere (innere) gewinnt beim Zeiger.
-    var svg = '<svg viewBox="0 0 ' + VBW + ' ' + chHalbHoehe(cy, VBH, startDeg, sweepDeg) +
-      '" style="display:block;margin:0 auto;width:' + (nameLab ? 240 : 160) + 'px" fill="none">' + segs + labs +
+    // Namen AUSSEN ragen über den Kreis hinaus — dann muss der Kasten bis dorthin reichen.
+    var box = chRundBox(cx, cy, nameLab ? rOut * 1.14 : rOut, startDeg, sweepDeg, VBW, VBH, nameLab ? 30 : 14);
+    var svg = '<svg viewBox="' + box.vb +
+      '" style="display:block;margin:0 auto;width:' + Math.round((nameLab ? 240 : 160) * box.f) + 'px" fill="none">' + segs + labs +
       chCenterText(cx, cy, cfg.center) + hits + '</svg>';
     var m = chMount(root, cfg, svg);
     var svgEl = m.svgEl, tip = m.tip;
@@ -2223,8 +2263,10 @@
       var farbe = chCol(g.colors[z.i] || reihen[z.si].color, z.i);
       var wert = cfg.values ? chNum(v) + (cfg.unit || '') : Math.round(v / g.summe * 100) + ' %';
       var name = reihen.length > 1 ? (reihen[z.si].name || '') : (cfg.values ? (reihen[0].name || '') : (cfg.unit || 'Anteil'));
-      tip.innerHTML = chTipHtml(labels[z.i] || '', [{ color: farbe, label: name, value: wert, suffix: cfg.tipUnit }], cfg);
-      chPlaceRadial(tip, svgEl, root, cx, cy, g.mid[z.i], VBW, g.R + g.bh / 2);   // Kreis-Referenz: Bandaußenrand
+      // Summenzeile: das Ganze, auf das sich der Anteil bezieht — die Summe DIESES Rings.
+      tip.innerHTML = chTipHtml(labels[z.i] || '', [{ color: farbe, label: name, value: wert, suffix: cfg.tipUnit }],
+        cfg, chTotalVon(cfg, g.roh));
+      chPlaceRadial(tip, svgEl, root, cx - box.x, cy - box.y, g.mid[z.i], box.w, g.R + g.bh / 2);   // Kreis-Referenz: Bandaußenrand
       segEls.forEach(function (e, j) { e.style.opacity = j === k ? '1' : '0.3'; });
     }
     function hide() { tip.style.opacity = '0'; segEls.forEach(function (e) { e.style.opacity = '1'; }); }
@@ -2236,9 +2278,10 @@
   // Bogenlänge ist der Wert am Maßstab (max). Technik wie beim Kreis: gestrichelte Kreislinie,
   // Strichbreite = Bandhöhe — deshalb kein eigener Pfad-Generator.
   // Optionen: max · inner (Lochanteil) · start/sweep (Grad; sweep 180 = Halbkreis) ·
-  // track:false (ohne Spur) · grid:true (Polargitter) · round:false (eckige Enden) ·
-  // barLabels:true (Name IM Bogen am Anfang) · center {value,label,dy} ·
-  // stack:true (EIN Band, Werte hintereinander gestapelt statt je Kategorie ein Ring).
+  // track:false (ohne Spur) · grid:true (Polargitter) · round:false (eckige Enden; ein Stapel
+  // rechnet immer mit eckigen) · barLabels:true (Name dem Bogen folgend vor dem Balkenanfang) ·
+  // center {value,label,dy} · stack:true (EIN Band, Werte hintereinander gestapelt statt je
+  // Kategorie ein Ring) · tipTotal (Summenzeile: Stapel = das Band, sonst alle Ringe).
   function chartRadial(root, cfg) {
     var labels = cfg.labels || [];
     var se0 = (cfg.series && cfg.series[0]) || { data: [] };
@@ -2248,8 +2291,13 @@
     var rIn = rOut * inner;
     var startDeg = cfg.start != null ? cfg.start : -90;
     var sweepDeg = Math.min(360, cfg.sweep != null ? cfg.sweep : 360);
-    var kappe = cfg.round === false ? 'butt' : 'round';
     var stack = !!cfg.stack;
+    // Runde Kappen ragen eine HALBE Bandbreite über jedes Segmentende hinaus. Bei einem einzelnen
+    // Balken ist das der gewollte Abschluss; bei gestapelten Segmenten auf EINEM Band überlappen
+    // sich dadurch die Nachbarn (bei dickem Band um bh) und die Grenzen wandern sichtbar. Ein
+    // Stapel bekommt deshalb immer butt-Kappen — nicht als Voreinstellung, sondern als Geometrie:
+    // "round" wäre dort schlicht falsch gerechnet.
+    var kappe = (cfg.round === false || stack) ? 'butt' : 'round';
     var max = cfg.max || (stack
       ? chNiceMax(data.reduce(function (a, b) { return a + b; }, 0) || 1)
       : chNiceMax(Math.max.apply(null, data) || 1));
@@ -2269,6 +2317,37 @@
         '" stroke-linecap="' + kappe + '" stroke-dasharray="' + sicht.toFixed(2) + ' ' +
         Math.max(0.01, b.C - sicht).toFixed(2) + '" stroke-dashoffset="' + (-off).toFixed(2) +
         '" transform="rotate(' + startDeg + ' ' + cx + ' ' + cy + ')"/>';
+    }
+
+    // Beschriftung eines Radialbalkens. Sie FOLGT dem Bogen (<textPath> auf einem <path> mit ID) —
+    // gerader Text auf einem gekrümmten Band hängt sonst halb daneben, und weil alle Bänder am
+    // GLEICHEN Winkel beginnen, stapelten sich die Namen früher zu einer senkrechten Säule.
+    // Entlang des Bogens laufen sie stattdessen jeder auf seinem eigenen Ring und stoßen nie
+    // zusammen. Sie sitzen VOR dem Balkenanfang, also auf der Spur (--muted) bzw. außerhalb eines
+    // angeschnittenen Kreises auf der Fläche — beides Untergründe, auf denen das ROLLEN-PAAR
+    // muted/muted-foreground in hell UND dunkel liest. Auf dem Balken selbst ginge das nicht: die
+    // Serienfarben --chart-1…5 laufen über die halbe Helligkeitsskala, dort ist keine feste
+    // Textfarbe in beiden Erscheinungsbildern lesbar (var(--background) war im Dunkelmodus
+    // fast schwarz auf dunklem Band).
+    function radialLabel(b, len, txt) {
+      if (!txt) return '';
+      var fs = Math.min(9, bh * 0.8);                       // an die BANDHÖHE gebunden, nicht fest
+      var a0 = startDeg * Math.PI / 180;
+      // Abstand zum Balkenanfang: eine runde Kappe ragt bh/2 zurück, sonst nur Luft.
+      var luft = (kappe === 'round' ? bh / 2 : 0) + 3;
+      var frei = b.C - len - luft;                          // Bogenlänge ohne Balken (Spur + Freiraum)
+      var brauch = txt.length * fs * 0.58;                  // Schätzung der Textbreite
+      if (frei < brauch) return '';                         // kein Platz -> lieber nichts (der Tooltip nennt den Namen)
+      var aEnd = a0 - luft / b.R, dA = brauch / b.R;
+      // Laufrichtung entscheidet, wie der Text STEHT: auf der unteren Hälfte stünde er im
+      // Uhrzeigersinn auf dem Kopf, dort muss der Pfad gegen den Uhrzeigersinn laufen.
+      var unten = Math.sin(aEnd - dA / 2) > 0;
+      var id = 'c22-bl-' + (++chUid);
+      var d = unten ? chArcPath(cx, cy, b.R, aEnd, aEnd - dA) : chArcPath(cx, cy, b.R, aEnd - dA, aEnd);
+      return '<path id="' + id + '" d="' + d + '" fill="none" stroke="none"/>' +
+        '<text fill="' + chCol('muted-foreground', 0) + '" dominant-baseline="central" text-anchor="' +
+        (unten ? 'start' : 'end') + '" style="font-size:' + fs.toFixed(1) + 'px;font-weight:600">' +
+        '<textPath href="#' + id + '" startOffset="' + (unten ? '0%' : '100%') + '">' + calEsc(txt) + '</textPath></text>';
     }
 
     var gitter = '', spuren = '', segs = '', hits = '', labs = '', ziele = [];
@@ -2312,40 +2391,28 @@
           b.voll.toFixed(2) + ' ' + Math.max(0.01, b.C - b.voll).toFixed(2) +
           '" transform="rotate(' + startDeg + ' ' + cx + ' ' + cy + ')"/>';
         ziele.push({ R: b.R, a: aEnd, v: v, farbe: chCol(colors[i] || se0.color, i) });
-        if (cfg.barLabels) {
-          // Beschriftung IM Bogen, kurz hinter dem Anfang (wie Recharts „insideStart"). Zwei
-          // Feinheiten, ohne die der Text nicht auf dem Balken liegt:
-          //  • Schrift an die BANDHÖHE gebunden statt fest — bei vielen Ringen sind die Bänder
-          //    schmal, eine feste Größe würde die Nachbarzeile überschreiben.
-          //  • Ausrichtung nach der LAUFRICHTUNG des Bogens: der Bogen läuft im Uhrzeigersinn,
-          //    seine Tangente am Anfang zeigt (-sin, cos). Zeigt sie nach links (Anfang unten),
-          //    muss der Text nach links hängen ("end") — sonst läuft er aus dem Farbband heraus
-          //    ins Leere und ist weiß auf weiß nicht mehr lesbar.
-          var fs = Math.min(9, bh * 0.8);
-          var a0 = startDeg * Math.PI / 180;
-          var aL = a0 + 9 / b.R;
-          labs += '<text x="' + (cx + b.R * Math.cos(aL)).toFixed(1) + '" y="' + (cy + b.R * Math.sin(aL) + fs / 3).toFixed(1) +
-            '" text-anchor="' + (-Math.sin(a0) < 0 ? 'end' : 'start') + '" fill="var(--background)" style="font-size:' +
-            fs.toFixed(1) + 'px;font-weight:600">' + calEsc(labels[i] || '') + '</text>';
-        }
+        if (cfg.barLabels) labs += radialLabel(b, len, labels[i] || '');
       });
     }
 
-    var svg = '<svg viewBox="0 0 ' + VB + ' ' + chHalbHoehe(cy, VB, startDeg, sweepDeg) +
-      '" style="display:block;margin:0 auto;width:200px" fill="none">' +
+    var box = chRundBox(cx, cy, rOut, startDeg, sweepDeg, VB, VB);
+    var svg = '<svg viewBox="' + box.vb +
+      '" style="display:block;margin:0 auto;width:' + Math.round(200 * box.f) + 'px" fill="none">' +
       gitter + spuren + segs + labs + chCenterText(cx, cy, cfg.center) + hits + '</svg>';
     var m = chMount(root, cfg, svg);
     var svgEl = m.svgEl, tip = m.tip;
     var segEls = [].slice.call(svgEl.querySelectorAll('[data-seg]'));
     function show(i) {
       var z = ziele[i];
+      // Summenzeile: beim Stapel die Summe des Bandes, sonst die aller Ringe — in beiden Fällen
+      // das Ganze, in dem dieser Balken steht.
       tip.innerHTML = chTipHtml(labels[i] || '', [{
         color: z.farbe, label: se0.name || labels[i] || '',
         value: chNum(z.v) + (cfg.unit || ''), suffix: cfg.tipUnit, icon: se0.icon,
-      }], cfg);
+      }], cfg, chTotalVon(cfg, data.reduce(function (a, v) { return a + v; }, 0)));
       // Punkt-Referenz: Bogenende auf der Bandmitte (extraR = halbe Bandhöhe, damit der
       // Tooltip nicht auf dem Band klebt).
-      chPlaceRadial(tip, svgEl, root, cx + z.R * Math.cos(z.a), cy + z.R * Math.sin(z.a), z.a, VB, bh / 2);
+      chPlaceRadial(tip, svgEl, root, cx + z.R * Math.cos(z.a) - box.x, cy + z.R * Math.sin(z.a) - box.y, z.a, box.w, bh / 2);
       segEls.forEach(function (e, j) { e.style.opacity = j === i ? '1' : '0.3'; });
     }
     function hide() { tip.style.opacity = '0'; segEls.forEach(function (e) { e.style.opacity = '1'; }); }

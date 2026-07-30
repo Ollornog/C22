@@ -116,8 +116,26 @@ Linie, Donut und Radar — es fehlten Torte, Radial und ein Ort für den Tooltip
   (`nameLabels`), und **mehrere Serien als konzentrische Ringe** (gestapelte Torte).
 - **`radial` — Radialbalken** (`chartRadial`): je Kategorie ein konzentrischer Bogen auf einer
   Spur, Bogenlänge = Wert am Maßstab. Ein Radialbalken IST ein Balken, deshalb zählt der Zeiger je
-  **Ring**, nicht je Winkel. Mit `track`, `grid` (Polargitter), `round`, `barLabels` (Name im
-  Bogen), `center` (Tacho) und `stack` (alle Werte in EINEM Band, Halbkreis mit Summe).
+  **Ring**, nicht je Winkel. Mit `track`, `grid` (Polargitter), `round`, `barLabels`,
+  `center` (Tacho) und `stack` (alle Werte in EINEM Band, Halbkreis mit Summe).
+- **`barLabels` folgt dem Bogen** (`<textPath>` auf einem `<path>` mit ID) und steht **vor** dem
+  Balkenanfang auf der Spur. Gerader Text auf gekrümmtem Band hängt halb daneben; und weil alle
+  Bänder am gleichen Winkel beginnen, stapelten sich die Namen sonst zu einer senkrechten Säule.
+  Entlang des Bogens läuft jeder Name auf seinem eigenen Ring und stößt nie an den Nachbarn. Die
+  Laufrichtung des Pfades kippt auf der unteren Hälfte, sonst stünde der Text dort auf dem Kopf.
+  Gefärbt über das **Rollen-Paar** `muted`/`muted-foreground`, das in hell und dunkel liest — auf
+  dem Balken selbst wäre das unmöglich: `--chart-1…5` laufen über die halbe Helligkeitsskala, keine
+  feste Textfarbe deckt beide Enden. Ist kein Platz, bleibt der Name weg (der Tooltip nennt ihn).
+- **Gestapelte Radialsegmente rechnen mit eckigen Kappen.** Eine runde Kappe ragt eine halbe
+  Bandbreite über jedes Segmentende hinaus — auf EINEM Band überlappen sich dadurch die Nachbarn
+  und die Grenzen wandern sichtbar. Das ist keine Voreinstellung, sondern Geometrie: `round` wäre
+  dort falsch gerechnet.
+- **Der Zeichenkasten runder Charts wird aus `start`/`sweep` gerechnet** — die echte Bounding-Box
+  des Winkelbereichs (Extrema an den Rändern und an jedem Vielfachen von 90°, Mittelpunkt immer
+  dabei). Vorher war nur „`start` genau 180°" behandelt und nur die Höhe beschnitten; ein Halbkreis
+  als `start:-90`/`sweep:180` hing in einem halb leeren Kasten. Die CSS-Breite wird mit dem
+  Beschnitt-Faktor multipliziert, damit nur Leerraum wegfällt und der **Maßstab** gleich bleibt —
+  sonst wäre ein Halbkreis größer gezeichnet als der ganze Kreis daneben.
 - **Radar-Ausführungen** wie im Vorbild: `gridShape:"circle"`, `spokes:false`, `grid:false`,
   `fill:false` (nur Linien), `dots:false`, `rings:<n>`.
 - **Der Tooltip ist eine eigene Achse, kein Anhängsel eines Typs:** `tipIndicator`
@@ -125,6 +143,12 @@ Linie, Donut und Radar — es fehlten Torte, Radial und ein Ort für den Tooltip
   `tipTotal`/`tipTotalLabel` (Summenzeile), `icon` je Serie — und `tipPin`, das ihn ohne Zeiger
   sichtbar hält, damit die Galerie ihn überhaupt zeigen kann. Das Aussehen dazu liegt als Regel in
   `components.css` (SPOT), nicht im Markup. Gilt für jeden Typ, auch die runden.
+- **`tipTotal` gilt wirklich für jeden Typ.** Die Summenzeile baut ein gemeinsamer `chTotalVon`, den
+  alle Renderer füttern — das „Ganze" ist je Geometrie ein anderes: kartesisch die Kategorie über
+  alle Serien, beim Kreis der Ring, auf den sich der Anteil bezieht, beim Radial das Band (Stapel)
+  bzw. alle Ringe. Ohne diese eine Stelle nahmen `chartPie`/`chartRadial` das Argument gar nicht an
+  und die dokumentierte Option tat dort **still nichts** — genau die Fehlerklasse, die wir überall
+  ausräumen.
 - **Neue Partials** `pie-chart.html`, `radial-chart.html`, `radar-chart.html`,
   `tooltip-chart.html`; `chart.html` zeigt als Übersicht jetzt auch Torte und Radial.
 - **`charts.html` zeigt die Typen als Reiter** — kanonische Tabs-Component, eigener Renderer

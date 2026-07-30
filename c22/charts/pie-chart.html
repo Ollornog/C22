@@ -61,6 +61,16 @@
   </div>
 
   <div class="c22-example">
+    <span class="c22-example-label">Halbring an einer anderen Kante (<code>start: -90</code>, <code>sweep: 180</code>) — der Zeichenkasten folgt <code>start</code>/<code>sweep</code>, hier also die rechte Hälfte</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"donut","start":-90,"sweep":180,"inner":0.62,"labels":["Direkt","Suche","Verweise","Social"],"series":[{"data":[38,25,19,18]}]}'></div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Mit Summenzeile im Tooltip (<code>tipTotal: true</code>) — beim Kreis ist das Ganze der Ring, auf den sich der Anteil bezieht; <code>tipPin</code> hält den Tooltip offen</span>
+    <div class="mx-auto w-full max-w-md" data-chart='{"type":"donut","tipTotal":true,"tipTotalLabel":"Ring","tipPin":0,"values":true,"unit":" Besuche","labels":["Direkt","Suche","Verweise","Social"],"series":[{"name":"Besuche","data":[3200,2100,1600,1512]}]}'></div>
+  </div>
+
+  <div class="c22-example">
     <span class="c22-example-label">Gestapelt — zwei Serien als konzentrische Ringe (außen die erste)</span>
     <div class="mx-auto w-full max-w-md" data-chart='{"type":"pie","inner":0.35,"values":true,"unit":" Besuche","labels":["Direkt","Suche","Verweise","Social"],"series":[{"name":"Desktop","data":[3200,2100,1600,900]},{"name":"Mobil","data":[1400,2600,700,1800]}]}'></div>
   </div>
