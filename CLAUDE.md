@@ -98,6 +98,10 @@ Lucide SVGs, uniform markup: `viewBox="0 0 24 24"`, `fill="none"`, `stroke="curr
 `stroke-width="2"`, `stroke-linecap="round"`, `stroke-linejoin="round"`. No filled icons unless the shape
 needs it, no off-convention stroke widths.
 
+**Brand marks are not icons.** Lucide has no brand logos; a GitHub/Google/… mark carries
+`data-icon-brand="<name>"` and sits **outside** the icon-library axis (a brand must not be
+restyled or substituted). Rule 11 fails on a brand name inside `data-icon-lu` — see `docs/icons.md`.
+
 **Every inline lucide icon carries its name**: `data-icon-lu="<lucide-name>"` (the foundation of the
 icon-library axis — see `docs/icons.md`). Adding an icon? Run `python3 tools/annotate-icons.py` (or set
 the name yourself); rule 11 of the hygiene suite fails on unnamed lucide-like SVGs. Don't confuse it with
