@@ -75,3 +75,18 @@ Two annotations are **judgement calls**, kept honest here: the marker document i
 (`file-text` — a two-full-line variant no lucide version draws exactly) and the marker link arrow
 (`arrow-up-right` — a coordinate variant of the same shape). Both are named after the closest
 canonical lucide icon.
+
+## Brand marks are not icons
+
+Lucide dropped brand logos in 2023 — they live in projects like simple-icons. A
+`data-icon-lu="github"` is therefore wrong twice over: the icon-library axis promises that
+anything carrying that attribute can be swapped for another set's glyph, and a *filled* brand
+path rendered with `stroke="currentColor"` is the outline of a solid shape, which never matches
+the stroked icons beside it.
+
+Brand marks carry **`data-icon-brand="<name>"`** instead. They are deliberately **outside** the
+icon-library axis: a brand may not be restyled, recoloured or substituted — that is the point of a
+brand. Rule 11 of the hygiene suite enforces both directions: a brand name in `data-icon-lu` fails,
+and `data-icon-brand` exempts the element from the Lucide naming requirement. The rule carries a
+self-test, and its brand list deliberately omits `x` — that is Lucide's close cross, not Twitter.
+

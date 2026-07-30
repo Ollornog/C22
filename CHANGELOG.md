@@ -6,6 +6,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — Toc: `rail` und `rail-overlay` (Striche statt Text, Beschriftung bei Hover)
+
+Zwei Ausführungen, weil sich „verschiebt es das Layout?" nicht allgemein beantworten lässt:
+- **`rail`** — der Platz ist **reserviert**: die Beschriftung erscheint im vorhandenen Raum,
+  nichts springt, kostet aber Breite.
+- **`rail-overlay`** — die Spur bleibt schmal, ein **Panel** schiebt sich beim Hover über den
+  Inhalt. Eine Fläche hinter allen Zeilen, nicht eine je Zeile: sonst schaut der Inhalt zwischen
+  den Zeilen hervor.
+
+Der Text steckt in einem `<span>` (Markup-Vertrag) — CSS kann einen nackten Textknoten nicht
+verbergen, ohne die Zeile zu opfern — und ist im Ruhezustand **nicht nur unsichtbar, sondern auch
+nicht anklickbar** (`pointer-events: none`); reine Deckkraft wäre ein unsichtbares Ziel für Maus
+und Vorlesesoftware. Die Strichlänge zeigt die Ebene. Kein JavaScript: `:hover`/`:focus-within`.
+
+### Fixed — Regel 11 hielt ein Markenlogo für ein Lucide-Icon
+
+`data-icon-lu="github"` saß in `badge.html` am **offiziellen GitHub-Mark**. Lucide führt seit 2023
+keine Marken (die leben in simple-icons), und ein gefüllter Marken-Pfad mit `stroke="currentColor"`
+ist die Outline einer Füllform — er passt nie zu den gestrichelten Icons daneben. Die Regel prüfte
+nur, **dass** ein Name dasteht, nicht ob er zu Lucide gehört.
+
+Jetzt: Marken tragen **`data-icon-brand="<name>"`** und stehen ausdrücklich **außerhalb** der
+Icon-Library-Achse (eine Marke darf nicht umgefärbt oder ersetzt werden — das ist ihr Zweck).
+Regel 11 schlägt bei einem Markennamen in `data-icon-lu` an und hat dafür einen **Selbsttest**.
+Die Markenliste lässt `x` bewusst weg: das ist Lucides Schließen-Kreuz, nicht Twitter — der erste
+Entwurf produzierte damit sechs Fehlalarme, und ein Fehlalarm ist so schädlich wie ein Loch.
+Dokumentiert in `docs/icons.md` und `CLAUDE.md`.
+
 ### Fixed — bei „Rundung 0" blieb überall eine Minimalrundung
 
 Basecoat/shadcn leitet `--radius-sm/md/xl` **additiv** ab (`calc(var(--radius) ± Npx)`). Damit

@@ -131,13 +131,13 @@
   </div>
 
   <div class="c22-example">
-    <span class="c22-example-label">Linien-Leiste (rail): nur Striche — bei Hover kommt der Text dazu</span>
+    <span class="c22-example-label">Linien-Leiste, Platz reserviert (<code>rail</code>): nur Striche — bei Hover kommt der Text dazu, das Layout bleibt stehen</span>
     <div class="flex w-full max-w-3xl gap-6 rounded-xl border p-4">
-      <nav class="toc shrink-0 self-start" data-variant="rail" data-toc="#toc-d-inhalt" aria-label="Inhalt">
-        <a href="#toc-d-1">Übersicht</a>
-        <a href="#toc-d-2" data-level="2">Anlagen</a>
-        <a href="#toc-d-3" data-level="2">Prüfungen</a>
-        <a href="#toc-d-4">Meldungen</a>
+      <nav class="toc w-44 shrink-0 self-start" data-variant="rail" data-toc="#toc-d-inhalt" aria-label="Inhalt">
+        <a href="#toc-d-1"><span>Übersicht</span></a>
+        <a href="#toc-d-2" data-level="2"><span>Anlagen</span></a>
+        <a href="#toc-d-3" data-level="2"><span>Prüfungen</span></a>
+        <a href="#toc-d-4"><span>Meldungen</span></a>
       </nav>
       <div id="toc-d-inhalt" class="h-64 min-w-0 flex-1 overflow-y-auto pe-2">
         <section id="toc-d-1" class="scroll-mt-2">
@@ -154,6 +154,39 @@
           <div class="bg-muted/40 mt-2 h-36 rounded-md"></div>
         </section>
         <section id="toc-d-4" class="scroll-mt-2 pt-6">
+          <h4 class="font-semibold">Meldungen</h4>
+          <div class="bg-muted/40 mt-2 h-36 rounded-md"></div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <div class="c22-example">
+    <span class="c22-example-label">Linien-Leiste, überlagernd (<code>rail-overlay</code>): schmale Spur, die Beschriftung schiebt sich über den Inhalt</span>
+    <div class="flex w-full max-w-3xl gap-4 rounded-xl border p-4">
+      <nav class="toc self-stretch" data-variant="rail-overlay" data-toc="#toc-e-inhalt" aria-label="Inhalt">
+        <div>
+          <a href="#toc-e-1"><span>Übersicht</span></a>
+          <a href="#toc-e-2" data-level="2"><span>Anlagen und Zubehör</span></a>
+          <a href="#toc-e-3" data-level="2"><span>Prüfungen</span></a>
+          <a href="#toc-e-4"><span>Meldungen</span></a>
+        </div>
+      </nav>
+      <div id="toc-e-inhalt" class="h-64 min-w-0 flex-1 overflow-y-auto pe-2">
+        <section id="toc-e-1" class="scroll-mt-2">
+          <h4 class="font-semibold">Übersicht</h4>
+          <p class="text-muted-foreground py-2 text-sm">Die Spur bleibt schmal. Beim Überfahren legt sich die Beschriftung auf eigener Fläche über den Text — nichts verschiebt sich.</p>
+          <div class="bg-muted/40 h-36 rounded-md"></div>
+        </section>
+        <section id="toc-e-2" class="scroll-mt-2 pt-6">
+          <h4 class="font-semibold">Anlagen und Zubehör</h4>
+          <div class="bg-muted/40 mt-2 h-36 rounded-md"></div>
+        </section>
+        <section id="toc-e-3" class="scroll-mt-2 pt-6">
+          <h4 class="font-semibold">Prüfungen</h4>
+          <div class="bg-muted/40 mt-2 h-36 rounded-md"></div>
+        </section>
+        <section id="toc-e-4" class="scroll-mt-2 pt-6">
           <h4 class="font-semibold">Meldungen</h4>
           <div class="bg-muted/40 mt-2 h-36 rounded-md"></div>
         </section>

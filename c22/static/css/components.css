@@ -242,44 +242,87 @@
   .toc[data-orientation='horizontal'] {
     @apply flex-row flex-wrap items-center gap-1;
   }
-  /* ── rail: Linien links, Text bei Hover ────────────── */
-  /* Die Leiste zeigt im Ruhezustand nur Striche — Laenge nach Ebene, der aktive kraeftiger.
-     Beim Ueberfahren (oder Tastatur-Fokus irgendwo darin) waechst sie und gibt die
-     Beschriftung frei. Kein JavaScript: das ist :hover/:focus-within plus eine Breite. */
-  .toc[data-variant='rail'] {
+  /* ── rail: Striche statt Text, Beschriftung erst bei Hover ─────────────
+     Markup-Vertrag: der Text steckt in einem <span> — CSS kann einen nackten Textknoten nicht
+     verbergen, ohne die ganze Zeile zu opfern. Zwei Ausfuehrungen, weil sich die Frage
+     „verschiebt es das Layout?" nicht allgemein beantworten laesst:
+       data-variant="rail"         Platz ist RESERVIERT — nichts springt, kostet aber Breite.
+       data-variant="rail-overlay" Die Leiste ist schmal, die Beschriftung legt sich beim
+                                   Hover UEBER den Inhalt (eigene Flaeche, Schatten).
+     Beides ohne JavaScript: :hover/:focus-within. Die Strichlaenge zeigt die Ebene. */
+  .toc[data-variant='rail'],
+  .toc[data-variant='rail-overlay'] {
     @apply gap-1.5;
   }
-  .toc[data-variant='rail'] a {
-    @apply flex items-center gap-2 overflow-hidden whitespace-nowrap px-0 py-1;
-    /* zugeklappt: nur der Strich ist zu sehen */
-    max-width: calc(var(--spacing) * 9);
-    transition: max-width var(--default-transition-duration) var(--default-transition-timing-function);
+  .toc[data-variant='rail'] a,
+  .toc[data-variant='rail-overlay'] a {
+    @apply flex items-center gap-2 whitespace-nowrap px-0 py-1;
   }
-  .toc[data-variant='rail'] a::before {
+  .toc[data-variant='rail'] a::before,
+  .toc[data-variant='rail-overlay'] a::before {
     content: '';
     @apply bg-muted-foreground/40 h-0.5 shrink-0 rounded-full transition-all;
     width: calc(var(--spacing) * 6);
   }
-  /* Ebene = Strichlaenge: tiefer liegende Eintraege sind kuerzer angebunden. */
-  .toc[data-variant='rail'] a[data-level='2']::before { width: calc(var(--spacing) * 4); }
-  .toc[data-variant='rail'] a[data-level='3']::before { width: calc(var(--spacing) * 3); }
-  .toc[data-variant='rail'] a[aria-current='true']::before {
+  .toc[data-variant='rail'] a[data-level='2']::before,
+  .toc[data-variant='rail-overlay'] a[data-level='2']::before { width: calc(var(--spacing) * 4); }
+  .toc[data-variant='rail'] a[data-level='3']::before,
+  .toc[data-variant='rail-overlay'] a[data-level='3']::before { width: calc(var(--spacing) * 3); }
+  .toc[data-variant='rail'] a[aria-current='true']::before,
+  .toc[data-variant='rail-overlay'] a[aria-current='true']::before {
     @apply bg-primary;
     height: 3px;
   }
-  /* Aufgeklappt: genug Breite fuer die laengste Beschriftung. */
-  .toc[data-variant='rail']:hover a,
-  .toc[data-variant='rail']:focus-within a {
-    max-width: calc(var(--spacing) * 56);
-  }
-  /* Der Einzug der Ebenen kommt hier aus der Strichlaenge, nicht aus Polsterung — sonst
-     wanderte der Strich mit und die Leiste waere im Ruhezustand nicht mehr geordnet. */
-  .toc[data-variant='rail'] a[data-level='2'],
-  .toc[data-variant='rail'] a[data-level='3'],
-  .toc[data-variant='rail'] a[data-level='4'] {
+  /* Der Einzug kommt aus der Strichlaenge, nicht aus Polsterung — sonst wanderte der Strich
+     mit und die Leiste waere im Ruhezustand nicht mehr auf einer Kante. */
+  .toc[data-variant='rail'] a[data-level],
+  .toc[data-variant='rail-overlay'] a[data-level] {
     padding-inline-start: 0;
   }
 
+  /* Die Beschriftung: unsichtbar UND nicht anklickbar, solange die Leiste ruht. Nur
+     `opacity` waere ein unsichtbares Ziel fuer Maus und Vorlesesoftware. */
+  .toc[data-variant='rail'] a > span,
+  .toc[data-variant='rail-overlay'] a > span {
+    @apply pointer-events-none opacity-0;
+    transition: opacity var(--default-transition-duration) var(--default-transition-timing-function);
+  }
+  .toc[data-variant='rail']:hover a > span,
+  .toc[data-variant='rail']:focus-within a > span,
+  .toc[data-variant='rail-overlay']:hover a > span,
+  .toc[data-variant='rail-overlay']:focus-within a > span {
+    @apply pointer-events-auto opacity-100;
+  }
+
+  /* rail: Platz reserviert. Die Breite gibt das Markup vor (z.B. `w-48`) und bleibt konstant. */
+
+  /* rail-overlay: schmale Spur, das PANEL schiebt sich darueber.
+     Markup: `<nav class="toc" data-variant="rail-overlay"><div>…Links…</div></nav>` — die Spur
+     behaelt ihre Breite (nichts springt), das innere Panel liegt absolut und waechst beim Hover
+     ueber den Inhalt. EINE Flaeche hinter allen Zeilen, nicht eine je Zeile: sonst schaut der
+     Inhalt zwischen den Zeilen hervor und die Leiste wird unruhig. */
+  .toc[data-variant='rail-overlay'] {
+    @apply relative shrink-0;
+    width: calc(var(--spacing) * 8);
+  }
+  .toc[data-variant='rail-overlay'] > div {
+    @apply absolute inset-y-0 start-0 flex w-max flex-col gap-1.5 rounded-md;
+    transition: background-color var(--default-transition-duration) var(--default-transition-timing-function);
+  }
+  .toc[data-variant='rail-overlay'] a {
+    @apply w-max max-w-none ps-0 pe-2;
+  }
+  /* Erst im Hover-Zustand wird das Panel zur Flaeche — vorher waere es ein durchsichtiger
+     Kasten ueber dem Inhalt, der Klicks abfaengt. */
+  .toc[data-variant='rail-overlay']:hover,
+  .toc[data-variant='rail-overlay']:focus-within {
+    @apply z-10;
+  }
+  .toc[data-variant='rail-overlay']:hover > div,
+  .toc[data-variant='rail-overlay']:focus-within > div {
+    @apply bg-popover shadow-md;
+    padding: calc(var(--spacing) * 2);
+  }
 
   /* ── hamburger: die Linien SIND das Verzeichnis ───────── */
   /* Zugeklappt zeigt der Knopf so viele Linien, wie es Eintraege gibt (nicht die ueblichen

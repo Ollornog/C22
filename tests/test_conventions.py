@@ -342,6 +342,22 @@ LUCIDE_KENN = ('stroke="currentColor"', 'stroke-linecap="round"', 'stroke-linejo
 ICON_LU = re.compile(r'data-icon-lu="([^"]*)"')
 
 
+# Lucide führt seit 2023 KEINE Markenlogos mehr (die leben in simple-icons). Ein `data-icon-lu`
+# mit einem Markennamen ist deshalb immer falsch — und zwar doppelt: die Icon-Library-Achse
+# verspricht, dass jedes so ausgezeichnete Icon durch ein anderes Set ersetzbar ist, und ein
+# gefüllter Marken-Pfad mit `stroke="currentColor"` ist zusätzlich die Outline einer Füllform.
+# Marken tragen deshalb `data-icon-brand="<name>"` und bleiben von der Achse ausgenommen.
+# (Gefunden 2026-07-30 an badge.html: `data-icon-lu="github"` am offiziellen GitHub-Mark.)
+MARKEN = {
+    "github", "gitlab", "google", "apple", "microsoft", "amazon", "facebook", "meta",
+    # „x" gehört NICHT hierher: das ist Lucides Schliess-Kreuz und kommt im Repo dutzendfach
+    # vor. Die Marke heisst hier „x-twitter" — ein Fehlalarm wäre so schädlich wie ein Loch.
+    "twitter", "x-twitter", "instagram", "linkedin", "youtube", "discord", "slack", "figma",
+    "notion", "paypal", "stripe", "dropbox", "spotify", "netflix", "twitch", "reddit",
+}
+ICON_BRAND = re.compile(r'data-icon-brand="([^"]*)"')
+
+
 def r11_lucide_namen() -> list[str]:
     treffer: list[str] = []
     for p in KOMPONENTEN:
@@ -351,10 +367,17 @@ def r11_lucide_namen() -> list[str]:
                 tag = ln[m.start():ende if ende != -1 else len(ln)]
                 if not all(k in tag for k in LUCIDE_KENN):
                     continue
+                if ICON_BRAND.search(tag):
+                    continue            # ausdrücklich als Marke ausgewiesen
                 name = ICON_LU.search(tag)
                 if not name or not name.group(1).strip():
                     treffer.append(f"{rel(p)}:{i}  Lucide-<svg> ohne data-icon-lu "
                                    f"— tools/annotate-icons.py laufen lassen")
+                elif name.group(1).strip().lower() in MARKEN:
+                    treffer.append(f"{rel(p)}:{i}  data-icon-lu=\"{name.group(1)}\" ist ein "
+                                   f"MARKENLOGO — Lucide führt keine Marken. Als "
+                                   f"data-icon-brand=\"…\" auszeichnen (nicht von der "
+                                   f"Icon-Library-Achse erfasst)")
     return treffer
 
 
@@ -377,7 +400,7 @@ ERLAUBTE_VARIANTEN = {
     "line", "label", "elevated", "card", "bordered", "separator", "mono", "browser", "grid",
     # Formen des Inhaltsverzeichnisses (components/toc.html): flache Liste, eingerückter Baum,
     # enge Fassung, und der Hamburger, dessen Linien selbst das Verzeichnis sind.
-    "list", "tree", "compact", "hamburger", "rail",
+    "list", "tree", "compact", "hamburger", "rail", "rail-overlay",
 }
 VARIANT_ATTR = re.compile(r'data-variant="([^"]*)"')
 
@@ -400,6 +423,26 @@ def r12_variant_vokabular() -> list[str]:
     for p in KOMPONENTEN:
         treffer += _variant_verstoesse(strip_kommentare(p.read_text(encoding="utf-8")), rel(p))
     return treffer
+
+
+def r11_selbsttest() -> bool:
+    """Der Marken-Zweig muss anschlagen — und die Ausnahme muss greifen."""
+    marke = '<svg data-icon-lu="github" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M0 0"/></svg>'
+    erlaubt = '<svg data-icon-brand="github" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M0 0"/></svg>'
+    def pruef(quelle: str) -> list[str]:
+        aus = []
+        for m in SVG_OPEN.finditer(quelle):
+            ende = quelle.find(">", m.start())
+            tag = quelle[m.start():ende if ende != -1 else len(quelle)]
+            if not all(k in tag for k in LUCIDE_KENN):
+                continue
+            if ICON_BRAND.search(tag):
+                continue
+            n = ICON_LU.search(tag)
+            if n and n.group(1).strip().lower() in MARKEN:
+                aus.append("marke")
+        return aus
+    return bool(pruef(marke)) and not pruef(erlaubt)
 
 
 def r12_selbsttest() -> bool:
@@ -441,8 +484,9 @@ r.check("Regel 9 — keine Streuner-Tags (</content>/</invoke>/<content)",
         not (t := r9_streuner_tags()), " | ".join(t[:6]))
 r.check("Regel 10 — kein aria-pressed:/aria-checked:-Arbitrary-Variant im Markup",
         not (t := r10_aria_variant_utilities()), " | ".join(t[:6]))
-r.check("Regel 11 — jedes Lucide-<svg> trägt ein nicht-leeres data-icon-lu",
+r.check("Regel 11 — Lucide-<svg> mit Namen, Markenlogos als data-icon-brand",
         not (t := r11_lucide_namen()), " | ".join(t[:6]))
+r.check("Regel 11 — Selbsttest (Marken-Erkennung greift wirklich)", r11_selbsttest())
 r.check("Regel 12 — data-variant nur aus dem festen Vokabular (color-roles.html)",
         not (t := r12_variant_vokabular()), " | ".join(t[:6]))
 r.check("Regel 12 — Selbsttest (Vokabular-Regel greift wirklich)", r12_selbsttest())
