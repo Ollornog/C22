@@ -175,10 +175,10 @@ Derived from a single `--radius`, per shadcn:
 
 ```css
 --radius: 0.625rem;
---radius-sm: calc(var(--radius) - 4px);
---radius-md: calc(var(--radius) - 2px);
+--radius-sm: calc(var(--radius) * 0.6);
+--radius-md: calc(var(--radius) * 0.8);
 --radius-lg: var(--radius);
---radius-xl: calc(var(--radius) + 4px);
+--radius-xl: calc(var(--radius) * 1.4);
 ```
 
 ### Typography scale (target — Phase A)
@@ -252,8 +252,12 @@ Phase C — the point of Phases A/B is only to make the token seams exist.
   deliberate extension, aware it diverges. *(confidence: medium)*
 - **"theme" field name** — the accent axis's exact `/create` field name is only moderately evidenced;
   the *concept* (named accent → `--primary`/`--ring`) is solid. *(confidence: medium)*
-- **Radius multipliers** — sources differ (`calc(… - 4px)` vs `× 0.6`); the principle "one `--radius`,
-  scale derived" is certain, the exact steps are a C22 choice.
+- **Radius multipliers** — **decided 2026-07-30 in favour of multiplication**, on an argument the
+  sources do not give: an *additive* derivation cannot close the axis. With `--radius: 0`,
+  `calc(var(--radius) + 4px)` still yields 4px, so every card kept a residual rounding in a square
+  pack — the axis silently refused its own end value. C22 derives `sm/md/lg/xl` as
+  `× 0.6 / × 0.8 / × 1 / × 1.4`, which reproduces the previous pixel values at the default
+  `0.625rem` (6 / 8 / 10 / 14 px) and reaches a true 0.
 
 Full primary-source research (dated 2026-07-17, adversarially checked) is kept on the maintainer's
 notes — this document is the repo-facing summary.
