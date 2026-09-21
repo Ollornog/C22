@@ -16,7 +16,7 @@ step() { printf '\n\033[1m▸ %s\033[0m\n' "$1"; }
 fail() { printf '\n\033[31m✗ %s\033[0m\n' "$1" >&2; exit 1; }
 
 # Die Tests importieren c22 aus dem Quellbaum (die Suiten legen den Repo-Root auf den Pfad)
-# — eine Installation ist dafür nicht nötig. Gebraucht wird nur Python >= 3.10; die dev-Extras
+# — eine Installation ist dafür nicht nötig. Gebraucht wird nur Python >= 3.12; die dev-Extras
 # (websockets/httpx) erst der spätere visuelle Test, dann greift der uv-Zweig.
 usable() { [[ -x "$1" ]] && "$1" -c 'import sys; raise SystemExit(0 if sys.version_info >= (3, 10) else 1)' 2>/dev/null; }
 PY=""
@@ -31,7 +31,12 @@ if [[ -z "$PY" ]]; then
     uv pip install -q --python .venv/bin/python -e ".[dev]" || fail "uv pip install"
     PY=".venv/bin/python"
 fi
-step "Interpreter: $("$PY" -c 'import sys; print(sys.executable)')"
+# Die Zeile ist der BELEG fuer `ci-local --matrix`: der Laeufer liest sie zurueck und
+# vergleicht die Versionsnummer mit dem angeforderten Bein. Bis 2026-09-22 stand hier
+# nur `sys.executable` — ein Pfad wie /opt/venvs/py313/bin/python nennt keine Version,
+# und die Matrix lief deshalb in diesem Repo NIE durch ("unbelegt", Exit 1). Die
+# Version gehoert also zuerst, der Pfad bleibt daneben stehen (er verraet das venv).
+step "Interpreter: $("$PY" -c 'import sys; print(sys.version.split()[0], "@", sys.executable)')"
 
 if [[ $FAST -eq 1 ]]; then
     step "Suiten ohne visuellen Test (--fast)"

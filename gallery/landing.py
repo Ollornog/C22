@@ -132,8 +132,8 @@ def inhalt(anzahl: dict[str, int] | None = None, assets: str = "../") -> str:
       <a href="{REPO}" class="btn" data-variant="outline">{ICON_GITHUB}{zwei("Auf GitHub", "On GitHub")}</a>
     </div>
     <p class="text-muted-foreground text-sm">{zwei(
-        f'MIT-Lizenz · Python 3.10+ · Basecoat + Tailwind CSS v4 · alles lokal, kein CDN',
-        f'MIT licence · Python 3.10+ · Basecoat + Tailwind CSS v4 · everything local, no CDN')}</p>
+        f'MIT-Lizenz · Python 3.12+ · Basecoat + Tailwind CSS v4 · alles lokal, kein CDN',
+        f'MIT licence · Python 3.12+ · Basecoat + Tailwind CSS v4 · everything local, no CDN')}</p>
   </section>
 
   <section class="grid gap-4 sm:grid-cols-2">{karten}</section>
