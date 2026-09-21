@@ -16,7 +16,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import subprocess  # noqa: E402
-from _kit import backlog, hygiene  # noqa: E402
+from _kit import backlog, hygiene, manifest  # noqa: E402
 from _kit.report import Report  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -25,6 +25,16 @@ r = Report("Hygiene — Repo")
 POLICY = hygiene.lade_policy()
 PROJEKTE = ["TinySesam", "DashMyBoard", "C22"]
 DATEIEN = hygiene.getrackte_dateien(str(ROOT))
+
+# ---- Die gevendorte Testbasis ist unverändert
+# Steht bewusst VOR allem anderen: jede folgende Prüfung kommt aus genau diesen Dateien.
+# Wer hier in der Kopie nachbessert statt im Kit, schwächt den Wächter still — und genau
+# das ist am 2026-09-21 passiert (derselbe Backlog-Fehler zweimal behoben, das zweite Mal
+# von Hand auf main). Bis 2026-09-22 gab es die Prüfung nur als `repokit check` auf dem
+# Tower; hier lief sie nie (repokit#9).
+_kit_drift = manifest.pruefe(str(ROOT))
+r.check(f"tests/_kit unverändert (Kit {manifest.version(str(ROOT))}; sonst: repokit sync .)",
+        not _kit_drift, " | ".join(_kit_drift[:3]))
 
 # ---- Pflichtdateien (zweisprachig, wo es den Leser betrifft)
 PFLICHT = [
@@ -36,7 +46,7 @@ PFLICHT = [
     ".github/workflows/ci.yml", ".github/workflows/pages.yml", ".github/dependabot.yml",
     # Die veröffentlichte Website: Bau-Skript und die Quelle ihrer Pflichtangaben.
     "scripts/build-site.py", "gallery/legal.py",
-    "tests/_kit/hygiene.py", "tests/_kit/backlog.py",
+    "tests/_kit/hygiene.py", "tests/_kit/backlog.py", "tests/_kit/manifest.py",
     "scripts/_backlog.py", "backlog/README-KONVENTION.md", "tests/run_all.py", "tests/test_repo.py",
     "c22/__init__.py",
 ]
