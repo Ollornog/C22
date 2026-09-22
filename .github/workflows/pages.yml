@@ -34,10 +34,14 @@ on:
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 
+# Nur LESEN auf Workflow-Ebene. `pages: write` und `id-token: write` braucht
+# ausschliesslich der deploy-Job und stehen deshalb dort — auf Workflow-Ebene
+# haetten sie auch der build-Job und jede Action darin, die dort fremden Code
+# ausfuehrt (Tailwind-CLI-Download, build-site.py). Von zizmor gefunden
+# (excessive-permissions, 2 x high), als das Workflow-Gate in ci-local zum
+# ersten Mal lief.
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 # Deployments dürfen sich nicht überholen — und ein laufendes nicht abbrechen.
 concurrency:
@@ -80,6 +84,10 @@ jobs:
     needs: build
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
+    # Hier — und nur hier — werden die Schreibrechte gebraucht.
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
