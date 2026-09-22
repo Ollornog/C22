@@ -437,7 +437,7 @@ def inhalt() -> str:
     // Anzeige, wie sie ist — ein Feld, das den geltenden Wert nicht kennt, darf ihn nicht
     // überschreiben.
     for (var i = 0; i < el.options.length; i++) {{
-      if (el.options[i].value.replace(/\s+/g, '') === String(wert).replace(/\s+/g, '')) {{
+      if (el.options[i].value.replace(/\\s+/g, '') === String(wert).replace(/\\s+/g, '')) {{
         el.selectedIndex = i;
         return el.options[i].textContent;
       }}

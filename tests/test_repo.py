@@ -36,6 +36,15 @@ _kit_drift = manifest.pruefe(str(ROOT))
 r.check(f"tests/_kit unverändert (Kit {manifest.version(str(ROOT))}; sonst: repokit sync .)",
         not _kit_drift, " | ".join(_kit_drift[:3]))
 
+# ---- Ist die Dateiliste überhaupt vollständig? (Kit 0.14.0)
+# Eine leere oder lückenhafte Liste macht JEDE folgende Prüfung grün, ohne dass sie
+# etwas gesehen hätte. Der echte Fall war nicht „leer": über `git archive` fehlte das
+# ganze `.github/` (per `export-ignore`) — also genau die Workflows, die weiter unten
+# geprüft werden. Deshalb zählt die Prüfung mit `root` gegen `git ls-tree`.
+_liste = hygiene.pruefe_dateiliste_plausibel(DATEIEN, root=str(ROOT))
+r.check(f"Dateiliste ist vollständig ({len(DATEIEN)} getrackte Dateien)",
+        not _liste, " | ".join(_liste[:3]))
+
 # ---- Pflichtdateien (zweisprachig, wo es den Leser betrifft)
 PFLICHT = [
     "README.md", "i18n/README.de.md", "LICENSE", "CHANGELOG.md",
@@ -77,6 +86,21 @@ adressen = hygiene.pruefe_adressen(str(ROOT), DATEIEN, POLICY,
 # (tailwindcss.com) nennen; die Beispieladress-Regel gilt nur für UNSEREN Code.
 adressen = [a for a in adressen if not a.startswith("c22/vendor/")]
 r.check("nur neutrale Beispieladressen", not adressen, " | ".join(sorted(set(adressen))[:4]))
+
+# ---- Dieselbe Regel für Hostnamen OHNE `https://` davor (Kit 0.14.0)
+# Die Lücke, durch die in einem anderen öffentlichen Repo ein realer Firmenname fiel:
+# `pruefe_adressen` sucht nur URLs mit Schema, und das Muster für private Infrastruktur
+# verlangt drei Namensteile — eine blanke Second-Level-Domain fällt durch beide.
+#
+# Der `grundstock` ist die von Hand DURCHGESEHENE Liste der Adressen, die hier schon
+# stehen und in Ordnung sind — nicht automatisch erzeugt. Genau darin liegt sein Wert:
+# ab jetzt wird jede NEUE blanke Adresse rot und muss einzeln angesehen werden. Wer ihn
+# maschinell nachwachsen lässt, segnet damit den nächsten echten Kundennamen ab.
+blank = hygiene.pruefe_blanke_adressen(
+    str(ROOT), DATEIEN, POLICY,
+    grundstock=["python.org", "devguide.python.org", "flaticon.com", "basecoatui.com",
+                "images.unsplash.com", "ui.shadcn.com", "ollornog.github.io"])
+r.check("keine fremden Hostnamen ohne Schema", not blank, " | ".join(sorted(set(blank))[:4]))
 
 # ---- Version steht überall gleich
 version = re.search(r'^version\s*=\s*"([^"]+)"',
@@ -153,6 +177,16 @@ r.check("geführte Matrix widerspricht der Rolling-Regel nicht", not _rr, " | ".
 # main-Lauf hängt hinterher kein Abbild und kein Required Check.
 _cip = hygiene.pruefe_kein_abbruch_auf_default_branch(str(ROOT), DATEIEN)
 r.check("kein unbedingtes cancel-in-progress auf main", not _cip, " | ".join(_cip[:3]))
+
+# ---- Jeder `actions/checkout` gibt das Token nicht an die folgenden Schritte weiter
+# EBENE: eigene Härtung, KEIN belegter Standard — GitHub empfiehlt
+# `persist-credentials: false` nirgends ausdrücklich. Es zählt dort, wo nach dem
+# Checkout fremder Code läuft (`pip install -e`, der Tailwind-Download in pages.yml).
+# Ausnahmen bräuchte nur ein Job, der selbst pusht; keiner hier tut das — release.yml
+# legt das Release über `gh` mit GH_TOKEN an, pages.yml veröffentlicht per OIDC.
+_pc = hygiene.pruefe_persist_credentials(str(ROOT), DATEIEN)
+r.check("jeder actions/checkout setzt persist-credentials: false",
+        not _pc, " | ".join(_pc[:3]))
 
 # ---- Der Wächter über den Wächtern (repokit 0.13.0)
 # Er meldet jede Kit-Prüfung, die ausgeliefert, aber nicht gerufen wird — genau der

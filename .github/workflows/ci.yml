@@ -34,7 +34,14 @@ jobs:
         python: ["3.12", "3.13", "3.14"]
 
     steps:
+      # `persist-credentials: false` ist EIGENE Härtung, kein belegter Standard — GitHub
+      # empfiehlt es nirgends ausdrücklich. Seit checkout@v6 liegt das Token in
+      # $RUNNER_TEMP statt in .git/config; es zählt dort, wo nach dem Checkout FREMDER
+      # Code läuft — hier `pip install -e` und die Suite. Kein Job dieses Repos pusht
+      # selbst, deshalb braucht es nirgends eine Ausnahme.
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0  # v7.0.0
+        with:
+          persist-credentials: false
 
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1  # v6.3.0
         with:
