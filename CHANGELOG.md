@@ -6,6 +6,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Security — `persist-credentials: false` an jedem `actions/checkout`
+
+Ohne den Schalter legt `checkout` das Token so ab, dass **jeder spätere Schritt desselben
+Jobs** es lesen kann. Das zählt dort, wo nach dem Checkout fremder Code läuft: `pip install -e`
+in der CI, der Tailwind-Download im Website-Bau. Seit `checkout@v6` liegt das Token in
+`$RUNNER_TEMP` statt in `.git/config` — kleiner als die oft zitierte `.git/config`-Begründung,
+aber nicht weg.
+
+Die Ebene gehört dazu: das ist **eigene Härtung, kein belegter Standard** — GitHub empfiehlt es
+nirgends ausdrücklich. Ausnahmen bräuchte nur ein Job, der selbst pusht; keiner in diesem Repo
+tut das (`release.yml` legt das Release über `gh` mit `GH_TOKEN` an, `pages.yml` veröffentlicht
+per OIDC). Eine neue Prüfung hält das fest, statt es der Aufmerksamkeit zu überlassen.
+
+### Added — drei Hygiene-Prüfungen aus der geteilten Testbasis (Kit 0.14.0)
+
+- **Ist die Dateiliste überhaupt vollständig?** Eine leere oder lückenhafte Liste macht jede
+  folgende Prüfung grün, ohne dass sie etwas gesehen hätte. Der gemessene Fall war nicht „leer":
+  über `git archive` fehlte das ganze `.github/` (per `export-ignore`) — also genau die Workflows,
+  die weiter unten geprüft werden. Die Prüfung zählt jetzt gegen `git ls-tree` und nennt die
+  fehlenden Pfade.
+- **Fremde Hostnamen ohne `https://` davor.** Die bestehende Adress-Prüfung sucht nur URLs **mit**
+  Schema, das Muster für private Infrastruktur verlangt **drei** Namensteile — eine blanke
+  Second-Level-Domain fällt durch beide. In einem anderen öffentlichen Repo fiel so ein realer
+  Firmenname durch. Der Grundstock der bereits vorhandenen Adressen wurde **von Hand
+  durchgesehen**; ab jetzt wird jede neue blanke Adresse rot.
+- **`persist-credentials`** — siehe oben.
+
 ### Changed — Python 3.12 is the new floor (matrix 3.12 / 3.13 / 3.14)
 
 `requires-python` moves from `>=3.10` to `>=3.12`, and CI runs **3.12, 3.13, 3.14** instead
