@@ -6,6 +6,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed — Python 3.12 is the new floor (matrix 3.12 / 3.13 / 3.14)
+
+`requires-python` moves from `>=3.10` to `>=3.12`, and CI runs **3.12, 3.13, 3.14** instead
+of 3.10 / 3.12 / 3.13.
+
+The rule behind it is not a number but a window: **the last three stable minors**. Python 3.10
+reaches end of life on 2026-10-31, and a version nobody tests any more is a promise without
+cover. The upper bound stays at 3.14 on purpose — 3.15 arrives on 2026-10-01 but only enters
+the gate once it has actually been run, not on the day it ships.
+
+The matrix is now kept in **one** place (`repokit`, `tests/_kit/python_matrix.json`); the CI
+image `ci-python-web` carries the same three interpreters.
+
 ### Fixed — Charts: Nachlese aus der Abnahme
 
 - **Beschriftung im Segment war unlesbar.** Der erste Entwurf färbte sie mit
