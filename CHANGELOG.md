@@ -33,6 +33,14 @@ per OIDC). Eine neue Prüfung hält das fest, statt es der Aufmerksamkeit zu üb
   durchgesehen**; ab jetzt wird jede neue blanke Adresse rot.
 - **`persist-credentials`** — siehe oben.
 
+### Fixed — ungültige Escape-Sequenz in `gallery/generator.py`
+
+Zeile 440 schrieb das JavaScript-Muster `/\s+/g` als `\s` statt `\\s`, Zeile 387 dieselbe
+Konstruktion korrekt. Python fängt ein unbekanntes Escape heute noch ab, das erzeugte JavaScript
+war also identisch — aber es warnt bei jedem Import (`SyntaxWarning: invalid escape sequence`)
+und soll laut PEP eines Tages ein `SyntaxError` werden. Aufgefallen ist es erst, als die neue
+Adress-Prüfung anfing, die Python-Dateien des Repos zu parsen.
+
 ### Changed — Python 3.12 is the new floor (matrix 3.12 / 3.13 / 3.14)
 
 `requires-python` moves from `>=3.10` to `>=3.12`, and CI runs **3.12, 3.13, 3.14** instead
