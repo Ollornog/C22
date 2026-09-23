@@ -13,6 +13,15 @@ updates:
       interval: monthly
     commit-message:
       prefix: "ci"
+    groups:
+      # Patch und Minor zusammen in EINEN PR. Majors bleiben absichtlich draußen und
+      # kommen einzeln: ein Major kann die Laufzeit wechseln (node20 → node24) oder
+      # Eingaben entfernen, das gehört einzeln angesehen. Ein Patch-Bump mit gepinntem
+      # SHA und grüner Suite braucht das nicht. Seit 2026-09-23 wird von Hand gemergt
+      # (Auto-Merge ist aus) — die Bündelung ist die Gegenleistung dafür.
+      klein:
+        patterns: ["*"]
+        update-types: ["patch", "minor"]
   # Die Abhängigkeiten selbst. Bis 2026-09-22 fehlten sie hier: Dependabot meldete zwar
   # Sicherheitslücken (das tut es repo-weit), aber es gab keine regulären Versions-PRs.
   # ⚠️ Grenze, gemessen an TinySesam: bei einem Projekt mit `>=`-Untergrenzen hebt die
@@ -25,5 +34,9 @@ updates:
       interval: monthly
     groups:
       # Ein PR je Monat statt einem je Paket — sonst ertrinkt ein Solo-Projekt in Rauschen.
-      alle:
+      # Wie oben nur Patch und Minor; ein Major kommt einzeln. Zwei Gruppen mit
+      # patterns ["*"] im selben Block dürfen sich nicht überschneiden, deshalb ist das
+      # EINE Gruppe mit Filter und keine zweite daneben.
+      klein:
         patterns: ["*"]
+        update-types: ["patch", "minor"]
