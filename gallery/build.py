@@ -697,7 +697,17 @@ def render_generator() -> tuple[str, int]:
 
     Ohne Inhaltsspalte: die Achsen-Leiste IST die Navigation dieser Seite.
     """
-    page = page_shell("generator.html", "title_generator", "", generator.inhalt(), sidebar=False)
+    # `normalisiere_assets` wie in `section()`: der Generator bettet Partials direkt ein
+    # (generator.py liest u.a. c22/typeset/prose.html), und die adressieren ihre Beilagen aus
+    # IHRER Sicht (`../c22/…`). Auf der Website liegt die Seite im Wurzelverzeichnis, dort
+    # zeigte das aus der Site heraus.
+    #
+    # Der Fehler war latent, bis 2026-09-23 die Beispielbilder von einem fremden Server auf
+    # den eigenen umzogen: eine absolute `https://`-Adresse stimmt aus jedem Verzeichnis, ein
+    # relativer Pfad nicht. Der Website-Wächter in scripts/build-site.py hat ihn beim ersten
+    # lokalen Pfad gemeldet — er tat genau, wofür er gebaut ist.
+    page = page_shell("generator.html", "title_generator", "",
+                      normalisiere_assets(generator.inhalt()), sidebar=False)
     (ZIEL / "generator.html").write_text(page, encoding="utf-8")
     return "generator.html", len(generator.DESIGN_ACHSEN) + len(generator.TYPESET_ACHSEN)
 

@@ -88,27 +88,29 @@ ABSCHNITTE: list[tuple[str, tuple[str, str], list[tuple[str, str]]]] = [
          f'<a href="{GITHUB_PRIVACY}" {LINK}>privacy statement</a>; please address requests about '
          "those logs directly there."),
     ]),
-    ("fremde-inhalte", ("Beispielbilder von Unsplash", "Example images from Unsplash"), [
+    ("fremde-inhalte", ("Beispielbilder", "Example images"), [
         ("Die Galerie braucht an einigen Stellen echte Bilder (Karten, Karussell, "
-         "Seitenverhältnis, Anhänge). Diese Bilder liegen nicht hier, sondern werden von "
-         f'<code {CODE}>images.unsplash.com</code> geladen (Unsplash, Inc.). Beim Laden erfährt '
-         "Unsplash die IP-Adresse, das angefragte Bild und technische Angaben zum Browser — genau "
-         "wie jeder andere Server, von dem ein Bild kommt. Rechtsgrundlage ist wieder Art. 6 "
-         "Abs. 1 lit. f DSGVO: eine Komponentengalerie ohne Beispielbilder zeigt nicht, was sie "
-         "zeigen soll. Es werden dabei <strong>keine Cookies</strong> gesetzt. Details in der "
-         f'<a href="https://unsplash.com/privacy" {LINK}>Datenschutzerklärung von Unsplash</a>.',
+         "Seitenverhältnis, Anhänge). Diese Bilder liegen <strong>hier auf diesem "
+         "Server</strong>. Sie stammen von "
+         f'<a href="https://unsplash.com/" {LINK}>Unsplash</a>, dessen Lizenz das '
+         "Herunterladen und Verwenden ausdrücklich erlaubt; der Nachweis steht neben den "
+         f'Dateien (<code {CODE}>c22/static/img/demo/REUSE.toml</code>).',
          "In a few places the gallery needs real images (cards, carousel, aspect ratio, "
-         "attachments). Those images are not hosted here — they are loaded from "
-         f'<code {CODE}>images.unsplash.com</code> (Unsplash, Inc.). In doing so Unsplash learns '
-         "the IP address, the image requested and technical details about the browser — just like "
-         "any other server an image comes from. The legal basis is again Art. 6(1)(f) GDPR: a "
-         "component gallery without example images fails to show what it is meant to show. "
-         "<strong>No cookies</strong> are set in the process. Details in "
-         f'<a href="https://unsplash.com/privacy" {LINK}>Unsplash\'s privacy policy</a>.'),
-        ("Alles andere lädt diese Seite von ihrem eigenen Server: Stylesheets, Skripte, Symbole "
-         "und die Schrift. Kein Analysedienst, kein Font-CDN, kein Werbenetzwerk.",
-         "Everything else is served from this site's own server: stylesheets, scripts, icons and "
-         "the web font. No analytics, no font CDN, no ad network."),
+         "attachments). Those images are hosted <strong>on this server</strong>. They come "
+         f'from <a href="https://unsplash.com/" {LINK}>Unsplash</a>, whose licence expressly '
+         "permits downloading and use; the attribution sits next to the files "
+         f'(<code {CODE}>c22/static/img/demo/REUSE.toml</code>).'),
+        ("Bis zum 23.09.2026 wurden diese Bilder von einem fremden Server nachgeladen. Damit "
+         "erfuhr ein Dritter bei jedem Seitenaufruf die IP-Adresse des Besuchers, ohne dass "
+         "dieser etwas angeklickt hatte. Das ist behoben: <strong>diese Seite lädt nichts von "
+         "Dritten</strong> — Stylesheets, Skripte, Symbole, die Schrift und die Beispielbilder "
+         "kommen alle von hier. Kein Analysedienst, kein Font-CDN, kein Werbenetzwerk, kein "
+         "Bild-CDN.",
+         "Until 23 Sep 2026 these images were loaded from a third-party server, which meant a "
+         "third party learned every visitor's IP address on page load, without any click. That "
+         "is fixed: <strong>this page loads nothing from third parties</strong> — stylesheets, "
+         "scripts, icons, the web font and the example images all come from here. No analytics, "
+         "no font CDN, no ad network, no image CDN."),
     ]),
     ("browser", ("Was in deinem Browser gespeichert wird", "What is stored in your browser"), [
         (f'Zwei Dinge, beide weil du sie angefordert hast: <code {CODE}>c22-pack</code> merkt sich '
