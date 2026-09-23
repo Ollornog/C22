@@ -1,0 +1,13 @@
+Unsplash-Lizenz (Stand des Abrufs; maßgeblich ist der Text unter
+https://unsplash.com/license)
+
+Unsplash-Bilder dürfen kostenlos heruntergeladen, kopiert, verändert, verteilt und
+verwendet werden — kommerziell wie nicht-kommerziell, ohne Genehmigung und ohne
+Namensnennung (eine Namensnennung ist erwünscht, aber nicht Pflicht).
+
+Nicht erlaubt: Bilder in einen konkurrierenden Bild-Dienst einstellen, also Unsplash-
+Fotos sammeln und selbst als Bildarchiv anbieten.
+
+Hinweis: Die Lizenz gewährt keine Rechte an abgebildeten Marken, Personen oder
+Eigentum. Für Verwendungen, bei denen Persönlichkeits- oder Markenrechte berührt
+werden, ist eine eigene Freigabe nötig.

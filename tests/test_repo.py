@@ -71,11 +71,22 @@ r.check(f"keine private Infrastruktur ({n_muster} Muster + {n_namen} Namen)",
 
 # ---- Nur neutrale Beispieladressen (+ Pflicht-Attributionen: flaticon.com fürs README-Logo,
 #      phosphoricons.com für den Phosphor-Icon-Subset (MIT), selfh.st für die App-Logos (CC BY 4.0),
-#      unsplash.com als Quelle der Beispielbilder in der Component-Galerie)
+#      unsplash.com als NACHWEIS-Quelle der Beispielbilder)
+#
+# ⚠️ Bis 2026-09-23 stand hier `(images\.)?unsplash\.com` — also auch der LADE-Host, von dem
+# 116 Stellen in 20 Dateien die Bilder nachluden. Die Bilder liegen jetzt lokal
+# (c22/static/img/demo/), und der Lade-Host ist aus der Freigabe raus. Geblieben ist
+# `unsplash\.com` für den Attributionslink, der laut Regel erlaubt und als Nachweis geboten ist.
+#
+# Dass `unsplash\.com` konstruktionsbedingt auch `images.unsplash.com` mitfreigibt (die Liste
+# wird als Suffix-Muster ausgewertet), ist HIER kein Loch mehr: `pruefe_keine_fremdressourcen`
+# fängt jedes tatsächliche Laden, unabhängig von dieser Liste. Zwei Fragen, zwei Prüfungen —
+# `pruefe_adressen` fragt "welche fremden Adressen NENNT das Repo", der neue Zaun fragt
+# "was LÄDT der Browser".
 adressen = hygiene.pruefe_adressen(str(ROOT), DATEIEN, POLICY,
                                    zusaetzliche_hosts=[r"(www\.)?flaticon\.com", r"img\.shields\.io",
                                                        r"phosphoricons\.com", r"selfh\.st",
-                                                       r"(images\.)?unsplash\.com",
+                                                       r"unsplash\.com",
                                                        r"basecoatui\.com", r"ui\.shadcn\.com",
                                                        r"registry\.npmjs\.org",
                                                        # Die eigene Projektseite (GitHub Pages) und
@@ -99,7 +110,7 @@ r.check("nur neutrale Beispieladressen", not adressen, " | ".join(sorted(set(adr
 blank = hygiene.pruefe_blanke_adressen(
     str(ROOT), DATEIEN, POLICY,
     grundstock=["python.org", "devguide.python.org", "flaticon.com", "basecoatui.com",
-                "images.unsplash.com", "ui.shadcn.com", "ollornog.github.io"])
+                "unsplash.com", "ui.shadcn.com", "ollornog.github.io"])
 r.check("keine fremden Hostnamen ohne Schema", not blank, " | ".join(sorted(set(blank))[:4]))
 
 # ---- Version steht überall gleich
@@ -202,6 +213,14 @@ _tab = hygiene.pruefe_tabelle_vollstaendig()
 r.check("jede Kit-Prüfung steht in genau einer Liste", not _tab, " | ".join(_tab[:3]))
 _pk = hygiene.pruefe_policy_schluessel_gelesen(POLICY)
 r.check("jeder Policy-Schlüssel wird gelesen", not _pk, " | ".join(_pk[:3]))
+
+# ---- Nichts wird von Dritten nachgeladen (Kit 0.18.0, PO-Regel 2026-09-23)
+# C22 ist hier der wichtigste Ort im ganzen Bestand: das Markup vererbt sich an jede App,
+# ein Hotlink hier wird zu einem Hotlink in jeder App, die einen Block abschreibt.
+# Die Ausnahmeliste ist LEER und soll es bleiben — eine Freigabe für eine Stelle, die man
+# beseitigen könnte, wäre keine Ausnahme, sondern eine Billigung.
+_fremd = hygiene.pruefe_keine_fremdressourcen(str(ROOT), DATEIEN, POLICY)
+r.check("nichts wird von Dritten nachgeladen", not _fremd, " | ".join(_fremd[:3]))
 
 _ng = hygiene.pruefe_kit_prueffunktionen_gerufen(str(ROOT))
 r.check("jede Kit-Prüfung wird gerufen oder ist begründet ausgenommen",
