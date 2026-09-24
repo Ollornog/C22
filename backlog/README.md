@@ -8,12 +8,14 @@ Konventionen: [README-KONVENTION.md](README-KONVENTION.md).
 ## Meilensteine
 
 * ☐ **[M-1](M-1-visuelle-testebene.md)** 0.3.0 — visuelle Test-Ebene — 0/3 erledigt
+* ☐ **[M-2](M-2-bausteine-aus-den-apps.md)** Bausteine, die eine App gebaut hat, gehören in C22 — 0/1 erledigt
 
 ## Aufgaben
 
 * ☐ **[T-1](T-1-visuelle-tests-scharf.md)** Visuelle Tests scharf schalten · M-1
 * ☐ **[T-2](T-2-eigene-webfont.md)** Eigene Web-Schrift einbetten · M-1
 * ☐ **[T-3](T-3-fremdressourcen-zweiter-blickwinkel.md)** Fremdressourcen — der zweite Blickwinkel fehlt noch (laufende Seite) · M-1
+* ☐ **[T-4](T-4-druckbarer-block.md)** Druckbarer Block — einen Ausschnitt der Seite drucken, schwarz auf weiss · M-2
 
 ## Entscheidungen (ADR)
 
