@@ -8,7 +8,7 @@ Konventionen: [README-KONVENTION.md](README-KONVENTION.md).
 ## Meilensteine
 
 * ☐ **[M-1](M-1-visuelle-testebene.md)** 0.3.0 — visuelle Test-Ebene — 0/3 erledigt
-* ☐ **[M-2](M-2-bausteine-aus-den-apps.md)** Bausteine, die eine App gebaut hat, gehören in C22 — 0/4 erledigt
+* ☐ **[M-2](M-2-bausteine-aus-den-apps.md)** Bausteine, die eine App gebaut hat, gehören in C22 — 0/5 erledigt
 
 ## Aufgaben
 
@@ -19,6 +19,7 @@ Konventionen: [README-KONVENTION.md](README-KONVENTION.md).
 * ☐ **[T-5](T-5-lizenztext-inter.md)** Schrift Inter ohne OFL-Lizenztext ausgeliefert · M-2
 * ☐ **[T-6](T-6-ablaufdiagramm.md)** Ablaufdiagramm / Entscheidungsbaum als Baustein · M-2
 * ☐ **[T-7](T-7-diagramm-hoehe.md)** Balkendiagramm mit einstellbarer Höhe bzw. Seitenverhältnis · M-2
+* ☐ **[T-8](T-8-tabelle-umbruch.md)** Tabelle mit umbrechenden Zellen · M-2
 
 ## Entscheidungen (ADR)
 
