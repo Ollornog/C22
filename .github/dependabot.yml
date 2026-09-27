@@ -9,6 +9,9 @@ version: 2
 updates:
   - package-ecosystem: github-actions
     directory: /
+    # Wartezeit vor Versions-Updates (PO 2026-09-28), gilt nicht für Sicherheits-Updates.
+    cooldown:
+      default-days: 3
     schedule:
       interval: monthly
     commit-message:
@@ -30,6 +33,9 @@ updates:
   # niedrigste auflösbare Version, nicht diese Datei.
   - package-ecosystem: pip
     directory: /
+    # Wartezeit vor Versions-Updates (PO 2026-09-28), gilt nicht für Sicherheits-Updates.
+    cooldown:
+      default-days: 3
     schedule:
       interval: monthly
     groups:
