@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — Schwachstellen-Tor (`audit.yml`)
+
+Bis jetzt prüfte kein Lauf, ob eine Abhängigkeit eine bekannte Lücke hat: Dependabot meldet
+repo-weit, aber eine Meldung ist kein Tor. Der neue Workflow `audit` löst die Abhängigkeiten
+(`dev`-Extra) einmal in der neuesten und einmal in der niedrigsten erlaubten Fassung auf und
+prüft beides mit `pip-audit --strict`; nächtlich zusätzlich, weil Advisories ohne Codeänderung
+erscheinen. Das Prüfwerkzeug selbst liegt gepinnt samt Hashes unter `.github/audit/`
+(`pip-audit`, `uv`) und wird von Dependabot mitgepflegt. Ein Lauf, der nichts auflöst, ist rot.
+Vorlage: das Tor von TinySesam, hier auf ein Repo ohne Laufzeit-Abhängigkeiten zugeschnitten.
+
 ### Changed — Tests
 
 - Geteilte Testbasis auf repokit 0.27.1. `tests/test_repo.py` ruft die neue Prüfung
