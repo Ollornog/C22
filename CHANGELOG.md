@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed — Auto-Merge wartet auch auf `audit`
+
+- `dependabot-auto-merge.yml`: ausgelöst nach `CI` **und** `audit`. `audit` ist Pflicht-Check;
+  endete es nach der CI, prallte der einzige Merge-Anlauf am fehlenden Check ab, und ein
+  Werkzeug-Update unter `/.github/audit` blieb liegen. Jetzt mergt der Lauf, der zuletzt endet;
+  nur der CI-Lauf kommentiert. Schreibrechte nur am Job (oben `permissions: {}`), Nachlauf mit
+  `audit.yml`, begründete zizmor-Ausnahme `dangerous-triggers`. Gleiche Fassung wie DashMyBoard,
+  paperlaiss und FlyingCerts.
+
 ### Added — Schwachstellen-Tor (`audit.yml`)
 
 Bis jetzt prüfte kein Lauf, ob eine Abhängigkeit eine bekannte Lücke hat: Dependabot meldet
