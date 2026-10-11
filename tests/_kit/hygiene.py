@@ -688,6 +688,96 @@ def pruefe_keine_fremdressourcen(root: str, dateien: list[str], policy: dict,
     return sorted(set(treffer))
 
 
+_DOKUMENT = re.compile(r"<head\b", re.I)
+_LINK = re.compile(r"<link\b[^>]*>", re.I | re.S)
+_REL = re.compile(r"""\brel\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))""", re.I)
+_HREF = re.compile(r"""\bhref\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))""", re.I)
+
+
+def _favicon_links(html: str) -> list[str]:
+    """Die `href` aller `<link>` mit dem rel-Wort `icon` (also `icon` und `shortcut icon`, NICHT `apple-touch-icon`
+    allein — das nimmt kein Browser für den Tab)."""
+    aus = []
+    for tag in _LINK.findall(html):
+        rel = _REL.search(tag)
+        if not rel:
+            continue
+        woerter = (rel.group(1) or rel.group(2) or rel.group(3) or "").lower().split()
+        if "icon" in woerter:
+            href = _HREF.search(tag)
+            aus.append((href.group(1) or href.group(2) or href.group(3) or "") if href else "")
+    return aus
+
+
+def favicon_befunde_html(html: str, eigener_host: str = "") -> list[str]:
+    """Fuer Browser- und Seitentests: hat eine AUSGELIEFERTE Seite ein Favicon, und kommt es vom eigenen Ursprung?
+
+    Die Dateipruefung `pruefe_favicon` sieht nur Seiten, die als Datei im Repo liegen. Seiten aus Code (FastAPI,
+    Python-f-Strings, Server-Templates aus Bausteinen) sieht nur ein Test, der die fertige Seite in der Hand hat —
+    dafuer ist diese Funktion. Leer = in Ordnung.
+
+    `eigener_host`: Host, unter dem die Seite laeuft. Ein Favicon mit fremder Herkunft (`https://anderer/…`, `//…`) ist
+    ein Abruf bei Dritten (Regel fremdressourcen) und wird gemeldet; `data:` und Pfade gehen immer.
+    """
+    if not _DOKUMENT.search(html):
+        return []
+    links = _favicon_links(html)
+    if not links:
+        return ["kein <link rel=\"icon\"> — der Tab zeigt ein leeres oder fremdes Symbol (PO 2026-10-08: Favicon ueberall)"]
+    treffer = []
+    for href in links:
+        h = href.strip()
+        m = re.match(r"(?:https?:)?//([^/:?#]+)", h, re.I)
+        if m and m.group(1).lower() != (eigener_host or "").lower():
+            treffer.append(f"Favicon von {m.group(1)} — ein Abruf bei Dritten; selbst ausliefern oder als data:-URI")
+        if not h:
+            treffer.append("<link rel=\"icon\"> ohne href")
+    return treffer
+
+
+def pruefe_favicon(root: str, dateien: list[str], policy: dict,
+                   ausgenommen: dict[str, str] | None = None) -> list[str]:
+    """Hat jede Webseite im Repo ein Favicon?
+
+    WARUM (PO 2026-10-08, „das favicon ueberall nicht vergessen. bitte auch als test generell ueberall in repos und co
+    einbauen bei websites“): Ohne `<link rel="icon">` fragt der Browser von sich aus `/favicon.ico` an. Je nach Server
+    ergibt das einen 404 im Log, einen geschuetzten Pfad, der auf eine Anmeldung umleitet, oder einen Tab ohne Zeichen,
+    an dem niemand die Seite wiedererkennt. Ein Favicon ist billig, und vergessen wird es genau dort, wo niemand
+    hinschaut: auf Neben- und Demoseiten.
+
+    Geprueft wird jede VOLLSTAENDIGE Seite (traegt ein `<head>`) in HTML und den ueblichen Vorlagen. Teilvorlagen ohne
+    `<head>` (`{% extends %}`, Partials) erben das Favicon und bleiben aussen vor. Gezaehlt wird nur das rel-Wort
+    `icon` — `apple-touch-icon` allein reicht nicht, das nimmt kein Browser fuer den Tab.
+
+    **Was diese Pruefung NICHT sieht** (benannte Grenze): Seiten, die Code zusammenbaut (FastAPI-Antworten,
+    f-Strings). Fuer die gibt es `favicon_befunde_html` — im Browser- oder Seitentest auf die fertige Seite anwenden.
+    Beide Blickwinkel sind noetig, keiner ersetzt den anderen.
+
+    `ausgenommen` ist ein dict `{"<pfad>": "Grund"}`; ein Grund ist Pflicht, eine Ausnahme ohne Treffer wird gemeldet.
+    """
+    ausgenommen = ausgenommen or {}
+    treffer = []
+    for schluessel, grund in sorted(ausgenommen.items()):
+        if not str(grund).strip():
+            treffer.append(f"Ausnahme {schluessel!r} ohne Begruendung — ein Grund ist Pflicht")
+    endungen = (".html", ".htm", ".j2", ".jinja", ".jinja2", ".twig", ".php", ".hbs", ".erb", ".vue")
+    benutzt = set()
+    for rel, inhalt in _texte(root, dateien, policy):
+        if not rel.endswith(endungen) or _ist_generiert(rel, policy) or not _DOKUMENT.search(inhalt):
+            continue
+        if _favicon_links(inhalt):
+            continue
+        if rel in ausgenommen:
+            benutzt.add(rel)
+            continue
+        zeile = inhalt[:_DOKUMENT.search(inhalt).start()].count("\n") + 1
+        treffer.append(f"{rel}:{zeile}: Seite ohne <link rel=\"icon\"> — Favicon ergaenzen "
+                       f"(eigene Datei oder data:-URI, nie von Dritten)")
+    for schluessel in sorted(set(ausgenommen) - benutzt):
+        treffer.append(f"Ausnahme {schluessel!r} trifft nichts mehr — Eintrag entfernen")
+    return sorted(set(treffer))
+
+
 def pruefe_adressen(root: str, dateien: list[str], policy: dict,
                     zusaetzliche_hosts: list[str] | None = None,
                     belegstellen: list[str] | None = None) -> list[str]:
@@ -1989,6 +2079,9 @@ AUSGELIEFERTE_PRUEFUNGEN: list[tuple[str, str]] = [
 # nicht die Bequemlichkeit des Repos ("haben wir noch nicht eingebaut") — das Zweite
 # gehoert als Ausnahme MIT Grund ins jeweilige Repo, wo es sichtbar bleibt.
 KIT_WERKZEUGE: list[tuple[str, str, str]] = [
+    ("automerge", "pruefe",
+     ("laeuft in jedem Repo ueber `manifest.pruefe` mit (seit 0.30.0) — eine eigene Forderung "
+      "hiesse, denselben Workflow zweimal zu pruefen")),
     ("hygiene", "pruefe_dateien_geschlossen",
      ("prueft den Kit-Quelltext selbst, nicht das aufrufende Repo — sie gehoert in repokits "
       "eigene Suite, und dort laeuft sie")),
@@ -2117,6 +2210,15 @@ _VEROEFFENTLICHT: list[tuple[str, str]] = [
 _NUR_AUFBAU = re.compile(r"actions/(checkout|setup-|cache|download-artifact|upload-artifact)"
                          r"|docker/setup-")
 _AM_TAG = re.compile(r"ref_type\s*==\s*'tag'|startsWith\(github\.ref,\s*'refs/tags")
+# GENERALPROBE (seit 0.30.0, PO 2026-10-11 „alles automatisieren ohne dass was bricht“): Ein
+# Schritt, der NUR ohne Tag läuft und dieselbe Action gegen ein Wegwerf-Ziel fährt (lokale
+# Registry, lokaler Paket-Server, Probedatei), veröffentlicht nichts — er nimmt die Action auf
+# jedem PR ab, damit ihr Update selbst mergen darf. Erlaubt nur ohne echtes Ziel und ohne
+# Geheimnis; ein Release anzulegen ist nie eine Probe.
+_GENERALPROBE = re.compile(r"ref_type\s*!=\s*'tag'")
+_ECHTES_ZIEL = re.compile(r"ghcr\.io|docker\.io|registry-1\.|pypi\.org|secrets\.|github\.token"
+                          r"|subject-name\s*:|push-to-registry\s*:\s*true", re.I)
+_NIE_PROBE = ("gh release create", "twine upload")
 
 
 def _workflow_bloecke(inhalt: str) -> tuple[bool, list[dict]]:
@@ -2152,6 +2254,7 @@ def _workflow_bloecke(inhalt: str) -> tuple[bool, list[dict]]:
     job: dict | None = None
     job_tiefe = None
     schritt: dict | None = None
+    if_offen: tuple[dict, int] | None = None
     for z in zeilen:
         if re.match(r"^jobs:", z):
             in_jobs = True
@@ -2169,17 +2272,35 @@ def _workflow_bloecke(inhalt: str) -> tuple[bool, list[dict]]:
             continue
         if job is None:
             continue
+        # Fortsetzung eines mehrzeiligen `if: >` / `if: |` (bis 0.30.0 verloren: die Bedingung
+        # stand dann leer da, und ein Job mit `if: >-` am Tag galt als ungedeckt).
+        if if_offen is not None:
+            if z.strip() and tiefe(z) > if_offen[1]:
+                if_offen[0]["if"] += " " + z.strip()
+                if schritt is not None:
+                    schritt["text"] += "\n" + z
+                continue
+            if_offen = None
         # Schritt-Anfang: "- " tiefer als der Jobname
         if re.match(r"^\s+-\s", z) and tiefe(z) > job_tiefe:
             schritt = {"text": z, "if": ""}
             job["steps"].append(schritt)
+            # `- if: …` als ERSTER Schlüssel des Schritts (bis 0.30.0 übersehen: der Schritt galt
+            # als ungedeckt — ein Fehlalarm, gefunden beim Bau der Generalprobe).
+            mif = re.match(r"^(\s+)-\s+if:\s*(.*)$", z)
+            if mif:
+                schritt["if"] += " " + mif.group(2)
+                if mif.group(2).strip() in (">", ">-", "|", "|-"):
+                    if_offen = (schritt, len(mif.group(1)) + 2)
             continue
-        mif = re.match(r"^\s+if:\s*(.*)$", z)
+        mif = re.match(r"^(\s+)if:\s*(.*)$", z)
         if mif:
+            ziel = schritt if schritt is not None else job
+            ziel["if"] += " " + mif.group(2)
+            if mif.group(2).strip() in (">", ">-", "|", "|-"):
+                if_offen = (ziel, len(mif.group(1)))
             if schritt is not None:
-                schritt["if"] += " " + mif.group(1)
-            else:
-                job["if"] += " " + mif.group(1)
+                schritt["text"] += "\n" + z
             continue
         if schritt is not None:
             schritt["text"] += "\n" + z
@@ -2235,15 +2356,24 @@ def pruefe_veroeffentlichen_am_tag(root: str, dateien: list[str] | None = None) 
             continue
         for job in jobs:
             job_am_tag = bool(_AM_TAG.search(job.get("if", "")))
+            job_probe = bool(_GENERALPROBE.search(job.get("if", "")))
             if job.get("environment") and not job_am_tag:
                 treffer.append(f".github/workflows/{name}:{job['name']}: `environment: "
                                f"{job['environment']}` ohne Tag-Bedingung am Job")
             for s in job["steps"]:
                 if job_am_tag or _AM_TAG.search(s.get("if", "")):
                     continue
+                probe = job_probe or bool(_GENERALPROBE.search(s.get("if", "")))
                 for muster, bezeichnung in _VEROEFFENTLICHT:
                     if not re.search(muster, s["text"]):
                         continue
+                    if probe and bezeichnung not in _NIE_PROBE:
+                        if not _ECHTES_ZIEL.search(s["text"]):
+                            continue
+                        treffer.append(f".github/workflows/{name}:{job['name']}: Generalprobe "
+                                       f"`{bezeichnung}` nennt ein echtes Ziel oder ein Geheimnis "
+                                       f"— eine Probe läuft nur gegen ein Wegwerf-Ziel")
+                        break
                     if bezeichnung == "build-push-action":
                         # Ein Bau, der NICHT schiebt, veroeffentlicht nichts. `push:` mit einem
                         # Ausdruck (`${{ github.ref_type == 'tag' }}`) ist genau die Loesung und
