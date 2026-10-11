@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed — Auto-Merge mit GitHub App (Kit 0.33.0)
+
+- Veraltete Dependabot-Zweige (Branch-Schutz „aktuell“) zieht der Auto-Merge per App-Token und Rebase nach;
+  gemergt wird mit dem App-Token, der Push startet die Workflows des Standardzweigs selbst. Ohne App unverändert.
+
 ### Changed — Pages-Actions mergen selbst, Abnahme nach dem Merge (Kit 0.32.0)
 
 - `actions/configure-pages`, `upload-pages-artifact` und `deploy-pages` laufen nur auf main; für
