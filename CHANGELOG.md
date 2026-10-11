@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed — Pages-Actions mergen selbst, Abnahme nach dem Merge (Kit 0.32.0)
+
+- `actions/configure-pages`, `upload-pages-artifact` und `deploy-pages` laufen nur auf main; für
+  `deploy-pages` gibt es keine öffentliche Probe. Ihre Updates mergen jetzt selbst (`NACH_MERGE_ABGENOMMEN`),
+  der Nachlauf von `pages.yml` nimmt sie ab. Scheitert er, bleibt die alte Seite online, und der rote Lauf
+  wird gemeldet.
+
 ### Changed — Dependabot-Auto-Merge aus der repokit-Vorlage (Kit 0.30.1)
 
 - Updates mergen selbst, sobald die Pflicht-Checks grün sind — **auch Majors** (PO 2026-10-11).
