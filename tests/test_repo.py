@@ -131,6 +131,10 @@ r.check("kein Datenverzeichnis oder .venv versioniert",
 lecks = hygiene.pruefe_geheimnisse(str(ROOT), DATEIEN, POLICY)
 r.check("keine Geheimnisse im Klartext", not lecks, " | ".join(lecks[:3]))
 
+# Kit 0.28 (PO 2026-10-08): jede vollständige Seite trägt ein Favicon.
+_favicon = hygiene.pruefe_favicon(str(ROOT), DATEIEN, POLICY)
+r.check("jede Seite hat ein Favicon", not _favicon, " | ".join(_favicon[:3]))
+
 # ---- Belegte Standards, maschinell erzwungen (context/repo-standards.md)
 ungepinnt = hygiene.pruefe_actions_sha_gepinnt(str(ROOT), DATEIEN)
 r.check("Actions per Commit-SHA gepinnt, nicht per Tag", not ungepinnt, " | ".join(ungepinnt[:3]))
