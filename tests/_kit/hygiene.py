@@ -1422,6 +1422,58 @@ def pruefe_uebersetzungs_struktur(root: str, paare: list[tuple[str, str]]) -> li
     return treffer
 
 
+# Schalter von pytest, die ein EIGENES Argument als nächstes Wort nehmen (ohne `=`). Das Wort danach
+# ist dann kein Pfad: `pytest -k tests` wählt Tests nach Namen, es sammelt nicht `tests/`.
+_PYTEST_WERT_SCHALTER = {"-k", "-m", "-p", "-W", "-c", "-o", "-n", "-r", "--rootdir", "--ignore",
+                         "--ignore-glob", "--deselect", "--maxfail", "--tb", "--durations",
+                         "--import-mode", "--junitxml", "--cov", "--basetemp", "--confcutdir",
+                         "--override-ini", "--config-file", "--color", "--log-level"}
+
+
+def _sammellauf_ueber_tests(text: str, testverzeichnis: str = "tests") -> bool:
+    """Ruft `text` pytest mit dem Testverzeichnis selbst als Pfadargument? (0.34.1)
+
+    Unabhängig von der Schalterfolge: `pytest -q -p no:cacheprovider -W "error" tests` zählt,
+    `pytest -k tests`, `pytest tests_extra/x.py` und `pytest tests/test_a.py` (eine einzelne
+    Datei, kein Sammellauf) zählen nicht. Auch die Array-/Variablenform zählt: steht
+    `PYTEST=(python -m pytest -q …)` in einer Zeile und `"${PYTEST[@]}" tests` in einer anderen,
+    ist das derselbe Lauf. Bis 0.34.0 brach ein Schalter mit Argument das Muster, die Prüfung fiel
+    auf den Namensvergleich zurück und meldete jede Testdatei als ungerufen (Fehlalarm).
+    """
+    text = re.sub(r"\\\n", " ", text)  # Zeilenfortsetzung
+    wort = re.escape(testverzeichnis)
+    pfad = re.compile(rf"^(\./)?{wort}/?$")
+
+    def tokens(rest: str) -> list[str]:
+        rest = re.split(r"(?:&&|\|\||;|\||#)", rest, maxsplit=1)[0]
+        return [t.strip("\"'") for t in rest.split()]
+
+    def hat_pfad(toks: list[str]) -> bool:
+        vorher = ""
+        for t in toks:
+            if pfad.match(t) and vorher not in _PYTEST_WERT_SCHALTER:
+                return True
+            vorher = t
+        return False
+
+    # Direkter Aufruf: alles hinter dem Wort `pytest` bis zum Zeilen-/Befehlsende.
+    for zeile in zeilen_wie_grep(text):
+        m = re.search(r"(?<![\w-])pytest\b(.*)", zeile)
+        if m and not re.match(r"\s*#", zeile) and hat_pfad(tokens(m.group(1))):
+            return True
+    # Array-/Variablenform: Name, der pytest enthält, später mit Pfad gerufen.
+    namen = set(re.findall(r"^\s*(?:export\s+|local\s+)?(\w+)=[(\"']?[^\n]*?(?<![\w-])pytest\b",
+                           text, re.M))
+    for name in namen:
+        aufruf = rf"(?:\"?\$\{{{name}\[[@*]\]\}}\"?|\"?\$\{{?{name}\}}?\"?)(.*)"
+        for zeile in zeilen_wie_grep(text):
+            m = re.search(aufruf, zeile)
+            if m and not re.match(rf"\s*{name}=", zeile) and hat_pfad(tokens(m.group(1))):
+                return True
+    return False
+
+
+
 def pruefe_testdateien_gerufen(root: str, testverzeichnis: str = "tests",
                                laeufer: list[str] | None = None,
                                ausgenommen: dict[str, str] | None = None) -> list[str]:
@@ -1528,7 +1580,7 @@ def pruefe_testdateien_gerufen(root: str, testverzeichnis: str = "tests",
     # `pytest tests/` bzw. `unittest discover` in check.sh: check.sh IST ein Laeufer, hier
     # stellt sich die Frage nach der Verkabelung nicht.
     _check = _lies(root, "scripts/check.sh") or ""
-    if re.search(r"pytest\s+(-[^\s]+\s+)*tests?\b|unittest\s+discover", _check):
+    if _sammellauf_ueber_tests(_check, testverzeichnis) or re.search(r"unittest\s+discover", _check):
         return treffer
 
     muster = os.path.join(root, testverzeichnis, "test_*")
@@ -1834,6 +1886,13 @@ def pruefe_persist_credentials(root: str, dateien: list[str],
     return treffer
 
 
+# Schwachstellen-Werkzeuge, die als Audit zählen (0.34.0: composer/npm dazu). `npm audit signatures`
+# prüft nur Signaturen der Lieferkette, keine bekannten Lücken — das zählt ausdrücklich NICHT.
+_NPM_AUDIT = re.compile(r"\bnpm\s+audit\b(?!\s+signatures)")
+_AUDIT_WERKZEUG = re.compile(
+    r"\bpip-audit\b|\bgovulncheck\b|\bcomposer\s+audit\b|\bnpm\s+audit\b(?!\s+signatures)")
+
+
 def pruefe_audit_workflow(root: str, dateien: list[str],
                           ausgenommen: dict[str, str] | None = None) -> list[str]:
     """Hat das Repo ein scharfes Schwachstellen-Tor? (M6/B1, „Baustein C", 2026-10-11)
@@ -1865,13 +1924,18 @@ def pruefe_audit_workflow(root: str, dateien: list[str],
 
        Ist ein Audit DA und zugleich eine Ausnahme gesetzt, ist die Ausnahme eine falsche
        Einladung (wie ein toter Policy-Schlüssel) → gemeldet.
-    2. **Ein Schwachstellen-Werkzeug** wird gerufen (`pip-audit` oder `govulncheck`).
+    2. **Ein Schwachstellen-Werkzeug** wird gerufen: `pip-audit`, `govulncheck`, seit 0.34.0
+       auch `composer audit` (PHP) und `npm audit`. **`npm audit signatures` zählt nicht** — es
+       prüft die Signaturen der Lieferkette, keine bekannten Lücken (Fund aus einem PHP-Repo, 0.33.0:
+       das PHP-Tor `composer audit --locked` wurde nicht erkannt, das Repo musste ausnehmen).
     3. **Die Werkzeugliste ist gehasht gepinnt** — bei Python `--require-hashes`, bei Go ein
        eigenes `.github/audit/go.mod` mit `tool …govulncheck` (Prüfsummen in go.sum). Ein
        Prüfwerkzeug, das bei jedem Lauf in der neuesten Fassung aus dem Index kommt, ist
-       selbst ein ungeprüfter Teil der Lieferkette.
-    4. **Kein `continue-on-error: true`** im Audit-Träger — ein Tor, das seine eigenen Fehler
-       durchwinkt, ist keines.
+       selbst ein ungeprüfter Teil der Lieferkette. `composer audit` muss `--locked` tragen
+       (sonst prüft es eine neue Auflösung statt der ausgelieferten composer.lock); composer und
+       npm selbst kommen aus der Toolchain des Laufs, eine eigene Liste gibt es für sie nicht.
+    4. **Kein `continue-on-error: true`** im Audit-Träger und **kein `|| true`** hinter einem
+       Audit-Aufruf (0.34.0) — ein Tor, das seine eigenen Fehler durchwinkt, ist keines.
     5. **Null-Fälle-Wächter — NUR wenn der Träger eine Auflösung fährt.** Löst der Workflow
        Abhängigkeiten erst auf (`uv pip compile`, `pip-compile`, `go list`), muss ein leeres
        Ergebnis rot werden — sonst prüfte der Lauf nichts. Heuristik (so ehrlich benannt wie
@@ -1900,7 +1964,7 @@ def pruefe_audit_workflow(root: str, dateien: list[str],
             if ist_audit_datei:
                 traeger.append((rel, ""))
             continue
-        if ist_audit_datei or re.search(r"\bpip-audit\b|\bgovulncheck\b", inhalt):
+        if ist_audit_datei or _AUDIT_WERKZEUG.search(inhalt):
             traeger.append((rel, inhalt))
 
     # Ausgenommen: dann darf es KEIN Audit geben — sonst ist die Ausnahme eine falsche Einladung
@@ -1917,9 +1981,9 @@ def pruefe_audit_workflow(root: str, dateien: list[str],
     if not traeger:
         treffer.append(
             "kein Audit — weder ein Workflow `.github/workflows/audit*.yml` noch ein Job, der "
-            "`pip-audit`/`govulncheck` ruft. Ein Schwachstellen-Tor anlegen (Vorlage C22 für "
-            "Python, FlyingCerts für Go) oder, wenn nichts aufzulösen ist, mit Grund in "
-            "`ausgenommen` eintragen")
+            "`pip-audit`/`govulncheck`/`composer audit`/`npm audit` ruft. Ein Schwachstellen-Tor "
+            "anlegen (Vorlage C22 für Python, FlyingCerts für Go) oder, wenn nichts aufzulösen "
+            "ist, mit Grund in `ausgenommen` eintragen")
         return treffer
 
     for rel, inhalt in traeger:
@@ -1929,10 +1993,29 @@ def pruefe_audit_workflow(root: str, dateien: list[str],
 
         hat_pip_audit = bool(re.search(r"\bpip-audit\b", inhalt))
         hat_govulncheck = bool(re.search(r"\bgovulncheck\b", inhalt))
-        if not (hat_pip_audit or hat_govulncheck):
-            treffer.append(f"{rel}: ruft kein Schwachstellen-Werkzeug — `pip-audit` (Python) "
-                           "oder `govulncheck` (Go)")
+        composer_zeilen = re.findall(r"^.*\bcomposer\s+audit\b.*$", inhalt, re.M)
+        hat_npm_audit = bool(_NPM_AUDIT.search(inhalt))
+        if not (hat_pip_audit or hat_govulncheck or composer_zeilen or hat_npm_audit):
+            hinweis = (" (`npm audit signatures` prüft nur Signaturen der Lieferkette, keine "
+                       "bekannten Lücken — zählt nicht)" if "npm audit signatures" in inhalt else "")
+            treffer.append(f"{rel}: ruft kein Schwachstellen-Werkzeug — `pip-audit` (Python), "
+                           f"`govulncheck` (Go), `composer audit` (PHP) oder `npm audit`{hinweis}")
             continue
+
+        # Ein Werkzeug-Aufruf mit `|| true` winkt seine Funde genauso durch wie continue-on-error.
+        for zeile in re.findall(r"^.*$", inhalt, re.M):
+            if _AUDIT_WERKZEUG.search(zeile) and re.search(r"\|\|\s*true\b", zeile):
+                treffer.append(f"{rel}: Audit-Aufruf mit `|| true` — ein Tor, das seine eigenen "
+                               f"Funde durchwinkt, ist keines: {zeile.strip()[:80]}")
+
+        # composer prüft die eingecheckte Lockdatei nur mit `--locked`; ohne löst es neu auf und
+        # prüft dann einen Stand, den das Repo nicht ausliefert. composer selbst kommt aus dem
+        # Abbild/der Toolchain des Laufs (wie python bei pip-audit), eine eigene Werkzeugliste gibt
+        # es dafür nicht.
+        for zeile in composer_zeilen:
+            if "--locked" not in zeile:
+                treffer.append(f"{rel}: `composer audit` ohne `--locked` — prüft dann eine neue "
+                               "Auflösung statt der ausgelieferten composer.lock")
 
         if hat_pip_audit and "--require-hashes" not in inhalt:
             treffer.append(f"{rel}: `pip-audit`, aber die Werkzeugliste ist nicht gehasht "
