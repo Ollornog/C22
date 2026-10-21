@@ -184,7 +184,7 @@ Derived from a single `--radius`, per shadcn:
 ### Typography scale (target — Phase A)
 
 Today typography is hard-coded as utility chains directly in the markup
-([`typography.html`](../c22/components/typography.html): `text-4xl`, `leading-7`, `text-xl`…). The **target**
+([`typography.html`](../c22/typeset/typography.html): `text-4xl`, `leading-7`, `text-xl`…). The **target**
 is to expose the scale as overridable tokens so the generator can move the whole ramp at once, while
 components keep the familiar utilities:
 
