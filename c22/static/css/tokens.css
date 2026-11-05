@@ -65,6 +65,9 @@
   --selection: color-mix(in oklab, var(--primary) 28%, var(--card));
   --selection-foreground: var(--foreground);
 
+  /* The marker of the active tab in tabs data-variant="line". */
+  --tab-marker: var(--foreground);
+
   /* Chart-Palette in oklch statt der Hex-Werte aus dem Vendor (base.css ist sonst durchgehend oklch;
    * die Hex-Blues waren die einzige Insel). Gleiche Farben (Tailwind blue-300/500/600/700/800), nur
    * generator-setzbar im selben Farbraum wie alle anderen Tokens (docs/theming.md, Achse chart). */
