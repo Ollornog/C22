@@ -401,6 +401,9 @@ ERLAUBTE_VARIANTEN = {
     # Formen des Inhaltsverzeichnisses (components/toc.html): flache Liste, eingerückter Baum,
     # enge Fassung, und der Hamburger, dessen Linien selbst das Verzeichnis sind.
     "list", "tree", "compact", "hamburger", "rail", "rail-overlay",
+    # Application frame (sidebar.html): the second column next to the rail; the table whose lines
+    # follow the hierarchy (blocks/tables/merge-table.html); the breadcrumb that is the page title.
+    "panel", "levels", "title",
 }
 VARIANT_ATTR = re.compile(r'data-variant="([^"]*)"')
 

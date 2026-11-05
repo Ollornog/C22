@@ -6,6 +6,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — pack `ankaa` and the building blocks of a calm work tool
+
+- **Pack `ankaa`:** a pure token override over the vega form. Warm grey surfaces, fine lines, one orange accent, small
+  radius, flat elevation; light and dark measured against WCAG AA.
+- **Application frame:** `.app-frame` with `.sidebar[data-variant="rail"]` (60 px, text under the icon, active bar, account
+  menu opening to the right) and `.sidebar[data-variant="panel"]` (260 px, collapsible, optional memory through
+  `data-panel-persist`). Below `md` the rail becomes a bottom tab bar and the panel a sheet. Toggle: `[data-panel-toggle]`.
+- **Filter bar:** new component `.filter-bar`, groups of filters with sign, count and text below, pressed state, single
+  choice per group with `data-single`, link variant for server filters, event `c22:filter`.
+- **Table with levels:** `.table[data-variant="levels"]` with merged cells (`td[data-merged]`), separator lines by level in
+  four strengths (`tr[data-level]`, tokens `--table-level-1…4`), row selection by click with strong background plus bar
+  (`data-selectable`, tokens `--selection`, `--selection-foreground`), fixed columns, ellipsis, event `c22:selection`.
+- **Path as title:** `.breadcrumb[data-variant="title"]`, the last step is the `<h1>`.
+- **Alerts:** variants `info` and `success`, closable through a direct `.btn-close` child, `[data-countdown]` for a
+  countdown, `.alert-stack` (with `data-variant="line"` for the page head).
+- **Confirmation as behaviour:** `[data-confirm]` and `form[data-confirm]` open a `<dialog class="alert-dialog">` instead of
+  `confirm()`, with title, text, labels and a destructive variant.
+- **Floating button:** `.btn[data-fab]` with a counter badge.
+
 ### Changed — Python 3.13–3.15 (Testkit 0.37.0)
 
 - Die Matrix fährt 3.13/3.14/3.15, `requires-python` ist `>=3.13` (die letzten drei stable Python-Reihen; 3.15.0 erschien am 2026-10-09).

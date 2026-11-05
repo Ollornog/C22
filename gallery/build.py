@@ -111,6 +111,7 @@ COMPONENTS: list[tuple[str, bool, bool, bool]] = [
     ("Dropdown Menu", True, True, False),
     ("Empty", True, True, False),
     ("Field", True, True, False),
+    ("Filter Bar", False, False, True),
     ("Hover Card", False, True, True),
     ("Icon", False, False, True),
     ("Input", True, True, False),
@@ -153,7 +154,7 @@ COMPONENTS: list[tuple[str, bool, bool, bool]] = [
 # Demo width per component (natural width like the source pages). Default below.
 DEFAULT_WIDTH = "max-w-2xl"
 WIDTHS = {
-    "table": "max-w-3xl", "sidebar": "max-w-full",
+    "table": "max-w-3xl", "sidebar": "max-w-full", "filter-bar": "max-w-4xl",
     "calendar": "max-w-md",
     "navigation-menu": "max-w-3xl", "menubar": "max-w-3xl", "resizable": "max-w-3xl",
     "card": "max-w-4xl",
@@ -297,7 +298,7 @@ _CAT_GROUPS = {
     "Aktion": "button button-group toggle toggle-group close-button",
     "Formular": "input textarea label field checkbox radio-group switch select native-select combobox input-group input-otp slider",
     "Overlay": "dialog alert-dialog drawer popover hover-card tooltip dropdown-menu context-menu menubar command",
-    "Navigation": "breadcrumb pagination tabs navigation-menu sidebar",
+    "Navigation": "breadcrumb pagination tabs navigation-menu sidebar filter-bar",
     "Anzeige": "table card avatar accordion collapsible item empty separator aspect-ratio carousel calendar date-picker badge brand kbd icon progress skeleton spinner scroll-area scrollbar marker resizable color-roles code-block",
     "Feedback": "alert toast",
     "Chat": "bubble message message-scroller attachment",
@@ -306,7 +307,7 @@ _CAT_GROUPS = {
 CATEGORY = {s: cat for cat, lst in _CAT_GROUPS.items() for s in lst.split()}
 INTERACTIVE = set(
     "accordion alert-dialog carousel collapsible combobox command context-menu date-picker "
-    "dialog drawer dropdown-menu hover-card menubar navigation-menu popover resizable select "
+    "dialog drawer dropdown-menu filter-bar hover-card menubar navigation-menu popover resizable select "
     "sidebar slider tabs theme-switcher toast toggle toggle-group tooltip".split())
 
 
@@ -436,6 +437,7 @@ def discover(directory: Path) -> list[tuple[str, str, str]]:
 PACKS = [
     ("vega", "Vega", {"de": ["neutral", "Standard"], "en": ["neutral", "default"]}),
     ("spica", "Spica", {"de": ["Marke", "blau"], "en": ["brand", "blue"]}),
+    ("ankaa", "Ankaa", {"de": ["Marke", "ruhig", "orange"], "en": ["brand", "calm", "orange"]}),
     ("nova", "Nova", {"de": ["rund", "weich"], "en": ["round", "soft"]}),
     ("maia", "Maia", {"de": ["sehr rund", "freundlich"], "en": ["very round", "friendly"]}),
     ("lyra", "Lyra", {"de": ["eckig", "brutalist"], "en": ["square", "brutalist"]}),

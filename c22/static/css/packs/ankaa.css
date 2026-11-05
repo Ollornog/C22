@@ -1,0 +1,144 @@
+/* C22 brand pack "Ankaa" — a pure TOKEN layer over the vega form.
+ *
+ * Character: a calm work tool. Warm grey surfaces, fine lines instead of lifted cards, ONE
+ * orange accent, small clear type, small radius. Only custom properties, no component rules.
+ *
+ * Status never relies on colour alone: every status token pairs with an icon and text in the
+ * component that uses it. That is why the status roles stay muted here.
+ *
+ * @c22-form: vega   (the FORM comes from vega; this pack only changes tokens)
+ *
+ * @achse base-color: gesetzt — warm grey surfaces, white card and popover.
+ * @achse accent: gesetzt — orange as primary and ring; hover (--accent) stays neutral grey.
+ * @achse status: gesetzt — muted status roles; warning keeps the amber of the base.
+ * @achse chart: gesetzt — the orange plus neutral and muted neighbours.
+ * @achse font: erbt — the embedded Inter.
+ * @achse type-scale: gesetzt — a slightly heavier, tighter heading on the default scale.
+ * @achse typeset: erbt — line length, leading and paragraph flow of the base.
+ * @achse radius: gesetzt — small.
+ * @achse menu: gesetzt — the rail sits on the sunken grey, active marks in orange.
+ * @achse menu-accent: gesetzt — hover one step darker than the rail.
+ * @achse density: erbt — form like vega.
+ * @achse elevation: gesetzt — flat: lines separate, shadows only for what really floats.
+ * @achse motion: erbt — form like vega.
+ * @achse icon-weight: gesetzt — a slightly finer stroke.
+ *
+ * Contrast (WCAG AA, measured): primary-foreground on primary 5.2:1 (light) and 8.1:1 (dark);
+ * muted-foreground on background 5.1:1 and 5.7:1, on muted 4.7:1 and 4.9:1; foreground on
+ * selection 11.4:1 and 8.3:1. The hex origin of each value is in its comment.
+ */
+
+:root {
+  --radius: 0.25rem;
+  --icon-stroke: 1.75;
+  --font-weight-heading: 650;
+  --tracking-heading: -0.015em;
+
+  --background: oklch(0.976 0.001 106.4);           /* #f7f7f6 */
+  --foreground: oklch(0.222 0.002 106.6);           /* #1b1b1a */
+  --card: oklch(1 0 0);                             /* #ffffff */
+  --card-foreground: oklch(0.222 0.002 106.6);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.222 0.002 106.6);
+  --muted: oklch(0.952 0.003 106.4);                /* #efefed */
+  --muted-foreground: oklch(0.523 0.008 106.7);     /* #6a6a65 */
+  --border: oklch(0.912 0.005 106.5);               /* #e2e2de */
+  --input: oklch(0.847 0.008 106.6);                /* #cdcdc7 */
+
+  --primary: oklch(0.553 0.174 38.4);               /* #c2410c */
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.952 0.003 106.4);
+  --secondary-foreground: oklch(0.222 0.002 106.6);
+  --accent: oklch(0.952 0.003 106.4);               /* neutral hover, the orange is primary */
+  --accent-foreground: oklch(0.222 0.002 106.6);
+  --ring: oklch(0.553 0.174 38.4);
+
+  --destructive: oklch(0.5 0.182 29.5);             /* #b42318 */
+  --destructive-foreground: oklch(1 0 0);
+  --success: oklch(0.49 0.084 159.2);               /* #2f6f4f */
+  --success-foreground: oklch(1 0 0);
+  --warning: oklch(0.79 0.16 78);
+  --warning-foreground: oklch(0.28 0.07 47);
+  --info: oklch(0.446 0.037 257.3);                 /* #475569 */
+  --info-foreground: oklch(1 0 0);
+
+  --sidebar: oklch(0.952 0.003 106.4);              /* #efefed, the rail */
+  --sidebar-foreground: oklch(0.419 0.007 106.7);   /* #4d4d49 */
+  --sidebar-border: oklch(0.912 0.005 106.5);
+  --sidebar-primary: oklch(0.553 0.174 38.4);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-ring: oklch(0.553 0.174 38.4);
+  --sidebar-accent: oklch(0.912 0.005 106.5);
+  --sidebar-accent-foreground: oklch(0.222 0.002 106.6);
+
+  --chart-1: oklch(0.553 0.174 38.4);
+  --chart-2: oklch(0.419 0.007 106.7);
+  --chart-3: oklch(0.723 0.009 106.6);
+  --chart-4: oklch(0.446 0.037 257.3);
+  --chart-5: oklch(0.49 0.084 159.2);
+
+  --shadow-2xs: none;
+  --shadow-xs: none;
+  --shadow-sm: none;
+  --shadow-md: 0 2px 8px oklch(0 0 0 / 0.08);
+  --shadow-lg: 0 8px 24px oklch(0 0 0 / 0.12);
+  --shadow-xl: 0 8px 28px oklch(0 0 0 / 0.14);
+  --shadow-2xl: 0 16px 40px oklch(0 0 0 / 0.18);
+
+  --table-level-1: oklch(0.222 0.002 106.6);        /* #1b1b1a */
+  --table-level-2: oklch(0.523 0.008 106.7);        /* #6a6a65 */
+  --table-level-3: oklch(0.723 0.009 106.6);        /* #a6a6a0 */
+  --table-level-4: oklch(0.912 0.005 106.5);
+  --selection: oklch(0.869 0.067 54.2);             /* #f8c9ab */
+  --selection-foreground: oklch(0.222 0.002 106.6);
+}
+
+.dark {
+  --background: oklch(0.191 0.002 106.6);           /* #141413 */
+  --foreground: oklch(0.943 0.003 106.5);           /* #ececea */
+  --card: oklch(0.222 0.002 106.6);                 /* #1b1b1a */
+  --card-foreground: oklch(0.943 0.003 106.5);
+  --popover: oklch(0.222 0.002 106.6);
+  --popover-foreground: oklch(0.943 0.003 106.5);
+  --muted: oklch(0.255 0.004 106.7);                /* #232321 */
+  --muted-foreground: oklch(0.649 0.009 99);        /* #908f89 */
+  --border: oklch(0.292 0.004 106.6);               /* #2c2c2a */
+  --input: oklch(0.378 0.007 106.7);                /* #42423e */
+
+  --primary: oklch(0.751 0.161 46.8);               /* #ff8a4c */
+  --primary-foreground: oklch(0.181 0.023 53.7);    /* #1a0f08 */
+  --secondary: oklch(0.255 0.004 106.7);
+  --secondary-foreground: oklch(0.943 0.003 106.5);
+  --accent: oklch(0.255 0.004 106.7);
+  --accent-foreground: oklch(0.943 0.003 106.5);
+  --ring: oklch(0.751 0.161 46.8);
+
+  --destructive: oklch(0.804 0.112 29.8);           /* #ffa394 */
+  --destructive-foreground: oklch(0.181 0.023 53.7);
+  --success: oklch(0.781 0.123 156.5);              /* #6fcf97 */
+  --success-foreground: oklch(0.222 0.028 158.4);   /* #0f1f16 */
+  --info: oklch(0.762 0.048 253.5);                 /* #9db4d0 */
+  --info-foreground: oklch(0.201 0.022 251.8);      /* #0f1720 */
+
+  --sidebar: oklch(0.255 0.004 106.7);              /* #232321 */
+  --sidebar-foreground: oklch(0.768 0.008 106.6);   /* #b4b4ae */
+  --sidebar-border: oklch(0.292 0.004 106.6);
+  --sidebar-primary: oklch(0.751 0.161 46.8);
+  --sidebar-primary-foreground: oklch(0.181 0.023 53.7);
+  --sidebar-ring: oklch(0.751 0.161 46.8);
+  --sidebar-accent: oklch(0.292 0.004 106.6);
+  --sidebar-accent-foreground: oklch(0.943 0.003 106.5);
+
+  --chart-1: oklch(0.751 0.161 46.8);
+  --chart-2: oklch(0.768 0.008 106.6);
+  --chart-3: oklch(0.514 0.014 106.9);
+  --chart-4: oklch(0.762 0.048 253.5);
+  --chart-5: oklch(0.781 0.123 156.5);
+
+  --table-level-1: oklch(0.943 0.003 106.5);
+  --table-level-2: oklch(0.71 0.009 106.6);         /* #a2a29c */
+  --table-level-3: oklch(0.514 0.014 106.9);        /* #68685f */
+  --table-level-4: oklch(0.292 0.004 106.6);
+  --selection: oklch(0.394 0.088 47.3);             /* #6b3517 */
+  --selection-foreground: oklch(0.943 0.003 106.5);
+}

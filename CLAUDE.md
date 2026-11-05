@@ -35,6 +35,13 @@ the look per component.
 | Multi-line code block | `<pre class="code-block"><code>…</code>` — copy button via `.btn.code-block-copy` + `[data-copy]`, line numbers via `data-line-numbers` | `code-block.html` |
 | Scrollable area | the token scrollbar is the **global default** (arrowless) — no class needed; variants via `class="scrollbar"` + `data-size`/`data-track`/`data-buttons`; rounded scroll containers get the track inset automatically (`data-scrollbar-inset` to force/disable) | `scrollbar.html` |
 | Popover / menu / dropdown / listbox | `[data-popover]` + `role="menu"`/`"menuitem"`/`"option"` | `dropdown-menu.html`, `select.html`, `combobox.html` |
+| Application frame (rail + panel) | `.app-frame` + `.sidebar` with `data-variant="rail"` / `"panel"`, toggle via `[data-panel-toggle]` | `sidebar.html`, `blocks/navigation/app-frame.html` |
+| Filters with sign, count and text | `class="filter-bar"` | `filter-bar.html` |
+| Table with hierarchy lines, row selection | `class="table" data-variant="levels"` + `data-selectable` | `blocks/tables/merge-table.html` |
+| Page title as path | `class="breadcrumb" data-variant="title"`, last step is the `<h1>` | `breadcrumb.html` |
+| Stack of messages, closable alert | `class="alert-stack"`, `.btn-close` as direct child of `.alert` | `alert.html` |
+| Confirmation before an action | `[data-confirm="text"]` or `form[data-confirm]`, never `confirm()` | `alert-dialog.html` |
+| Floating button with counter | `class="btn" data-fab` | `button.html` |
 
 Do **not** write `<button class="inline-flex rounded-md px-3 py-2 …">` when `.btn` exists, and so on.
 
@@ -43,8 +50,8 @@ Do **not** write `<button class="inline-flex rounded-md px-3 py-2 …">` when `.
 Colours, radii and spacing come from **tokens / token utilities** only: `bg-primary`,
 `text-muted-foreground`, `bg-accent`, `border-border`, `bg-popover`, `text-destructive`, `text-warning`, …
 **No hex, no `bg-[#…]`/`text-[#…]` with a literal colour, no inline `oklch()`/`rgb()`** in component markup.
-Re-theming must be "swap the tokens", which only works if nothing hardcodes a colour. The eight style packs
-(`vega`/`nova`/`maia`/`lyra`/`mira`/`luma`/`sera`/`rhea`) are just different token sets.
+Re-theming must be "swap the tokens", which only works if nothing hardcodes a colour. The style packs
+(`vega`/`nova`/`maia`/`lyra`/`mira`/`luma`/`sera`/`rhea`, plus the brand packs `spica` and `ankaa`) are just different token sets.
 
 **The one sanctioned exception** is a colour that must stay fixed *independent* of the theme — a brand
 badge (shields-style), or a control sitting on an arbitrary photo (carousel overlay) that needs guaranteed

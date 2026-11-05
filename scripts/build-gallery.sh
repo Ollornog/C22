@@ -15,7 +15,7 @@ python3 gallery/build.py
 #
 # Die FORM (welche Vendor-Style-Datei) ist normalerweise das gleichnamige Pack. Ein FARB-Pack
 # wie spica hat keine eigene Vendor-Datei und nennt seine Form im Kopf: `@c22-form: vega`.
-PACKS=(vega spica nova maia lyra mira luma sera rhea)
+PACKS=(vega spica ankaa nova maia lyra mira luma sera rhea)
 for pack in "${PACKS[@]}"; do
   in="c22/static/css/_in-$pack.css"
   vendor_style="$pack"
