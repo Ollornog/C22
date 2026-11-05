@@ -82,4 +82,13 @@
       </div>
     </dialog>
   </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Als Verhalten (<code>[data-confirm]</code>, <code>form[data-confirm]</code>): statt <code>confirm()</code> öffnet c22.js den Dialog. Optional <code>data-confirm-title</code>, <code>-ok</code>, <code>-cancel</code>, <code>-variant="destructive"</code>; Standardtexte als dieselben Attribute am <code>&lt;html&gt;</code>.</span>
+    <div class="flex flex-wrap gap-2">
+      <button type="button" class="btn" data-variant="outline" data-confirm="Der Auftrag geht an alle Beteiligten." data-confirm-title="Auftrag senden?" data-confirm-ok="Senden">Knopf</button>
+      <form action="#" method="post" data-confirm="Diese Tür und ihre Unterlagen werden gelöscht. Das lässt sich nicht rückgängig machen." data-confirm-title="Tür löschen?" data-confirm-ok="Löschen" data-confirm-variant="destructive">
+        <button type="submit" class="btn" data-variant="destructive">Formular (Gefahr)</button>
+      </form>
+    </div>
+  </div>
 </div>

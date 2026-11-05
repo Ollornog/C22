@@ -55,6 +55,16 @@
   --overlay-shadow-dot: 0 1px 3px oklch(0 0 0 / 0.6);
   --overlay-shadow-arrow: drop-shadow(0 2px 6px oklch(0 0 0 / 0.7));
 
+  /* Lines by hierarchy level (table[data-variant="levels"]): level 1 is the strongest, level 4 the
+     plain row line. Derived from the neutral roles so every pack gets a working ladder; a pack may
+     set exact values. Selection: the strong row marking of the same table, plus its text colour. */
+  --table-level-1: var(--foreground);
+  --table-level-2: var(--muted-foreground);
+  --table-level-3: color-mix(in oklab, var(--muted-foreground) 55%, var(--border));
+  --table-level-4: var(--border);
+  --selection: color-mix(in oklab, var(--primary) 28%, var(--card));
+  --selection-foreground: var(--foreground);
+
   /* Chart-Palette in oklch statt der Hex-Werte aus dem Vendor (base.css ist sonst durchgehend oklch;
    * die Hex-Blues waren die einzige Insel). Gleiche Farben (Tailwind blue-300/500/600/700/800), nur
    * generator-setzbar im selben Farbraum wie alle anderen Tokens (docs/theming.md, Achse chart). */
