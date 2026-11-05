@@ -2706,7 +2706,15 @@
     border-top: 1px solid var(--input);
   }
   .sidebar[data-variant='rail'] nav > footer > :is(a, button) { height: 2.375rem; }
-  .sidebar[data-variant='rail'] nav > footer .dropdown-menu { justify-content: center; }
+  /* The menu host spans the rail, so a popover with data-side="inline-end" opens fully beside it. */
+  .sidebar[data-variant='rail'] nav > :is(header, footer) .dropdown-menu {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+  .sidebar[data-variant='rail'] nav > :is(header, footer) [data-popover][data-side='inline-end'] {
+    margin-inline-start: 0.5rem;
+  }
   .sidebar[data-variant='rail'] [data-popover] {
     min-width: 16rem;
     max-width: 21rem;
@@ -2851,7 +2859,10 @@
     }
     .sidebar[data-variant='rail'] nav > footer > hr { display: none; }
     .sidebar[data-variant='rail'] nav > footer > :is(a, button) { width: 2.75rem; height: 2.75rem; }
-    .sidebar[data-variant='rail'] nav > footer .dropdown-menu { position: static; }
+    .sidebar[data-variant='rail'] nav > footer .dropdown-menu {
+      position: static;
+      width: auto;
+    }
     .sidebar[data-variant='rail'] nav > footer [data-popover] {
       position: fixed;
       inset: auto 0.5rem calc(var(--tabbar-height) + env(safe-area-inset-bottom, 0px) + 0.5rem) auto;
