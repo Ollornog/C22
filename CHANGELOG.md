@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rail and panel: the vendor's group padding made the rail items 40 px wide and cut off longer labels.
 - `.alert[data-variant="destructive"]` is tinted like the other status variants, so a stack reads as one.
 - Rail: a popover opening to the right no longer overlaps the rail.
+- Panel below `md`: the sheet no longer flashes open before Basecoat has initialised it.
 
 ### Changed — Python 3.13–3.15 (Testkit 0.37.0)
 

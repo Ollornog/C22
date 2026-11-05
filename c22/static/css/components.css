@@ -2870,6 +2870,9 @@
       translate: none;
     }
 
+    /* Closed until Basecoat has initialised it, or the sheet flashes on every page load. */
+    .sidebar[data-variant='panel']:not([data-sidebar-initialized]) { display: none; }
+
     /* Sheet: the vendor backdrop stays (aside = the dark layer), it just ends above the tab bar. */
     .sidebar[data-variant='panel'] {
       @apply bg-black/40;
