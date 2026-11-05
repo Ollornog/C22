@@ -91,6 +91,7 @@
   --table-level-4: oklch(0.912 0.005 106.5);
   --selection: oklch(0.869 0.067 54.2);             /* #f8c9ab */
   --selection-foreground: oklch(0.222 0.002 106.6);
+  --tab-marker: oklch(0.553 0.174 38.4);
 }
 
 .dark {
@@ -141,4 +142,5 @@
   --table-level-4: oklch(0.292 0.004 106.6);
   --selection: oklch(0.394 0.088 47.3);             /* #6b3517 */
   --selection-foreground: oklch(0.943 0.003 106.5);
+  --tab-marker: oklch(0.751 0.161 46.8);
 }

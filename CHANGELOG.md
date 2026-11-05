@@ -24,6 +24,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Confirmation as behaviour:** `[data-confirm]` and `form[data-confirm]` open a `<dialog class="alert-dialog">` instead of
   `confirm()`, with title, text, labels and a destructive variant.
 - **Floating button:** `.btn[data-fab]` with a counter badge.
+- `C22.confirm(message, onConfirm, options)` opens the same dialog from code, for example for htmx's `hx-confirm`.
+- Token `--tab-marker` for the active tab in `tabs` `data-variant="line"`; `ankaa` puts its accent there.
+
+### Fixed — details found while adopting pack `ankaa`
+
+- Rail and panel: the vendor's group padding made the rail items 40 px wide and cut off longer labels.
+- `.alert[data-variant="destructive"]` is tinted like the other status variants, so a stack reads as one.
 
 ### Changed — Python 3.13–3.15 (Testkit 0.37.0)
 

@@ -3294,6 +3294,18 @@ document.addEventListener('basecoat:initialized', function (e) {
     d.showModal();
     nein.focus();
   }
+  // For behaviour outside the markup contract (htmx's hx-confirm, for one): the same dialog from code.
+  // options: { title, ok, cancel, variant }, empty values fall back to the defaults on <html>.
+  window.C22 = window.C22 || {};
+  window.C22.confirm = function (message, onConfirm, options) {
+    var quelle = document.createElement('div');
+    quelle.setAttribute('data-confirm', message);
+    Object.keys(options || {}).forEach(function (name) {
+      if (options[name]) quelle.setAttribute('data-confirm-' + name, options[name]);
+    });
+    frage(quelle, onConfirm);
+  };
+
   // Capture phase: htmx and Basecoat must not see the first click or submit at all.
   document.addEventListener('click', function (e) {
     var el = e.target.closest && e.target.closest('[data-confirm]');
