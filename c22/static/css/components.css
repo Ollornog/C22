@@ -2804,7 +2804,23 @@
     box-shadow: inset 2px 0 0 var(--sidebar-primary);
   }
 
+  /* Levels in a panel list (ul[data-variant='levels'], li[data-level]): one click shows one level.
+     Each level has its own inset, weight and leading line, so the depth reads without colour. */
+  .sidebar[data-variant='panel'] ul[data-variant='levels'] > li[data-level='0'] > :is(a, button) {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--muted-foreground);
+  }
+  .sidebar[data-variant='panel'] ul[data-variant='levels'] > li[data-level='1'] > :is(a, button) { font-weight: 550; }
+  .sidebar[data-variant='panel'] ul[data-variant='levels'] > li[data-level='1'] + li[data-level='1'] { border-top: 1px solid var(--border); }
+  .sidebar[data-variant='panel'] ul[data-variant='levels'] > li[data-level='2'] { margin-inline-start: 0.75rem; border-inline-start: 1px solid var(--input); }
+  .sidebar[data-variant='panel'] ul[data-variant='levels'] > li[data-level='3'] { margin-inline-start: 1.5rem; border-inline-start: 1px solid var(--input); }
+  .sidebar[data-variant='panel'] ul[data-variant='levels'] > li[data-level='3'] > :is(a, button) { color: var(--muted-foreground); }
+
   @media (width < 48rem) {
+    /* data-tabs='fill': the footer moved elsewhere, so the tabs share the whole width. */
+    .sidebar[data-variant='rail'] nav[data-tabs='fill'] > section ul { display: contents; }
+    .sidebar[data-variant='rail'] nav[data-tabs='fill'] > section ul li { flex: 1 1 0; width: auto; min-width: 0; }
     .app-frame {
       display: block;
     }
@@ -2953,6 +2969,18 @@
     color: var(--muted-foreground);
     white-space: nowrap;
   }
+  /* A link in the group title selects the whole group; it stays a title, not a filter. */
+  .filter-bar > section > :is(h2, h3, h4) > a {
+    display: inline;
+    padding: 0;
+    border: 0;
+    color: inherit;
+  }
+  .filter-bar > section > :is(h2, h3, h4) > a:hover {
+    background: none;
+    color: inherit;
+    text-decoration: underline;
+  }
   .filter-bar :is(button, a):hover {
     background-color: var(--accent);
     color: var(--accent-foreground);
@@ -3010,10 +3038,7 @@
   .table[data-variant='levels'] td[data-wrap] { white-space: normal; }
   .table[data-variant='levels'] tr[data-level='3'] > td { border-top-color: var(--table-level-3); }
   .table[data-variant='levels'] tr[data-level='2'] > td { border-top-color: var(--table-level-2); }
-  .table[data-variant='levels'] tr[data-level='1'] > td {
-    border-top-width: 2px;
-    border-top-color: var(--table-level-1);
-  }
+  .table[data-variant='levels'] tr[data-level='1'] > td { border-top-color: var(--table-level-1); }
   .table[data-variant='levels'] td[data-merged] {
     padding-top: 0.375rem;
     vertical-align: top;

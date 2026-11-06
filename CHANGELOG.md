@@ -6,10 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **Levels table:** the top line of the first level no longer doubles its width; colour alone marks it.
+
 ### Added — pack `ankaa` and the building blocks of a calm work tool
 
 - **Pack `ankaa`:** a pure token override over the vega form. Warm grey surfaces, fine lines, one orange accent, small
   radius, flat elevation; light and dark measured against WCAG AA.
+- **Levels in a panel list:** `ul[data-variant="levels"]` with `li[data-level="0..3"]`: inset, weight and a leading line per level.
+- **Rail as tabs:** `nav[data-tabs="fill"]` lets the tabs share the width below `md`.
+- **Filter bar:** a link in the group title selects the group and stays a title.
 - **Application frame:** `.app-frame` with `.sidebar[data-variant="rail"]` (60 px, text under the icon, active bar, account
   menu opening to the right) and `.sidebar[data-variant="panel"]` (260 px, collapsible, optional memory through
   `data-panel-persist`). Below `md` the rail becomes a bottom tab bar and the panel a sheet. Toggle: `[data-panel-toggle]`.
