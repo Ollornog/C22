@@ -3214,6 +3214,10 @@ document.addEventListener('basecoat:initialized', function (e) {
     if (auswahl && !auswahl.isCollapsed && String(auswahl).length) return;
     waehle(table, tr, ziel.closest('td'), e.shiftKey);
   });
+  // Shift extends the selection of rows, not the browser's text selection (which would cancel the click).
+  document.addEventListener('mousedown', function (e) {
+    if (e.shiftKey && e.target.closest && e.target.closest(TABLE + ' tbody tr')) e.preventDefault();
+  });
   document.addEventListener('keydown', function (e) {
     if (e.key !== ' ' && e.key !== 'Enter') return;
     var tr = e.target;
