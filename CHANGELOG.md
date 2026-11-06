@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **Levels table:** a shift click selects the row range instead of selecting text.
+
 ### Changed
 
 - **Levels table:** the top line of the first level no longer doubles its width; colour alone marks it.
