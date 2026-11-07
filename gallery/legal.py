@@ -100,6 +100,10 @@ ABSCHNITTE: list[tuple[str, tuple[str, str], list[tuple[str, str]]]] = [
          f'from <a href="https://unsplash.com/" {LINK}>Unsplash</a>, whose licence expressly '
          "permits downloading and use; the attribution sits next to the files "
          f'(<code {CODE}>c22/static/img/demo/REUSE.toml</code>).'),
+        ("Die Schrift dieser Seite ist Inter, ebenfalls von hier ausgeliefert. Sie steht unter "
+         f'der <a href="@ASSETS@c22/static/fonts/OFL.txt" {LINK}>SIL Open Font License 1.1</a>.',
+         "The font of this site is Inter, also served from here. It is licensed under the "
+         f'<a href="@ASSETS@c22/static/fonts/OFL.txt" {LINK}>SIL Open Font License 1.1</a>.'),
         ("Bis zum 23.09.2026 wurden diese Bilder von einem fremden Server nachgeladen. Damit "
          "erfuhr ein Dritter bei jedem Seitenaufruf die IP-Adresse des Besuchers, ohne dass "
          "dieser etwas angeklickt hatte. Das ist behoben: <strong>diese Seite lädt nichts von "
@@ -191,15 +195,16 @@ def _adressblock() -> str:
     )
 
 
-def inhalt() -> tuple[str, str]:
-    """Liefert (toc_html, main_html) für die Rechtsseite."""
+def inhalt(assets: str = "") -> tuple[str, str]:
+    """Liefert (toc_html, main_html) für die Rechtsseite. `assets`: Präfix der Asset-Adressen."""
     toc, body = [], []
     for anker, (titel_de, titel_en), absaetze in ABSCHNITTE:
         toc.append(
             f'<a href="#{anker}" class="text-muted-foreground hover:bg-muted hover:text-foreground '
             f'rounded-md px-2 py-1 text-sm">{zwei(html.escape(titel_de), html.escape(titel_en))}</a>')
         teile = "".join(
-            _adressblock() if de == "ADRESSBLOCK" else f'<p {P}>{zwei(de, en)}</p>'
+            _adressblock() if de == "ADRESSBLOCK"
+            else f'<p {P}>{zwei(de, en)}</p>'.replace("@ASSETS@", assets)
             for de, en in absaetze)
         body.append(
             f'<section id="{anker}" class="scroll-mt-6 flex flex-col gap-4 pt-10 first:pt-0">'

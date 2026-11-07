@@ -3449,6 +3449,7 @@ document.addEventListener('basecoat:initialized', function (e) {
     var copy = block.cloneNode(true);
     copy.removeAttribute('id');
     copy.querySelectorAll('[id]').forEach(function (el) { el.removeAttribute('id'); });
+    if (copy.tagName === 'DETAILS') copy.open = true;
     copy.querySelectorAll('details').forEach(function (d) { d.open = true; });
     copy.setAttribute('data-print-copy', '');
     copy.classList.add('print-sheet');
