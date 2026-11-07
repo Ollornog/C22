@@ -3135,6 +3135,8 @@ document.addEventListener('basecoat:initialized', function (e) {
   // Basecoat's sidebar.js registers. [data-panel-toggle] flips it; `data-panel-toggle="#id"` names
   // the panel, otherwise the one inside the same .app-frame counts. Below md the panel is a sheet.
   var PANEL = '.sidebar[data-variant="panel"]';
+  // Under a frame head (data-head) the panel stays open; small screens show it in the drawer instead.
+  var PANEL_FREE = PANEL + ':not([data-head] > *)';
   var MOBILE = window.matchMedia ? window.matchMedia('(max-width: 47.999rem)') : { matches: false };
 
   function panelOf(btn) {
@@ -3176,12 +3178,12 @@ document.addEventListener('basecoat:initialized', function (e) {
   });
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape' || !MOBILE.matches) return;
-    document.querySelectorAll(PANEL + '[aria-hidden="false"]').forEach(function (panel) {
+    document.querySelectorAll(PANEL_FREE + '[aria-hidden="false"]').forEach(function (panel) {
       if (typeof panel.close === 'function') { panel.close(); syncToggles(panel); }
     });
   });
   function followViewport() {
-    document.querySelectorAll(PANEL).forEach(function (panel) {
+    document.querySelectorAll(PANEL_FREE).forEach(function (panel) {
       if (typeof panel.close !== 'function') return;
       var key = panelKey(panel);
       if (MOBILE.matches || (key && store(key) === 'closed')) panel.close(); else panel.open();
@@ -3194,6 +3196,40 @@ document.addEventListener('basecoat:initialized', function (e) {
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', startPanels, { once: true, capture: true });
   else startPanels();
+
+  // ---- Frame head: drawer below md ------------------------------------------
+  // .app-frame[data-head] > .app-frame-head carries a [data-frame-menu] button. It opens rail and
+  // panel side by side under the head (data-menu-open on the frame). Escape, a click beside the
+  // drawer and a followed link close it; leaving the small screen closes it too.
+  function setFrameMenu(frame, open) {
+    var head = frame.querySelector(':scope > .app-frame-head');
+    if (open) {
+      frame.style.setProperty('--frame-head-height', (head ? head.getBoundingClientRect().bottom : 0) + 'px');
+      frame.setAttribute('data-menu-open', '');
+    } else {
+      frame.removeAttribute('data-menu-open');
+    }
+    frame.querySelectorAll('[data-frame-menu]').forEach(function (btn) { btn.setAttribute('aria-expanded', String(open)); });
+  }
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest && e.target.closest('[data-frame-menu]');
+    if (btn) {
+      var frame = btn.closest('.app-frame[data-head]');
+      if (frame) setFrameMenu(frame, !frame.hasAttribute('data-menu-open'));
+      return;
+    }
+    document.querySelectorAll('.app-frame[data-menu-open]').forEach(function (frame) {
+      var drawer = e.target.closest && e.target.closest('.app-frame[data-menu-open] > .sidebar');
+      if (!drawer || e.target.closest('a[href]')) setFrameMenu(frame, false);
+    });
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    document.querySelectorAll('.app-frame[data-menu-open]').forEach(function (frame) { setFrameMenu(frame, false); });
+  });
+  if (MOBILE.addEventListener) MOBILE.addEventListener('change', function () {
+    if (!MOBILE.matches) document.querySelectorAll('.app-frame[data-menu-open]').forEach(function (frame) { setFrameMenu(frame, false); });
+  });
 
   // ---- Filter bar -----------------------------------------------------------
   // A <button aria-pressed> toggles; `data-single` on the group releases its siblings. Links
