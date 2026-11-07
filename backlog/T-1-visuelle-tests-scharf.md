@@ -2,7 +2,7 @@
 id: T-1
 type: Task
 title: Visuelle Tests scharf schalten
-status: offen
+status: erledigt
 milestone: M-1
 tags: [testing, screenshots]
 created: 2026-07-23
@@ -36,3 +36,10 @@ Genau das sollte die visuelle/Browser-Ebene können:
 3. Erwartung vergleichen (Abschnitt 3 ⇒ dritter Eintrag; Kopfbereich ⇒ Seitentitel-Eintrag).
 Dasselbe Muster deckt danach Karussell, Kalender und die Chart-Engine ab.
 
+## Erledigt (2026-11-07)
+
+`tests/test_visual.py` vergleicht jeden Galerie-Abschnitt je Ansicht (Desktop, Handy, dunkel) mit einem Bild in `tests/visual/`.
+
+- **Abweichung:** Blöcke von 8×8 Pixeln bei einem Drittel der Größe. Ein Pixel zählt ab 48/255 je Kanal, ein Block ab einem Viertel seiner Pixel. Kantenglättung bleibt darunter. Jeder Lauf verschiebt selbst einen Knopf um 12 px und verlangt Rot.
+- **Referenzen:** `python3 tests/test_visual.py --renew` ist der eigene Schritt und schreibt nur, was sich bewegt hat. Der Diff zeigt es.
+- **Lesemarke:** Das Inhaltsverzeichnis wird gescrollt und ausgelesen; dasselbe Muster prüft Karussell, Kalender und Diagramm.

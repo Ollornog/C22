@@ -2,7 +2,7 @@
 id: T-5
 type: Task
 title: Schrift Inter ohne OFL-Lizenztext ausgeliefert
-status: offen
+status: in-arbeit
 milestone: M-2
 tags: [lizenz, schrift, fremdressourcen]
 created: 2026-09-27
@@ -26,3 +26,9 @@ Quelle: `LICENSE.txt` im Repo `rsms/inter`) — das ist ein Sonderweg.
 
 `c22/static/fonts/OFL.txt` (oder gleichwertig) liegt neben der Schrift, das Paket liefert sie
 mit, und die Vendor-Skripte der Apps kopieren sie aus C22 statt aus eigener Quelle.
+
+## Stand (2026-11-07)
+
+Die C22-Seite ist erledigt: `c22/static/fonts/OFL.txt` (gleich `LICENSE.txt` von `rsms/inter`) liegt neben der Schrift und kommt ins Wheel.
+
+**Offen:** Die Vendor-Skripte der Apps kopieren sie noch nicht aus C22.

@@ -2043,8 +2043,15 @@
     var N = labels.length;
     var grid = cfg.grid !== false;
     var axis = !!cfg.axis;
+    // Drawing box. Default: a fixed 320x180 that scales with the width, so the text scales too.
+    // With `height` (px) or `aspect` (width/height) one unit is one CSS pixel: the text keeps its
+    // size at any width, and the chart redraws itself when the width changes.
+    var inPixels = cfg.height != null || cfg.aspect != null;
+    var VB_W = inPixels ? (root.clientWidth || CH_W) : CH_W;
+    var VB_H = inPixels ? Math.round(cfg.height || VB_W / cfg.aspect) : CH_H;
+    var fs = inPixels ? 12 : 10;
     var padL = axis ? 42 : 14, padR = 14, padT = 14, padB = 26;
-    var x0 = padL, x1 = CH_W - padR, y0 = padT, y1 = CH_H - padB;
+    var x0 = padL, x1 = VB_W - padR, y0 = padT, y1 = VB_H - padB;
     var band = (x1 - x0) / N;
     function xc(i) { return x0 + band * (i + 0.5); }
 
@@ -2057,7 +2064,7 @@
     for (var t = 0; t <= ticks; t++) {
       var val = max * t / ticks, gy = yv(val);
       if (grid) s += '<line x1="' + x0 + '" y1="' + gy.toFixed(1) + '" x2="' + x1 + '" y2="' + gy.toFixed(1) + '" stroke="var(--border)" stroke-width="1"/>';
-      if (axis) s += chText(padL - 6, gy + 3, chNum(val), 'end', 10);
+      if (axis) s += chText(padL - 6, gy + 3, chNum(val), 'end', fs);
     }
     if (axis) s += '<line x1="' + x0 + '" y1="' + y0 + '" x2="' + x0 + '" y2="' + y1 + '" stroke="var(--muted-foreground)" stroke-width="1"/>';
 
@@ -2100,10 +2107,16 @@
       series.forEach(function (se, si) { s += '<circle data-focus-dot="' + si + '" r="4.5" fill="var(--background)" stroke="' + chCol(se.color, si) + '" stroke-width="2.5" opacity="0"/>'; });
     }
 
-    if (cfg.xLabels !== false) for (var i = 0; i < N; i++) s += chText(xc(i), y1 + 16, labels[i], 'middle', 10);
+    // In pixels the labels would collide on a narrow band, so only every n-th one is drawn.
+    var xStep = 1;
+    if (inPixels) {
+      var longest = labels.reduce(function (a, l) { return Math.max(a, String(l).length); }, 1);
+      xStep = Math.max(1, Math.ceil((longest * fs * 0.62 + 6) / band));
+    }
+    if (cfg.xLabels !== false) for (var i = 0; i < N; i += xStep) s += chText(xc(i), y1 + 16, labels[i], 'middle', fs);
     for (var i = 0; i < N; i++) s += '<rect data-hit="' + i + '" x="' + (x0 + band * i).toFixed(1) + '" y="' + y0 + '" width="' + band.toFixed(1) + '" height="' + (y1 - y0) + '" fill="transparent"/>';
 
-    var m = chMount(root, cfg, '<svg viewBox="0 0 ' + CH_W + ' ' + CH_H + '" style="display:block;width:100%" fill="none">' + s + '</svg>');
+    var m = chMount(root, cfg, '<svg viewBox="0 0 ' + VB_W + ' ' + VB_H + '" style="display:block;width:100%" fill="none">' + s + '</svg>');
     var svgEl = m.svgEl, tip = m.tip;
     var catRects = [].slice.call(svgEl.querySelectorAll('rect[data-cat]'));
     var focusLine = svgEl.querySelector('[data-focus-line]');
@@ -2116,7 +2129,7 @@
       var topVal = type === 'stacked'
         ? series.reduce(function (a, se) { return a + (se.data[i] || 0); }, 0)
         : Math.max.apply(null, series.map(function (se) { return se.data[i] || 0; }));
-      chPlace(tip, svgEl, root, xc(i), yv(topVal), CH_W, CH_H);
+      chPlace(tip, svgEl, root, xc(i), yv(topVal), VB_W, VB_H);
       catRects.forEach(function (r) { r.style.opacity = (+r.getAttribute('data-cat') === i) ? '1' : '0.3'; });
       if (focusLine) { focusLine.setAttribute('x1', xc(i)); focusLine.setAttribute('x2', xc(i)); focusLine.setAttribute('opacity', '0.5'); }
       focusDots.forEach(function (d, si) { d.setAttribute('cx', xc(i)); d.setAttribute('cy', yv(series[si].data[i] || 0)); d.setAttribute('opacity', '1'); });
@@ -2128,6 +2141,42 @@
       focusDots.forEach(function (d) { d.setAttribute('opacity', '0'); });
     }
     chHover(svgEl, show, hide, cfg);
+    if (cfg.selectable) chSelectable(root, svgEl, labels, series);
+    if (inPixels) chRedrawOnWidth(root, cfg, VB_W);
+  }
+
+  // `selectable: true`: a category is a button. Click, Enter or Space send `c22:chart-select` with
+  // { index, label, values } from the chart element; the app decides what follows.
+  function chSelectable(root, svgEl, labels, series) {
+    function melde(i) {
+      root.dispatchEvent(new CustomEvent('c22:chart-select', {
+        bubbles: true,
+        detail: { index: i, label: labels[i], values: series.map(function (se) { return { name: se.name, value: se.data[i] }; }) },
+      }));
+    }
+    [].slice.call(svgEl.querySelectorAll('[data-hit]')).forEach(function (h, i) {
+      h.setAttribute('tabindex', '0');
+      h.setAttribute('role', 'button');
+      h.setAttribute('aria-label', String(labels[i]));
+      h.style.cursor = 'pointer';
+      h.addEventListener('click', function () { melde(i); });
+      h.addEventListener('keydown', function (e) {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        e.preventDefault();
+        melde(i);
+      });
+    });
+  }
+  // One observer per chart element, however often it redraws. A hidden tab panel has width 0: the
+  // chart draws at the default width and redraws as soon as the panel opens.
+  function chRedrawOnWidth(root, cfg, drawnAt) {
+    root.c22ChartWidth = drawnAt;
+    if (root.c22ChartObserver || !window.ResizeObserver) return;
+    root.c22ChartObserver = new ResizeObserver(function () {
+      var w = root.clientWidth;
+      if (w && Math.abs(w - root.c22ChartWidth) >= 1) chartCartesian(root, cfg);
+    });
+    root.c22ChartObserver.observe(root);
   }
 
   // Zeichenkasten runder Charts: so groß, wie die Geometrie WIRKLICH reicht. Ein angeschnittener
@@ -3331,4 +3380,95 @@ document.addEventListener('basecoat:initialized', function (e) {
       if (form.requestSubmit) form.requestSubmit(knopf || undefined); else form.submit();
     });
   }, true);
+})();
+
+/* Text preview (components/text-clamp.html). The clamp only applies once this script has measured
+ * the block, so without JS nothing is cut off and out of reach. */
+(function () {
+  function wire(box) {
+    if (box.hasAttribute('data-ready')) return;
+    var body = box.querySelector(':scope > [data-clamp-body]');
+    if (!body) return;
+    box.setAttribute('data-ready', '');
+    var measure = function () { measureClamp(box, body); };
+    measure();
+    if (window.ResizeObserver) new ResizeObserver(measure).observe(body);
+    body.addEventListener('load', measure, true);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+  }
+  function measureClamp(box, body) {
+    if (box.hasAttribute('data-open')) return;
+    var fits = body.scrollHeight <= body.clientHeight + 1;
+    box.toggleAttribute('data-fits', fits);
+    var btn = box.querySelector(':scope > [data-clamp-toggle]');
+    if (btn) btn.hidden = fits;
+  }
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest && e.target.closest('[data-clamp-toggle]');
+    if (!btn) return;
+    var box = btn.closest('.text-clamp');
+    var open = !box.hasAttribute('data-open');
+    box.toggleAttribute('data-open', open);
+    btn.setAttribute('aria-expanded', String(open));
+    var label = btn.getAttribute(open ? 'data-less' : 'data-more');
+    if (label) btn.textContent = label;
+    if (!open) measureClamp(box, box.querySelector(':scope > [data-clamp-body]'));
+  });
+  function wireAll(root) {
+    (root.querySelectorAll ? root : document).querySelectorAll('.text-clamp').forEach(wire);
+    if (root.matches && root.matches('.text-clamp')) wire(root);
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { wireAll(document); });
+  } else {
+    wireAll(document);
+  }
+  new MutationObserver(function (muts) {
+    muts.forEach(function (m) {
+      Array.prototype.forEach.call(m.addedNodes, function (n) { if (n.nodeType === 1) wireAll(n); });
+    });
+  }).observe(document.documentElement, { childList: true, subtree: true });
+  window.C22 = window.C22 || {};
+  window.C22.initClamps = wireAll;
+})();
+
+/* Printable block (components/print-block.html). A copy of the block goes straight under <body>:
+ * deep in a grid, a card or a scroll container it would be cut off on paper. The dark class leaves
+ * <html> while printing, so the `dark:` rules let go as well and the sheet is black on white. */
+(function () {
+  var state = null;
+  function cleanup() {
+    if (!state) return;
+    state.copy.remove();
+    document.documentElement.removeAttribute('data-print-selection');
+    if (state.dark) document.documentElement.classList.add('dark');
+    state = null;
+  }
+  function printBlock(block) {
+    cleanup();
+    var copy = block.cloneNode(true);
+    copy.removeAttribute('id');
+    copy.querySelectorAll('[id]').forEach(function (el) { el.removeAttribute('id'); });
+    copy.querySelectorAll('details').forEach(function (d) { d.open = true; });
+    copy.setAttribute('data-print-copy', '');
+    copy.classList.add('print-sheet');
+    document.body.appendChild(copy);
+    var html = document.documentElement;
+    state = { copy: copy, dark: html.classList.contains('dark') };
+    html.classList.remove('dark');
+    html.setAttribute('data-print-selection', '');
+    window.print();
+  }
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest && e.target.closest('[data-print]');
+    if (!btn) return;
+    var block = btn.closest('[data-printable]');
+    if (block) printBlock(block);
+  });
+  window.addEventListener('afterprint', cleanup);
+  // afterprint does not fire everywhere, the end of the print media query does.
+  if (window.matchMedia) {
+    var media = window.matchMedia('print');
+    if (media.addEventListener) media.addEventListener('change', function (e) { if (!e.matches) cleanup(); });
+  }
 })();

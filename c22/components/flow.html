@@ -1,0 +1,139 @@
+<!-- custom: Flow diagram. ol.flow = a chain of steps, the arrows come from the list itself. A node is a .card[data-size="sm"];
+     data-state (pending / active / done / failed) sets the border, the word in the badge says the same thing, so the
+     state never hangs on colour alone. A button with [data-flow-open] in the title makes the whole node clickable and
+     reachable by keyboard. .flow-branches holds .flow-branch blocks side by side; the next step after them is where the
+     branches meet again. data-orientation="horizontal" lays the chain out in a row that scrolls when it does not fit. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Senkrecht, mit Zuständen</span>
+    <ol class="flow max-w-sm">
+      <li><div class="card" data-size="sm" data-state="done">
+          <header>
+            <h3 class="card-title">Dokument erkannt</h3>
+            <p class="card-description">Texterkennung abgeschlossen</p>
+            <div class="card-action"><span class="badge" data-variant="success">Fertig</span></div>
+          </header>
+        </div></li>
+      <li><div class="card" data-size="sm" data-state="active">
+          <header>
+            <h3 class="card-title">Regeln prüfen</h3>
+            <p class="card-description">14 von 32 geprüft</p>
+            <div class="card-action"><span class="badge" data-variant="info">Läuft</span></div>
+          </header>
+        </div></li>
+      <li><div class="card" data-size="sm" data-state="pending">
+          <header>
+            <h3 class="card-title">Sprachmodell fragen</h3>
+            <p class="card-description">Wartet auf die Regeln</p>
+            <div class="card-action"><span class="badge" data-variant="secondary">Offen</span></div>
+          </header>
+        </div></li>
+    </ol>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Entscheidung mit zwei Zweigen, die wieder zusammenlaufen</span>
+    <ol class="flow max-w-xl">
+      <li><div class="card" data-size="sm">
+          <header>
+            <h3 class="card-title">Absender bekannt?</h3>
+            <p class="card-description">Vergleich mit dem Adressbuch</p>
+            <div class="card-action"><span class="badge" data-variant="secondary">Entscheidung</span></div>
+          </header>
+        </div></li>
+      <li>
+        <div class="flow-branches">
+          <div class="flow-branch">
+            <span class="badge" data-variant="success">Ja</span>
+            <ol class="flow">
+              <li><div class="card" data-size="sm" data-state="done">
+          <header>
+            <h3 class="card-title">Regel anwenden</h3>
+            <p class="card-description">Ordner aus dem Adressbuch</p>
+            <div class="card-action"><span class="badge" data-variant="secondary">Schritt</span></div>
+          </header>
+        </div></li>
+            </ol>
+          </div>
+          <div class="flow-branch">
+            <span class="badge" data-variant="warning">Nein</span>
+            <ol class="flow">
+              <li><div class="card" data-size="sm">
+          <header>
+            <h3 class="card-title">Sprachmodell fragen</h3>
+            <p class="card-description">Antwort zur Kontrolle</p>
+            <div class="card-action"><span class="badge" data-variant="secondary">KI</span></div>
+          </header>
+        </div></li>
+              <li><div class="card" data-size="sm" data-state="failed">
+          <header>
+            <h3 class="card-title">Abruf fehlgeschlagen</h3>
+            <p class="card-description">Zeitüberschreitung nach 30 s</p>
+            <div class="card-action"><span class="badge" data-variant="destructive">Fehler</span></div>
+          </header>
+        </div></li>
+            </ol>
+          </div>
+        </div>
+      </li>
+      <li><div class="card" data-size="sm">
+          <header>
+            <h3 class="card-title">Ablegen</h3>
+            <p class="card-description">Ordner, Schlagwörter, Datum</p>
+            <div class="card-action"><span class="badge" data-variant="secondary">Schritt</span></div>
+          </header>
+        </div></li>
+    </ol>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Knoten zum Anklicken (per Tastatur erreichbar)</span>
+    <ol class="flow max-w-sm">
+      <li><div class="card" data-size="sm">
+          <header>
+            <h3 class="card-title"><button type="button" data-flow-open>Eingang</button></h3>
+            <p class="card-description">Klicken zum Bearbeiten</p>
+            <div class="card-action"><span class="badge" data-variant="secondary">Schritt</span></div>
+          </header>
+        </div></li>
+      <li><div class="card" data-size="sm">
+          <header>
+            <h3 class="card-title"><button type="button" data-flow-open>Klassifizieren</button></h3>
+            <p class="card-description">Klicken zum Bearbeiten</p>
+            <div class="card-action"><span class="badge" data-variant="secondary">KI</span></div>
+          </header>
+        </div></li>
+    </ol>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Waagerecht (<code>data-orientation="horizontal"</code>)</span>
+    <ol class="flow" data-orientation="horizontal">
+      <li><div class="card" data-size="sm" data-state="done">
+          <header>
+            <h3 class="card-title">Container</h3>
+            <p class="card-description">Erstellt</p>
+            <div class="card-action"><span class="badge" data-variant="success">Fertig</span></div>
+          </header>
+        </div></li>
+      <li><div class="card" data-size="sm" data-state="done">
+          <header>
+            <h3 class="card-title">Schlüssel</h3>
+            <p class="card-description">Eingetragen</p>
+            <div class="card-action"><span class="badge" data-variant="success">Fertig</span></div>
+          </header>
+        </div></li>
+      <li><div class="card" data-size="sm" data-state="active">
+          <header>
+            <h3 class="card-title">Anwendung</h3>
+            <p class="card-description">Wird gestartet</p>
+            <div class="card-action"><span class="badge" data-variant="info">Läuft</span></div>
+          </header>
+        </div></li>
+      <li><div class="card" data-size="sm" data-state="pending">
+          <header>
+            <h3 class="card-title">Prüfung</h3>
+            <p class="card-description">Wartet</p>
+            <div class="card-action"><span class="badge" data-variant="secondary">Offen</span></div>
+          </header>
+        </div></li>
+    </ol>
+  </div>
+</div>

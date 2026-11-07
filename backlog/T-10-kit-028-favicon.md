@@ -2,7 +2,7 @@
 id: T-10
 type: Task
 title: Kit 0.28 übernehmen — jede Webseite hat ein Favicon
-status: offen
+status: erledigt
 milestone: M-2
 tags: [hygiene, kit, favicon]
 created: 2026-10-08
@@ -32,3 +32,7 @@ auf die fertige Seite.
    **rohe Antwort** prüfen (`fetch` mit `Content-Type`), nicht das DOM. Chrome verpackt JSON und Text in eine eigene
    HTML-Hülle mit `<head>`, das ergab in DashMyBoard einen Fehlalarm.
 3. Fehlt das Favicon, ein eigenes ausliefern (Datei oder `data:`-URI), nie von Dritten.
+
+## Erledigt (2026-11-07)
+
+Schritt 1 war schon drin. Schritt 2: `tests/test_visual.py` wendet `favicon_befunde_html` auf die rohe Antwort jeder gebauten Seite an und holt das Favicon selbst ab. Die Galerie liefert `docs/logo.png`, Schritt 3 entfällt.

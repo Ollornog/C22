@@ -31,6 +31,9 @@ the look per component.
 | Keyboard shortcut | `<kbd class="kbd">` — one cap per key | `kbd.html` |
 | Badge / avatar | `class="badge"` / `class="avatar"` | `badge.html`, `avatar.html` |
 | Brand mark (logo lockup: glyph plate + wordmark) | `class="brand"` (+ `data-orientation="vertical"`), glyph plate `class="brand-mark"` — on a coloured surface the plate is dropped and the glyph stands bare | `brand.html` |
+| Flow diagram / stepper | `ol.flow`, nodes `.card[data-size="sm"]` + `data-state`, branches `.flow-branches` > `.flow-branch` | `flow.html` |
+| Text cut to n lines with "show more" | `class="text-clamp"` + `data-lines`, `[data-clamp-body]`, `[data-clamp-toggle]` | `text-clamp.html` |
+| Printing one block | `[data-printable]` + a button `[data-print]`, paper look `.print-sheet` | `print-block.html` |
 | Divider | `class="separator"` or `<hr role="separator">` | `separator.html` |
 | Multi-line code block | `<pre class="code-block"><code>…</code>` — copy button via `.btn.code-block-copy` + `[data-copy]`, line numbers via `data-line-numbers` | `code-block.html` |
 | Scrollable area | the token scrollbar is the **global default** (arrowless) — no class needed; variants via `class="scrollbar"` + `data-size`/`data-track`/`data-buttons`; rounded scroll containers get the track inset automatically (`data-scrollbar-inset` to force/disable) | `scrollbar.html` |
@@ -188,6 +191,11 @@ rebuilds and deploys it on every push to `main` — a pull request only builds i
    enforces: no private infrastructure, tokens over hex, Actions pinned by commit SHA, valid CHANGELOG
    categories, README.de in sync.
 5. CHANGELOG entry in the same commit (`## [Unreleased]`).
+6. The browser suite (`tests/test_visual.py`, part of `scripts/check.sh`) compares every gallery section to
+   its reference image in `tests/visual/`. A deliberate change of the look means
+   `python3 tests/test_visual.py --renew`: it rewrites only the images that moved, so the pull request shows
+   what changed. Never renew to get a red run green without looking at the difference. Behaviour no picture
+   can show (scrolling, clicks, printing) belongs in the `verhalten` part of the same suite.
 
 ## Conventions
 

@@ -34,7 +34,7 @@ acht Style-Packs, hell und dunkel. Wird bei jeder Änderung an `main` neu gebaut
 - **Tokens statt fester Werte:** Farbe, Radius, Abstände und Typografie kommen aus CSS Custom
   Properties (`c22/static/css/tokens.css`), sodass mehrere Sites einen Kern teilen und trotzdem völlig
   verschieden aussehen.
-- **Eine Component-Galerie (die einzige Quelle der Wahrheit):** `gallery/build.py` rendert alle 65
+- **Eine Component-Galerie (die einzige Quelle der Wahrheit):** `gallery/build.py` rendert alle 68
   Components — jeden in seinen Varianten — aus kanonischen HTML-Partials in `c22/components/`. Sie
   verlinkt je Component die Basecoat- und shadcn-Quelldoku und schaltet zwischen acht Style-Packs sowie
   hell/dunkel um.
@@ -44,7 +44,7 @@ acht Style-Packs, hell und dunkel. Wird bei jeder Änderung an `main` neu gebaut
 
 ## Status
 
-In Arbeit. Alle 65 Components existieren mit ihren Varianten, aber Schnittstellen und Struktur können
+In Arbeit. Alle 68 Components existieren mit ihren Varianten, aber Schnittstellen und Struktur können
 sich vor einem stabilen `1.0` noch ändern. Noch nicht für den Produktiveinsatz verlassen.
 
 ## Verwendung

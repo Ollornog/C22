@@ -2,7 +2,7 @@
 id: T-8
 type: Task
 title: Tabelle mit umbrechenden Zellen
-status: offen
+status: erledigt
 milestone: M-2
 tags: [komponenten, tabelle]
 created: 2026-09-27
@@ -25,3 +25,7 @@ Tabelle verlegt — ein Umweg über den Inhalt statt über das Aussehen.
 Eine Tabelle (oder einzelne Spalten) per Variante umbrechen kann, etwa
 `<table class="table" data-wrap>`, das in der Galerie gezeigt wird und paperlaiss seine Regeln
 wieder in voller Länge in die Zelle schreiben kann.
+
+## Erledigt (2026-11-07)
+
+`data-wrap` an `.table` oder an einzelnen Zellen, in der Galerie gezeigt. paperlaiss kann die Regeln wieder in voller Länge in die Zelle schreiben.

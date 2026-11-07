@@ -89,6 +89,8 @@ adressen = hygiene.pruefe_adressen(str(ROOT), DATEIEN, POLICY,
                                                        r"unsplash\.com",
                                                        r"basecoatui\.com", r"ui\.shadcn\.com",
                                                        r"registry\.npmjs\.org",
+                                                       # In the OFL text next to the font, which has to stay verbatim.
+                                                       r"scripts\.sil\.org",
                                                        # Die eigene Projektseite (GitHub Pages) und
                                                        # die Stellen, auf die ihr Impressum verweist.
                                                        r"[a-z0-9-]+\.github\.io", r"docs\.github\.com",

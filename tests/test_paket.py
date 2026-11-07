@@ -4,7 +4,9 @@ nur die Struktur geprüft, damit die Zusage nicht unbemerkt wegbricht.
 """
 from __future__ import annotations
 
+import fnmatch
 import sys
+import tomllib
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -21,5 +23,17 @@ r.check("macros_path() zeigt auf einen existierenden Ordner", c22.macros_path().
 r.check("static/ enthält css und js",
         (c22.static_path() / "css").is_dir() and (c22.static_path() / "js").is_dir())
 r.check("__version__ ist gesetzt", bool(c22.__version__))
+
+# The font ships with its licence (the OFL demands it with every copy), and both reach the
+# wheel: a glob in package-data that misses them drops them silently, the source tree still works.
+schriften = c22.static_path() / "fonts"
+r.check("Inter liegt im Paket", (schriften / "inter.woff2").is_file())
+ofl = schriften / "OFL.txt"
+r.check("OFL-Lizenztext liegt neben der Schrift",
+        ofl.is_file() and "SIL OPEN FONT LICENSE" in ofl.read_text(encoding="utf-8").upper())
+daten = tomllib.loads((HERE.parent / "pyproject.toml").read_text(encoding="utf-8"))
+globs = daten["tool"]["setuptools"]["package-data"]["c22"]
+for name in ("static/fonts/inter.woff2", "static/fonts/OFL.txt"):
+    r.check(f"package-data nimmt {name} mit", any(fnmatch.fnmatch(name, g) for g in globs))
 
 sys.exit(r.done())

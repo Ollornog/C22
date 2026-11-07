@@ -2,7 +2,7 @@
 id: M-1
 type: Milestone
 title: 0.3.0 — visuelle Test-Ebene
-status: offen
+status: erledigt
 tags: [testing, release]
 created: 2026-07-23
 ---

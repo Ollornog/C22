@@ -50,17 +50,34 @@ jobs:
       - name: Abhängigkeiten
         run: pip install -e ".[dev]"
 
+      # The browser suite builds the site. Fetched here, before the snapshot below, because the
+      # binary is ignored but counts for the residue check.
+      - name: Tailwind-CLI holen
+        run: ./scripts/fetch-tailwind.sh
+
       # Der Vorher-Stand macht den Rückstands-Check unten ENTSCHEIDBAR. Er muss NACH
       # der Installation liegen: `pip install -e` erzeugt `*.egg-info`, und ohne diesen
       # Schritt wäre das ein Rückstand, den der Check der Suite zuschreibt.
       - name: Vorher-Stand des Baums
         run: ./scripts/_residue_check.sh snapshot > "$RUNNER_TEMP/baum-vorher.txt"
 
-      - name: Suite (Fach + Hygiene)
+      - name: Suite (Fach + Hygiene + Browser)
         run: ./scripts/check.sh
+        env:
+          C22_VISUAL_OUT: ${{ runner.temp }}/visual
 
       - name: Wiederholbarkeit — dieselbe Suite ein zweites Mal
         run: ./scripts/check.sh
+        env:
+          C22_VISUAL_OUT: ${{ runner.temp }}/visual
+
+      # A red picture says nothing in a log: the capture and the marked difference stay available.
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7.0.2
+        if: failure()
+        with:
+          name: visual-${{ matrix.python }}
+          path: ${{ runner.temp }}/visual
+          if-no-files-found: ignore
 
       # Dieselbe Prüfung, die der pre-push-Hook fährt.
       - name: Arbeitsverzeichnis ist unverändert geblieben

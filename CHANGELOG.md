@@ -8,11 +8,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **Package:** the wheel now carries `static/fonts/`, so Inter no longer goes missing behind `url(../fonts/inter.woff2)`.
+- **Licence:** `c22/static/fonts/OFL.txt` ships next to Inter, as the SIL Open Font License demands for every copy.
+- **Typeset:** `.typeset` now spaces the block after an `h1` and treats `.table-container` like a table.
 - **Levels table:** a shift click selects the row range instead of selecting text.
 
 ### Changed
 
 - **Levels table:** the top line of the first level no longer doubles its width; colour alone marks it.
+
+### Added
+
+- **Table:** `data-wrap` on `.table` or on single cells lets text wrap instead of scrolling sideways.
+- **Flow diagram:** new component `ol.flow`, a chain of cards with arrows, branches side by side that meet again, states
+  (`data-state`), nodes reachable by keyboard (`[data-flow-open]`), horizontal variant.
+- **Text preview:** new component `.text-clamp`, cuts a block to n lines and fades it out; the button only appears when
+  something is hidden. Without JS nothing is cut off, in print everything shows.
+- **Printable block:** new component `[data-printable]` with `[data-print]` prints one block, black on white, from dark
+  mode as well; `.print-sheet` shows the same paper look in the page.
+- **Bar and line charts:** `height` (px) or `aspect` draw one unit per CSS pixel: the text keeps its size at any width, labels
+  thin out instead of colliding. `selectable: true` makes categories buttons and sends `c22:chart-select`.
+- **Sidebar:** `data-sidebar-width` (`sm`, `md`, `lg`) replaces the inline `--sidebar-width`, and `data-panel-toggle="#id"`
+  replaces `onclick` in the examples. Both work under a strict CSP.
+- **Browser suite:** `tests/test_visual.py` compares every gallery section per view to a reference image (threshold, not
+  equality; `--renew` is the deliberate step), checks every request against the own origin, reads the favicon from
+  the raw response, and uses what a still picture cannot show: table of contents, carousel, calendar, chart, printing.
 
 ### Added — pack `ankaa` and the building blocks of a calm work tool
 
