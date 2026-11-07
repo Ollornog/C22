@@ -2,7 +2,7 @@
 id: T-5
 type: Task
 title: Schrift Inter ohne OFL-Lizenztext ausgeliefert
-status: in-arbeit
+status: erledigt
 milestone: M-2
 tags: [lizenz, schrift, fremdressourcen]
 created: 2026-09-27
@@ -33,4 +33,4 @@ Die C22-Seite ist erledigt: `c22/static/fonts/OFL.txt` (gleich `LICENSE.txt` von
 
 Die Website trägt den Text jetzt auch, verlinkt aus dem Impressum.
 
-**Offen:** Die Vendor-Skripte der Apps, die die Schrift mitnehmen, kopieren den Text noch nicht aus C22 (paperlaiss, UnderDoc und eine Kunden-App).
+**App-Seite (2026-11-07):** Die Vendor-Skripte von paperlaiss, UnderDoc und einer Kunden-App kopieren den Text aus C22. Andere Abnehmer liefern die Schrift nicht mit.

@@ -2,7 +2,7 @@
 id: T-6
 type: Task
 title: Ablaufdiagramm / Entscheidungsbaum als Baustein
-status: in-arbeit
+status: erledigt
 milestone: M-2
 tags: [bausteine, diagramm, ablauf]
 created: 2026-09-27
@@ -40,4 +40,4 @@ Zuständen, und paperlaiss nutzt ihn über einen dünnen Adapter.
 
 Die C22-Seite ist erledigt: `components/flow.html` mit Zuständen, Zweigen, die wieder zusammenlaufen, Tastatur, waagerechter Variante und Druck.
 
-**Offen:** paperlaiss stellt `ablauf()`/`knoten()` auf den Baustein um.
+**App-Seite (2026-11-07):** paperlaiss zeichnet die Kette in `kette()` als `ol.flow`.
