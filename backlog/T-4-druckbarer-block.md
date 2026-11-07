@@ -2,7 +2,7 @@
 id: T-4
 type: Task
 title: Druckbarer Block — einen Ausschnitt der Seite drucken, schwarz auf weiss
-status: in-arbeit
+status: erledigt
 milestone: M-2
 tags: [bausteine, druck, dark-mode]
 created: 2026-09-24
@@ -50,4 +50,4 @@ Die C22-Seite ist erledigt: `components/print-block.html`, in der Galerie mit Dr
 
 Die Attribute heißen englisch wie der Rest von C22: `data-printable`, `data-print`, `data-print-copy`, `data-print-selection`.
 
-**Offen:** Die App stellt ihren Adapter um und entfernt ihr eigenes JS und CSS.
+**App-Seite (2026-11-07):** Die App nutzt nur noch das Markup, ihr eigenes JS und CSS sind entfernt.
