@@ -81,7 +81,14 @@ class Browser:
             self._proc.wait()
         os.close(self._an_chrome)
         os.close(self._von_chrome)
-        shutil.rmtree(self._profil, ignore_errors=True)
+        # Chrome's helper processes outlive the main one by a moment and keep writing to the
+        # profile: a single pass can fail on a file that has just appeared.
+        for _ in range(50):
+            shutil.rmtree(self._profil, ignore_errors=True)
+            if not os.path.exists(self._profil):
+                return
+            time.sleep(0.1)
+        raise BrowserFehler(f"Chrome-Profil bleibt liegen: {self._profil}")
 
     def _lies(self, frist: float) -> dict:
         ende = time.monotonic() + frist

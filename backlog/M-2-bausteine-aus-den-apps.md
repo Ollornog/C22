@@ -17,4 +17,4 @@ zurück, bis C22 ihn übernimmt.
 **Fertig, wenn:** jeder hier gelistete Baustein in C22 liegt, in der Galerie in jedem Zustand
 (hell, dunkel, Druck) zu sehen ist, und die App ihn nur noch über einen dünnen Adapter nutzt.
 
-**Stand (2026-11-07):** Offen ist nur noch T-12. paperlaiss kann außerdem seine Sonderwege zu T-7, T-8 und T-9 entfernen; C22 bietet die Bausteine.
+**Stand (2026-11-07):** Offen ist nur noch T-12. paperlaiss hat seine Sonderwege zu T-7, T-8 und T-9 entfernt.
