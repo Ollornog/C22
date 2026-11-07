@@ -31,4 +31,6 @@ mit, und die Vendor-Skripte der Apps kopieren sie aus C22 statt aus eigener Quel
 
 Die C22-Seite ist erledigt: `c22/static/fonts/OFL.txt` (gleich `LICENSE.txt` von `rsms/inter`) liegt neben der Schrift und kommt ins Wheel.
 
-**Offen:** Die Vendor-Skripte der Apps kopieren sie noch nicht aus C22.
+Die Website trägt den Text jetzt auch, verlinkt aus dem Impressum.
+
+**Offen:** Die Vendor-Skripte der Apps, die die Schrift mitnehmen, kopieren den Text noch nicht aus C22 (paperlaiss, UnderDoc und eine Kunden-App).

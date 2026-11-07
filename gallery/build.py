@@ -723,7 +723,7 @@ def render_legal() -> tuple[str, int]:
     Kein Reiter in der Seiten-Navigation: die Seite gehört zur Website, nicht zum Werk.
     Erreichbar über den Verweis auf der Startseite.
     """
-    toc, main_html = legal.inhalt()
+    toc, main_html = legal.inhalt(ASSETS)
     page = page_shell("legal.html", "title_legal", toc, main_html)
     (ZIEL / "legal.html").write_text(page, encoding="utf-8")
     return "legal.html", len(legal.ABSCHNITTE)

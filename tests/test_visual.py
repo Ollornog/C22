@@ -31,6 +31,7 @@ import subprocess
 import sys
 import tempfile
 import threading
+import urllib.error
 import urllib.request
 from pathlib import Path
 from urllib.parse import urlsplit
@@ -284,6 +285,14 @@ def favicon(r: Report, basis: str) -> None:
         with urllib.request.urlopen(f"{basis}/{p}.html") as antwort:  # noqa: S310  own server
             befunde += [f"{p}: {b}" for b in hygiene.favicon_befunde_html(antwort.read().decode(), host)]
     r.check("jede ausgelieferte Seite nennt ihr Favicon", not befunde, " | ".join(befunde[:3]))
+    # build-site.py only takes along what a page links to: the licence reaches the site through
+    # the imprint, and the font is not served without it.
+    try:
+        with urllib.request.urlopen(f"{basis}/c22/static/fonts/OFL.txt") as antwort:  # noqa: S310  own server
+            lizenz = antwort.read()
+    except urllib.error.HTTPError as fehler:
+        lizenz = str(fehler).encode()
+    r.check("der Lizenztext der Schrift wird ausgeliefert", b"SIL OPEN FONT LICENSE" in lizenz.upper(), lizenz[:60].decode())
     with urllib.request.urlopen(f"{basis}/docs/logo.png") as antwort:  # noqa: S310  own server
         r.check("das Favicon wird ausgeliefert", antwort.status == 200 and antwort.read(4) == b"\x89PNG")
 
@@ -405,6 +414,17 @@ def verhalten(r: Report, b: Browser, basis: str) -> None:
             p["sichtbar"] == "block" and not p["rest"] and p["knopf"] == "none", str(p))
     r.check("Druckblock: schwarze Schrift, auch die leise", max(p["schrift"]) < 40 and max(p["leise"]) < 70, str(p))
     r.check("Druckblock: nach dem Druck ist alles wie vorher", aufraeumen == {"kopie": False, "dunkel": True}, str(aufraeumen))
+    # A collapsed <details> that is the block itself opens on paper as well.
+    zu = s.js("""(() => {
+      const block = document.querySelector('#print-block details[data-printable]');
+      block.open = false;
+      block.querySelector('[data-print]').click();
+      const kopie = document.querySelector('body > [data-print-copy]');
+      const ergebnis = { offen: kopie.open, rahmen: block.open };
+      window.dispatchEvent(new Event('afterprint'));
+      return ergebnis;
+    })()""")
+    r.check("Druckblock: ein details-Block ist auf dem Papier offen", zu == {"offen": True, "rahmen": False}, str(zu))
 
     # Chart: wide and flat stays flat, keeps its text size and reports a click.
     s.geh(f"{basis}/charts.html?pack=vega&theme=light&lang=de")
