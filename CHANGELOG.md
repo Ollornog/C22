@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **Panel:** a button group directly in a panel section stays a row; the vendor stacked every group of a section.
 - **Package:** the wheel now carries `static/fonts/`, so Inter no longer goes missing behind `url(../fonts/inter.woff2)`.
 - **Licence:** `c22/static/fonts/OFL.txt` ships next to Inter, as the SIL Open Font License demands for every copy.
 - **Browser suite:** Chrome's profile directory no longer stays behind in the temp folder under load; Chrome's helper
@@ -28,6 +29,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Application frame:** `data-head` puts a head (`.app-frame-head`) over rail and panel: brand and the title of what the
+  panel shows, a search below, both as wide as the two columns. The panel is not collapsible there. Below md the head is the
+  top bar, `[data-frame-menu]` opens rail and panel side by side as a drawer, and there is no bottom tab bar. The frame
+  without a head is unchanged.
 - **Table:** `data-wrap` on `.table` or on single cells lets text wrap instead of scrolling sideways.
 - **Flow diagram:** new component `ol.flow`, a chain of cards with arrows, branches side by side that meet again, states
   (`data-state`), nodes reachable by keyboard (`[data-flow-open]`), horizontal variant.

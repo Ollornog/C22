@@ -2651,6 +2651,8 @@
   /* The vendor pads the group for its wide row; rail and panel set their own inset on nav and section. */
   .sidebar[data-variant='rail'] nav > section > [role='group'],
   .sidebar[data-variant='panel'] nav > section > [role='group'] { padding: 0; }
+  /* A button group or a tab list in the panel stays a row: the vendor stacks every group of a section. */
+  .sidebar[data-variant='panel'] nav > section > .button-group[role='group'] { flex-direction: row; }
   .sidebar[data-variant='rail'] nav > section > hr {
     margin: 0.375rem 0.25rem;
     border-color: var(--input);
@@ -2822,21 +2824,22 @@
   .sidebar[data-variant='panel'] ul[data-variant='levels'] > li[data-level='3'] > :is(a, button) { color: var(--muted-foreground); }
 
   @media (width < 48rem) {
+    /* A frame with a head (data-head, below) keeps rail and panel as a drawer: the tab bar and the sheet apply without a head only. */
     /* data-tabs='fill': the footer moved elsewhere, so the tabs share the whole width. */
-    .sidebar[data-variant='rail'] nav[data-tabs='fill'] > section ul { display: contents; }
-    .sidebar[data-variant='rail'] nav[data-tabs='fill'] > section ul li { flex: 1 1 0; width: auto; min-width: 0; }
-    .app-frame {
+    .sidebar[data-variant='rail']:where(:not([data-head] > *)) nav[data-tabs='fill'] > section ul { display: contents; }
+    .sidebar[data-variant='rail']:where(:not([data-head] > *)) nav[data-tabs='fill'] > section ul li { flex: 1 1 0; width: auto; min-width: 0; }
+    .app-frame:not([data-head]) {
       display: block;
     }
-    .app-frame > main {
+    .app-frame:not([data-head]) > main {
       height: 100%;
       padding-bottom: calc(var(--tabbar-height) + env(safe-area-inset-bottom, 0px));
     }
-    .sidebar[data-variant='rail'] {
+    .sidebar[data-variant='rail']:where(:not([data-head] > *)) {
       position: static;
       background: none;
     }
-    .sidebar[data-variant='rail'] nav {
+    .sidebar[data-variant='rail']:where(:not([data-head] > *)) nav {
       position: fixed;
       inset: auto 0 0 0;
       z-index: 40;
@@ -2847,29 +2850,29 @@
       border-inline-end: 0;
       border-top: 1px solid var(--sidebar-border);
     }
-    .sidebar[data-variant='rail'] nav > header { display: none; }
-    .sidebar[data-variant='rail'] nav > section {
+    .sidebar[data-variant='rail']:where(:not([data-head] > *)) nav > header { display: none; }
+    .sidebar[data-variant='rail']:where(:not([data-head] > *)) nav > section {
       flex-direction: row;
       overflow: auto hidden;
     }
-    .sidebar[data-variant='rail'] nav > section > [role='group'] { display: contents; }
-    .sidebar[data-variant='rail'] nav > section ul {
+    .sidebar[data-variant='rail']:where(:not([data-head] > *)) nav > section > [role='group'] { display: contents; }
+    .sidebar[data-variant='rail']:where(:not([data-head] > *)) nav > section ul {
       flex: none;
       flex-direction: row;
       width: auto;
     }
-    .sidebar[data-variant='rail'] nav > section ul li { width: 3.75rem; flex: none; }
-    .sidebar[data-variant='rail'] nav > section > hr { display: none; }
-    .sidebar[data-variant='rail'] nav > section ul li > :is(a, button) {
+    .sidebar[data-variant='rail']:where(:not([data-head] > *)) nav > section ul li { width: 3.75rem; flex: none; }
+    .sidebar[data-variant='rail']:where(:not([data-head] > *)) nav > section > hr { display: none; }
+    .sidebar[data-variant='rail']:where(:not([data-head] > *)) nav > section ul li > :is(a, button) {
       height: var(--tabbar-height);
       border-radius: 0;
       font-size: calc(var(--text-xs) * 0.9);
     }
-    .sidebar[data-variant='rail'] nav > section ul li > :is(a, button):is([aria-current='page'], [aria-pressed='true']) {
+    .sidebar[data-variant='rail']:where(:not([data-head] > *)) nav > section ul li > :is(a, button):is([aria-current='page'], [aria-pressed='true']) {
       background: none;
       box-shadow: inset 0 2px 0 var(--sidebar-primary);
     }
-    .sidebar[data-variant='rail'] nav > footer {
+    .sidebar[data-variant='rail']:where(:not([data-head] > *)) nav > footer {
       flex-direction: row;
       align-items: center;
       flex: none;
@@ -2877,13 +2880,13 @@
       border-top: 0;
       border-inline-start: 1px solid var(--input);
     }
-    .sidebar[data-variant='rail'] nav > footer > hr { display: none; }
-    .sidebar[data-variant='rail'] nav > footer > :is(a, button) { width: 2.75rem; height: 2.75rem; }
-    .sidebar[data-variant='rail'] nav > footer .dropdown-menu {
+    .sidebar[data-variant='rail']:where(:not([data-head] > *)) nav > footer > hr { display: none; }
+    .sidebar[data-variant='rail']:where(:not([data-head] > *)) nav > footer > :is(a, button) { width: 2.75rem; height: 2.75rem; }
+    .sidebar[data-variant='rail']:where(:not([data-head] > *)) nav > footer .dropdown-menu {
       position: static;
       width: auto;
     }
-    .sidebar[data-variant='rail'] nav > footer [data-popover] {
+    .sidebar[data-variant='rail']:where(:not([data-head] > *)) nav > footer [data-popover] {
       position: fixed;
       inset: auto 0.5rem calc(var(--tabbar-height) + env(safe-area-inset-bottom, 0px) + 0.5rem) auto;
       margin: 0;
@@ -2891,16 +2894,16 @@
     }
 
     /* Closed until Basecoat has initialised it, or the sheet flashes on every page load. */
-    .sidebar[data-variant='panel']:not([data-sidebar-initialized]) { display: none; }
+    .sidebar[data-variant='panel']:where(:not([data-head] > *)):not([data-sidebar-initialized]) { display: none; }
 
     /* Sheet: the vendor backdrop stays (aside = the dark layer), it just ends above the tab bar. */
-    .sidebar[data-variant='panel'] {
+    .sidebar[data-variant='panel']:where(:not([data-head] > *)) {
       @apply bg-black/40;
       position: fixed;
       inset: 0 0 calc(var(--tabbar-height) + env(safe-area-inset-bottom, 0px)) 0;
       z-index: 30;
     }
-    .sidebar[data-variant='panel'] nav {
+    .sidebar[data-variant='panel']:where(:not([data-head] > *)) nav {
       position: absolute;
       inset: auto 0 0 0;
       width: auto;
@@ -2910,12 +2913,103 @@
       border-radius: var(--radius-xl) var(--radius-xl) 0 0;
       box-shadow: var(--shadow-2xl);
     }
-    .sidebar[data-variant='panel'] nav > header { height: 3rem; }
-    .sidebar[data-variant='panel'] nav > section ul li > :is(a, button) { min-height: 2.75rem; }
+    .sidebar[data-variant='panel']:where(:not([data-head] > *)) nav > header { height: 3rem; }
+    .sidebar[data-variant='panel']:where(:not([data-head] > *)) nav > section ul li > :is(a, button) { min-height: 2.75rem; }
   }
+  /* Frame with a head over rail and panel (data-head, blocks/navigation/app-frame.html): row 1 holds the
+     brand and the title of what the panel shows, row 2 a search; both are as wide as rail and panel.
+     The panel is not collapsible here (no [data-panel-toggle]), the content runs the full height.
+     Below md the head is the top bar, [data-frame-menu] opens rail and panel side by side as a drawer
+     under it (c22.js), and there is no bottom tab bar. Without a panel the head spans the frame. */
+  .app-frame[data-head] {
+    /* No bottom tab bar: floating buttons and sticky footers sit on the screen edge. */
+    --tabbar-height: 0px;
+    grid-template-columns: var(--rail-width) var(--panel-width) minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+  .app-frame[data-head] > .app-frame-head { grid-column: 1 / 3; grid-row: 1; }
+  .app-frame[data-head] > .sidebar[data-variant='rail'] { grid-column: 1; grid-row: 2; }
+  .app-frame[data-head] > .sidebar[data-variant='panel'] { grid-column: 2; grid-row: 2; }
+  .app-frame[data-head] > main { grid-column: 3; grid-row: 1 / -1; }
+  .app-frame[data-head]:not(:has(> .sidebar[data-variant='panel'])) { grid-template-columns: var(--rail-width) minmax(0, 1fr); }
+  .app-frame[data-head]:not(:has(> .sidebar[data-variant='panel'])) > .app-frame-head { grid-column: 1 / -1; }
+  .app-frame[data-head]:not(:has(> .sidebar[data-variant='panel'])) > main { grid-column: 2; grid-row: 2; }
+  .app-frame-head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-width: 0;
+    padding: 0.5rem 0.5rem 0.625rem;
+    background-color: var(--sidebar);
+    color: var(--sidebar-foreground);
+    border-inline-end: 1px solid var(--sidebar-border);
+    border-bottom: 1px solid var(--sidebar-border);
+  }
+  .app-frame-head > div {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+  }
+  .app-frame-head > div:first-child { min-height: 2rem; padding-inline-start: 0.25rem; }
+  .app-frame-head :is(h1, h2, [data-frame-title]) {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: var(--text-sm);
+    font-weight: 650;
+  }
+  .app-frame-head > div > :is(.input, .input-group, form) { flex: 1 1 auto; min-width: 0; }
+  .app-frame-head [data-frame-menu] { display: none; }
+  /* The rail under a head starts at its own top: the brand lives in the head. */
+  .app-frame[data-head] > .sidebar[data-variant='rail'] nav { padding-top: 0.375rem; }
+  .app-frame[data-head] > .sidebar[data-variant='panel'] nav > section:first-child { padding-top: 0.5rem; }
+
+  @media (width < 48rem) {
+    .app-frame[data-head] {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto minmax(0, 1fr);
+    }
+    .app-frame[data-head] > .app-frame-head,
+    .app-frame[data-head]:not(:has(> .sidebar[data-variant='panel'])) > .app-frame-head {
+      grid-column: 1;
+      position: relative;
+      z-index: 45;
+      border-inline-end: 0;
+    }
+    .app-frame[data-head] > main,
+    .app-frame[data-head]:not(:has(> .sidebar[data-variant='panel'])) > main { grid-column: 1; grid-row: 2; }
+    .app-frame-head [data-frame-menu] { display: inline-flex; }
+    .app-frame[data-head] > .sidebar:is([data-variant='rail'], [data-variant='panel']) { display: none; }
+    /* Drawer: rail and panel side by side below the head (c22.js sets --frame-head-height on opening). */
+    .app-frame[data-head][data-menu-open] > .sidebar:is([data-variant='rail'], [data-variant='panel']) {
+      display: block;
+      position: fixed;
+      top: var(--frame-head-height, 0px);
+      bottom: 0;
+      z-index: 44;
+    }
+    .app-frame[data-head][data-menu-open] > .sidebar[data-variant='rail'] { inset-inline-start: 0; }
+    .app-frame[data-head][data-menu-open] > .sidebar[data-variant='panel'] { inset-inline-start: var(--rail-width); }
+    .app-frame[data-head][data-menu-open] > .sidebar[data-variant='panel'] nav {
+      width: min(var(--panel-width), calc(100vw - var(--rail-width)));
+      box-shadow: var(--shadow-2xl);
+    }
+    .app-frame[data-head][data-menu-open] > .sidebar[data-variant='panel'] nav > section ul li > :is(a, button) { min-height: 2.75rem; }
+    .app-frame[data-head][data-menu-open]::after {
+      @apply bg-black/40;
+      content: '';
+      position: fixed;
+      inset: var(--frame-head-height, 0px) 0 0 0;
+      z-index: 43;
+    }
+  }
+
   @media print {
     .sidebar[data-variant='rail'],
-    .sidebar[data-variant='panel'] { display: none; }
+    .sidebar[data-variant='panel'],
+    .app-frame-head { display: none; }
     .app-frame { display: block; height: auto; }
     .app-frame > main { overflow: visible; }
   }

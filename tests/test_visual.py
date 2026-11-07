@@ -344,6 +344,45 @@ def verhalten(r: Report, b: Browser, basis: str) -> None:
     })()""")
     r.check("Tabelle: data-wrap bricht um, ohne bleibt die Zeile", werte == ["normal", "nowrap", "normal"], str(werte))
 
+    # Frame with a head: as wide as rail and panel on a wide screen; below md the menu button opens
+    # rail and panel as a drawer, a followed link and Escape close it again.
+    bloecke = f"{basis}/blocks.html?pack=vega&theme=light&lang=de"
+    s.geh(bloecke)
+    breit = s.js("""(() => {
+      const f = document.querySelector('.app-frame[data-head]');
+      const w = sel => f.querySelector(':scope > ' + sel).getBoundingClientRect();
+      return { kopf: w('.app-frame-head').width, leiste: w('.sidebar[data-variant="rail"]').width,
+               spalte: w('.sidebar[data-variant="panel"]').width, inhaltOben: w('main').top - f.getBoundingClientRect().top,
+               menue: getComputedStyle(f.querySelector('[data-frame-menu]')).display };
+    })()""")
+    r.check("Rahmen mit Kopf: Kopf so breit wie Leiste und Spalte, Inhalt über die volle Höhe",
+            abs(breit["kopf"] - breit["leiste"] - breit["spalte"]) < 1 and breit["inhaltOben"] < 1 and breit["menue"] == "none", str(breit))
+    h = b.seite(390, 844)
+    h.geh(bloecke)
+    h.warte("document.querySelector('.app-frame[data-head] > .sidebar[data-variant=\"panel\"][data-sidebar-initialized]') !== null")
+    schublade = h.js("""(() => {
+      const f = document.querySelector('.app-frame[data-head]');
+      const d = sel => getComputedStyle(f.querySelector(':scope > ' + sel)).display;
+      const zu = { leiste: d('.sidebar[data-variant="rail"]'), spalte: d('.sidebar[data-variant="panel"]') };
+      f.querySelector('[data-frame-menu]').click();
+      const auf = { leiste: d('.sidebar[data-variant="rail"]'), spalte: d('.sidebar[data-variant="panel"]'),
+                    offen: f.querySelector(':scope > .sidebar[data-variant="panel"]').getAttribute('aria-hidden'),
+                    expanded: f.querySelector('[data-frame-menu]').getAttribute('aria-expanded') };
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+      const esc = f.hasAttribute('data-menu-open');
+      f.querySelector('[data-frame-menu]').click();
+      const wieder = f.querySelector(':scope > .sidebar[data-variant="panel"]').getAttribute('aria-hidden');
+      const link = f.querySelector(':scope > .sidebar[data-variant="panel"] a[href]');
+      link.addEventListener('click', e => e.preventDefault(), { once: true });
+      link.click();
+      return { zu, auf, esc, wieder, nachLink: f.hasAttribute('data-menu-open') };
+    })()""")
+    r.check("Rahmen mit Kopf: unter md zu, das Menü öffnet Leiste und Spalte",
+            schublade["zu"] == {"leiste": "none", "spalte": "none"} and schublade["auf"] == {"leiste": "block", "spalte": "block", "offen": "false", "expanded": "true"},
+            str(schublade))
+    r.check("Rahmen mit Kopf: Escape und ein Link schließen die Schublade, die Spalte bleibt dabei offen",
+            not schublade["esc"] and not schublade["nachLink"] and schublade["wieder"] == "false", str(schublade))
+
     # Typeset: flow after the title and around a table.
     s.geh(f"{basis}/typeset.html?pack=vega&theme=light&lang=de")
     fluss = s.js("""(() => {
