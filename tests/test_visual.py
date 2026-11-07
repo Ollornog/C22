@@ -365,7 +365,9 @@ def verhalten(r: Report, b: Browser, basis: str) -> None:
       const d = sel => getComputedStyle(f.querySelector(':scope > ' + sel)).display;
       const zu = { leiste: d('.sidebar[data-variant="rail"]'), spalte: d('.sidebar[data-variant="panel"]') };
       f.querySelector('[data-frame-menu]').click();
+      const z = sel => Number(getComputedStyle(f.querySelector(':scope > ' + sel)).zIndex);
       const auf = { leiste: d('.sidebar[data-variant="rail"]'), spalte: d('.sidebar[data-variant="panel"]'),
+                    leisteOben: z('.sidebar[data-variant="rail"]') > z('.sidebar[data-variant="panel"]'),
                     offen: f.querySelector(':scope > .sidebar[data-variant="panel"]').getAttribute('aria-hidden'),
                     expanded: f.querySelector('[data-frame-menu]').getAttribute('aria-expanded') };
       document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
@@ -377,8 +379,8 @@ def verhalten(r: Report, b: Browser, basis: str) -> None:
       link.click();
       return { zu, auf, esc, wieder, nachLink: f.hasAttribute('data-menu-open') };
     })()""")
-    r.check("Rahmen mit Kopf: unter md zu, das Menü öffnet Leiste und Spalte",
-            schublade["zu"] == {"leiste": "none", "spalte": "none"} and schublade["auf"] == {"leiste": "block", "spalte": "block", "offen": "false", "expanded": "true"},
+    r.check("Rahmen mit Kopf: unter md zu, das Menü öffnet Leiste und Spalte, die Leiste liegt oben (ihre Menüs öffnen über der Spalte)",
+            schublade["zu"] == {"leiste": "none", "spalte": "none"} and schublade["auf"] == {"leiste": "block", "spalte": "block", "leisteOben": True, "offen": "false", "expanded": "true"},
             str(schublade))
     r.check("Rahmen mit Kopf: Escape und ein Link schließen die Schublade, die Spalte bleibt dabei offen",
             not schublade["esc"] and not schublade["nachLink"] and schublade["wieder"] == "false", str(schublade))

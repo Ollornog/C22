@@ -2990,8 +2990,9 @@
       bottom: 0;
       z-index: 44;
     }
-    .app-frame[data-head][data-menu-open] > .sidebar[data-variant='rail'] { inset-inline-start: 0; }
-    .app-frame[data-head][data-menu-open] > .sidebar[data-variant='panel'] { inset-inline-start: var(--rail-width); }
+    /* The rail lies above the panel: its menus (account) open to the right, over the panel. */
+    .app-frame[data-head][data-menu-open] > .sidebar[data-variant='rail'] { inset-inline-start: 0; z-index: 44; }
+    .app-frame[data-head][data-menu-open] > .sidebar[data-variant='panel'] { inset-inline-start: var(--rail-width); z-index: 43; }
     .app-frame[data-head][data-menu-open] > .sidebar[data-variant='panel'] nav {
       width: min(var(--panel-width), calc(100vw - var(--rail-width)));
       box-shadow: var(--shadow-2xl);
@@ -3002,7 +3003,7 @@
       content: '';
       position: fixed;
       inset: var(--frame-head-height, 0px) 0 0 0;
-      z-index: 43;
+      z-index: 42;
     }
   }
 
