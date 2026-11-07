@@ -17,6 +17,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Levels table:** the top line of the first level no longer doubles its width; colour alone marks it.
 
+### Removed
+
+- **Dev extras:** `websockets` and `httpx` are gone, nothing used them. The audit workflow now allows an empty resolution when
+  `pyproject.toml` declares no dependencies, and still fails when declared dependencies resolve to nothing.
+
 ### Added
 
 - **Table:** `data-wrap` on `.table` or on single cells lets text wrap instead of scrolling sideways.

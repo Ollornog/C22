@@ -57,17 +57,23 @@ jobs:
               -o "$RUNNER_TEMP/neu.txt"
           "$uv" pip compile pyproject.toml --all-extras --resolution lowest-direct \
               --python-version 3.13 --no-header -o "$RUNNER_TEMP/boden.txt"
-          # Null Pakete wären ein grüner Lauf ohne Befund: das ist kein Beleg, sondern ein Fehler.
+          # Zero packages are only fine when pyproject.toml declares none. Decided from the
+          # declaration, not from the result: a broken resolution looks the same as an empty one
+          # and would be a green run that checked nothing.
+          deklariert="$(python -c 'import tomllib; p = tomllib.load(open("pyproject.toml", "rb"))["project"]; print(len(p.get("dependencies", [])) + sum(map(len, p.get("optional-dependencies", {}).values())))')"
           for f in neu boden; do
-            [ "$(grep -cE '^[A-Za-z0-9_.-]+==' "$RUNNER_TEMP/$f.txt")" -gt 0 ] \
+            [ "$(grep -cE '^[A-Za-z0-9_.-]+==' "$RUNNER_TEMP/$f.txt")" -gt 0 ] || [ "$deklariert" -eq 0 ] \
               || { echo "::error::$f: nichts aufgelöst — der Lauf prüfte nichts"; exit 1; }
           done
+          [ "$deklariert" -gt 0 ] || echo "::notice::pyproject.toml deklariert keine Abhängigkeiten, geprüft wird die Werkzeugliste"
 
       # `--strict`: Ein Paket, das pip-audit nicht nachschlagen kann, ist ein Fehler, kein Skip.
       - name: pip-audit
         run: |
           audit="$RUNNER_TEMP/audit/bin/pip-audit"
           for f in neu boden; do
+            # Empty only when nothing is declared, the step above has made sure of that.
+            grep -qE '^[A-Za-z0-9_.-]+==' "$RUNNER_TEMP/$f.txt" || continue
             echo "::group::$f"
             "$audit" --strict --progress-spinner off --no-deps --disable-pip -r "$RUNNER_TEMP/$f.txt"
             echo "::endgroup::"
