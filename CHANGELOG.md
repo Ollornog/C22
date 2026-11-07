@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Package:** the wheel now carries `static/fonts/`, so Inter no longer goes missing behind `url(../fonts/inter.woff2)`.
 - **Licence:** `c22/static/fonts/OFL.txt` ships next to Inter, as the SIL Open Font License demands for every copy.
+- **Browser suite:** Chrome's profile directory no longer stays behind in the temp folder under load; Chrome's helper
+  processes were still writing to it while it was being removed.
 - **Website:** the imprint names Inter's licence and links `OFL.txt`, which also brings the file onto the site.
 - **Printable block:** a block that is itself a `<details>` opens on paper as well.
 - **Typeset:** `.typeset` now spaces the block after an `h1` and treats `.table-container` like a table.
