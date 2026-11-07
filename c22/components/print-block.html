@@ -1,0 +1,44 @@
+<!-- custom: Printable block. [data-printable] marks the block, a button inside it carries [data-print]. c22.js copies the
+     block under <body> (deep in a layout it would be cut off on paper), sets data-print-selection on <html>, takes the
+     dark class off and calls print(). Paper is black on white: .print-sheet sets the tokens for that, and also shows the
+     result in the page as a preview. Collapsed <details> open in the copy; <summary> and the button stay off the paper. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Block mit Druckknopf (druckt nur diesen Abschnitt)</span>
+    <div class="card w-full max-w-md" data-printable>
+      <header>
+        <h3 class="card-title">Prüfliste Abnahme</h3>
+        <p class="card-description">Vor Ort abhaken und unterschreiben.</p>
+        <div class="card-action">
+          <button type="button" class="btn" data-variant="outline" data-size="sm" data-print>
+            <svg data-icon-lu="printer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg>
+            Drucken
+          </button>
+        </div>
+      </header>
+      <section>
+        <ul class="grid gap-2 text-sm">
+          <li class="flex items-center gap-2"><input type="checkbox" class="input" aria-label="Zugang geprüft"> Zugang geprüft</li>
+          <li class="flex items-center gap-2"><input type="checkbox" class="input" aria-label="Unterlagen übergeben"> Unterlagen übergeben</li>
+          <li class="flex items-center gap-2"><input type="checkbox" class="input" aria-label="Mängel notiert"> Mängel notiert</li>
+        </ul>
+      </section>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Druckvorschau (<code>.print-sheet</code>: schwarz auf weiß, auch im dunklen Modus)</span>
+    <div class="card print-sheet w-full max-w-md">
+      <header>
+        <h3 class="card-title">Prüfliste Abnahme</h3>
+        <p class="card-description">Vor Ort abhaken und unterschreiben.</p>
+      </header>
+      <section>
+        <ul class="grid gap-2 text-sm">
+          <li class="flex items-center gap-2"><input type="checkbox" class="input" aria-label="Zugang geprüft (Vorschau)"> Zugang geprüft</li>
+          <li class="flex items-center gap-2"><input type="checkbox" class="input" aria-label="Unterlagen übergeben (Vorschau)"> Unterlagen übergeben</li>
+          <li class="flex items-center gap-2"><input type="checkbox" class="input" aria-label="Mängel notiert (Vorschau)"> Mängel notiert</li>
+        </ul>
+      </section>
+    </div>
+  </div>
+</div>

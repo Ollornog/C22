@@ -1,0 +1,37 @@
+<!-- custom: Text preview. .text-clamp with data-lines (1–6, 8, 10), the text in [data-clamp-body], a button with
+     [data-clamp-toggle]. c22.js measures the block: the button only appears when text is hidden, and the
+     clamp only applies after measuring, so without JS the whole text stays readable. Print shows everything.
+     A line is one `lh` of [data-clamp-body], so the text size belongs on that element, not further inside. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Drei Zeilen, ausgeblendet, mit Knopf</span>
+    <div class="text-clamp w-full max-w-md" data-lines="3">
+      <div class="text-sm" data-clamp-body><p>Der Klassifizierer liest zuerst den Absender, dann den Betreff, dann den Text des Dokuments. Trifft eine Regel, bekommt das Dokument Ordner, Schlagwörter und ein Datum. Trifft keine, fragt er das Sprachmodell und zeigt die Antwort zur Kontrolle. Erst wenn ein Mensch sie bestätigt hat, wandert das Dokument weiter, und aus der Bestätigung entsteht auf Wunsch eine neue Regel für den nächsten Fall dieser Art.</p></div>
+      <button type="button" class="btn" data-variant="link" data-size="sm" data-clamp-toggle aria-expanded="false" data-more="Mehr anzeigen" data-less="Weniger anzeigen" hidden>Mehr anzeigen</button>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Text passt: kein Ausblenden, kein Knopf</span>
+    <div class="text-clamp w-full max-w-md" data-lines="3">
+      <div class="text-sm" data-clamp-body><p>Ein kurzer Text bleibt, wie er ist.</p></div>
+      <button type="button" class="btn" data-variant="link" data-size="sm" data-clamp-toggle aria-expanded="false" data-more="Mehr anzeigen" data-less="Weniger anzeigen" hidden>Mehr anzeigen</button>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Beliebiger Inhalt: Code über sechs Zeilen</span>
+    <div class="text-clamp w-full max-w-md" data-lines="6">
+      <div data-clamp-body>
+        <pre class="code-block"><code>prompt = lade("klassifizieren")
+antwort = modell.frage(prompt, dokument.text)
+ordner = antwort["ordner"]
+schlagwoerter = antwort["schlagwoerter"]
+datum = antwort.get("datum")
+if not ordner:
+    return wiedervorlage(dokument)
+ablage.lege(dokument, ordner, schlagwoerter, datum)
+regeln.lerne(dokument, ordner)</code></pre>
+      </div>
+      <button type="button" class="btn" data-variant="outline" data-size="sm" data-clamp-toggle aria-expanded="false" data-more="Alles zeigen" data-less="Einklappen" hidden>Alles zeigen</button>
+    </div>
+  </div>
+</div>

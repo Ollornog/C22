@@ -352,16 +352,20 @@
     max-width: var(--measure);
     line-height: var(--leading-body);
   }
-  .typeset > :is(p, ul, ol, blockquote, pre, table, figure) + :is(p, ul, ol, blockquote, pre, table, figure) {
+  .typeset > :is(p, ul, ol, blockquote, pre, table, figure, .table-container) + :is(p, ul, ol, blockquote, pre, table, figure, .table-container) {
     margin-top: var(--flow);
   }
   /* Vor einer Überschrift braucht es mehr Luft als zwischen zwei Absätzen — aber abgeleitet
      aus derselben Achse, damit ein Regler beides zugleich stimmig hält. */
-  .typeset > :not(:first-child):is(h2, h3, h4) {
+  .typeset > :not(:first-child):is(h1, h2, h3, h4) {
     margin-top: calc(var(--flow) * 1.8);
   }
   .typeset > :is(h2, h3, h4) + * {
     margin-top: calc(var(--flow) * 0.5);
+  }
+  /* The page title stands further from its text than a section heading does. */
+  .typeset > h1 + * {
+    margin-top: var(--flow);
   }
 
   /* Merkmal-Plakette der Galerie („eckig", „brutalist" …) — dieselbe Rechnung wie .c22-tag,
@@ -3035,7 +3039,13 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  .table[data-variant='levels'] td[data-wrap] { white-space: normal; }
+  /* Text that wraps instead of scrolling sideways: `data-wrap` on the table or on single cells.
+     Comes after the levels rule on purpose, the two have the same specificity. */
+  .table[data-wrap] :is(th, td),
+  .table :is(th, td)[data-wrap] {
+    white-space: normal;
+    overflow-wrap: break-word;
+  }
   .table[data-variant='levels'] tr[data-level='3'] > td { border-top-color: var(--table-level-3); }
   .table[data-variant='levels'] tr[data-level='2'] > td { border-top-color: var(--table-level-2); }
   .table[data-variant='levels'] tr[data-level='1'] > td { border-top-color: var(--table-level-1); }
@@ -3175,5 +3185,180 @@
     .app-frame .btn[data-fab] {
       bottom: calc(var(--tabbar-height) + env(safe-area-inset-bottom, 0px) + 1rem);
     }
+  }
+
+  /* Sidebar width without an inline style, which a strict CSP would block. Goes on the element
+     that holds the sidebar and its content; without it the vendor's 16rem applies. */
+  [data-sidebar-width='sm'] { --sidebar-width: 14rem; }
+  [data-sidebar-width='md'] { --sidebar-width: 15rem; }
+  [data-sidebar-width='lg'] { --sidebar-width: 18rem; }
+
+  /* Text preview (components/text-clamp.html): a block cut to n lines that fades out downwards.
+     The clamp waits for data-ready, without JS the whole text stays readable. */
+  .text-clamp {
+    --clamp-lines: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: calc(var(--spacing) * 1);
+  }
+  .text-clamp[data-lines='1'] { --clamp-lines: 1; }
+  .text-clamp[data-lines='2'] { --clamp-lines: 2; }
+  .text-clamp[data-lines='3'] { --clamp-lines: 3; }
+  .text-clamp[data-lines='4'] { --clamp-lines: 4; }
+  .text-clamp[data-lines='5'] { --clamp-lines: 5; }
+  .text-clamp[data-lines='6'] { --clamp-lines: 6; }
+  .text-clamp[data-lines='8'] { --clamp-lines: 8; }
+  .text-clamp[data-lines='10'] { --clamp-lines: 10; }
+  .text-clamp > [data-clamp-body] { width: 100%; }
+  .text-clamp[data-ready]:not([data-open]) > [data-clamp-body] {
+    max-height: calc(var(--clamp-lines) * 1lh);
+    overflow: hidden;
+  }
+  .text-clamp[data-ready]:not([data-open], [data-fits]) > [data-clamp-body] {
+    mask-image: linear-gradient(to bottom, black 60%, transparent);
+  }
+  @media print {
+    .text-clamp[data-ready] > [data-clamp-body] { max-height: none; overflow: visible; mask-image: none; }
+    .text-clamp > [data-clamp-toggle] { display: none; }
+  }
+
+  /* Flow diagram (components/flow.html): a chain of cards with arrows, branches side by side.
+     The state always shows as a word in the node as well; the border only supports it. */
+  .flow {
+    --flow-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 5v14'/%3E%3Cpath d='m19 12-7 7-7-7'/%3E%3C/svg%3E");
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .flow > li { min-width: 0; margin: 0; break-inside: avoid; }
+  .flow > li + li::before {
+    content: '';
+    display: block;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin: calc(var(--spacing) * 1) auto;
+    background: var(--muted-foreground);
+    mask: var(--flow-arrow) center / contain no-repeat;
+  }
+  .flow .card { position: relative; }
+  .flow .card[data-state='active'] { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); }
+  .flow .card[data-state='done'] { border-color: var(--success); }
+  .flow .card[data-state='failed'] { border-color: var(--destructive); box-shadow: 0 0 0 1px var(--destructive); }
+  .flow .card[data-state='pending'] { border-style: dashed; }
+  /* A node that opens something: the button in the title stretches over the whole card, which
+     keeps the markup valid and the node reachable by keyboard. */
+  .flow .card:has(> header [data-flow-open]):hover { border-color: var(--ring); }
+  .flow [data-flow-open] {
+    font: inherit;
+    text-align: start;
+    cursor: pointer;
+    background: none;
+    border: 0;
+    padding: 0;
+  }
+  .flow [data-flow-open]::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+  }
+  .flow [data-flow-open]:focus-visible { outline: none; }
+  .flow [data-flow-open]:focus-visible::after {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+  .flow-branches {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(12rem, 100%), 1fr));
+    gap: calc(var(--spacing) * 3);
+  }
+  .flow-branch {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: calc(var(--spacing) * 2);
+    min-width: 0;
+    padding: calc(var(--spacing) * 3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+  }
+  .flow[data-orientation='horizontal'] {
+    flex-direction: row;
+    align-items: stretch;
+    overflow-x: auto;
+    padding-block: 2px;
+  }
+  .flow[data-orientation='horizontal'] > li {
+    display: flex;
+    align-items: center;
+    flex: none;
+  }
+  .flow[data-orientation='horizontal'] > li + li::before {
+    flex: none;
+    margin: 0 calc(var(--spacing) * 1);
+    transform: rotate(-90deg);
+  }
+  .flow[data-orientation='horizontal'] .flow-branches { grid-template-columns: minmax(0, 1fr); }
+  .flow[data-orientation='horizontal'] .card { flex: none; width: 10rem; }
+
+  /* Printable block (components/print-block.html). The sheet is paper whatever the theme says:
+     black on white, in the preview as well as in the copy that gets printed. */
+  .print-sheet {
+    color-scheme: light;
+    --background: oklch(1 0 0);
+    --foreground: oklch(0 0 0);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0 0 0);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0 0 0);
+    --muted: oklch(1 0 0);
+    --muted-foreground: oklch(0.25 0 0);
+    --accent: oklch(1 0 0);
+    --accent-foreground: oklch(0 0 0);
+    --secondary: oklch(1 0 0);
+    --secondary-foreground: oklch(0 0 0);
+    --primary: oklch(0 0 0);
+    --primary-foreground: oklch(1 0 0);
+    --border: oklch(0.6 0 0);
+    --input: oklch(0.6 0 0);
+    /* The utilities read --color-*, which :root has already resolved to the theme's values. */
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-border: var(--border);
+    --color-input: var(--input);
+    background: var(--background);
+    color: var(--foreground);
+    box-shadow: none;
+  }
+  [data-print-copy] { display: none; }
+  @media print {
+    html[data-print-selection],
+    html[data-print-selection] body {
+      color-scheme: light;
+      height: auto;
+      overflow: visible;
+      background: white;
+    }
+    html[data-print-selection] body > :not([data-print-copy]) { display: none !important; }
+    html[data-print-selection] [data-print-copy] { display: block !important; max-width: none; }
+    [data-print-copy] :is(summary, [data-print]) { display: none !important; }
+    [data-print] { display: none !important; }
   }
 }

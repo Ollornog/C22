@@ -251,4 +251,45 @@
       </table>
     </div>
   </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Umbrechender Text (<code>data-wrap</code> an der Tabelle oder an einzelnen Zellen)</span>
+    <div class="table-container w-full max-w-2xl">
+      <table class="table" data-wrap>
+        <thead>
+          <tr>
+            <th>Wenn</th>
+            <th>Dann</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Der Absender steht im Adressbuch und der Betreff enthält eine Rechnungsnummer.</td>
+            <td>Das Dokument wandert in den Ordner „Rechnungen“ und bekommt das Fälligkeitsdatum aus dem Text.</td>
+          </tr>
+          <tr>
+            <td>Der Absender ist unbekannt.</td>
+            <td>Das Dokument bleibt im Eingang und wartet auf eine Entscheidung von Hand.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table-container w-full max-w-2xl">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Regel</th>
+            <th>Beschreibung</th>
+            <th class="text-end">Treffer</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="font-medium">Rechnungen</td>
+            <td data-wrap>Nur diese Spalte bricht um, die Namen und Zahlen daneben bleiben in einer Zeile stehen.</td>
+            <td class="text-end tabular-nums">128</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>

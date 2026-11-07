@@ -2,7 +2,7 @@
 id: T-3
 type: Task
 title: Fremdressourcen — der zweite Blickwinkel fehlt noch (laufende Seite)
-status: offen
+status: erledigt
 milestone: M-1
 tags: [testing, datenschutz, hygiene]
 created: 2026-09-23
@@ -42,3 +42,7 @@ Regel C22 namentlich: *zuerst, was veröffentlicht ist, und zuerst, was sich ver
   entstehen (ein Nutzer trägt eine fremde URL ein) — diesen Fall gibt es hier nicht.
 - **SRI ist keine Datenschutzmaßnahme.** `integrity=` schützt die Integrität, nicht die IP des
   Besuchers, gilt nur für `script` und `link rel=stylesheet` und wirkt bei Bildern gar nicht.
+
+## Erledigt (2026-11-07)
+
+`tests/test_visual.py` lädt alle Seiten und alle Packs mit Netzwerkprotokoll: jede Anfrage bleibt beim eigenen Ursprung, keine schlägt fehl.

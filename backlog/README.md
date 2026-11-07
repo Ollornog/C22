@@ -7,22 +7,22 @@ Konventionen: [README-KONVENTION.md](README-KONVENTION.md).
 
 ## Meilensteine
 
-* ☐ **[M-1](M-1-visuelle-testebene.md)** 0.3.0 — visuelle Test-Ebene — 0/3 erledigt
-* ☐ **[M-2](M-2-bausteine-aus-den-apps.md)** Bausteine, die eine App gebaut hat, gehören in C22 — 0/9 erledigt
+* ☑ **[M-1](M-1-visuelle-testebene.md)** 0.3.0 — visuelle Test-Ebene — 3/3 erledigt
+* ☐ **[M-2](M-2-bausteine-aus-den-apps.md)** Bausteine, die eine App gebaut hat, gehören in C22 — 5/9 erledigt
 
 ## Aufgaben
 
-* ☐ **[T-1](T-1-visuelle-tests-scharf.md)** Visuelle Tests scharf schalten · M-1
-* ☐ **[T-2](T-2-eigene-webfont.md)** Eigene Web-Schrift einbetten · M-1
-* ☐ **[T-3](T-3-fremdressourcen-zweiter-blickwinkel.md)** Fremdressourcen — der zweite Blickwinkel fehlt noch (laufende Seite) · M-1
-* ☐ **[T-4](T-4-druckbarer-block.md)** Druckbarer Block — einen Ausschnitt der Seite drucken, schwarz auf weiss · M-2
-* ☐ **[T-5](T-5-lizenztext-inter.md)** Schrift Inter ohne OFL-Lizenztext ausgeliefert · M-2
-* ☐ **[T-6](T-6-ablaufdiagramm.md)** Ablaufdiagramm / Entscheidungsbaum als Baustein · M-2
-* ☐ **[T-7](T-7-diagramm-hoehe.md)** Balkendiagramm mit einstellbarer Höhe bzw. Seitenverhältnis · M-2
-* ☐ **[T-8](T-8-tabelle-umbruch.md)** Tabelle mit umbrechenden Zellen · M-2
-* ☐ **[T-9](T-9-textvorschau-zeilen.md)** Textvorschau mit n Zeilen, Ausblenden und „mehr anzeigen" · M-2
-* ☐ **[T-10](T-10-kit-028-favicon.md)** Kit 0.28 übernehmen — jede Webseite hat ein Favicon · M-2
-* ☐ **[T-11](T-11-typeset-h1-und-tabelle.md)** Prosa-Fluss in .typeset für h1 und Tabellen-Container · M-2
+* ☑ **[T-1](T-1-visuelle-tests-scharf.md)** Visuelle Tests scharf schalten · M-1
+* ☑ **[T-2](T-2-eigene-webfont.md)** Eigene Web-Schrift einbetten · M-1
+* ☑ **[T-3](T-3-fremdressourcen-zweiter-blickwinkel.md)** Fremdressourcen — der zweite Blickwinkel fehlt noch (laufende Seite) · M-1
+* ◐ **[T-4](T-4-druckbarer-block.md)** Druckbarer Block — einen Ausschnitt der Seite drucken, schwarz auf weiss · M-2
+* ◐ **[T-5](T-5-lizenztext-inter.md)** Schrift Inter ohne OFL-Lizenztext ausgeliefert · M-2
+* ◐ **[T-6](T-6-ablaufdiagramm.md)** Ablaufdiagramm / Entscheidungsbaum als Baustein · M-2
+* ☑ **[T-7](T-7-diagramm-hoehe.md)** Balkendiagramm mit einstellbarer Höhe bzw. Seitenverhältnis · M-2
+* ☑ **[T-8](T-8-tabelle-umbruch.md)** Tabelle mit umbrechenden Zellen · M-2
+* ☑ **[T-9](T-9-textvorschau-zeilen.md)** Textvorschau mit n Zeilen, Ausblenden und „mehr anzeigen" · M-2
+* ☑ **[T-10](T-10-kit-028-favicon.md)** Kit 0.28 übernehmen — jede Webseite hat ein Favicon · M-2
+* ☑ **[T-11](T-11-typeset-h1-und-tabelle.md)** Prosa-Fluss in .typeset für h1 und Tabellen-Container · M-2
 * ☐ **[T-12](T-12-go-adapter.md)** Adapter für Go-Vorlagen · M-2
 
 ## Entscheidungen (ADR)

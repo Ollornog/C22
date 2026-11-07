@@ -2,7 +2,7 @@
 id: T-4
 type: Task
 title: Druckbarer Block — einen Ausschnitt der Seite drucken, schwarz auf weiss
-status: offen
+status: in-arbeit
 milestone: M-2
 tags: [bausteine, druck, dark-mode]
 created: 2026-09-24
@@ -43,3 +43,11 @@ Die Kopie statt „alles andere ausblenden" ist nötig, weil der Block tief im L
 
 **Fertig, wenn:** die App den Block nur noch über den C22-Baustein nutzt und ihr eigenes JS
 und CSS dafür entfernt sind.
+
+## Stand (2026-11-07)
+
+Die C22-Seite ist erledigt: `components/print-block.html`, in der Galerie mit Druckvorschau. Das Druckbild prüft `tests/test_visual.py`.
+
+Die Attribute heißen englisch wie der Rest von C22: `data-printable`, `data-print`, `data-print-copy`, `data-print-selection`.
+
+**Offen:** Die App stellt ihren Adapter um und entfernt ihr eigenes JS und CSS.

@@ -2,7 +2,7 @@
 id: T-11
 type: Task
 title: Prosa-Fluss in .typeset für h1 und Tabellen-Container
-status: offen
+status: erledigt
 milestone: M-2
 tags: [typeset, komponenten]
 created: 2026-11-06
@@ -25,3 +25,7 @@ UnderDoc hilft sich mit `mb-4` am `h1` und `my-4` am Container. Das gehört nach
 
 - `.typeset` deckt `h1` und `.table-container` ab, abgeleitet aus `--flow`.
 - Der Prosa-Musterartikel zeigt beide Fälle.
+
+## Erledigt (2026-11-07)
+
+`.typeset` deckt `h1` und `.table-container` ab, beide aus `--flow`. Der Musterartikel zeigt beide Fälle. UnderDoc kann `mb-4` und `my-4` streichen.

@@ -34,7 +34,7 @@ packs, light and dark. Rebuilt from `main` on every change.
 - **Tokens over hard-coded values:** colour, radius, spacing and typography come from CSS custom
   properties (`c22/static/css/tokens.css`), so several sites can share one core and still look nothing
   alike.
-- **A component gallery (the single point of truth):** `gallery/build.py` renders all 65 components —
+- **A component gallery (the single point of truth):** `gallery/build.py` renders all 68 components —
   each in its variants — from canonical HTML partials in `c22/components/`. It links every component's
   Basecoat and shadcn source docs and switches between eight style packs and light/dark.
 - **Engine-neutral, with an optional Jinja layer:** any stack embeds the compiled CSS, the partials'
@@ -43,7 +43,7 @@ packs, light and dark. Rebuilt from `main` on every change.
 
 ## Status
 
-Work in progress. All 65 components exist with their variants, but interfaces and structure may still
+Work in progress. All 68 components exist with their variants, but interfaces and structure may still
 change before a stable `1.0`. Do not depend on it for production yet.
 
 ## Using it

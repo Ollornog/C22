@@ -2,7 +2,7 @@
 id: T-9
 type: Task
 title: Textvorschau mit n Zeilen, Ausblenden und „mehr anzeigen"
-status: offen
+status: erledigt
 milestone: M-2
 tags: [komponenten, text]
 created: 2026-09-27
@@ -26,3 +26,7 @@ nach dem Zeichnen gemessen — passt alles, fällt die Klemme weg.
 Ein Baustein (etwa `data-klemme="3"` plus Knopf) einen Block auf n Zeilen kürzt, nach unten
 ausblendet, den Knopf nur bei Überhang zeigt, in der Galerie steht und paperlaiss den Sonderweg
 entfernen kann.
+
+## Erledigt (2026-11-07)
+
+Baustein `.text-clamp` mit `data-lines`, `[data-clamp-body]` und `[data-clamp-toggle]`. paperlaiss kann `klapp()`/`klemmen()` damit entfernen.

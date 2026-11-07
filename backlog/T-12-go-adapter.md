@@ -26,3 +26,9 @@ Dazu kommen zwei Punkte, die jede Go-App trifft:
 
 - Eine zweite Go-App die Schicht aus C22 übernehmen kann, statt sie zu kopieren. Vorher lohnt sich der Umbau nicht.
 - Die Seitenleiste lässt sich ohne Inline-Stil und ohne `onclick` bedienen, in der Galerie sichtbar.
+
+## Stand (2026-11-07)
+
+Die Seitenleiste geht jetzt ohne Inline-Stil und ohne `onclick`: `data-sidebar-width` und `data-panel-toggle="#id"`, in der Galerie sichtbar.
+
+**Offen:** die Schicht für `html/template`. Sie wartet laut Befund auf eine zweite Go-App; bis dahin bleibt der Eintrag offen.

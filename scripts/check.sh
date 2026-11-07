@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Das Tor vor jedem Push: Fach- + Hygiene-Tests (später zusätzlich der visuelle Test der Makros).
+# The gate before every push: unit, hygiene and browser suites.
 #
-#   scripts/check.sh            # alles
-#   scripts/check.sh --fast     # ohne visuellen Test (kurze Schleife)
+#   scripts/check.sh            # everything, needs Chrome and tools/tailwindcss (fetched if missing)
+#   scripts/check.sh --fast     # without the browser suite (short loop)
 #
 # Der pre-push-Hook (.githooks/pre-push) ruft dieses Skript. Einmalig pro Klon:
 #   git config core.hooksPath .githooks
@@ -15,9 +15,8 @@ FAST=0
 step() { printf '\n\033[1m▸ %s\033[0m\n' "$1"; }
 fail() { printf '\n\033[31m✗ %s\033[0m\n' "$1" >&2; exit 1; }
 
-# Die Tests importieren c22 aus dem Quellbaum (die Suiten legen den Repo-Root auf den Pfad)
-# — eine Installation ist dafür nicht nötig. Gebraucht wird nur Python >= 3.12; die dev-Extras
-# (websockets/httpx) erst der spätere visuelle Test, dann greift der uv-Zweig.
+# The tests import c22 from the source tree (the suites put the repo root on the path), so no
+# installation is needed. Python alone is enough, the browser suite uses the standard library.
 usable() { [[ -x "$1" ]] && "$1" -c 'import sys; raise SystemExit(0 if sys.version_info >= (3, 10) else 1)' 2>/dev/null; }
 PY=""
 for cand in "${PYTHON:-}" .venv/bin/python "$(command -v python3 || true)"; do

@@ -1,0 +1,473 @@
+#!/usr/bin/env python3
+"""The browser level: what no string test can see.
+
+    python3 tests/test_visual.py           # compare against tests/visual/, change nothing
+    python3 tests/test_visual.py --renew   # write new reference images, on purpose and in the diff
+
+Builds the website into a temp directory and looks at it in headless Chrome:
+
+- every gallery section per view is compared to its reference image;
+- every request a page makes goes to the page's own origin, none of them fails;
+- every delivered page names a favicon;
+- components that only show their behaviour when used are used: a scrolled table of contents,
+  a carousel, a calendar, a chart, the text preview, the print block.
+
+A missing Chrome is a failure, not a skip. `scripts/check.sh --fast` leaves this suite out.
+
+What counts as a difference: reference and capture are compared in blocks of 8x8 pixels at a third
+of the size. A pixel counts when a channel is off by more than 48 of 255, a block counts when more than
+a quarter of its pixels do. Edge smoothing changes scattered pixels and stays below that, a moved
+button fills whole blocks. The suite proves this on every run by moving a button itself.
+"""
+from __future__ import annotations
+
+import base64
+import functools
+import http.server
+import json
+import os
+import shutil
+import subprocess
+import sys
+import tempfile
+import threading
+import urllib.request
+from pathlib import Path
+from urllib.parse import urlsplit
+
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parent
+sys.path.insert(0, str(HERE))
+from _cdp import Browser, BrowserFehler, Seite, schreibe_png  # noqa: E402
+from _kit import hygiene  # noqa: E402
+from _kit.report import Report  # noqa: E402
+
+REFERENZ = HERE / "visual"
+MASSSTAB = 1 / 3
+BLOCK = 8
+KANAL = 48
+ANTEIL = 0.25
+HOEHE_TOLERANZ = 2  # px of the reduced image: rounding differs between machines
+
+ANSICHTEN = {
+    "desktop": (1280, 900, "light"),
+    "mobile": (390, 844, "light"),
+    "dark": (1280, 900, "dark"),
+}
+SEITEN = ("components", "blocks", "charts", "typeset")
+ALLE_SEITEN = ("index", *SEITEN, "generator", "legal")
+PACKS = ("vega", "spica", "ankaa", "nova", "maia", "lyra", "mira", "luma", "sera", "rhea")
+
+# Time and chance stand still, so a calendar or a clock looks the same on every run.
+FEST = """
+(() => {
+  const T = Date.UTC(2026, 0, 15, 11, 0, 0), R = Date;
+  window.Date = class extends R {
+    constructor(...a) { if (a.length) super(...a); else super(T); }
+    static now() { return T; }
+  };
+  let s = 22;
+  Math.random = () => (s = (s * 16807) % 2147483647) / 2147483647;
+})();
+"""
+# The page scrolls inside <main>; laid out in full, every section can be captured whole.
+AUSGEROLLT = """
+(() => {
+  const st = document.createElement('style');
+  st.textContent = `
+    *, *::before, *::after { animation: none !important; transition: none !important; caret-color: transparent !important; }
+    html, body, body > *, main { height: auto !important; max-height: none !important; overflow: visible !important; }
+    /* Written by the browser in its own language: not C22's to answer for. */
+    input[type=date]::-webkit-datetime-edit, input[type=file] { color: transparent !important; }
+    input[type=file]::file-selector-button { color: transparent !important; width: 7rem !important; }
+  `;
+  document.head.appendChild(st);
+  // Inter is the only font C22 brings. Emoji, Arabic and Hebrew come from whatever the machine has
+  // installed, so they become plain letters here: the layout around them still counts.
+  const fremd = /[\p{Extended_Pictographic}\u0590-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFF\uFE00-\uFE0F]/gu;
+  const gang = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+  while (gang.nextNode()) {
+    if (!['SCRIPT', 'STYLE'].includes(gang.currentNode.parentElement.tagName)) gang.currentNode.data = gang.currentNode.data.replace(fremd, 'x');
+  }
+  document.querySelectorAll('[placeholder]').forEach(e => { e.placeholder = e.placeholder.replace(fremd, 'x'); });
+  // The tabs of the charts page are its navigation: each chart gets captured, not only the first tab.
+  document.querySelectorAll('#charts > [role=tabpanel][hidden]').forEach(p => { p.hidden = false; });
+})();
+"""
+VERGLEICH = """
+async (a, b, block, kanal, anteil) => {
+  const lade = d => new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = no; i.src = 'data:image/png;base64,' + d; });
+  const [ia, ib] = await Promise.all([lade(a), lade(b)]);
+  const w = Math.min(ia.width, ib.width), h = Math.min(ia.height, ib.height);
+  const pixel = i => { const c = document.createElement('canvas'); c.width = w; c.height = h; const x = c.getContext('2d', { willReadFrequently: true }); x.drawImage(i, 0, 0); return x.getImageData(0, 0, w, h); };
+  const pa = pixel(ia), pb = pixel(ib), da = pa.data, db = pb.data;
+  let bloecke = 0;
+  const out = document.createElement('canvas'); out.width = w; out.height = h;
+  const ox = out.getContext('2d'); ox.drawImage(ib, 0, 0); ox.fillStyle = 'rgba(255,0,0,.45)';
+  for (let by = 0; by < h; by += block) for (let bx = 0; bx < w; bx += block) {
+    let n = 0, z = 0;
+    for (let y = by; y < Math.min(by + block, h); y++) for (let x = bx; x < Math.min(bx + block, w); x++) {
+      const i = (y * w + x) * 4; z++;
+      if (Math.abs(da[i] - db[i]) > kanal || Math.abs(da[i + 1] - db[i + 1]) > kanal || Math.abs(da[i + 2] - db[i + 2]) > kanal) n++;
+    }
+    if (n > z * anteil) { bloecke++; ox.fillRect(bx, by, block, block); }
+  }
+  return { bloecke, hoeheA: ia.height, hoeheB: ib.height, breiteA: ia.width, breiteB: ib.width,
+           diff: bloecke ? out.toDataURL('image/png').split(',')[1] : '' };
+}
+"""
+
+
+def baue_site(arbeit: Path) -> Path:
+    """Builds in a copy of the tree: the suite must leave the working tree as it found it."""
+    quelle = arbeit / "src"
+    weg = shutil.ignore_patterns(".git", "_site", ".venv", "__pycache__", "*.egg-info", "tailwindcss",
+                                 ".claude", "visual")
+    shutil.copytree(ROOT, quelle, ignore=weg)
+    tailwind = ROOT / "tools" / "tailwindcss"
+    if tailwind.exists():
+        (quelle / "tools" / "tailwindcss").symlink_to(tailwind)
+    else:
+        subprocess.run(["bash", "scripts/fetch-tailwind.sh"], cwd=quelle, check=True)
+    site = arbeit / "site"
+    subprocess.run([sys.executable, "scripts/build-site.py", str(site)], cwd=quelle, check=True,
+                   stdout=subprocess.DEVNULL)
+    return site
+
+
+class StillerHandler(http.server.SimpleHTTPRequestHandler):
+    def log_message(self, *_: object) -> None:
+        pass
+
+
+def starte_server(site: Path) -> tuple[http.server.ThreadingHTTPServer, str]:
+    handler = functools.partial(StillerHandler, directory=str(site))
+    server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), handler)
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    return server, f"http://127.0.0.1:{server.server_address[1]}"
+
+
+def lade_ausgerollt(s: Seite, url: str) -> None:
+    s.geh(url)
+    s.js(AUSGEROLLT)
+    s.js("""Promise.all([...document.images].map(i => i.complete ? 0 : new Promise(r => { i.onload = i.onerror = r; })))
+            .then(() => new Promise(r => setTimeout(r, 150)))""")
+
+
+OBERSTE = "[...document.querySelectorAll('main section[id]')].filter(e => !e.parentElement.closest('section[id]'))"
+
+
+def abschnitte(s: Seite) -> list[str]:
+    return s.js(f"{OBERSTE}.filter(e => e.getBoundingClientRect().width > 0).map(e => e.id)")
+
+
+def foto_abschnitt(s: Seite, kennung: str) -> str:
+    """Only this section is laid out: painting a page of 60,000 px per capture takes half a second."""
+    a = s.js(f"""(() => {{
+      {OBERSTE}.forEach(e => {{ e.style.display = e.id === {kennung!r} ? '' : 'none'; }});
+      return new Promise(ok => requestAnimationFrame(() => requestAnimationFrame(() => {{
+        const r = document.getElementById({kennung!r}).getBoundingClientRect();
+        ok({{ x: r.x + scrollX, y: r.y + scrollY, w: r.width, h: r.height }});
+      }})));
+    }})()""")
+    return s.foto(a["x"], a["y"], a["w"], a["h"], MASSSTAB)
+
+
+def vergleiche(hilfe: Seite, referenz: str, ist: str) -> dict:
+    return hilfe.js(f"({VERGLEICH})({json.dumps(referenz)}, {json.dumps(ist)}, {BLOCK}, {KANAL}, {ANTEIL})")
+
+
+def weicht_ab(e: dict) -> str:
+    if abs(e["hoeheA"] - e["hoeheB"]) > HOEHE_TOLERANZ or abs(e["breiteA"] - e["breiteB"]) > HOEHE_TOLERANZ:
+        return f"Größe {e['breiteA']}x{e['hoeheA']} -> {e['breiteB']}x{e['hoeheB']}"
+    return f"{e['bloecke']} Blöcke" if e["bloecke"] else ""
+
+
+def bilder(r: Report, b: Browser, basis: str, erneuern: bool, ablage: Path) -> None:
+    hilfe = b.seite()
+    hilfe.geh("about:blank")
+    gefunden: set[Path] = set()
+    for ansicht, (breite, hoehe, theme) in ANSICHTEN.items():
+        s = b.seite(breite, hoehe, FEST)
+        abweichend: list[str] = []
+        fehlend: list[str] = []
+        neu = 0
+        anzahl = 0
+        for seite in SEITEN:
+            lade_ausgerollt(s, f"{basis}/{seite}.html?pack=vega&theme={theme}&lang=de")
+            for kennung in abschnitte(s):
+                anzahl += 1
+                datei = REFERENZ / ansicht / f"{seite}--{kennung}.png"
+                gefunden.add(datei)
+                ist = foto_abschnitt(s, kennung)
+                if not datei.exists():
+                    if erneuern:
+                        schreibe_png(datei, ist)
+                        neu += 1
+                    else:
+                        fehlend.append(datei.name)
+                    continue
+                vor = base64.b64encode(datei.read_bytes()).decode()
+                e = vergleiche(hilfe, vor, ist)
+                grund = weicht_ab(e)
+                if not grund:
+                    continue
+                if erneuern:
+                    # Below the threshold the file stays, so a renewal only touches what moved.
+                    schreibe_png(datei, ist)
+                    neu += 1
+                    continue
+                abweichend.append(f"{ansicht}/{datei.stem} ({grund})")
+                schreibe_png(ablage / ansicht / f"{datei.stem}.ist.png", ist)
+                if e["diff"]:
+                    schreibe_png(ablage / ansicht / f"{datei.stem}.diff.png", e["diff"])
+        s.sende("Page.close")
+        if erneuern:
+            print(f"  {ansicht}: {anzahl} Abschnitte, {neu} Referenzen geschrieben")
+            continue
+        r.check(f"{ansicht}: {anzahl} Abschnitte haben eine Referenz", anzahl > 0 and not fehlend,
+                " | ".join(fehlend[:5]) + " -> python3 tests/test_visual.py --renew")
+        r.check(f"{ansicht}: keine Abweichung (Bilder: {ablage})", not abweichend, " | ".join(abweichend[:8]))
+    if erneuern:
+        waisen = [d for d in REFERENZ.rglob("*.png") if d not in gefunden]
+        for d in waisen:
+            d.unlink()
+        print(f"  {len(waisen)} verwaiste Referenzen entfernt")
+    hilfe.sende("Page.close")
+
+
+def schaerfe(r: Report, b: Browser, basis: str) -> None:
+    """A comparison that never fires proves nothing, so each run moves a button on purpose."""
+    hilfe = b.seite()
+    hilfe.geh("about:blank")
+    s = b.seite(1280, 900, FEST)
+    lade_ausgerollt(s, f"{basis}/components.html?pack=vega&theme=light&lang=de")
+    vorher = foto_abschnitt(s, "button")
+    nochmal = foto_abschnitt(s, "button")
+    r.check("Vergleich: dasselbe Bild zweimal ist gleich", not weicht_ab(vergleiche(hilfe, vorher, nochmal)))
+    s.js("document.querySelector('#button .btn').style.transform = 'translateX(12px)'")
+    verschoben = foto_abschnitt(s, "button")
+    r.check("Vergleich: ein um 12 px verschobener Knopf wird rot", bool(weicht_ab(vergleiche(hilfe, vorher, verschoben))))
+    s.sende("Page.close")
+    hilfe.sende("Page.close")
+
+
+def fremdressourcen(r: Report, b: Browser, basis: str) -> None:
+    """The second view: the source does not see what JavaScript assembles at runtime."""
+    eigen = urlsplit(basis).netloc
+    s = b.seite()
+    ziele = [f"{basis}/{p}.html?lang=de" for p in ALLE_SEITEN] + [f"{basis}/components.html?pack={p}" for p in PACKS]
+    fremd: set[str] = set()
+    kaputt: set[str] = set()
+    anzahl = 0
+    for url in ziele:
+        s.geh(url)
+        s.js("new Promise(r => setTimeout(r, 200))")
+        alle, fehl = s.anfragen()
+        anzahl += len(alle)
+        kaputt.update(fehl)
+        for u in alle:
+            teile = urlsplit(u)
+            if teile.scheme not in ("data", "blob") and teile.netloc != eigen:
+                fremd.add(u)
+    r.check(f"{len(ziele)} Seiten stellen Anfragen", anzahl > len(ziele), f"{anzahl} Anfragen")
+    r.check("jede Anfrage bleibt beim eigenen Ursprung", not fremd, " | ".join(sorted(fremd)[:5]))
+    r.check("keine Anfrage schlägt fehl", not kaputt, " | ".join(sorted(kaputt)[:5]))
+    s.sende("Page.close")
+
+
+def favicon(r: Report, basis: str) -> None:
+    """On the raw response: Chrome wraps text in an HTML shell with a <head> of its own."""
+    host = urlsplit(basis).netloc
+    befunde: list[str] = []
+    for p in ALLE_SEITEN:
+        with urllib.request.urlopen(f"{basis}/{p}.html") as antwort:  # noqa: S310  own server
+            befunde += [f"{p}: {b}" for b in hygiene.favicon_befunde_html(antwort.read().decode(), host)]
+    r.check("jede ausgelieferte Seite nennt ihr Favicon", not befunde, " | ".join(befunde[:3]))
+    with urllib.request.urlopen(f"{basis}/docs/logo.png") as antwort:  # noqa: S310  own server
+        r.check("das Favicon wird ausgeliefert", antwort.status == 200 and antwort.read(4) == b"\x89PNG")
+
+
+def verhalten(r: Report, b: Browser, basis: str) -> None:
+    s = b.seite(1280, 900)
+    k = f"{basis}/components.html?pack=vega&theme=light&lang=de"
+
+    # Table of contents: scroll the container, read the reading mark.
+    s.geh(k)
+    s.js("""(() => { const c = document.querySelector('#toc-a-inhalt'); c.scrollTop = document.querySelector('#toc-a-3').offsetTop - c.offsetTop; })()""")
+    s.warte("""document.querySelector('nav[data-toc="#toc-a-inhalt"] [aria-current]')?.getAttribute('href') === '#toc-a-3'""")
+    r.check("Inhaltsverzeichnis: Scrollen setzt die Lesemarke", True)
+
+    # Carousel: the next button moves the viewport.
+    s.js("""(() => {
+      const c = document.querySelector('[data-carousel]');
+      window.__vp = c.querySelector('[data-carousel-viewport]');
+      c.querySelector('[data-carousel-next]').click();
+    })()""")
+    s.warte("window.__vp.scrollLeft > 0")
+    r.check("Karussell: der Weiter-Knopf bewegt die Bilder", True)
+
+    # Calendar: the next month button changes the heading.
+    titel = """document.querySelector('[data-calendar]').textContent"""
+    vorher = s.js(titel)
+    s.js("""document.querySelector('[data-calendar] [data-cal-next]').click()""")
+    s.warte(f"{titel} !== {vorher!r}")
+    r.check("Kalender: der Monatsknopf blättert", True)
+
+    # Sidebar: bedienbar without onclick and without an inline style, a strict CSP allows both away.
+    leiste = s.js("""(() => {
+      const bl = document.getElementById('c22-sb-g');
+      const zu = bl.getAttribute('aria-hidden');
+      document.querySelector('[data-panel-toggle="#c22-sb-g"]').click();
+      const halter = bl.closest('[data-sidebar-width]');
+      return { vorher: zu, nachher: bl.getAttribute('aria-hidden'), breite: getComputedStyle(halter).getPropertyValue('--sidebar-width').trim(),
+               inline: document.querySelectorAll('#sidebar .c22-examples [onclick], #sidebar .c22-examples [style*="--sidebar-width"]').length };
+    })()""")
+    r.check("Seitenleiste: der Umschalter wirkt ohne onclick", leiste["vorher"] != leiste["nachher"], str(leiste))
+    r.check("Seitenleiste: Breite ohne Inline-Stil", leiste["breite"] == "15rem" and leiste["inline"] == 0, str(leiste))
+
+    # Table: data-wrap wraps; without it the cell stays on one line.
+    werte = s.js("""(() => {
+      const t = [...document.querySelectorAll('#table table[data-wrap] td')][0];
+      const n = document.querySelector('#table table:not([data-wrap]) td');
+      const z = document.querySelector('#table td[data-wrap]');
+      return [getComputedStyle(t).whiteSpace, getComputedStyle(n).whiteSpace, getComputedStyle(z).whiteSpace];
+    })()""")
+    r.check("Tabelle: data-wrap bricht um, ohne bleibt die Zeile", werte == ["normal", "nowrap", "normal"], str(werte))
+
+    # Typeset: flow after the title and around a table.
+    s.geh(f"{basis}/typeset.html?pack=vega&theme=light&lang=de")
+    fluss = s.js("""(() => {
+      const a = document.querySelector('article.typeset');
+      const flow = parseFloat(getComputedStyle(a.querySelector(':scope > h1 + *')).fontSize);
+      const m = e => parseFloat(getComputedStyle(e).marginTop);
+      const c = a.querySelector(':scope > .table-container');
+      return { h1: m(a.querySelector(':scope > h1 + *')), vorTabelle: m(c), nachTabelle: m(c.nextElementSibling), flow };
+    })()""")
+    r.check("Typeset: Abstand nach dem h1", fluss["h1"] > 0, str(fluss))
+    r.check("Typeset: Abstand vor und nach dem Tabellen-Container",
+            fluss["vorTabelle"] > 0 and fluss["nachTabelle"] > 0, str(fluss))
+
+    # Text preview: three lines, a button only when something is hidden, the button opens it.
+    s.geh(k)
+    s.warte("document.querySelector('#text-clamp .text-clamp[data-ready]') !== null")
+    v = s.js("""(() => {
+      const [lang, kurz] = document.querySelectorAll('#text-clamp .text-clamp');
+      const body = lang.querySelector('[data-clamp-body]');
+      const btn = lang.querySelector('[data-clamp-toggle]');
+      const zeilen = body.getBoundingClientRect().height / parseFloat(getComputedStyle(body).lineHeight);
+      const zu = { zeilen, knopf: !btn.hidden, maske: getComputedStyle(body).maskImage !== 'none',
+                   kurzKnopf: !kurz.querySelector('[data-clamp-toggle]').hidden,
+                   kurzMaske: getComputedStyle(kurz.querySelector('[data-clamp-body]')).maskImage !== 'none' };
+      btn.click();
+      return { ...zu, auf: body.scrollHeight <= body.clientHeight + 1 && getComputedStyle(body).maskImage === 'none',
+               label: btn.textContent, expanded: btn.getAttribute('aria-expanded') };
+    })()""")
+    r.check("Textvorschau: kürzt auf drei Zeilen und blendet aus", round(v["zeilen"]) == 3 and v["maske"], str(v))
+    r.check("Textvorschau: Knopf nur bei Überhang", v["knopf"] and not v["kurzKnopf"] and not v["kurzMaske"], str(v))
+    r.check("Textvorschau: der Knopf klappt auf und benennt sich um",
+            v["auf"] and v["label"] == "Weniger anzeigen" and v["expanded"] == "true", str(v))
+
+    # Flow: a node with a button is reachable by keyboard, its whole card is the target.
+    knoten = s.js("""(() => {
+      const b = document.querySelector('#flow [data-flow-open]');
+      b.focus();
+      const karte = b.closest('.card').getBoundingClientRect();
+      b.closest('.card').scrollIntoView({ block: 'center' });
+      const k = b.closest('.card').getBoundingClientRect();
+      const unten = document.elementFromPoint(k.right - 24, k.bottom - 6);
+      return { fokus: document.activeElement === b, trifft: unten === b, breite: karte.width };
+    })()""")
+    r.check("Ablauf: der Knoten-Knopf hat den Fokus und deckt die Karte", knoten["fokus"] and knoten["trifft"], str(knoten))
+
+    # Print block: only the copy reaches the paper, black on white, from dark mode as well.
+    s.geh(f"{basis}/components.html?pack=vega&theme=dark&lang=de")
+    d = s.js("""(() => {
+      window.__gedruckt = 0; window.print = () => { window.__gedruckt++; };
+      document.querySelector('#print-block [data-print]').click();
+      const kopie = document.querySelector('body > [data-print-copy]');
+      return { gedruckt: window.__gedruckt, kopie: !!kopie, dunkel: document.documentElement.classList.contains('dark') };
+    })()""")
+    s.medium("print")
+    p = s.js("""(() => {
+      const kopie = document.querySelector('body > [data-print-copy]');
+      const rest = [...document.body.children].filter(e => e !== kopie && !['SCRIPT', 'STYLE'].includes(e.tagName))
+        .filter(e => getComputedStyle(e).display !== 'none').map(e => e.tagName);
+      const titel = kopie.querySelector('.card-title');
+      const farbe = e => { const c = document.createElement('canvas').getContext('2d'); c.fillStyle = getComputedStyle(e).color; c.fillRect(0, 0, 1, 1); return [...c.getImageData(0, 0, 1, 1).data].slice(0, 3); };
+      const leise = kopie.querySelector('.card-description');
+      return { sichtbar: getComputedStyle(kopie).display, rest, schrift: farbe(titel), leise: farbe(leise), knopf: getComputedStyle(kopie.querySelector('[data-print]')).display };
+    })()""")
+    s.medium("")
+    aufraeumen = s.js("""window.dispatchEvent(new Event('afterprint')), { kopie: !!document.querySelector('[data-print-copy]'), dunkel: document.documentElement.classList.contains('dark') }""")
+    r.check("Druckblock: Kopie unter body, dunkler Modus für den Druck aus", d == {"gedruckt": 1, "kopie": True, "dunkel": False}, str(d))
+    r.check("Druckblock: auf dem Papier nur die Kopie, ohne Knopf",
+            p["sichtbar"] == "block" and not p["rest"] and p["knopf"] == "none", str(p))
+    r.check("Druckblock: schwarze Schrift, auch die leise", max(p["schrift"]) < 40 and max(p["leise"]) < 70, str(p))
+    r.check("Druckblock: nach dem Druck ist alles wie vorher", aufraeumen == {"kopie": False, "dunkel": True}, str(aufraeumen))
+
+    # Chart: wide and flat stays flat, keeps its text size and reports a click.
+    s.geh(f"{basis}/charts.html?pack=vega&theme=light&lang=de")
+    s.js(AUSGEROLLT)
+    s.warte("""[...document.querySelectorAll('[data-chart]')].some(e => JSON.parse(e.dataset.chart).height && e.querySelector('svg')?.getBoundingClientRect().height > 0)""")
+    c = s.js("""(() => {
+      const el = [...document.querySelectorAll('[data-chart]')].find(e => JSON.parse(e.dataset.chart).height);
+      const asp = [...document.querySelectorAll('[data-chart]')].find(e => JSON.parse(e.dataset.chart).aspect);
+      const svg = () => el.querySelector('svg');
+      const text = () => { const t = svg().querySelector('text'); return t.getBoundingClientRect().height; };
+      const m = { hoehe: svg().getBoundingClientRect().height, breite: svg().getBoundingClientRect().width, text: text(),
+                  asp: asp.querySelector('svg').getBoundingClientRect().width / asp.querySelector('svg').getBoundingClientRect().height };
+      let treffer = null;
+      el.addEventListener('c22:chart-select', e => { treffer = e.detail; });
+      svg().querySelectorAll('[data-hit]')[3].dispatchEvent(new MouseEvent('click', { bubbles: true }));
+      const taste = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true });
+      const klick = treffer; treffer = null;
+      svg().querySelectorAll('[data-hit]')[4].dispatchEvent(taste);
+      const beschriftung = [...svg().querySelectorAll('text')].map(t => t.getBoundingClientRect());
+      const ueberlappt = beschriftung.some((a, i) => beschriftung.slice(i + 1).some(b => a.right > b.left && b.right > a.left && Math.abs(a.top - b.top) < 2));
+      return { ...m, klick, taste: treffer, ueberlappt };
+    })()""")
+    r.check("Diagramm: height ergibt genau diese Höhe", abs(c["hoehe"] - 160) < 1, str(c["hoehe"]))
+    r.check("Diagramm: aspect ergibt das Seitenverhältnis", abs(c["asp"] - 4) < 0.05, str(c["asp"]))
+    r.check("Diagramm: Klick meldet die Kategorie", bool(c["klick"]) and c["klick"]["index"] == 3, str(c["klick"]))
+    r.check("Diagramm: Enter meldet die Kategorie", bool(c["taste"]) and c["taste"]["index"] == 4, str(c["taste"]))
+    r.check("Diagramm: Beschriftungen überlappen nicht", not c["ueberlappt"])
+    # Twice the width, same text: the box follows the element instead of scaling the text.
+    schmal = s.js("""new Promise(ok => {
+      const el = [...document.querySelectorAll('[data-chart]')].find(e => JSON.parse(e.dataset.chart).height);
+      el.style.width = '400px';
+      setTimeout(() => { const v = el.querySelector('svg'); ok({ b: v.getBoundingClientRect().width, h: v.getBoundingClientRect().height, t: v.querySelector('text').getBoundingClientRect().height }); }, 300);
+    })""")
+    r.check("Diagramm: schmaler gezogen bleiben Höhe und Schrift", abs(schmal["b"] - 400) < 1 and abs(schmal["h"] - 160) < 1
+            and abs(schmal["t"] - c["text"]) < 1, str(schmal))
+    s.sende("Page.close")
+
+
+def main() -> int:
+    erneuern = "--renew" in sys.argv
+    r = Report("Browser — Galerie in Chrome")
+    vorgegeben = os.environ.get("C22_VISUAL_OUT")
+    ablage = Path(vorgegeben or tempfile.mkdtemp(prefix="c22-visual-"))
+    with tempfile.TemporaryDirectory(prefix="c22-site-") as arbeit:
+        site = baue_site(Path(arbeit))
+        server, basis = starte_server(site)
+        try:
+            with Browser() as b:
+                bilder(r, b, basis, erneuern, ablage)
+                if not erneuern:
+                    schaerfe(r, b, basis)
+                    fremdressourcen(r, b, basis)
+                    favicon(r, basis)
+                    verhalten(r, b, basis)
+        except BrowserFehler as fehler:
+            r.check("Browser läuft durch", False, str(fehler))
+        finally:
+            server.shutdown()
+    # Nothing to look at after a green run, so no empty directory stays behind.
+    if not vorgegeben and not any(ablage.iterdir()):
+        ablage.rmdir()
+    return 0 if erneuern else r.done()
+
+
+if __name__ == "__main__":
+    sys.exit(main())

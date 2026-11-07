@@ -12,7 +12,8 @@ keywords = ["css", "design-system", "design-tokens", "layout", "jinja", "compone
 dependencies = []
 
 [project.optional-dependencies]
-# Nur für die Testsuite: der spätere visuelle Test spricht das DevTools-Protokoll (headless Chrome).
+# The browser suite talks to Chrome over a pipe and needs neither (tests/_cdp.py). They stay because
+# the audit workflow treats an empty resolution as a run that checked nothing.
 dev = ["websockets>=12", "httpx>=0.27"]
 
 [project.urls]
@@ -27,4 +28,4 @@ build-backend = "setuptools.build_meta"
 packages = ["c22"]
 
 [tool.setuptools.package-data]
-c22 = ["static/css/*.css", "static/js/*.js", "macros/*.html"]
+c22 = ["static/css/*.css", "static/js/*.js", "static/fonts/*", "macros/*.html"]

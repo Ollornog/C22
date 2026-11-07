@@ -2,7 +2,7 @@
 id: T-6
 type: Task
 title: Ablaufdiagramm / Entscheidungsbaum als Baustein
-status: offen
+status: in-arbeit
 milestone: M-2
 tags: [bausteine, diagramm, ablauf]
 created: 2026-09-27
@@ -35,3 +35,9 @@ Knoten als Zustand, Tastatur (Knoten als Buttons), Druck.
 
 Der Baustein liegt in `c22/components/` oder `c22/blocks/`, die Galerie zeigt ihn in allen
 Zuständen, und paperlaiss nutzt ihn über einen dünnen Adapter.
+
+## Stand (2026-11-07)
+
+Die C22-Seite ist erledigt: `components/flow.html` mit Zuständen, Zweigen, die wieder zusammenlaufen, Tastatur, waagerechter Variante und Druck.
+
+**Offen:** paperlaiss stellt `ablauf()`/`knoten()` auf den Baustein um.
