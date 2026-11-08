@@ -1265,6 +1265,9 @@
      Vendor-Selektor trifft nur Anker, deshalb hier für Buttons gespiegelt statt inline nachgebaut. */
   .breadcrumb button { @apply transition-colors; }
   .breadcrumb button:hover { @apply text-foreground; }
+  /* A menu as a breadcrumb step (e.g. the organisation with its switcher): as small as the other steps. */
+  .breadcrumb .dropdown-menu > .btn { height: auto; gap: 0.25rem; padding: 0 0.25rem; font-size: inherit; font-weight: inherit; color: inherit; }
+  .breadcrumb .dropdown-menu > .btn > svg { width: 0.875rem; height: 0.875rem; }
 
   /* Alert-Warnung über das --warning-Token statt hartkodierter amber-Utilities (dark-fähig, SPOT):
      getönter Grund + kräftiges Warn-Icon; Titel/Text bleiben in der normalen Vordergrundfarbe, weil
@@ -3778,6 +3781,57 @@
     box-shadow: inset 0 -2px 0 var(--primary);
   }
   .filter-menus > .dropdown-menu[data-teil] > button { border-style: dashed; border-color: var(--foreground); }
+  /* Split button (.filter-split): the button takes or drops the whole group, the arrow beside it opens the group's menu. Both share
+     one frame; the state sits on the frame. */
+  .filter-menus > .filter-split {
+    display: inline-flex;
+    align-items: stretch;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background-color: var(--background);
+  }
+  .filter-menus > .filter-split > a {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    min-width: 4.25rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: calc(var(--radius-md) - 1px) 0 0 calc(var(--radius-md) - 1px);
+    color: var(--foreground);
+    text-decoration: none;
+  }
+  .filter-menus > .filter-split > a > span {
+    display: flex;
+    align-items: center;
+    gap: 0.3125rem;
+    min-height: 1.25rem;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .filter-menus > .filter-split > a > small {
+    font-size: var(--text-xs);
+    line-height: 1.25;
+    color: var(--muted-foreground);
+    white-space: nowrap;
+  }
+  .filter-menus > .filter-split > .dropdown-menu { display: flex; border-inline-start: 1px solid var(--border); }
+  .filter-menus > .filter-split > .dropdown-menu > button {
+    height: auto;
+    padding-inline: 0.25rem;
+    border-radius: 0 calc(var(--radius-md) - 1px) calc(var(--radius-md) - 1px) 0;
+    color: var(--muted-foreground);
+  }
+  .filter-menus > .filter-split > :is(a, .dropdown-menu > button):hover { background-color: var(--accent); color: var(--accent-foreground); }
+  .filter-menus > .filter-split[data-an] {
+    background-color: var(--card);
+    border-color: var(--foreground);
+    box-shadow: inset 0 -2px 0 var(--primary);
+  }
+  .filter-menus > .filter-split[data-teil] { border-style: dashed; border-color: var(--foreground); }
+  .filter-menus > .filter-split:is([data-an], [data-teil]) > a > small { color: var(--foreground); }
+  .filter-menus > .filter-split:is([data-an], [data-teil]) > .dropdown-menu { border-inline-start-color: var(--foreground); }
   /* A vertical separator between groups of buttons (e.g. which doors, then what about them). */
   .filter-menus > [role='separator'] { align-self: stretch; width: 1px; margin-inline: 0.25rem; background-color: var(--border); }
   .filter-menus > a[aria-current='true'] > small,
