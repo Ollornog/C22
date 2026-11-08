@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **App workspace:** the ghost of a drag takes the tokens of the workspace; it hangs on `<body>`, outside the root, so
+  its padding fell back to nothing.
 - **Panel:** a button group directly in a panel section stays a row; the vendor stacked every group of a section.
 - **Package:** the wheel now carries `static/fonts/`, so Inter no longer goes missing behind `url(../fonts/inter.woff2)`.
 - **Licence:** `c22/static/fonts/OFL.txt` ships next to Inter, as the SIL Open Font License demands for every copy.
@@ -23,6 +25,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **App workspace:** in nav2 only an entry kept open (`data-pinned`) draws the line on the left; one open for now keeps
   just its background. This replaces the pin, and the favorite star is gone, as everything in nav2 is sorted by
   dragging. At the step Text the head of nav2 shows only the plus of New, so it is no longer cut off.
+- **App workspace:** dragging in nav2 and nav3 opens a gap where the entry would land (`.dropgap`, dashed, so it reads
+  without colour) instead of a line on one edge or the other of each entry; the ghost (`.ghost.lift`) carries the look
+  and the width of the entry. The lines and frames of the old marks (`.drop-before`, `.drop-after`, `.drop-into` on
+  entries of nav2 and nav3, on `#clist` and `.nav2`) are gone; tabs keep theirs.
 
 - **Levels table:** the top line of the first level no longer doubles its width; colour alone marks it.
 
@@ -33,6 +39,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **App workspace:** New as the command menu of C22 inside a menu of the workspace (`.cmdpop` with `.command`), so typing
+  filters it; a name written in place in nav2 or nav3 (`.collrow.ren`, `.renin`).
 - **App workspace:** lines and spaces between entries of nav2 and nav3 (`.deco` with `data-deco="line"` or `"space"`),
   dragged like an entry; and a line between the entries of nav2 that shows where a dragged one lands.
 - **App workspace:** editing a page block by block, `.bedit` (a plain Markdown field) with `.bbar` below it (add a

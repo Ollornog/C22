@@ -31,7 +31,8 @@
  * mockup's rounds, later rounds refine earlier ones (the round comments mark where each begins).
  */
 
-.c22-app-workspace {
+/* The ghost of a drag hangs on <body>, outside the root, so it takes the tokens too. */
+.c22-app-workspace, body:has(> .c22-app-workspace) > .ghost {
   --app-workspace-space: calc(var(--spacing) / 4);
   --app-workspace-text: calc(var(--text-scale) * 0.0625rem);
   --app-workspace-radius: calc(var(--radius) / 10);
@@ -413,9 +414,6 @@ body.dragging .c22-app-workspace, body.dragging .c22-app-workspace * { user-sele
 .c22-app-workspace .collrow .navitem { flex: 1; width: auto; }
 .c22-app-workspace .nav2 #cq { width: 100%; height: calc(28 * var(--app-workspace-space)); padding: 0 calc(7 * var(--app-workspace-space)); border: 1px solid var(--border); border-radius: calc(6 * var(--app-workspace-radius)); background: var(--background); flex: none; }
 .c22-app-workspace #clist { display: flex; flex-direction: column; gap: calc(3 * var(--app-workspace-space)); }
-.c22-app-workspace .navitem.drop-before, .c22-app-workspace .row.drop-before { box-shadow: inset 0 3px 0 var(--primary); border-radius: 0; }
-.c22-app-workspace .navitem.drop-after, .c22-app-workspace .row.drop-after { box-shadow: inset 0 -3px 0 var(--primary); border-radius: 0; }
-.c22-app-workspace .row.drop-into, .c22-app-workspace .cheadrow.drop-into { background: var(--accent); box-shadow: inset 0 0 0 2px var(--primary); }
 .c22-app-workspace .row.just { box-shadow: inset 0 0 0 1.5px var(--ring); }
 .c22-app-workspace .cheadrow { display: flex; align-items: center; margin-top: calc(10 * var(--app-workspace-space)); border-top: 1px solid var(--ring); }
 .c22-app-workspace .cheadrow .chead { flex: 1; margin: 0; border: 0; padding: calc(5 * var(--app-workspace-space)) calc(4 * var(--app-workspace-space)) calc(3 * var(--app-workspace-space)); }
@@ -426,6 +424,12 @@ body.dragging .c22-app-workspace, body.dragging .c22-app-workspace * { user-sele
 .c22-app-workspace .addmenu button:hover { background: var(--accent); }
 .c22-app-workspace .lockline { display: flex; align-items: center; gap: calc(6 * var(--app-workspace-space)); font-size: calc(12.5 * var(--app-workspace-text)); color: var(--muted-foreground); padding: calc(2 * var(--app-workspace-space)) calc(4 * var(--app-workspace-space)) calc(8 * var(--app-workspace-space)); }
 body:has(> .c22-app-workspace) > .ghost { position: fixed; z-index: 50; pointer-events: none; padding: calc(3 * var(--app-workspace-space)) calc(9 * var(--app-workspace-space)); background: var(--primary); color: var(--primary-foreground); border-radius: calc(6 * var(--app-workspace-radius)); font-size: calc(13 * var(--app-workspace-text)); max-width: calc(220 * var(--app-workspace-space)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; box-shadow: var(--app-workspace-shadow-ghost); }
+/* Dragging pulls the entry out: the ghost carries its look and its width, and a gap opens where it would land, the
+   entries around it sliding apart (2026-11-08). The gap is dashed, so it reads without colour. */
+body:has(> .c22-app-workspace) > .ghost.lift { display: flex; align-items: center; gap: calc(6 * var(--app-workspace-space)); max-width: none; min-height: calc(30 * var(--app-workspace-space)); padding: calc(3 * var(--app-workspace-space)) calc(8 * var(--app-workspace-space)); background: var(--card); color: var(--foreground); border: 1px solid var(--ring); opacity: .94; }
+body:has(> .c22-app-workspace) > .ghost.lift span { overflow: hidden; text-overflow: ellipsis; }
+body:has(> .c22-app-workspace) > .ghost.lift svg { width: calc(16 * var(--app-workspace-space)); height: calc(16 * var(--app-workspace-space)); flex: none; fill: none; stroke: currentColor; stroke-width: calc(var(--icon-stroke) * 0.85); stroke-linecap: round; stroke-linejoin: round; }
+.c22-app-workspace .dropgap { display: block; list-style: none; box-sizing: border-box; border: 1px dashed var(--primary); border-radius: calc(5 * var(--app-workspace-radius)); background: color-mix(in oklab, var(--primary) 8%, transparent); pointer-events: none; }
 /* Search */
 .c22-app-workspace .search { width: min(340 * var(--app-workspace-space), 34vw); }
 .c22-app-workspace .filterbtn { padding: calc(2 * var(--app-workspace-space)) calc(9 * var(--app-workspace-space)); margin-bottom: calc(8 * var(--app-workspace-space)); }
@@ -647,7 +651,6 @@ body:has(> .c22-app-workspace) > .ghost { position: fixed; z-index: 50; pointer-
 .c22-app-workspace .dtitle h1 { font-size: calc(21 * var(--app-workspace-text)); line-height: 1.25; margin: 0; overflow-wrap: anywhere; }
 .c22-app-workspace .dtitle p { margin: calc(2 * var(--app-workspace-space)) 0 0; font-size: calc(13 * var(--app-workspace-text)); color: var(--muted-foreground); }
 .c22-app-workspace [data-later] { opacity: .35; cursor: not-allowed; }
-.c22-app-workspace #clist.drop-into, .c22-app-workspace .nav2.drop-into { outline: 2px dashed var(--foreground); outline-offset: -2px; border-radius: calc(6 * var(--app-workspace-radius)); }
 .c22-app-workspace .chead svg { width: calc(11 * var(--app-workspace-space)); height: calc(11 * var(--app-workspace-space)); margin-right: calc(4 * var(--app-workspace-space)); vertical-align: -1px; }
 /* Round 9 */
 .c22-app-workspace .chead .acc svg { width: calc(11 * var(--app-workspace-space)); height: calc(11 * var(--app-workspace-space)); margin-left: calc(5 * var(--app-workspace-space)); color: var(--muted-foreground); }
@@ -705,9 +708,6 @@ body:has(> .c22-app-workspace) > .ghost { position: fixed; z-index: 50; pointer-
 .c22-app-workspace .deco[data-deco="line"]::after { content: ""; position: absolute; left: calc(6 * var(--app-workspace-space)); right: calc(6 * var(--app-workspace-space)); top: 50%; height: 1px; background: var(--border); }
 .c22-app-workspace .deco[data-deco="space"] { height: calc(14 * var(--app-workspace-space)); min-height: 0; }
 .c22-app-workspace .deco:hover { background: var(--accent); }
-.c22-app-workspace .collrow.drop-before::before, .c22-app-workspace .collrow.drop-after::before { content: ""; position: absolute; left: 0; right: 0; height: 2px; background: var(--primary); z-index: 2; pointer-events: none; }
-.c22-app-workspace .collrow.drop-before::before { top: -1px; }
-.c22-app-workspace .collrow.drop-after::before { bottom: -1px; }
 /* At the step Text the head of nav2 has no room for the word New: the plus says it, and the label gives way. */
 .c22-app-workspace .n2head .lbl { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .c22-app-workspace .n2head .newplus { flex: none; }
@@ -748,3 +748,15 @@ body:has(> .c22-app-workspace) > .ghost { position: fixed; z-index: 50; pointer-
   .c22-app-workspace .tw { overflow: visible; }
   .c22-app-workspace :is(table, .kard, .embed, pre) { break-inside: avoid; }
 }
+
+/* A new collection is named where it appears, in nav2 or in nav3 (2026-11-08). */
+.c22-app-workspace .collrow.ren { gap: calc(7 * var(--app-workspace-space)); padding: 0 calc(5 * var(--app-workspace-space)) 0 calc(7 * var(--app-workspace-space)); min-height: calc(34 * var(--app-workspace-space)); }
+.c22-app-workspace .renin { flex: 1; min-width: 0; height: calc(26 * var(--app-workspace-space)); padding: 0 calc(6 * var(--app-workspace-space)); border: 1px solid var(--ring); border-radius: calc(5 * var(--app-workspace-radius)); background: var(--background); color: var(--foreground); font: inherit; font-size: calc(13 * var(--app-workspace-text)); }
+.c22-app-workspace .renin:focus { outline: 2px solid var(--primary); outline-offset: 0; }
+
+/* New, in nav2 and in the head of a collection: the command menu of C22 in a menu of the workspace, so typing filters
+   it (2026-11-08). */
+.c22-app-workspace .cmdpop { padding: 0; overflow: hidden; width: calc(250 * var(--app-workspace-space)); }
+.c22-app-workspace .cmdpop .command { background: transparent; }
+.c22-app-workspace .cmdpop .command > header input { border: 0; background: transparent; box-shadow: none; height: auto; padding: 0; }
+.c22-app-workspace .cmdpop [role="menuitem"] { font-size: calc(13 * var(--app-workspace-text)); }
