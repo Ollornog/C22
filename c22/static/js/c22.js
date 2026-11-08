@@ -3249,10 +3249,18 @@ document.addEventListener('basecoat:initialized', function (e) {
   // ---- Table with levels ----------------------------------------------------
   // Selection by clicking a row: data-state="selected" on the <tr>, a click on a merged cell
   // takes all rows it spans, shift extends. Clicks on controls inside a row stay theirs, and so
-  // does selecting text to copy it. Apps listen to `c22:selection`, values come from data-value.
+  // does selecting text to copy it. Apps listen to `c22:selection`, values come from data-value;
+  // detail.mode says how it changed (replace, toggle, extend).
+  // data-selectable="explorer" works like a file manager: a click selects only that row (or the rows
+  // of a merged cell), Ctrl or Cmd adds or removes one, Shift selects the range from the last click.
+  // A double click or Enter opens the row: `c22:open` (cancelable), then its data-href. A plain click
+  // on a link in a row selects too, on a fine pointer; Ctrl, middle click and the keyboard still
+  // follow the link. Escape clears the selection.
   var TABLE = '.table[data-variant="levels"][data-selectable]';
+  var FEIN = window.matchMedia ? window.matchMedia('(pointer: fine)') : { matches: true };
   var anker = new WeakMap();
 
+  function explorer(table) { return table.getAttribute('data-selectable') === 'explorer'; }
   function zeilenVon(zelle) {
     var tr = zelle.parentElement;
     var alle = Array.prototype.slice.call(tr.parentElement.rows);
@@ -3263,7 +3271,7 @@ document.addEventListener('basecoat:initialized', function (e) {
     if (an) { tr.setAttribute('data-state', 'selected'); tr.setAttribute('aria-selected', 'true'); }
     else { tr.removeAttribute('data-state'); tr.setAttribute('aria-selected', 'false'); }
   }
-  function meldeAuswahl(table) {
+  function meldeAuswahl(table, art) {
     table.querySelectorAll('td[data-merged]').forEach(function (td) {
       var voll = zeilenVon(td).every(function (tr) { return tr.getAttribute('data-state') === 'selected'; });
       if (voll) td.setAttribute('data-state', 'selected'); else td.removeAttribute('data-state');
@@ -3271,44 +3279,91 @@ document.addEventListener('basecoat:initialized', function (e) {
     var zeilen = Array.prototype.slice.call(table.querySelectorAll('tbody tr[data-state="selected"]'));
     table.dispatchEvent(new CustomEvent('c22:selection', {
       bubbles: true,
-      detail: { rows: zeilen, values: zeilen.map(function (tr) { return tr.getAttribute('data-value'); }) },
+      detail: { rows: zeilen, values: zeilen.map(function (tr) { return tr.getAttribute('data-value'); }), mode: art },
     }));
   }
-  function waehle(table, tr, zelle, erweitern) {
+  function leereTabelle(table) {
+    table.querySelectorAll('tbody tr[data-state="selected"]').forEach(function (z) { setze(z, false); });
+  }
+  function waehle(table, tr, zelle, erweitern, umschalten) {
+    var ex = explorer(table);
+    var art = 'toggle';
     if (zelle && zelle.hasAttribute('data-merged')) {
       var bereich = zeilenVon(zelle);
       var alleAn = bereich.every(function (z) { return z.getAttribute('data-state') === 'selected'; });
-      bereich.forEach(function (z) { setze(z, !alleAn); });
+      if (ex && !umschalten) { leereTabelle(table); bereich.forEach(function (z) { setze(z, true); }); art = 'replace'; }
+      else bereich.forEach(function (z) { setze(z, !alleAn); });
     } else if (erweitern && anker.get(table) && anker.get(table).parentElement === tr.parentElement) {
       var rows = Array.prototype.slice.call(tr.parentElement.rows);
       var von = rows.indexOf(anker.get(table)), bis = rows.indexOf(tr);
+      if (ex && !umschalten) leereTabelle(table);
       rows.slice(Math.min(von, bis), Math.max(von, bis) + 1).forEach(function (z) { setze(z, true); });
+      art = ex && !umschalten ? 'replace' : 'extend';
+    } else if (ex && !umschalten) {
+      leereTabelle(table);
+      setze(tr, true);
+      anker.set(table, tr);
+      art = 'replace';
     } else {
       setze(tr, tr.getAttribute('data-state') !== 'selected');
       anker.set(table, tr);
     }
-    meldeAuswahl(table);
+    meldeAuswahl(table, art);
+  }
+  function oeffne(table, tr) {
+    var ok = tr.dispatchEvent(new CustomEvent('c22:open', { bubbles: true, cancelable: true, detail: { row: tr, value: tr.getAttribute('data-value') } }));
+    if (ok && tr.getAttribute('data-href')) location.assign(tr.getAttribute('data-href'));
   }
   document.addEventListener('click', function (e) {
     var ziel = e.target;
     var table = ziel.closest && ziel.closest(TABLE);
-    if (!table || ziel.closest('a, button, input, select, textarea, label, summary')) return;
+    if (!table) return;
     var tr = ziel.closest('tbody tr');
     if (!tr) return;
+    var link = ziel.closest('a');
+    var umschalten = e.ctrlKey || e.metaKey;
+    // Explorer: a plain click with the mouse on a link in the row selects; everything else follows the link.
+    var maus = e.pointerType ? e.pointerType === 'mouse' : FEIN.matches;
+    if (link && explorer(table) && maus && e.detail > 0 && e.button === 0 && !umschalten && !e.shiftKey && !e.altKey) {
+      e.preventDefault();
+    } else if (ziel.closest('a, button, input, select, textarea, label, summary')) {
+      return;
+    }
     var auswahl = window.getSelection && window.getSelection();
     if (auswahl && !auswahl.isCollapsed && String(auswahl).length) return;
-    waehle(table, tr, ziel.closest('td'), e.shiftKey);
+    // The second click of a double click only opens.
+    if (explorer(table) && e.detail > 1) return;
+    waehle(table, tr, ziel.closest('td'), e.shiftKey, umschalten);
   });
-  // Shift extends the selection of rows, not the browser's text selection (which would cancel the click).
+  document.addEventListener('dblclick', function (e) {
+    var table = e.target.closest && e.target.closest(TABLE);
+    if (!table || !explorer(table) || e.target.closest('button, input, select, textarea, label, summary')) return;
+    var tr = e.target.closest('tbody tr[data-value]');
+    if (tr) oeffne(table, tr);
+  });
+  // Shift extends the selection of rows, not the browser's text selection (which would cancel the click);
+  // a double click in an explorer table opens instead of selecting a word.
   document.addEventListener('mousedown', function (e) {
-    if (e.shiftKey && e.target.closest && e.target.closest(TABLE + ' tbody tr')) e.preventDefault();
+    var tr = e.target.closest && e.target.closest(TABLE + ' tbody tr');
+    if (!tr) return;
+    if (e.shiftKey || (e.detail > 1 && explorer(tr.closest('table')))) e.preventDefault();
   });
   document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      document.querySelectorAll(TABLE + '[data-selectable="explorer"]').forEach(function (table) {
+        if (!table.querySelector('tbody tr[data-state="selected"]') || document.querySelector('[data-popover][aria-hidden="false"], .context-menu [data-cm-panel]:not([hidden])')) return;
+        leereTabelle(table);
+        meldeAuswahl(table, 'replace');
+      });
+      return;
+    }
     if (e.key !== ' ' && e.key !== 'Enter') return;
     var tr = e.target;
     if (!tr.matches || !tr.matches(TABLE + ' tbody tr')) return;
     e.preventDefault();
-    waehle(tr.closest('table'), tr, null, e.shiftKey);
+    var table = tr.closest('table');
+    if (e.key === 'Enter' && explorer(table)) { oeffne(table, tr); return; }
+    waehle(table, tr, null, e.shiftKey, e.ctrlKey || e.metaKey || (e.key === ' ' && explorer(table)));
   });
 
   // ---- Closable alert -------------------------------------------------------
