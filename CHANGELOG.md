@@ -20,6 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **App workspace:** in nav2 only an entry kept open (`data-pinned`) draws the line on the left; one open for now keeps
+  just its background. This replaces the pin, and the favorite star is gone, as everything in nav2 is sorted by
+  dragging. At the step Text the head of nav2 shows only the plus of New, so it is no longer cut off.
+
 - **Levels table:** the top line of the first level no longer doubles its width; colour alone marks it.
 
 ### Removed
@@ -29,6 +33,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **App workspace:** lines and spaces between entries of nav2 and nav3 (`.deco` with `data-deco="line"` or `"space"`),
+  dragged like an entry; and a line between the entries of nav2 that shows where a dragged one lands.
 - **App workspace:** editing a page block by block, `.bedit` (a plain Markdown field) with `.bbar` below it (add a
   block after it, delete it, its ID); the mockup left editing for later. Shown as a third example in the gallery.
 - **App workspace:** new building block `.c22-app-workspace` (`c22/static/css/app-workspace.css`, gallery
