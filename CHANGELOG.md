@@ -29,6 +29,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **App workspace:** editing a page block by block, `.bedit` (a plain Markdown field) with `.bbar` below it (add a
+  block after it, delete it, its ID); the mockup left editing for later. Shown as a third example in the gallery.
 - **App workspace:** new building block `.c22-app-workspace` (`c22/static/css/app-workspace.css`, gallery
   `blocks/navigation/app-workspace.html`): the workspace of an approved clickable mockup, taken over whole for the app that
   renders that markup (UnderDoc). Every rule sits under the one root class, inside it the class names are the ones the app's
