@@ -3509,3 +3509,224 @@ document.addEventListener('basecoat:initialized', function (e) {
     if (media.addEventListener) media.addEventListener('change', function (e) { if (!e.matches) cleanup(); });
   }
 })();
+
+// ---- Workspace (blocks/navigation/workspace.html) ----------------------------------------------
+// Columns: [data-grip] on the right edge of .workspace-nav. nav1 and nav2 (data-level 1, 2) snap to
+// the four steps (data-step 0-3, widths from --workspace-step-0 … -3), nav3 moves freely between
+// --workspace-nav3-min and -max and writes --workspace-nav3 on .workspace (a CSSOM property, which
+// a strict CSP allows; no style attribute in the markup). Pointer and arrow keys. With
+// data-workspace-store="<key>" the state lasts in localStorage; workspace-boot.js puts it back
+// before the first paint. Each change fires `c22:workspace-columns` on .workspace with
+// {nav1, nav2, nav3}.
+// List: the arrow [data-toggle] or a double click on the name shows or hides the nested list. A name
+// that is a <button> becomes the current one (aria-current); a link is left to the browser or the
+// app. A click on the current entry of nav1 hides nav2 and nav3 (data-nav-hidden), below md it
+// opens them over the window (data-nav-open; Escape, a click in the window or on a name closes).
+// [data-drawer-toggle="<id>"] opens and closes the drawer over the window, Escape closes it.
+// A right click in a .context-menu of the workspace names the row in the menu's [role=heading].
+// No onclick, no inline style: everything hangs off delegated listeners.
+(function () {
+  'use strict';
+  var PHONE = window.matchMedia ? window.matchMedia('(max-width: 47.999rem)') : { matches: false };
+
+  // Length of a custom property in px: measured, so rem, px and calc() all work.
+  function measure(ws, prop) {
+    var probe = document.createElement('div');
+    probe.style.position = 'absolute';
+    probe.style.visibility = 'hidden';
+    probe.style.width = 'var(' + prop + ')';
+    ws.appendChild(probe);
+    var px = probe.getBoundingClientRect().width;
+    probe.remove();
+    return px;
+  }
+  function steps(ws) { return [0, 1, 2, 3].map(function (i) { return measure(ws, '--workspace-step-' + i); }); }
+  function nav(ws, level) { return ws.querySelector(':scope > .workspace-nav[data-level="' + level + '"]'); }
+  function stepOf(n) { var s = Number(n && n.dataset.step); return s >= 0 && s <= 3 ? s : 3; }
+  function nav3Width(ws) { var n = nav(ws, 3); return n ? Math.round(n.getBoundingClientRect().width) : 0; }
+  function clamp3(ws, px) { return Math.round(Math.min(measure(ws, '--workspace-nav3-max'), Math.max(measure(ws, '--workspace-nav3-min'), px))); }
+
+  function state(ws) {
+    return { nav1: stepOf(nav(ws, 1)), nav2: stepOf(nav(ws, 2)), nav3: nav3Width(ws) };
+  }
+  function label(grip) {
+    var n = grip.parentElement, level = n.dataset.level;
+    if (level === '3') {
+      grip.setAttribute('aria-valuenow', String(nav3Width(n.parentElement)));
+    } else {
+      grip.setAttribute('aria-valuemin', '0');
+      grip.setAttribute('aria-valuemax', '3');
+      grip.setAttribute('aria-valuenow', String(stepOf(n)));
+    }
+  }
+  function changed(ws) {
+    var s = state(ws);
+    var key = ws.dataset.workspaceStore;
+    if (key) { try { localStorage.setItem(key, JSON.stringify(s)); } catch (err) { /* lasts until reload */ } }
+    ws.querySelectorAll(':scope > .workspace-nav > [data-grip]').forEach(label);
+    ws.dispatchEvent(new CustomEvent('c22:workspace-columns', { bubbles: true, detail: s }));
+  }
+  function setStep(n, step) { n.dataset.step = String(Math.min(3, Math.max(0, step))); }
+  function setNav3(ws, px) { ws.style.setProperty('--workspace-nav3', clamp3(ws, px) + 'px'); }
+  function nearest(list, px) {
+    return list.reduce(function (best, w, i) { return Math.abs(w - px) < Math.abs(list[best] - px) ? i : best; }, 0);
+  }
+
+  document.addEventListener('pointerdown', function (e) {
+    var grip = e.target.closest && e.target.closest('.workspace > .workspace-nav > [data-grip]');
+    if (!grip || e.button !== 0) return;
+    e.preventDefault();
+    var n = grip.parentElement, ws = n.parentElement, level = n.dataset.level;
+    var x0 = e.clientX, w0 = n.getBoundingClientRect().width, widths = level === '3' ? null : steps(ws);
+    var rtl = getComputedStyle(ws).direction === 'rtl';
+    ws.setAttribute('data-resizing', '');
+    grip.setAttribute('data-active', '');
+    if (grip.setPointerCapture) { try { grip.setPointerCapture(e.pointerId); } catch (err) { /* synthetic event */ } }
+    function move(m) {
+      var want = w0 + (rtl ? x0 - m.clientX : m.clientX - x0);
+      if (widths) setStep(n, nearest(widths, want));
+      else setNav3(ws, want);
+    }
+    function up() {
+      removeEventListener('pointermove', move);
+      removeEventListener('pointerup', up);
+      removeEventListener('pointercancel', up);
+      ws.removeAttribute('data-resizing');
+      grip.removeAttribute('data-active');
+      changed(ws);
+    }
+    addEventListener('pointermove', move);
+    addEventListener('pointerup', up);
+    addEventListener('pointercancel', up);
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.workspace[data-nav-open]').forEach(function (ws) { ws.removeAttribute('data-nav-open'); });
+      document.querySelectorAll('.workspace-main > aside[data-drawer]:not([hidden])').forEach(function (d) { setDrawer(d, false); });
+      return;
+    }
+    var grip = e.target.closest && e.target.closest('.workspace > .workspace-nav > [data-grip]');
+    if (!grip || (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight' && e.key !== 'Home' && e.key !== 'End')) return;
+    e.preventDefault();
+    var n = grip.parentElement, ws = n.parentElement;
+    var dir = e.key === 'ArrowLeft' || e.key === 'Home' ? -1 : 1;
+    if (getComputedStyle(ws).direction === 'rtl' && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) dir = -dir;
+    var far = e.key === 'Home' || e.key === 'End';
+    if (n.dataset.level === '3') setNav3(ws, far ? dir * 1e6 : nav3Width(ws) + 20 * dir);
+    else setStep(n, far ? (dir < 0 ? 0 : 3) : stepOf(n) + dir);
+    changed(ws);
+  });
+
+  function toggle(li) {
+    var btn = li && li.querySelector(':scope > div > [data-toggle]');
+    var list = li && li.querySelector(':scope > ul');
+    if (!btn || !list || btn.tagName !== 'BUTTON') return;
+    var open = list.hidden;
+    list.hidden = !open;
+    btn.setAttribute('aria-expanded', String(open));
+  }
+  function markCurrent(item, scope) {
+    scope.querySelectorAll('[aria-current]').forEach(function (el) { if (el !== item) el.removeAttribute('aria-current'); });
+    item.setAttribute('aria-current', 'true');
+  }
+  function setDrawer(drawer, open) {
+    drawer.hidden = !open;
+    document.querySelectorAll('[data-drawer-toggle="' + drawer.id + '"]').forEach(function (b) { b.setAttribute('aria-expanded', String(open)); });
+  }
+
+  document.addEventListener('click', function (e) {
+    var t = e.target;
+    if (!t.closest) return;
+    var ws = t.closest('.workspace');
+    var drawerBtn = t.closest('[data-drawer-toggle]');
+    if (drawerBtn) {
+      var drawer = document.getElementById(drawerBtn.dataset.drawerToggle);
+      if (drawer) setDrawer(drawer, drawer.hidden);
+      return;
+    }
+    if (!ws) return;
+    if (t.closest('[aria-disabled="true"]')) { e.preventDefault(); return; }
+    var arrow = t.closest('.workspace-tree [data-toggle]');
+    if (arrow) { toggle(arrow.closest('li')); return; }
+    var name = t.closest('.workspace-tree li > div > :is(a, button):not([data-toggle])');
+    if (name) {
+      if (e.detail === 2) { e.preventDefault(); toggle(name.closest('li')); return; }
+      if (name.tagName === 'BUTTON') markCurrent(name, name.closest('.workspace-nav'));
+      if (PHONE.matches) ws.removeAttribute('data-nav-open');
+      return;
+    }
+    var item = t.closest('.workspace-nav .workspace-item');
+    if (item) {
+      var n = item.closest('.workspace-nav');
+      var current = item.hasAttribute('aria-current') && item.getAttribute('aria-current') !== 'false';
+      if (current && n.dataset.level === '1') {
+        e.preventDefault();
+        if (PHONE.matches) ws.toggleAttribute('data-nav-open');
+        else ws.toggleAttribute('data-nav-hidden');
+        return;
+      }
+      if (item.tagName === 'BUTTON') markCurrent(item, n);
+      return;
+    }
+    if (ws.hasAttribute('data-nav-open') && t.closest('.workspace-main, .workspace-tabs')) ws.removeAttribute('data-nav-open');
+  });
+  // A double click on a name toggles; the browser would select the text otherwise.
+  document.addEventListener('dblclick', function (e) {
+    var name = e.target.closest && e.target.closest('.workspace-tree li > div > :is(a, button):not([data-toggle])');
+    if (name) e.preventDefault();
+  });
+
+  // The context menu names the row it was opened on (capture: before c22's menu positions itself).
+  document.addEventListener('contextmenu', function (e) {
+    var menu = e.target.closest && e.target.closest('.workspace .context-menu');
+    if (!menu || (e.target.closest('[data-cm-panel]'))) return;
+    var panel = menu.querySelector(':scope > [data-cm-panel]');
+    var heading = panel && panel.querySelector(':scope > [role="heading"]');
+    menu.querySelectorAll('[data-menu-row]').forEach(function (r) { r.removeAttribute('data-menu-row'); });
+    var row = e.target.closest('.workspace-tree li > div, .workspace-nav section > header');
+    var name = row && (row.querySelector(':scope > :is(a, button):not([data-toggle]) > span') || row.querySelector(':scope > a'));
+    var text = name ? name.textContent.trim() : '';
+    if (row && row.tagName === 'DIV') row.setAttribute('data-menu-row', '');
+    if (heading) { heading.textContent = text; heading.hidden = !text; }
+  }, true);
+  document.addEventListener('click', function () {
+    document.querySelectorAll('.workspace [data-menu-row]').forEach(function (r) { r.removeAttribute('data-menu-row'); });
+  }, true);
+
+  // Back from the small screen: the overlay closes.
+  if (PHONE.addEventListener) PHONE.addEventListener('change', function () {
+    if (!PHONE.matches) document.querySelectorAll('.workspace[data-nav-open]').forEach(function (ws) { ws.removeAttribute('data-nav-open'); });
+  });
+
+  // Put a stored state back (workspace-boot.js does this before the first paint; this is the late
+  // path for pages without it) and label the grips for assistive technology.
+  function restore(ws) {
+    if (ws.dataset.workspaceRestored) return;
+    ws.dataset.workspaceRestored = '1';
+    var key = ws.dataset.workspaceStore, s = null;
+    if (key) { try { s = JSON.parse(localStorage.getItem(key) || 'null'); } catch (err) { s = null; } }
+    if (s && typeof s === 'object') {
+      [1, 2].forEach(function (level) {
+        var v = s['nav' + level], n = nav(ws, level);
+        if (n && Number.isInteger(v) && v >= 0 && v <= 3) n.dataset.step = String(v);
+      });
+      if (Number.isFinite(s.nav3) && s.nav3 > 0) ws.style.setProperty('--workspace-nav3', Math.round(s.nav3) + 'px');
+    }
+  }
+  function init(root) {
+    (root || document).querySelectorAll('.workspace').forEach(function (ws) {
+      restore(ws);
+      ws.querySelectorAll(':scope > .workspace-nav > [data-grip]').forEach(label);
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { init(document); });
+  else init(document);
+
+  window.C22 = window.C22 || {};
+  window.C22.workspace = {
+    init: init,                                     // label grips, restore state (newly loaded markup)
+    state: state,                                   // {nav1, nav2, nav3} of one .workspace
+    restore: function (ws) { delete ws.dataset.workspaceRestored; restore(ws); }
+  };
+})();

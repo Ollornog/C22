@@ -504,6 +504,186 @@ def verhalten(r: Report, b: Browser, basis: str) -> None:
     s.sende("Page.close")
 
 
+# The first frame in which nav1 of the stored example exists: what it shows there is what the first
+# paint shows, because a frame callback runs before the paint.
+ERSTES_BILD = """
+(() => {
+  const look = () => {
+    const n = document.querySelector('.workspace[data-workspace-store] > .workspace-nav[data-level="2"]');
+    if (n && !window.__ersteStufe) window.__ersteStufe = { nav1: n.parentElement.querySelector(':scope > [data-level="1"]').dataset.step,
+      nav2: n.dataset.step, nav3: n.parentElement.style.getPropertyValue('--workspace-nav3') };
+    else requestAnimationFrame(look);
+  };
+  requestAnimationFrame(look);
+})();
+"""
+
+
+def arbeitsbereich(r: Report, b: Browser, basis: str) -> None:
+    """The workspace: columns snap and drag, the list toggles, menus, drawer, phone, paper, strict CSP."""
+    url = f"{basis}/blocks.html?pack=vega&theme=light&lang=de"
+    s = b.seite(1280, 900)
+    s.geh(url)
+    s.js("localStorage.removeItem('c22-beispiel-arbeitsbereich')")
+    s.geh(url)
+    roh = s.js("""(() => {
+      const w = document.querySelector('.workspace[data-workspace-store]');
+      return { inline: w.parentElement.querySelectorAll('[onclick], [onkeydown], [style]').length,
+               greifer: [...w.querySelectorAll(':scope > .workspace-nav > [data-grip]')].map(g => [g.getAttribute('role'), g.tabIndex, g.getAttribute('aria-valuenow')]) };
+    })()""")
+    r.check("Arbeitsbereich: kein onclick, kein style-Attribut im Markup (strenge CSP)", roh["inline"] == 0, str(roh))
+    r.check("Arbeitsbereich: jede Spaltenkante ist ein bedienbarer Trenner mit Wert",
+            len(roh["greifer"]) == 3 and all(g[0] == "separator" and g[1] == 0 and g[2] for g in roh["greifer"]), str(roh))
+
+    spalten = s.js("""(() => {
+      const w = document.querySelector('.workspace[data-workspace-store]');
+      w.scrollIntoView();
+      const n = l => w.querySelector(':scope > [data-level="' + l + '"]');
+      const breite = l => Math.round(n(l).getBoundingClientRect().width);
+      const stufe = i => { const p = document.createElement('div'); p.style.width = 'var(--workspace-step-' + i + ')'; w.appendChild(p); const x = Math.round(p.getBoundingClientRect().width); p.remove(); return x; };
+      const stufen = [0, 1, 2, 3].map(stufe);
+      let gemeldet = null;
+      w.addEventListener('c22:workspace-columns', e => { gemeldet = e.detail; });
+      const taste = (l, key) => { const g = n(l).querySelector(':scope > [data-grip]'); g.focus(); g.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true })); };
+      const ziehe = (l, dx) => {
+        const g = n(l).querySelector(':scope > [data-grip]'), q = g.getBoundingClientRect(), x = q.left + 2, y = q.top + 50;
+        g.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, button: 0, clientX: x, clientY: y, pointerId: 1 }));
+        window.dispatchEvent(new PointerEvent('pointermove', { bubbles: true, clientX: x + dx, clientY: y, pointerId: 1 }));
+        const mitten = w.hasAttribute('data-resizing');
+        window.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, clientX: x + dx, clientY: y, pointerId: 1 }));
+        return mitten;
+      };
+      const vorher = { nav1: breite(1), nav2: breite(2), nav3: breite(3) };
+      taste(1, 'ArrowRight');
+      const pfeil = { stufe: n(1).dataset.step, breite: breite(1), wert: n(1).querySelector('[data-grip]').getAttribute('aria-valuenow') };
+      const zieht = ziehe(2, -(stufen[3] - stufen[1]) + 6);
+      const gezogen = { stufe: n(2).dataset.step, breite: breite(2), resizing: zieht, danach: w.hasAttribute('data-resizing') };
+      ziehe(3, 50);
+      const frei = breite(3);
+      taste(3, 'End');
+      const max = breite(3);
+      taste(3, 'Home');
+      const min = breite(3);
+      ziehe(3, 40);
+      return { stufen, vorher, pfeil, gezogen, frei, max, min, ende: breite(3), gemeldet,
+               gespeichert: JSON.parse(localStorage.getItem('c22-beispiel-arbeitsbereich')) };
+    })()""")
+    st, v = spalten["stufen"], spalten["vorher"]
+    r.check("Arbeitsbereich: Startbreiten folgen data-step (nav1 Symbol, nav2 Symbol mit Text daneben)",
+            v["nav1"] == st[0] and v["nav2"] == st[3], str(spalten))
+    r.check("Arbeitsbereich: Pfeiltaste rastet nav1 eine Stufe weiter",
+            spalten["pfeil"] == {"stufe": "1", "breite": st[1], "wert": "1"}, str(spalten))
+    r.check("Arbeitsbereich: Ziehen rastet nav2 auf die nächste Stufe",
+            spalten["gezogen"] == {"stufe": "1", "breite": st[1], "resizing": True, "danach": False}, str(spalten))
+    r.check("Arbeitsbereich: nav3 frei, Ende und Anfang begrenzen",
+            spalten["frei"] == v["nav3"] + 50 and spalten["max"] > spalten["frei"] and spalten["min"] < v["nav3"], str(spalten))
+    r.check("Arbeitsbereich: Änderung wird gemeldet und gespeichert",
+            spalten["gemeldet"] == spalten["gespeichert"] == {"nav1": 1, "nav2": 1, "nav3": spalten["ende"]}, str(spalten))
+
+    # Back after a reload, already in the first frame, and from workspace-boot.js alone: c22.js is
+    # blocked for this load, so its later restore cannot be what puts them back.
+    s.sende("Page.addScriptToEvaluateOnNewDocument", source=ERSTES_BILD)
+    s.sende("Network.setBlockedURLs", urls=["*/c22.js*"])
+    s.geh(url)
+    erst = s.js("window.__ersteStufe")
+    s.sende("Network.setBlockedURLs", urls=[])
+    r.check("Arbeitsbereich: gespeicherte Breiten stehen schon im ersten Bild (workspace-boot.js)",
+            erst == {"nav1": "1", "nav2": "1", "nav3": f"{spalten['ende']}px"}, str(erst))
+    s.geh(url)
+    s.js("localStorage.removeItem('c22-beispiel-arbeitsbereich')")
+
+    liste = s.js("""(() => {
+      const w = document.querySelector('.workspace[data-workspace-store]');
+      const li = [...w.querySelectorAll('.workspace-tree li')].find(l => l.querySelector(':scope > div > button:not([data-toggle]) > span').textContent === 'Netzwerk');
+      const pfeil = li.querySelector(':scope > div > [data-toggle]'), name = li.querySelector(':scope > div > button:not([data-toggle])');
+      const zu = () => ({ hidden: li.querySelector(':scope > ul').hidden, expanded: pfeil.getAttribute('aria-expanded') });
+      const a = zu();
+      pfeil.click();
+      const b = zu();
+      name.dispatchEvent(new MouseEvent('click', { bubbles: true, detail: 1 }));
+      name.dispatchEvent(new MouseEvent('click', { bubbles: true, detail: 2 }));
+      const c = zu();
+      const markiert = name.getAttribute('aria-current');
+      const andere = w.querySelectorAll('.workspace-nav[data-level="3"] [aria-current]').length;
+      return { a, b, c, markiert, andere };
+    })()""")
+    r.check("Arbeitsbereich: der Pfeil klappt zu, ein Doppelklick auf den Namen wieder auf",
+            liste["a"] == {"hidden": False, "expanded": "true"} and liste["b"] == {"hidden": True, "expanded": "false"}
+            and liste["c"] == {"hidden": False, "expanded": "true"}, str(liste))
+    r.check("Arbeitsbereich: ein Klick auf den Namen macht ihn zum aktuellen Eintrag",
+            liste["markiert"] == "true" and liste["andere"] == 1, str(liste))
+
+    menue = s.js("""(() => {
+      const w = document.querySelector('.workspace[data-workspace-store]');
+      const zeile = [...w.querySelectorAll('.workspace-tree li > div')].find(d => d.textContent.trim() === 'Offene Tickets');
+      zeile.scrollIntoView({ block: 'center' });
+      const q = zeile.getBoundingClientRect();
+      zeile.querySelector('span').dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true, clientX: q.left + 30, clientY: q.top + 8 }));
+      const p = w.querySelector('[data-cm-panel]'), pq = p.getBoundingClientRect();
+      return { offen: !p.hidden, titel: p.querySelector('[role=heading]').textContent, zeile: zeile.hasAttribute('data-menu-row'),
+               amZeiger: Math.abs(pq.left - (q.left + 30)) < 2 && Math.abs(pq.top - (q.top + 8)) < 2 };
+    })()""")
+    r.check("Arbeitsbereich: Rechtsklick öffnet das Menü am Zeiger und nennt die Zeile",
+            menue == {"offen": True, "titel": "Offene Tickets", "zeile": True, "amZeiger": True}, str(menue))
+    s.js("document.body.click()")
+
+    lade = s.js("""(() => {
+      const w = document.querySelector('.workspace[data-workspace-store]');
+      const d = w.querySelector('aside[data-drawer]'), knopf = w.querySelector('[role=toolbar] [data-drawer-toggle]');
+      const a = d.hidden;
+      knopf.click();
+      const b = { hidden: d.hidden, expanded: knopf.getAttribute('aria-expanded'), ueber: getComputedStyle(d).position };
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+      return { a, b, esc: d.hidden, expanded: knopf.getAttribute('aria-expanded') };
+    })()""")
+    r.check("Arbeitsbereich: Zahnrad öffnet die Schublade über dem Fenster, Escape schließt",
+            lade == {"a": True, "b": {"hidden": False, "expanded": "true", "ueber": "absolute"}, "esc": True, "expanded": "false"}, str(lade))
+
+    seite = s.js("""(() => {
+      const w = document.querySelector('.workspace[data-workspace-store]');
+      const aktiv = w.querySelector(':scope > [data-level="1"] [aria-current]');
+      const d = l => getComputedStyle(w.querySelector(':scope > [data-level="' + l + '"]')).display;
+      aktiv.click();
+      const weg = { attr: w.hasAttribute('data-nav-hidden'), nav2: d(2), nav3: d(3) };
+      aktiv.click();
+      const aus = [...w.querySelectorAll('[aria-disabled="true"]')].map(e => getComputedStyle(e).opacity);
+      return { weg, zurueck: { attr: w.hasAttribute('data-nav-hidden'), nav2: d(2), nav3: d(3) }, aus };
+    })()""")
+    r.check("Arbeitsbereich: zweiter Klick auf die aktive Ansicht blendet nav2 und nav3 aus und wieder ein",
+            seite["weg"] == {"attr": True, "nav2": "none", "nav3": "none"} and seite["zurueck"] == {"attr": False, "nav2": "flex", "nav3": "flex"}, str(seite))
+    r.check("Arbeitsbereich: Ausgegrautes ist sichtbar und blass",
+            seite["aus"] and all(0 < float(o) < 1 for o in seite["aus"]), str(seite))
+
+    s.medium("print")
+    papier = s.js("""(() => {
+      const w = document.querySelector('.workspace[data-workspace-store]');
+      const d = sel => getComputedStyle(w.querySelector(sel)).display;
+      return { top: d(':scope > .workspace-top'), tabs: d(':scope > .workspace-tabs'), nav: d(':scope > [data-level="2"]'),
+               werkzeug: d('[role=toolbar]'), titel: d('.workspace-main > header > h1'), inhalt: d('.workspace-main > section') };
+    })()""")
+    s.medium("")
+    r.check("Arbeitsbereich: auf Papier nur Titel und Inhalt",
+            papier == {"top": "none", "tabs": "none", "nav": "none", "werkzeug": "none", "titel": "block", "inhalt": "block"}, str(papier))
+    s.sende("Page.close")
+
+    h = b.seite(390, 844)
+    h.geh(url)
+    handy = h.js("""(() => {
+      const w = document.querySelector('.workspace[data-workspace-store]');
+      const d = l => getComputedStyle(w.querySelector(':scope > [data-level="' + l + '"]')).display;
+      const zu = { nav2: d(2), nav3: d(3), suche: getComputedStyle(w.querySelector('.workspace-top > form')).display };
+      w.querySelector(':scope > [data-level="1"] [aria-current]').click();
+      const n2 = w.querySelector(':scope > [data-level="2"]').getBoundingClientRect(), m = w.querySelector('.workspace-main').getBoundingClientRect();
+      const auf = { nav2: d(2), nav3: d(3), ueber: n2.left < m.left + 1 && n2.right > m.left };
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+      return { zu, auf, esc: d(2) };
+    })()""")
+    r.check("Arbeitsbereich: unter md öffnen nav2 und nav3 über dem Fenster, Escape schließt",
+            handy == {"zu": {"nav2": "none", "nav3": "none", "suche": "none"}, "auf": {"nav2": "flex", "nav3": "flex", "ueber": True}, "esc": "none"},
+            str(handy))
+    h.sende("Page.close")
+
+
 def main() -> int:
     erneuern = "--renew" in sys.argv
     r = Report("Browser — Galerie in Chrome")
@@ -520,6 +700,7 @@ def main() -> int:
                     fremdressourcen(r, b, basis)
                     favicon(r, basis)
                     verhalten(r, b, basis)
+                    arbeitsbereich(r, b, basis)
         except BrowserFehler as fehler:
             r.check("Browser läuft durch", False, str(fehler))
         finally:

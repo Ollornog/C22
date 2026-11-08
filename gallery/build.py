@@ -505,6 +505,7 @@ def page_shell(active: str, titel_schluessel: str, toc_html: str, main_html: str
 <script src="{ASSETS}c22/static/js/basecoat.all.min.js?v={v("js/basecoat.all.min.js")}" defer></script>
 <script src="{ASSETS}c22/static/js/icons.js?v={v("js/icons.js")}" defer></script>
 <script src="{ASSETS}c22/static/js/c22.js?v={v("js/c22.js")}" defer></script>
+<script src="{ASSETS}c22/static/js/workspace-boot.js?v={v("js/workspace-boot.js")}"></script>
 {i18n.kopf_skript({"de": titel_de, "en": titel_en})}
 </head>
 <body class="bg-background text-foreground flex h-screen flex-col overflow-hidden">
