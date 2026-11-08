@@ -3061,6 +3061,18 @@
     font-weight: 650;
   }
   .app-frame-head > div > :is(.input, .input-group, form) { flex: 1 1 auto; min-width: 0; }
+  /* A centred head row ([data-frame-center], the brand): its content sits in the middle of the head, the menu button (narrow
+     screens) stays at the start. */
+  .app-frame-head > div[data-frame-center],
+  .app-frame[data-head] > .app-frame-head > div[data-frame-center] {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    padding-inline: 0;
+  }
+  .app-frame[data-head] > .app-frame-head > div[data-frame-center] > :not([data-frame-menu]) { padding-inline-start: 0; }
+  .app-frame-head > div[data-frame-center] > [data-frame-menu] { position: absolute; inset-inline-start: 0.25rem; }
   /* A head row with two ends ([data-frame-split], e.g. account at the start and organisation at the end, each with its glyph on the
      outer side): when both do not fit on one line, the second wraps under the first, close to it and still at the end. */
   .app-frame-head > div[data-frame-split],
@@ -3075,7 +3087,7 @@
   .app-frame-head > div[data-frame-split] > *,
   .app-frame[data-head] > .app-frame-head > div[data-frame-split] > :not([data-frame-axis]) { min-width: 0; max-width: 100%; padding-inline-start: 0; }
   .app-frame-head > div[data-frame-split] > :last-child:not(:first-child) { margin-inline-start: auto; }
-  .app-frame-head > div[data-frame-split] > .dropdown-menu > button { width: auto; max-width: 100%; justify-content: flex-start; }
+  .app-frame-head > div[data-frame-split] > .dropdown-menu > button { width: auto; max-width: 100%; justify-content: flex-start; padding-inline: 0.375rem; }
   .app-frame-head > div[data-frame-split] > .dropdown-menu > button > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .app-frame-head [data-frame-menu] { display: none; order: -1; }
   /* Wide screens: each head row is two columns, the first as wide as the rail. What carries [data-frame-axis] (brand glyph, scan
@@ -3703,10 +3715,12 @@
     display: flex;
     gap: 1px;
   }
+  /* Every filter keeps its place: a minimum width for counts that grow, and the pressed state changes no width (no bold text). */
   .filter-bar :is(button, a) {
     display: inline-flex;
     flex-direction: column;
     align-items: flex-start;
+    min-width: 3.75rem;
     padding: 0.1875rem 0.4375rem;
     border: 1px solid transparent;
     border-radius: var(--radius-md);
@@ -3750,10 +3764,7 @@
     border-color: var(--foreground);
     box-shadow: inset 0 -2px 0 var(--primary);
   }
-  .filter-bar :is(button, a):is([aria-pressed='true'], [aria-current='true']) > small {
-    color: var(--foreground);
-    font-weight: 600;
-  }
+  .filter-bar :is(button, a):is([aria-pressed='true'], [aria-current='true']) > small { color: var(--foreground); }
   @media (width < 48rem) {
     .filter-bar {
       flex-wrap: nowrap;
