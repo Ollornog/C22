@@ -143,7 +143,12 @@
       }
       closeAll();
     }, true);
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeAll(); });
+    // Escape that closes an open menu is used up (defaultPrevented): it does not also clear a table selection behind it.
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      if (document.querySelector('.context-menu [data-cm-panel]:not([hidden])')) e.preventDefault();
+      closeAll();
+    });
     // Fixes Menü soll nicht mitschweben — aber NUR schließen, wenn der gescrollte Container das
     // Menü wirklich bewegt: Dokument/Fenster oder ein Vorfahr des Panels. Capture fängt sonst
     // JEDES Scroll-Event der Seite (Carousel-Autoplay scrollt z.B. alle 3s programmatisch —
@@ -3247,79 +3252,99 @@ document.addEventListener('basecoat:initialized', function (e) {
   });
 
   // ---- Table with levels ----------------------------------------------------
-  // Selection by clicking a row: data-state="selected" on the <tr>, a click on a merged cell
-  // takes all rows it spans, shift extends. Clicks on controls inside a row stay theirs, and so
-  // does selecting text to copy it. Apps listen to `c22:selection`, values come from data-value;
-  // detail.mode says how it changed (replace, toggle, extend).
-  // data-selectable="explorer" works like a file manager: a click selects only that row (or the rows
-  // of a merged cell), a click on what is selected already unselects it, Ctrl or Cmd adds or removes
-  // one, Shift selects the range from the last click. A double click or Enter opens the row:
-  // `c22:open` (cancelable), then its data-href; a double click on a merged cell with its own
-  // data-href opens that. A plain click on a link in a row selects too, on a fine pointer; Ctrl,
-  // middle click and the keyboard still follow the link. Escape clears the selection.
-  // A merged cell shows the state of its rows: data-state="selected" when all are selected,
-  // "partial" when some are. Pointing at a row lights it and the merged cells it belongs to
-  // (data-hover), pointing at a merged cell lights its rows; what a double click would open carries
-  // data-open-target (the merged cell, or the row's cell marked data-primary).
+  // A table with levels is a tree: rows are the leaves, merged cells (td[data-merged], rowspan) the
+  // parents of the rows they span. Only rows hold a state; a merged cell shows what its rows hold.
+  // Rows with the same data-value are one item (it may stand under two parents) and go together.
+  //
+  // Selecting (data-selectable): a click on a row toggles that row and nothing else. A click on a
+  // merged cell selects all its rows, unless all are selected already, then it unselects them.
+  // Shift selects the range from the last clicked row. Escape clears. Ctrl, Cmd and middle click on
+  // a link still follow it. Clicks on controls inside a row stay theirs, and so does selecting text.
+  // Rows get data-state="selected"; a merged cell gets "selected" when all its rows are, "partial"
+  // when some are. Apps listen to `c22:selection` (detail.rows, detail.values).
+  //
+  // Pointing works the same way: what a click would take gets data-hover, rows and merged cells
+  // alike ("full", or "partial" on a merged cell of which only some rows would be taken).
+  //
+  // data-selectable="explorer" adds opening: a double click or Enter opens the row (`c22:open`,
+  // cancelable, then its data-href), a double click on a merged cell with data-href opens that. The
+  // double click leaves the selection as it was before. A plain mouse click on a link in the row
+  // selects instead of following it. What a double click would open is marked data-open-target
+  // (the merged cell, or the row's cell marked data-primary).
+  //
+  // window.C22.tableSelection(table) repaints the merged cells after an app set row states itself.
   var TABLE = '.table[data-variant="levels"][data-selectable]';
   var FEIN = window.matchMedia ? window.matchMedia('(pointer: fine)') : { matches: true };
   var anker = new WeakMap();
+  var vorDemKlick = null;
 
   function explorer(table) { return table.getAttribute('data-selectable') === 'explorer'; }
+  function zeilenDer(table) { return Array.prototype.slice.call(table.querySelectorAll('tbody tr')); }
   function zeilenVon(zelle) {
     var tr = zelle.parentElement;
     var alle = Array.prototype.slice.call(tr.parentElement.rows);
     var start = alle.indexOf(tr);
     return alle.slice(start, start + zelle.rowSpan);
   }
-  function setze(tr, an) {
-    if (an) { tr.setAttribute('data-state', 'selected'); tr.setAttribute('aria-selected', 'true'); }
+  function an(tr) { return tr.getAttribute('data-state') === 'selected'; }
+  // A row and the other rows of the same item.
+  function mitGleichen(table, zeilen) {
+    var werte = {};
+    var drin = new Set(zeilen);
+    zeilen.forEach(function (tr) { if (tr.getAttribute('data-value')) werte[tr.getAttribute('data-value')] = true; });
+    return zeilenDer(table).filter(function (tr) { return drin.has(tr) || werte[tr.getAttribute('data-value')]; });
+  }
+  function setze(tr, ja) {
+    if (ja) { tr.setAttribute('data-state', 'selected'); tr.setAttribute('aria-selected', 'true'); }
     else { tr.removeAttribute('data-state'); tr.setAttribute('aria-selected', 'false'); }
   }
-  function zelleZeigen(td) {
-    var zeilen = zeilenVon(td);
-    var an = zeilen.filter(function (tr) { return tr.getAttribute('data-state') === 'selected'; }).length;
-    if (an && an === zeilen.length) td.setAttribute('data-state', 'selected');
-    else if (an) td.setAttribute('data-state', 'partial');
-    else td.removeAttribute('data-state');
+  // Every merged cell with the rows it spans: all, some or none of them in the set (one pass over the rows).
+  function jeZelle(table, imSet, tu) {
+    var alle = zeilenDer(table);
+    var summe = [0];
+    alle.forEach(function (tr, i) { summe.push(summe[i] + (imSet(tr) ? 1 : 0)); });
+    alle.forEach(function (tr, i) {
+      Array.prototype.forEach.call(tr.cells, function (td) {
+        if (!td.hasAttribute('data-merged')) return;
+        var bis = Math.min(alle.length, i + td.rowSpan);
+        var n = summe[bis] - summe[i];
+        tu(td, n === 0 ? null : (n === bis - i ? 'full' : 'partial'));
+      });
+    });
   }
-  function meldeAuswahl(table, art) {
-    table.querySelectorAll('td[data-merged]').forEach(zelleZeigen);
-    var zeilen = Array.prototype.slice.call(table.querySelectorAll('tbody tr[data-state="selected"]'));
+  function zellenZeigen(table) {
+    jeZelle(table, an, function (td, s) {
+      if (s === 'full') td.setAttribute('data-state', 'selected');
+      else if (s === 'partial') td.setAttribute('data-state', 'partial');
+      else td.removeAttribute('data-state');
+    });
+  }
+  function melde(table) {
+    zellenZeigen(table);
+    var zeilen = zeilenDer(table).filter(an);
     table.dispatchEvent(new CustomEvent('c22:selection', {
       bubbles: true,
-      detail: { rows: zeilen, values: zeilen.map(function (tr) { return tr.getAttribute('data-value'); }), mode: art },
+      detail: { rows: zeilen, values: zeilen.map(function (tr) { return tr.getAttribute('data-value'); }) },
     }));
   }
-  function leereTabelle(table) {
-    table.querySelectorAll('tbody tr[data-state="selected"]').forEach(function (z) { setze(z, false); });
-  }
-  function waehle(table, tr, zelle, erweitern, umschalten) {
-    var ex = explorer(table);
-    var art = 'toggle';
+  function waehle(table, tr, zelle, bereich) {
+    var zeilen;
     if (zelle && zelle.hasAttribute('data-merged')) {
-      var bereich = zeilenVon(zelle);
-      var alleAn = bereich.every(function (z) { return z.getAttribute('data-state') === 'selected'; });
-      if (ex && !umschalten && !alleAn) { leereTabelle(table); bereich.forEach(function (z) { setze(z, true); }); art = 'replace'; }
-      else bereich.forEach(function (z) { setze(z, !alleAn); });
-    } else if (erweitern && anker.get(table) && anker.get(table).parentElement === tr.parentElement) {
-      var rows = Array.prototype.slice.call(tr.parentElement.rows);
-      var von = rows.indexOf(anker.get(table)), bis = rows.indexOf(tr);
-      if (ex && !umschalten) leereTabelle(table);
-      rows.slice(Math.min(von, bis), Math.max(von, bis) + 1).forEach(function (z) { setze(z, true); });
-      art = ex && !umschalten ? 'replace' : 'extend';
-    } else if (ex && !umschalten && tr.getAttribute('data-state') !== 'selected') {
-      leereTabelle(table);
-      setze(tr, true);
-      anker.set(table, tr);
-      art = 'replace';
+      zeilen = mitGleichen(table, zeilenVon(zelle));
+      var alleAn = zeilen.every(an);
+      zeilen.forEach(function (z) { setze(z, !alleAn); });
+    } else if (bereich && anker.get(table) && anker.get(table).parentElement === tr.parentElement) {
+      var alle = Array.prototype.slice.call(tr.parentElement.rows);
+      var von = alle.indexOf(anker.get(table)), bis = alle.indexOf(tr);
+      mitGleichen(table, alle.slice(Math.min(von, bis), Math.max(von, bis) + 1)).forEach(function (z) { setze(z, true); });
     } else {
-      setze(tr, tr.getAttribute('data-state') !== 'selected');
+      var ja = !an(tr);
+      mitGleichen(table, [tr]).forEach(function (z) { setze(z, ja); });
       anker.set(table, tr);
     }
-    meldeAuswahl(table, art);
+    melde(table);
   }
-  function oeffne(table, tr) {
+  function oeffne(tr) {
     var ok = tr.dispatchEvent(new CustomEvent('c22:open', { bubbles: true, cancelable: true, detail: { row: tr, value: tr.getAttribute('data-value') } }));
     if (ok && tr.getAttribute('data-href')) location.assign(tr.getAttribute('data-href'));
   }
@@ -3330,10 +3355,9 @@ document.addEventListener('basecoat:initialized', function (e) {
     var tr = ziel.closest('tbody tr');
     if (!tr) return;
     var link = ziel.closest('a');
-    var umschalten = e.ctrlKey || e.metaKey;
     // Explorer: a plain click with the mouse on a link in the row selects; everything else follows the link.
     var maus = e.pointerType ? e.pointerType === 'mouse' : FEIN.matches;
-    if (link && explorer(table) && maus && e.detail > 0 && e.button === 0 && !umschalten && !e.shiftKey && !e.altKey) {
+    if (link && explorer(table) && maus && e.detail > 0 && e.button === 0 && !e.ctrlKey && !e.metaKey && !e.shiftKey && !e.altKey) {
       e.preventDefault();
     } else if (ziel.closest('a, button, input, select, textarea, label, summary')) {
       return;
@@ -3342,42 +3366,33 @@ document.addEventListener('basecoat:initialized', function (e) {
     if (auswahl && !auswahl.isCollapsed && String(auswahl).length) return;
     // The second click of a double click only opens.
     if (explorer(table) && e.detail > 1) return;
-    waehle(table, tr, ziel.closest('td'), e.shiftKey, umschalten);
+    vorDemKlick = { table: table, zeilen: new Set(zeilenDer(table).filter(an)) };
+    waehle(table, tr, ziel.closest('td'), e.shiftKey);
   });
   document.addEventListener('dblclick', function (e) {
     var table = e.target.closest && e.target.closest(TABLE);
     if (!table || !explorer(table) || e.target.closest('button, input, select, textarea, label, summary')) return;
+    // A double click opens and leaves the selection as it was before its first click.
+    if (vorDemKlick && vorDemKlick.table === table) {
+      zeilenDer(table).forEach(function (z) { setze(z, vorDemKlick.zeilen.has(z)); });
+      vorDemKlick = null;
+      melde(table);
+    }
     var zelle = e.target.closest('td[data-merged][data-href]');
     if (zelle) {
-      var ok = zelle.dispatchEvent(new CustomEvent('c22:open', { bubbles: true, cancelable: true, detail: { cell: zelle } }));
-      if (ok) location.assign(zelle.getAttribute('data-href'));
+      if (zelle.dispatchEvent(new CustomEvent('c22:open', { bubbles: true, cancelable: true, detail: { cell: zelle } }))) location.assign(zelle.getAttribute('data-href'));
       return;
     }
     var tr = e.target.closest('tbody tr[data-value]');
-    if (!tr) return;
-    // Like a file manager: what a double click opens is the selection afterwards (its first click may have unselected it).
-    leereTabelle(table);
-    setze(tr, true);
-    anker.set(table, tr);
-    meldeAuswahl(table, 'replace');
-    oeffne(table, tr);
+    if (tr) oeffne(tr);
   });
-  // Pointing: the row and the merged cells over it, or a merged cell and its rows.
-  function ueber(zeilen) {
-    var alle = Array.prototype.slice.call(zeilen[0].parentElement.rows);
-    var von = alle.indexOf(zeilen[0]), bis = alle.indexOf(zeilen[zeilen.length - 1]);
-    var zellen = [];
-    for (var i = von; i >= 0; i--) {
-      Array.prototype.forEach.call(alle[i].cells, function (td) {
-        if (td.hasAttribute('data-merged') && i + td.rowSpan > bis) zellen.push(td);
-      });
-    }
-    return zellen;
-  }
-  function zeige(table, zeilen, zellen, ziel) {
+  // Pointing: the same rows a click would take, and the merged cells by the same rule.
+  function zeige(table, zeilen, ziel) {
     table.querySelectorAll('[data-hover], [data-open-target]').forEach(function (el) { el.removeAttribute('data-hover'); el.removeAttribute('data-open-target'); });
-    zeilen.forEach(function (tr) { tr.setAttribute('data-hover', ''); });
-    zellen.forEach(function (td) { td.setAttribute('data-hover', ''); });
+    if (!zeilen.length) return;
+    zeilen.forEach(function (tr) { tr.setAttribute('data-hover', 'full'); });
+    var drin = new Set(zeilen);
+    jeZelle(table, function (tr) { return drin.has(tr); }, function (td, s) { if (s) td.setAttribute('data-hover', s); });
     if (ziel) ziel.setAttribute('data-open-target', '');
   }
   var gezeigt = { table: null, punkt: null };
@@ -3387,15 +3402,11 @@ document.addEventListener('basecoat:initialized', function (e) {
     var td = tr && e.target.closest('td');
     var punkt = td && td.hasAttribute('data-merged') ? td : tr;
     if (punkt === gezeigt.punkt) return;
-    if (gezeigt.table && gezeigt.table !== table) zeige(gezeigt.table, [], [], null);
+    if (gezeigt.table && gezeigt.table !== table) zeige(gezeigt.table, [], null);
     gezeigt = { table: table, punkt: punkt };
     if (!tr) return;
-    if (punkt === td) {
-      var zeilen = zeilenVon(td);
-      zeige(table, zeilen, ueber(zeilen), explorer(table) && td.hasAttribute('data-href') ? td : null);
-    } else {
-      zeige(table, [tr], ueber([tr]), explorer(table) ? tr.querySelector('td[data-primary]') : null);
-    }
+    if (punkt === td) zeige(table, mitGleichen(table, zeilenVon(td)), explorer(table) && td.hasAttribute('data-href') ? td : null);
+    else zeige(table, mitGleichen(table, [tr]), explorer(table) ? tr.querySelector('td[data-primary]') : null);
   });
   // Shift extends the selection of rows, not the browser's text selection (which would cancel the click);
   // a double click in an explorer table opens instead of selecting a word.
@@ -3406,10 +3417,11 @@ document.addEventListener('basecoat:initialized', function (e) {
   });
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') {
-      document.querySelectorAll(TABLE + '[data-selectable="explorer"]').forEach(function (table) {
+      if (e.defaultPrevented) return;
+      document.querySelectorAll(TABLE).forEach(function (table) {
         if (!table.querySelector('tbody tr[data-state="selected"]') || document.querySelector('[data-popover][aria-hidden="false"], .context-menu [data-cm-panel]:not([hidden])')) return;
-        leereTabelle(table);
-        meldeAuswahl(table, 'replace');
+        zeilenDer(table).forEach(function (z) { setze(z, false); });
+        melde(table);
       });
       return;
     }
@@ -3418,9 +3430,11 @@ document.addEventListener('basecoat:initialized', function (e) {
     if (!tr.matches || !tr.matches(TABLE + ' tbody tr')) return;
     e.preventDefault();
     var table = tr.closest('table');
-    if (e.key === 'Enter' && explorer(table)) { oeffne(table, tr); return; }
-    waehle(table, tr, null, e.shiftKey, e.ctrlKey || e.metaKey || (e.key === ' ' && explorer(table)));
+    if (e.key === 'Enter' && explorer(table)) { oeffne(tr); return; }
+    waehle(table, tr, null, e.shiftKey);
   });
+  window.C22 = window.C22 || {};
+  window.C22.tableSelection = zellenZeigen;
 
   // ---- Closable alert -------------------------------------------------------
   document.addEventListener('click', function (e) {
