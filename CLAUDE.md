@@ -40,6 +40,7 @@ the look per component.
 | Popover / menu / dropdown / listbox | `[data-popover]` + `role="menu"`/`"menuitem"`/`"option"` | `dropdown-menu.html`, `select.html`, `combobox.html` |
 | Application frame (rail + panel) | `.app-frame` + `.sidebar` with `data-variant="rail"` / `"panel"`, toggle via `[data-panel-toggle]`; with a head over both (brand, title, search; drawer below md): `data-head` + `header.app-frame-head`, menu button `[data-frame-menu]` | `sidebar.html`, `blocks/navigation/app-frame.html` |
 | Workspace (three columns, tabs, head of the window) | `.workspace` > `.workspace-top`, `.workspace-tabs`, `.workspace-nav[data-level][data-step]` + `[data-grip]`, `.workspace-main`; entries `.workspace-item`, list `.workspace-tree`; sizes as `--workspace-*` on `.workspace`; stored widths via `data-workspace-store` + `workspace-boot.js` | `blocks/navigation/workspace.html` |
+| An app's approved mockup taken over whole (its own class names) | root class `.c22-app-<name>` on the element the app renders into, everything inside scoped to it (rule 14); lengths via `--app-<name>-space/-text/-radius` | `blocks/navigation/app-workspace.html` |
 | Filters with sign, count and text | `class="filter-bar"` | `filter-bar.html` |
 | Table with hierarchy lines, row selection | `class="table" data-variant="levels"` + `data-selectable` | `blocks/tables/merge-table.html` |
 | Page title as path | `class="breadcrumb" data-variant="title"`, last step is the `<h1>` | `breadcrumb.html` |
@@ -145,6 +146,8 @@ c22/typeset/*.html      typography in context (typeset page; base for the future
 c22/static/css/
   tokens.css            the token definitions (the look)
   components.css        shared C22 rules (@layer components) — the SPOT home for anything cross-component
+  app-<name>.css        an app's whole look taken over as one building block, every selector under the root
+                        class .c22-app-<name> (rule 14); unlayered, see the file head
   packs/<name>.css      OWN style packs = pure token overrides riding on the vega shape
                         (de-monolithisation phase B; e.g. packs/spica.css — brand blue)
   input.css             Tailwind entry (imports vendored basecoat + tokens + components)

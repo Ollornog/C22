@@ -29,6 +29,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **App workspace:** new building block `.c22-app-workspace` (`c22/static/css/app-workspace.css`, gallery
+  `blocks/navigation/app-workspace.html`): the workspace of an approved clickable mockup, taken over whole for the app that
+  renders that markup (UnderDoc). Every rule sits under the one root class, inside it the class names are the ones the app's
+  script emits, so its markup runs unchanged and nothing matches on a page without the root. Every length reads an axis
+  through `--app-workspace-space`, `-text` and `-radius` (1px at the default density, type scale and radius), so at vega it
+  is the mockup to the pixel; starting column widths `--app-workspace-nav1` … `-nav3`, fixed colours and shadows are tokens
+  on the root. Light and dark from the C22 roles, print shows the active document only. Loaded with every pack.
+- **Conventions, rule 14:** every selector in `c22/static/css/app-*.css` names its root class `.c22-app-<name>`; the axis
+  suite scans those files like `components.css`.
+
 - **Workspace:** new block `.workspace` (`blocks/navigation/workspace.html`), one grid with a top row (`.workspace-top`:
   brand, search, New) over three columns and a tab row (`.workspace-tabs`) beside it. Columns are `.workspace-nav` with
   `data-level` 1-3; nav1 and nav2 snap to `data-step` 0-3 (icon, icon with text below, text, icon with text beside), nav3
