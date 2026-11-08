@@ -2772,6 +2772,19 @@
     padding: 0 0.375rem 0 0.875rem;
     border-bottom: 1px solid var(--border);
   }
+  /* A panel header with tools ([data-tools]): controls in a top row, the first at the start and the one marked [data-tools-end] at
+     the end, below them what is marked [data-tools-wide] (a search field) over the full width. A form joins the grid with
+     `display: contents`. */
+  .sidebar[data-variant='panel'] nav > header[data-tools] {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 0.375rem;
+    height: auto;
+    padding: 0.5rem;
+  }
+  .sidebar[data-variant='panel'] nav > header[data-tools] [data-tools-end] { justify-self: end; grid-column: -2; }
+  .sidebar[data-variant='panel'] nav > header[data-tools] [data-tools-wide] { grid-column: 1 / -1; }
   .sidebar[data-variant='panel'] nav > header > :is(h2, h3) {
     font-size: var(--text-sm);
     font-weight: 650;
@@ -3044,6 +3057,22 @@
     font-weight: 650;
   }
   .app-frame-head > div > :is(.input, .input-group, form) { flex: 1 1 auto; min-width: 0; }
+  /* A head row with two ends ([data-frame-split], e.g. account at the start and organisation at the end, each with its glyph on the
+     outer side): when both do not fit on one line, the second wraps under the first, close to it and still at the end. */
+  .app-frame-head > div[data-frame-split],
+  .app-frame[data-head] > .app-frame-head > div[data-frame-split] {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    column-gap: 0.5rem;
+    row-gap: 0.125rem;
+    padding-inline: 0.25rem 0;
+  }
+  .app-frame-head > div[data-frame-split] > *,
+  .app-frame[data-head] > .app-frame-head > div[data-frame-split] > :not([data-frame-axis]) { min-width: 0; max-width: 100%; padding-inline-start: 0; }
+  .app-frame-head > div[data-frame-split] > :last-child:not(:first-child) { margin-inline-start: auto; }
+  .app-frame-head > div[data-frame-split] > .dropdown-menu > button { width: auto; max-width: 100%; justify-content: flex-start; }
+  .app-frame-head > div[data-frame-split] > .dropdown-menu > button > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .app-frame-head [data-frame-menu] { display: none; order: -1; }
   /* Wide screens: each head row is two columns, the first as wide as the rail. What carries [data-frame-axis] (brand glyph, scan
      button) sits on the rail's axis, everything else (name, search field) lines up with the panel. A form joins the grid with
@@ -3804,8 +3833,7 @@
   }
   /* A selectable table lights what a click would take (c22.js data-hover), by the rule of the
      selection: rows and merged cells taken whole ("full"), a merged cell of which only some rows
-     would be taken lighter ("partial"). What is selected keeps its colour, a little deeper. What a
-     double click opens is bold. */
+     would be taken lighter ("partial"). What is selected keeps its colour, a little deeper. */
   .table[data-variant='levels'][data-selectable] tbody tr[data-hover]:not([data-state='selected']) > td:not([data-merged]),
   .table[data-variant='levels'][data-selectable] td[data-merged][data-hover='full']:not([data-state]) {
     background-color: var(--accent);
@@ -3820,8 +3848,6 @@
   .table[data-variant='levels'][data-selectable] td[data-merged][data-hover][data-state='partial'] {
     background-color: color-mix(in oklab, var(--selection) 60%, transparent);
   }
-  .table[data-variant='levels'] [data-open-target],
-  .table[data-variant='levels'] [data-open-target] :is(a, span) { font-weight: 700; }
   .table[data-variant='levels'] tbody tr:focus-visible {
     outline: 2px solid var(--ring);
     outline-offset: -2px;

@@ -3269,8 +3269,8 @@ document.addEventListener('basecoat:initialized', function (e) {
   // data-selectable="explorer" adds opening: a double click or Enter opens the row (`c22:open`,
   // cancelable, then its data-href), a double click on a merged cell with data-href opens that. The
   // double click leaves the selection as it was before. A plain mouse click on a link in the row
-  // selects instead of following it. What a double click would open is marked data-open-target
-  // (the merged cell, or the row's cell marked data-primary).
+  // selects instead of following it, unless the link carries data-follow (the item's code or name,
+  // which open it on a click).
   //
   // window.C22.tableSelection(table) repaints the merged cells after an app set row states itself.
   var TABLE = '.table[data-variant="levels"][data-selectable]';
@@ -3355,6 +3355,7 @@ document.addEventListener('basecoat:initialized', function (e) {
     var tr = ziel.closest('tbody tr');
     if (!tr) return;
     var link = ziel.closest('a');
+    if (link && link.hasAttribute('data-follow')) return;
     // Explorer: a plain click with the mouse on a link in the row selects; everything else follows the link.
     var maus = e.pointerType ? e.pointerType === 'mouse' : FEIN.matches;
     if (link && explorer(table) && maus && e.detail > 0 && e.button === 0 && !e.ctrlKey && !e.metaKey && !e.shiftKey && !e.altKey) {
@@ -3387,13 +3388,12 @@ document.addEventListener('basecoat:initialized', function (e) {
     if (tr) oeffne(tr);
   });
   // Pointing: the same rows a click would take, and the merged cells by the same rule.
-  function zeige(table, zeilen, ziel) {
-    table.querySelectorAll('[data-hover], [data-open-target]').forEach(function (el) { el.removeAttribute('data-hover'); el.removeAttribute('data-open-target'); });
+  function zeige(table, zeilen) {
+    table.querySelectorAll('[data-hover]').forEach(function (el) { el.removeAttribute('data-hover'); });
     if (!zeilen.length) return;
     zeilen.forEach(function (tr) { tr.setAttribute('data-hover', 'full'); });
     var drin = new Set(zeilen);
     jeZelle(table, function (tr) { return drin.has(tr); }, function (td, s) { if (s) td.setAttribute('data-hover', s); });
-    if (ziel) ziel.setAttribute('data-open-target', '');
   }
   var gezeigt = { table: null, punkt: null };
   document.addEventListener('mouseover', function (e) {
@@ -3402,11 +3402,10 @@ document.addEventListener('basecoat:initialized', function (e) {
     var td = tr && e.target.closest('td');
     var punkt = td && td.hasAttribute('data-merged') ? td : tr;
     if (punkt === gezeigt.punkt) return;
-    if (gezeigt.table && gezeigt.table !== table) zeige(gezeigt.table, [], null);
+    if (gezeigt.table && gezeigt.table !== table) zeige(gezeigt.table, []);
     gezeigt = { table: table, punkt: punkt };
     if (!tr) return;
-    if (punkt === td) zeige(table, mitGleichen(table, zeilenVon(td)), explorer(table) && td.hasAttribute('data-href') ? td : null);
-    else zeige(table, mitGleichen(table, [tr]), explorer(table) ? tr.querySelector('td[data-primary]') : null);
+    zeige(table, mitGleichen(table, punkt === td ? zeilenVon(td) : [tr]));
   });
   // Shift extends the selection of rows, not the browser's text selection (which would cancel the click);
   // a double click in an explorer table opens instead of selecting a word.
