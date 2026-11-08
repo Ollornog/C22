@@ -711,6 +711,14 @@ body:has(> .c22-app-workspace) > .ghost { position: fixed; z-index: 50; pointer-
 /* Task lists of real pages: the checkbox is the marker. */
 .c22-app-workspace article.doc li:has(> input[type="checkbox"]) { list-style: none; margin-left: -1.1em; }
 .c22-app-workspace article.doc li > input[type="checkbox"] { margin-right: calc(6 * var(--app-workspace-space)); vertical-align: -1px; }
+/* Editing a page block by block: each block a plain Markdown field, with a bar below it (add a block after it,
+   delete it, its ID). Not part of the mockup, which left editing for later; added here in its look. */
+.c22-app-workspace .bedit { margin: 0 0 calc(12 * var(--app-workspace-space)); }
+.c22-app-workspace .bedit textarea { display: block; width: 100%; padding: calc(7 * var(--app-workspace-space)) calc(9 * var(--app-workspace-space)); border: 1px solid var(--border); border-radius: calc(7 * var(--app-workspace-radius)); background: var(--background); color: var(--foreground); font: calc(13 * var(--app-workspace-text))/1.55 var(--font-mono); resize: vertical; }
+.c22-app-workspace .bedit textarea:focus-visible { outline: 2px solid var(--ring); outline-offset: 0; }
+.c22-app-workspace .bbar { display: flex; align-items: center; gap: calc(6 * var(--app-workspace-space)); margin-top: calc(4 * var(--app-workspace-space)); opacity: .55; }
+.c22-app-workspace .bedit:hover .bbar, .c22-app-workspace .bedit:focus-within .bbar { opacity: 1; }
+.c22-app-workspace .bbar em { margin-left: auto; font-style: normal; font-family: var(--font-mono); font-size: calc(11 * var(--app-workspace-text)); color: var(--muted-foreground); }
 
 /* Print: the document of the active window on paper — its title and content, nothing of the screen
    around it (columns, tabs, tools, status, drawers, menus, comment bubbles). Paper is light whatever
@@ -726,7 +734,7 @@ body:has(> .c22-app-workspace) > .ghost { position: fixed; z-index: 50; pointer-
     color-scheme: light;
     display: block; height: auto;
   }
-  .c22-app-workspace :is(.side, .rail, .tabrow, .status, .winbar, .aidrawer, .newwin, .toc, .fdrawer, .pop, .ctxpop, .toast, .cblk, .blk, .grip),
+  .c22-app-workspace :is(.side, .rail, .tabrow, .status, .winbar, .aidrawer, .newwin, .toc, .fdrawer, .pop, .ctxpop, .toast, .cblk, .blk, .grip, .bbar),
   body:has(> .c22-app-workspace) > .ghost { display: none !important; }
   .c22-app-workspace .tools > :not(.dtitle) { display: none; }
   .c22-app-workspace .tools { display: block; padding: 0; border: 0; }
