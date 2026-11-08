@@ -43,6 +43,7 @@ for pack in "${PACKS[@]}"; do
     printf '@import "../../vendor/basecoat/dist/styles/%s.css" layer(vendor);\n' "$vendor_style"
     printf '@import "./tokens.css";\n'
     printf '@import "./components.css";\n'
+    printf '@import "./app-workspace.css";\n'
     [ -n "$eigener_pack" ] && printf '%s\n' "$eigener_pack"
     printf '@source "../../components/**/*.html";\n'
     printf '@source "../../blocks/**/*.html";\n'

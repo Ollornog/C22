@@ -25,6 +25,10 @@
 /* C22 custom component variants (the one place for extra "Ausführungen"). */
 @import "./components.css";
 
+/* App building blocks: whole looks an app takes over, each scoped under one root class
+ * (app-workspace.css: .c22-app-workspace). Nothing there matches outside its root. */
+@import "./app-workspace.css";
+
 /* Scan the canonical component HTML and the gallery for utility classes. */
 @source "../../components/**/*.html";
 @source "../../blocks/**/*.html";
