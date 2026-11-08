@@ -3688,6 +3688,67 @@
     .workspace-main > header { padding-inline: 0; }
   }
 
+  /* Filter menus (components/filter-bar.html, compact): one row of buttons, each with its sign and count over its name. A link
+     switches one filter; a menu ([data-an], [data-teil] on the .dropdown-menu) lists the filters of a group as menuitemcheckbox or
+     menuitemradio. On = line plus accent underline, partly on = dashed line, so the state does not depend on colour. Every button
+     keeps its width whatever its state. */
+  .filter-menus {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 0.375rem;
+  }
+  .filter-menus > a,
+  .filter-menus > .dropdown-menu > button {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0;
+    min-width: 4.75rem;
+    height: auto;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background-color: var(--background);
+    color: var(--foreground);
+    font-weight: 400;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .filter-menus > a > span,
+  .filter-menus > .dropdown-menu > button > span {
+    display: flex;
+    align-items: center;
+    gap: 0.3125rem;
+    min-height: 1.25rem;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .filter-menus > a > small,
+  .filter-menus > .dropdown-menu > button > small {
+    display: flex;
+    align-items: center;
+    gap: 0.125rem;
+    font-size: var(--text-xs);
+    line-height: 1.25;
+    color: var(--muted-foreground);
+    white-space: nowrap;
+  }
+  .filter-menus > .dropdown-menu > button > small > svg { width: 0.75rem; height: 0.75rem; }
+  .filter-menus > a:hover,
+  .filter-menus > .dropdown-menu > button:hover { background-color: var(--accent); color: var(--accent-foreground); }
+  .filter-menus > a[aria-current='true'],
+  .filter-menus > .dropdown-menu[data-an] > button {
+    background-color: var(--card);
+    border-color: var(--foreground);
+    box-shadow: inset 0 -2px 0 var(--primary);
+  }
+  .filter-menus > .dropdown-menu[data-teil] > button { border-style: dashed; border-color: var(--foreground); }
+  .filter-menus > a[aria-current='true'] > small,
+  .filter-menus > .dropdown-menu:is([data-an], [data-teil]) > button > small { color: var(--foreground); }
+
   /* Filter bar (components/filter-bar.html): groups of filters, each button shows its sign and
      count with the text below — no separate legend needed. Pressed = line plus accent underline,
      so the state does not depend on colour. A link variant uses aria-current for server filters. */
