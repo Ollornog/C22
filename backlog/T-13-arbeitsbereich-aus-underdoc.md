@@ -2,7 +2,7 @@
 id: T-13
 type: Task
 title: Arbeitsbereich mit drei Spalten aus UnderDoc übernehmen
-status: offen
+status: in-arbeit
 milestone: M-2
 tags: [bausteine, layout, underdoc]
 created: 2026-11-08
@@ -39,3 +39,16 @@ Stand und Aussehen: der klickbare Entwurf von UnderDoc (Runde 10) und der Bau in
 - Die Bausteine liegen in C22, in der Galerie in jedem Zustand (hell, dunkel, Druck), und gehen unter strenger CSP ohne
   Inline-Stil und ohne `onclick`.
 - UnderDoc nutzt sie über die dünne Schicht von T-12 und hat `shell.css` und `shell.js` entfernt.
+
+## Stand (2026-11-08)
+
+C22 hat die Bausteine (Block `blocks/navigation/workspace.html`, Regeln in `components.css`, Verhalten in `c22.js`,
+`workspace-boot.js` für die Breiten vor dem ersten Zeichnen). Galerie in hell, dunkel und Handy, Druck und Verhalten
+prüft `tests/test_visual.py`. Die Maße sind Variablen an `.workspace`, die Vorgaben folgen der Abstands-Achse. Die Maße
+aus dem Entwurf sind UnderDocs Wahl und gehören in UnderDocs eigenes Stylesheet (PO 2026-11-08: C22 hält die Bausteine,
+jede App setzt ihr Aussehen selbst darauf).
+
+Bewusst nicht in C22, weil App-Sache: Reiter ziehen und schließen, mehrere Fenster, Inhalt des Kontextmenüs, was „Neu“
+anlegt. Der Verlauf am allgemeinen Reiter und die Inhaltsmarkierung sind ein `.dropdown-menu`.
+
+Offen: UnderDoc stellt um (zweiter Punkt von „Fertig, wenn“).

@@ -1,0 +1,814 @@
+<!-- c22-title: Arbeitsbereich (drei Spalten, Reiter, Fensterkopf) -->
+<!-- C22-custom: the workspace. One grid: .workspace-top (brand, search, New) over the columns, .workspace-tabs beside it,
+     three .workspace-nav columns (data-level 1-3) and .workspace-main. nav1 and nav2 snap to data-step 0-3 (icon, icon
+     with text below, text, icon with text beside), nav3 is free; the right edge [data-grip] drags (pointer, arrow keys,
+     c22.js). Widths and the row height are custom properties on .workspace (components.css), so an app sets its own
+     sizes in its stylesheet. The list .workspace-tree: arrow [data-toggle] or a double click on the name toggles, the
+     name opens. Head of the window: main > header (breadcrumb, tags, [role=toolbar]; h1 and p below). Drawer:
+     main > aside[data-drawer] with [data-drawer-toggle]. Comment bubble: .comment-anchor > [data-comment] (+ data-count).
+     Built later: aria-disabled="true". Below md nav2 and nav3 open over the window (data-nav-open). Strict CSP: no
+     onclick, no style attribute; workspace-boot.js puts stored widths back before the first paint. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Standard (Symbol · Symbol mit Text daneben · Liste; allgemeiner Reiter als Stapel mit Verlauf; Rechtsklick in der Liste; Zahnrad öffnet die Schublade; Spaltenbreiten bleiben gespeichert)</span>
+    <div class="w-full overflow-hidden rounded-lg border">
+    <div class="workspace h-160" data-workspace-store="c22-beispiel-arbeitsbereich">
+      <header class="workspace-top">
+        <a href="#" class="brand"><span class="brand-mark"><svg data-icon-lu="book-open" class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg></span><span>Beispiel</span></a>
+        <form role="search"><input class="input" type="search" placeholder="Suchen /" aria-label="Suchen"></form>
+        <button type="button" class="btn" data-variant="outline" data-size="icon-sm" aria-label="Neu"><svg data-icon-lu="plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button>
+      </header>
+      <div class="workspace-tabs">
+        <div role="tablist" aria-label="Offen in diesem Fenster">
+          <div class="workspace-tab" data-general data-stack title="Allgemeiner Reiter: das nächste Dokument ersetzt ihn">
+            <button type="button" role="tab" aria-selected="true"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Netzwerkplan</span></button>
+            <div class="dropdown-menu" id="ws-a-hist">
+              <button type="button" id="ws-a-hist-t" aria-label="Vorher hier geöffnet" aria-haspopup="menu" aria-controls="ws-a-hist-m" aria-expanded="false"><svg data-icon-lu="chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+              <div id="ws-a-hist-p" data-popover aria-hidden="true">
+                <div role="menu" id="ws-a-hist-m" aria-labelledby="ws-a-hist-t">
+                  <div role="group" aria-labelledby="ws-a-hist-h"><div role="heading" id="ws-a-hist-h">Vorher hier geöffnet</div>
+                    <button type="button" role="menuitem"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>VLAN-Liste</button>
+                    <button type="button" role="menuitem"><svg data-icon-lu="table" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></svg>Kontakte</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Alle Reiter dieses Fensters"><svg data-icon-lu="list" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h.01"/><path d="M3 12h.01"/><path d="M3 19h.01"/><path d="M8 5h13"/><path d="M8 12h13"/><path d="M8 19h13"/></svg></button>
+        <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Assistent"><svg data-icon-lu="sparkles" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg></button>
+      </div>
+      <nav class="workspace-nav" data-level="1" data-step="0" aria-label="Ansichten">
+        <div>
+          <button type="button" class="workspace-item" title="Arbeitsbereich" aria-current="page"><svg data-icon-lu="panel-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg><span>Arbeitsbereich</span></button>
+          <span class="workspace-item" aria-disabled="true" title="Dateien: kommt später"><svg data-icon-lu="hard-drive" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 16h.01"/><path d="M2.212 11.577a2 2 0 0 0-.212.896V18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5.527a2 2 0 0 0-.212-.896L18.55 5.11A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/><path d="M21.946 12.013H2.054"/><path d="M6 16h.01"/></svg><span>Dateien</span></span>
+          <span class="workspace-item" aria-disabled="true" title="Ressourcen: kommt später"><svg data-icon-lu="database" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg><span>Ressourcen</span></span>
+          <span class="workspace-item" aria-disabled="true" title="Post: kommt später"><svg data-icon-lu="mail" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg><span>Post</span></span>
+          <hr>
+          <button type="button" class="workspace-item" title="Suche"><svg data-icon-lu="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg><span>Suche</span></button>
+          <span data-fill></span>
+          <span class="workspace-label" title="Nur für dich"><svg data-icon-lu="lock" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span>Privat</span></span>
+          <button type="button" class="workspace-item" title="Aufgaben"><svg data-icon-lu="square-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="m9 12 2 2 4-4"/></svg><span>Aufgaben</span></button>
+          <button type="button" class="workspace-item" title="Kalender"><svg data-icon-lu="calendar" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg><span>Kalender</span></button>
+          <span class="workspace-item" aria-disabled="true" title="Zeit: kommt später"><svg data-icon-lu="clock" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span>Zeit</span></span>
+        </div>
+        <footer>
+          <hr>
+          <button type="button" class="workspace-item" title="Profil"><span class="avatar" data-size="sm"><span>JB</span></span><span>Profil</span></button>
+        </footer>
+        <span data-grip role="separator" aria-orientation="vertical" aria-label="Breite der Ansichten" tabindex="0"></span>
+      </nav>
+      <nav class="workspace-nav" data-level="2" data-step="3" aria-label="Sammlungen">
+        <header><span>Sammlungen</span><button type="button" class="btn" data-variant="outline" data-size="xs" aria-label="Neue Sammlung"><span>Neu</span><svg data-icon-lu="plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button></header>
+        <div>
+          <button type="button" class="workspace-item" title="Betrieb" aria-current="page" data-pinned><svg data-icon-lu="activity" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"/></svg><span>Betrieb</span><svg data-icon-lu="pin" data-pin aria-label="offen gehalten" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg></button>
+          <button type="button" class="workspace-item" title="Projekte"><svg data-icon-lu="flag" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22V4a1 1 0 0 1 .4-.8A6 6 0 0 1 8 2c3 0 5 2 7.333 2q2 0 3.067-.8A1 1 0 0 1 20 4v10a1 1 0 0 1-.4.8A6 6 0 0 1 16 16c-3 0-5-2-8-2a6 6 0 0 0-4 1.528"/></svg><span>Projekte</span></button>
+          <button type="button" class="workspace-item" title="Meine Notizen"><svg data-icon-lu="pencil" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg><span>Meine Notizen</span></button>
+          <hr>
+          <button type="button" class="workspace-item" title="Archiv"><svg data-icon-lu="archive" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="5" x="2" y="3" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/></svg><span>Archiv</span></button>
+        </div>
+        <span data-grip role="separator" aria-orientation="vertical" aria-label="Breite der Sammlungen" tabindex="0"></span>
+      </nav>
+      <nav class="workspace-nav" data-level="3" aria-label="Offene Sammlungen">
+        <div class="context-menu">
+          <div>
+            <section>
+              <header><a href="#ws-a-betrieb" title="Betrieb öffnen"><svg data-icon-lu="pin" data-pin aria-label="offen gehalten" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg><span>Betrieb</span></a><button type="button" class="btn" data-variant="outline" data-size="xs" aria-label="Neu in Betrieb"><span>Neu</span><svg data-icon-lu="plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button></header>
+              <ul class="workspace-tree"><li><div><button type="button" data-toggle aria-expanded="true" aria-label="Netzwerk auf- oder zuklappen"><svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button><button type="button" title="Netzwerk"><svg data-icon-lu="folder" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg><span>Netzwerk</span></button></div><ul><li><div><button type="button" data-toggle aria-expanded="true" aria-label="Netzwerkplan auf- oder zuklappen"><svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button><button type="button" title="Netzwerkplan" aria-current="page"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Netzwerkplan</span></button><small>offen</small></div><ul><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="VLAN-Liste"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>VLAN-Liste</span></button></div></li><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Switch-Ports"><svg data-icon-lu="table" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></svg><span>Switch-Ports</span></button></div></li></ul></li><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Offene Tickets"><svg data-icon-lu="filter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 20a1 1 0 0 0 .553.895l2 1A1 1 0 0 0 14 21v-7a2 2 0 0 1 .517-1.341L21.74 4.67A1 1 0 0 0 21 3H3a1 1 0 0 0-.742 1.67l7.225 7.989A2 2 0 0 1 10 14z"/></svg><span>Offene Tickets</span></button></div></li><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="10.0.0.0/24"><svg data-icon-lu="network" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/></svg><span>10.0.0.0/24</span></button></div></li><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Netzgeräte"><svg data-icon-lu="hard-drive" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 16h.01"/><path d="M2.212 11.577a2 2 0 0 0-.212.896V18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5.527a2 2 0 0 0-.212-.896L18.55 5.11A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/><path d="M21.946 12.013H2.054"/><path d="M6 16h.01"/></svg><span>Netzgeräte</span></button></div></li></ul></li><li><div><button type="button" data-toggle aria-expanded="false" aria-label="Standort-Logbuch auf- oder zuklappen"><svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button><button type="button" title="Standort-Logbuch"><svg data-icon-lu="folder" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg><span>Standort-Logbuch</span></button></div><ul hidden><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Woche 44"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Woche 44</span></button></div></li><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Woche 45"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Woche 45</span></button></div></li></ul></li><li><div><button type="button" data-toggle aria-expanded="true" aria-label="Bereitschaft auf- oder zuklappen"><svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button><button type="button" title="Bereitschaft"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Bereitschaft</span></button></div><ul><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Eskalation"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Eskalation</span></button></div></li><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Kontakte"><svg data-icon-lu="table" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></svg><span>Kontakte</span></button></div></li></ul></li></ul>
+            </section>
+            <section>
+              <header><a href="#ws-a-projekte" title="Projekte öffnen"><span>Projekte</span></a><button type="button" class="btn" data-variant="outline" data-size="xs" aria-label="Neu in Projekte"><span>Neu</span><svg data-icon-lu="plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button></header>
+              <ul class="workspace-tree"><li><div><button type="button" data-toggle aria-expanded="true" aria-label="Turm 50 m auf- oder zuklappen"><svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button><button type="button" title="Turm 50 m"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Turm 50 m</span></button></div><ul><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Turmmaße"><svg data-icon-lu="table" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></svg><span>Turmmaße</span></button></div></li><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Baustellenfotos"><svg data-icon-lu="image" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg><span>Baustellenfotos</span></button></div></li></ul></li></ul>
+            </section>
+          </div>
+          <div data-cm-panel hidden role="menu" aria-label="Eintrag" class="w-56">
+            <div role="heading" aria-level="3" hidden></div>
+            <button type="button" role="menuitem">Öffnen</button>
+            <button type="button" role="menuitem">Als eigenen Reiter öffnen</button>
+            <button type="button" role="menuitem">In neuer Spalte öffnen</button>
+            <hr role="separator">
+            <button type="button" role="menuitem">Neue Seite darunter</button>
+            <button type="button" role="menuitem">Link kopieren</button>
+            <button type="button" role="menuitem">Einstellungen und Metadaten</button>
+          </div>
+        </div>
+        <span data-grip role="separator" aria-orientation="vertical" aria-label="Breite der Liste" tabindex="0"></span>
+      </nav>
+      <main class="workspace-main">
+        <header>
+          <div>
+            <nav class="breadcrumb" aria-label="Pfad">
+              <ol>
+                <li><a href="#">Betrieb</a></li>
+                <li aria-hidden="true"><svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></li>
+                <li><a href="#">Netzwerk</a></li>
+              </ol>
+            </nav>
+            <a href="#" class="badge" data-variant="outline">#netzwerk</a>
+            <a href="#" class="badge" data-variant="outline">#hauptstandort</a>
+            <div role="toolbar" aria-label="Werkzeuge">
+              <div class="dropdown-menu" id="ws-a-toc">
+                <button type="button" class="btn" data-variant="outline" data-size="xs" id="ws-a-toc-t" aria-haspopup="menu" aria-controls="ws-a-toc-m" aria-expanded="false"><svg data-icon-lu="list" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h.01"/><path d="M3 12h.01"/><path d="M3 19h.01"/><path d="M8 5h13"/><path d="M8 12h13"/><path d="M8 19h13"/></svg>5 Abschnitte<svg data-icon-lu="chevron-down" class="opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+                <div id="ws-a-toc-p" data-popover data-align="end" aria-hidden="true">
+                  <div role="menu" id="ws-a-toc-m" aria-labelledby="ws-a-toc-t">
+                    <div role="group" aria-labelledby="ws-a-toc-h"><div role="heading" id="ws-a-toc-h">In diesem Dokument</div>
+                      <a role="menuitem" href="#ws-a-h1">Überblick</a>
+                      <a role="menuitem" href="#ws-a-h2">Kern-Switches</a>
+                      <a role="menuitem" href="#ws-a-h3">Funkstrecke</a>
+                      <a role="menuitem" href="#ws-a-h4">Offene Tickets</a>
+                      <a role="menuitem" href="#ws-a-h5">Änderungen</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Auf der Seite suchen"><svg data-icon-lu="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Quelltext"><svg data-icon-lu="code" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Auch in einer neuen Spalte zeigen"><svg data-icon-lu="columns-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M12 3v18"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" data-count="3" aria-label="Kommentare, 3"><svg data-icon-lu="message-square" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" data-drawer-toggle="ws-a-drawer" aria-controls="ws-a-drawer" aria-expanded="false" aria-label="Einstellungen des Dokuments"><svg data-icon-lu="settings" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Mehr"><svg data-icon-lu="ellipsis" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>
+            </div>
+          </div>
+          <h1>Netzwerkplan</h1>
+          <p>Router, Kern-Switches und die Funkstrecke des Hauptstandorts.</p>
+        </header>
+        <section>
+          <div class="flex max-w-3xl flex-col gap-4 text-sm">
+            <p>Der Standort hat einen Router, zwei Kern-Switches und eine Funkstrecke am Turm.</p>
+            <h2 id="ws-a-h1" class="text-lg font-semibold">Überblick</h2>
+            <div class="comment-anchor">
+              <p>Der Router steht im Serverraum. Der Turm ist 50 m hoch, das setzt die Reichweite der Funkstrecke.</p>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-xs" data-comment aria-label="Kommentieren"><svg data-icon-lu="message-square" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/></svg></button>
+            </div>
+            <h2 id="ws-a-h2" class="text-lg font-semibold">Kern-Switches</h2>
+            <div class="comment-anchor">
+              <div class="table-container">
+                <table class="table">
+                  <thead><tr><th>Name</th><th>Raum</th><th>Uplink</th></tr></thead>
+                  <tbody><tr><td>core-a</td><td>Serverraum</td><td>10 Gbit</td></tr><tr><td>core-b</td><td>Werkstatt</td><td>10 Gbit</td></tr></tbody>
+                </table>
+              </div>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-xs" data-comment data-count="2" aria-label="2 Kommentare"><svg data-icon-lu="message-square" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/></svg></button>
+            </div>
+            <h2 id="ws-a-h3" class="text-lg font-semibold">Funkstrecke</h2>
+            <p>Die Funkstrecke läuft vom Turm zum Pförtnerhaus. Nach jedem Sturm prüfen.</p>
+          </div>
+        </section>
+        <aside data-drawer id="ws-a-drawer" aria-label="Einstellungen des Dokuments" hidden>
+          <header>Einstellungen des Dokuments<button type="button" class="btn" data-variant="ghost" data-size="icon-sm" data-drawer-toggle="ws-a-drawer" aria-label="Schließen"><svg data-icon-lu="x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></header>
+          <h3>Schlagworte</h3>
+          <div class="flex flex-wrap gap-1"><span class="badge" data-variant="outline">#netzwerk</span><span class="badge" data-variant="outline">#hauptstandort</span></div>
+          <h3>Metadaten</h3>
+          <dl>
+            <dt>Typ</dt><dd>Seite</dd>
+            <dt>Ort</dt><dd>Betrieb › Netzwerk</dd>
+            <dt>Geändert</dt><dd>heute 09:41</dd>
+            <dt>Sichtbar für</dt><dd>Gruppe Betrieb, geerbt</dd>
+          </dl>
+        </aside>
+      </main>
+    </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Stufen: Symbol mit Text darunter und nur Symbol, Schublade offen, eigene Reiter neben dem allgemeinen</span>
+    <div class="w-full overflow-hidden rounded-lg border">
+    <div class="workspace h-160">
+      <header class="workspace-top">
+        <a href="#" class="brand"><span class="brand-mark"><svg data-icon-lu="book-open" class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg></span><span>Beispiel</span></a>
+        <form role="search"><input class="input" type="search" placeholder="Suchen /" aria-label="Suchen"></form>
+        <button type="button" class="btn" data-variant="outline" data-size="icon-sm" aria-label="Neu"><svg data-icon-lu="plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button>
+      </header>
+      <div class="workspace-tabs">
+        <div role="tablist" aria-label="Offen in diesem Fenster">
+          <div class="workspace-tab" data-general title="Allgemeiner Reiter: das nächste Dokument ersetzt ihn">
+            <button type="button" role="tab" aria-selected="false"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Eskalation</span></button>
+          </div>
+          <div class="workspace-tab">
+            <button type="button" role="tab" aria-selected="true"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Turm 50 m</span></button>
+            <button type="button" aria-label="Reiter schließen"><svg data-icon-lu="x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+          </div>
+          <div class="workspace-tab">
+            <button type="button" role="tab" aria-selected="false"><svg data-icon-lu="table" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></svg><span>Turmmaße mit einem langen Namen</span></button>
+            <button type="button" aria-label="Reiter schließen"><svg data-icon-lu="x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+          </div>
+        </div>
+        <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Alle Reiter dieses Fensters"><svg data-icon-lu="list" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h.01"/><path d="M3 12h.01"/><path d="M3 19h.01"/><path d="M8 5h13"/><path d="M8 12h13"/><path d="M8 19h13"/></svg></button>
+        <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Assistent"><svg data-icon-lu="sparkles" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg></button>
+      </div>
+      <nav class="workspace-nav" data-level="1" data-step="1" aria-label="Ansichten">
+        <div>
+          <button type="button" class="workspace-item" title="Arbeitsbereich" aria-current="page"><svg data-icon-lu="panel-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg><span>Arbeitsbereich</span></button>
+          <span class="workspace-item" aria-disabled="true" title="Dateien: kommt später"><svg data-icon-lu="hard-drive" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 16h.01"/><path d="M2.212 11.577a2 2 0 0 0-.212.896V18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5.527a2 2 0 0 0-.212-.896L18.55 5.11A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/><path d="M21.946 12.013H2.054"/><path d="M6 16h.01"/></svg><span>Dateien</span></span>
+          <span class="workspace-item" aria-disabled="true" title="Ressourcen: kommt später"><svg data-icon-lu="database" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg><span>Ressourcen</span></span>
+          <span class="workspace-item" aria-disabled="true" title="Post: kommt später"><svg data-icon-lu="mail" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg><span>Post</span></span>
+          <hr>
+          <button type="button" class="workspace-item" title="Suche"><svg data-icon-lu="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg><span>Suche</span></button>
+          <span data-fill></span>
+          <span class="workspace-label" title="Nur für dich"><svg data-icon-lu="lock" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span>Privat</span></span>
+          <button type="button" class="workspace-item" title="Aufgaben"><svg data-icon-lu="square-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="m9 12 2 2 4-4"/></svg><span>Aufgaben</span></button>
+          <button type="button" class="workspace-item" title="Kalender"><svg data-icon-lu="calendar" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg><span>Kalender</span></button>
+          <span class="workspace-item" aria-disabled="true" title="Zeit: kommt später"><svg data-icon-lu="clock" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span>Zeit</span></span>
+        </div>
+        <footer>
+          <hr>
+          <button type="button" class="workspace-item" title="Profil"><span class="avatar" data-size="sm"><span>JB</span></span><span>Profil</span></button>
+        </footer>
+        <span data-grip role="separator" aria-orientation="vertical" aria-label="Breite der Ansichten" tabindex="0"></span>
+      </nav>
+      <nav class="workspace-nav" data-level="2" data-step="0" aria-label="Sammlungen">
+        <header><span>Sammlungen</span><button type="button" class="btn" data-variant="outline" data-size="xs" aria-label="Neue Sammlung"><span>Neu</span><svg data-icon-lu="plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button></header>
+        <div>
+          <button type="button" class="workspace-item" title="Betrieb" aria-current="page" data-pinned><svg data-icon-lu="activity" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"/></svg><span>Betrieb</span><svg data-icon-lu="pin" data-pin aria-label="offen gehalten" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg></button>
+          <button type="button" class="workspace-item" title="Projekte"><svg data-icon-lu="flag" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22V4a1 1 0 0 1 .4-.8A6 6 0 0 1 8 2c3 0 5 2 7.333 2q2 0 3.067-.8A1 1 0 0 1 20 4v10a1 1 0 0 1-.4.8A6 6 0 0 1 16 16c-3 0-5-2-8-2a6 6 0 0 0-4 1.528"/></svg><span>Projekte</span></button>
+          <button type="button" class="workspace-item" title="Meine Notizen"><svg data-icon-lu="pencil" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg><span>Meine Notizen</span></button>
+          <hr>
+          <button type="button" class="workspace-item" title="Archiv"><svg data-icon-lu="archive" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="5" x="2" y="3" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/></svg><span>Archiv</span></button>
+        </div>
+        <span data-grip role="separator" aria-orientation="vertical" aria-label="Breite der Sammlungen" tabindex="0"></span>
+      </nav>
+      <nav class="workspace-nav" data-level="3" aria-label="Offene Sammlungen">
+        <div class="context-menu">
+          <div>
+            <section>
+              <header><a href="#ws-b-betrieb" title="Betrieb öffnen"><svg data-icon-lu="pin" data-pin aria-label="offen gehalten" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg><span>Betrieb</span></a><button type="button" class="btn" data-variant="outline" data-size="xs" aria-label="Neu in Betrieb"><span>Neu</span><svg data-icon-lu="plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button></header>
+              <ul class="workspace-tree"><li><div><button type="button" data-toggle aria-expanded="true" aria-label="Netzwerk auf- oder zuklappen"><svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button><button type="button" title="Netzwerk"><svg data-icon-lu="folder" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg><span>Netzwerk</span></button></div><ul><li><div><button type="button" data-toggle aria-expanded="true" aria-label="Netzwerkplan auf- oder zuklappen"><svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button><button type="button" title="Netzwerkplan" aria-current="page"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Netzwerkplan</span></button><small>offen</small></div><ul><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="VLAN-Liste"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>VLAN-Liste</span></button></div></li><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Switch-Ports"><svg data-icon-lu="table" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></svg><span>Switch-Ports</span></button></div></li></ul></li><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Offene Tickets"><svg data-icon-lu="filter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 20a1 1 0 0 0 .553.895l2 1A1 1 0 0 0 14 21v-7a2 2 0 0 1 .517-1.341L21.74 4.67A1 1 0 0 0 21 3H3a1 1 0 0 0-.742 1.67l7.225 7.989A2 2 0 0 1 10 14z"/></svg><span>Offene Tickets</span></button></div></li><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="10.0.0.0/24"><svg data-icon-lu="network" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/></svg><span>10.0.0.0/24</span></button></div></li><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Netzgeräte"><svg data-icon-lu="hard-drive" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 16h.01"/><path d="M2.212 11.577a2 2 0 0 0-.212.896V18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5.527a2 2 0 0 0-.212-.896L18.55 5.11A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/><path d="M21.946 12.013H2.054"/><path d="M6 16h.01"/></svg><span>Netzgeräte</span></button></div></li></ul></li><li><div><button type="button" data-toggle aria-expanded="false" aria-label="Standort-Logbuch auf- oder zuklappen"><svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button><button type="button" title="Standort-Logbuch"><svg data-icon-lu="folder" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg><span>Standort-Logbuch</span></button></div><ul hidden><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Woche 44"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Woche 44</span></button></div></li><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Woche 45"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Woche 45</span></button></div></li></ul></li><li><div><button type="button" data-toggle aria-expanded="true" aria-label="Bereitschaft auf- oder zuklappen"><svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button><button type="button" title="Bereitschaft"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Bereitschaft</span></button></div><ul><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Eskalation"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Eskalation</span></button></div></li><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Kontakte"><svg data-icon-lu="table" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></svg><span>Kontakte</span></button></div></li></ul></li></ul>
+            </section>
+            <section>
+              <header><a href="#ws-b-projekte" title="Projekte öffnen"><span>Projekte</span></a><button type="button" class="btn" data-variant="outline" data-size="xs" aria-label="Neu in Projekte"><span>Neu</span><svg data-icon-lu="plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button></header>
+              <ul class="workspace-tree"><li><div><button type="button" data-toggle aria-expanded="true" aria-label="Turm 50 m auf- oder zuklappen"><svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button><button type="button" title="Turm 50 m"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Turm 50 m</span></button></div><ul><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Turmmaße"><svg data-icon-lu="table" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></svg><span>Turmmaße</span></button></div></li><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Baustellenfotos"><svg data-icon-lu="image" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg><span>Baustellenfotos</span></button></div></li></ul></li></ul>
+            </section>
+          </div>
+          <div data-cm-panel hidden role="menu" aria-label="Eintrag" class="w-56">
+            <div role="heading" aria-level="3" hidden></div>
+            <button type="button" role="menuitem">Öffnen</button>
+            <button type="button" role="menuitem">Als eigenen Reiter öffnen</button>
+            <button type="button" role="menuitem">In neuer Spalte öffnen</button>
+            <hr role="separator">
+            <button type="button" role="menuitem">Neue Seite darunter</button>
+            <button type="button" role="menuitem">Link kopieren</button>
+            <button type="button" role="menuitem">Einstellungen und Metadaten</button>
+          </div>
+        </div>
+        <span data-grip role="separator" aria-orientation="vertical" aria-label="Breite der Liste" tabindex="0"></span>
+      </nav>
+      <main class="workspace-main">
+        <header>
+          <div>
+            <nav class="breadcrumb" aria-label="Pfad">
+              <ol>
+                <li><a href="#">Betrieb</a></li>
+                <li aria-hidden="true"><svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></li>
+                <li><a href="#">Netzwerk</a></li>
+              </ol>
+            </nav>
+            <a href="#" class="badge" data-variant="outline">#netzwerk</a>
+            <a href="#" class="badge" data-variant="outline">#hauptstandort</a>
+            <div role="toolbar" aria-label="Werkzeuge">
+              <div class="dropdown-menu" id="ws-b-toc">
+                <button type="button" class="btn" data-variant="outline" data-size="xs" id="ws-b-toc-t" aria-haspopup="menu" aria-controls="ws-b-toc-m" aria-expanded="false"><svg data-icon-lu="list" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h.01"/><path d="M3 12h.01"/><path d="M3 19h.01"/><path d="M8 5h13"/><path d="M8 12h13"/><path d="M8 19h13"/></svg>5 Abschnitte<svg data-icon-lu="chevron-down" class="opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+                <div id="ws-b-toc-p" data-popover data-align="end" aria-hidden="true">
+                  <div role="menu" id="ws-b-toc-m" aria-labelledby="ws-b-toc-t">
+                    <div role="group" aria-labelledby="ws-b-toc-h"><div role="heading" id="ws-b-toc-h">In diesem Dokument</div>
+                      <a role="menuitem" href="#ws-b-h1">Überblick</a>
+                      <a role="menuitem" href="#ws-b-h2">Kern-Switches</a>
+                      <a role="menuitem" href="#ws-b-h3">Funkstrecke</a>
+                      <a role="menuitem" href="#ws-b-h4">Offene Tickets</a>
+                      <a role="menuitem" href="#ws-b-h5">Änderungen</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Auf der Seite suchen"><svg data-icon-lu="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Quelltext"><svg data-icon-lu="code" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Auch in einer neuen Spalte zeigen"><svg data-icon-lu="columns-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M12 3v18"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" data-count="3" aria-label="Kommentare, 3"><svg data-icon-lu="message-square" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" data-drawer-toggle="ws-b-drawer" aria-controls="ws-b-drawer" aria-expanded="true" aria-label="Einstellungen des Dokuments"><svg data-icon-lu="settings" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Mehr"><svg data-icon-lu="ellipsis" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>
+            </div>
+          </div>
+          <h1>Netzwerkplan</h1>
+          <p>Router, Kern-Switches und die Funkstrecke des Hauptstandorts.</p>
+        </header>
+        <section>
+          <div class="flex max-w-3xl flex-col gap-4 text-sm">
+            <p>Der Standort hat einen Router, zwei Kern-Switches und eine Funkstrecke am Turm.</p>
+            <h2 id="ws-b-h1" class="text-lg font-semibold">Überblick</h2>
+            <div class="comment-anchor">
+              <p>Der Router steht im Serverraum. Der Turm ist 50 m hoch, das setzt die Reichweite der Funkstrecke.</p>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-xs" data-comment aria-label="Kommentieren"><svg data-icon-lu="message-square" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/></svg></button>
+            </div>
+            <h2 id="ws-b-h2" class="text-lg font-semibold">Kern-Switches</h2>
+            <div class="comment-anchor">
+              <div class="table-container">
+                <table class="table">
+                  <thead><tr><th>Name</th><th>Raum</th><th>Uplink</th></tr></thead>
+                  <tbody><tr><td>core-a</td><td>Serverraum</td><td>10 Gbit</td></tr><tr><td>core-b</td><td>Werkstatt</td><td>10 Gbit</td></tr></tbody>
+                </table>
+              </div>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-xs" data-comment data-count="2" aria-label="2 Kommentare"><svg data-icon-lu="message-square" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/></svg></button>
+            </div>
+            <h2 id="ws-b-h3" class="text-lg font-semibold">Funkstrecke</h2>
+            <p>Die Funkstrecke läuft vom Turm zum Pförtnerhaus. Nach jedem Sturm prüfen.</p>
+          </div>
+        </section>
+        <aside data-drawer id="ws-b-drawer" aria-label="Einstellungen des Dokuments">
+          <header>Einstellungen des Dokuments<button type="button" class="btn" data-variant="ghost" data-size="icon-sm" data-drawer-toggle="ws-b-drawer" aria-label="Schließen"><svg data-icon-lu="x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></header>
+          <h3>Schlagworte</h3>
+          <div class="flex flex-wrap gap-1"><span class="badge" data-variant="outline">#netzwerk</span><span class="badge" data-variant="outline">#hauptstandort</span></div>
+          <h3>Metadaten</h3>
+          <dl>
+            <dt>Typ</dt><dd>Seite</dd>
+            <dt>Ort</dt><dd>Betrieb › Netzwerk</dd>
+            <dt>Geändert</dt><dd>heute 09:41</dd>
+            <dt>Sichtbar für</dt><dd>Gruppe Betrieb, geerbt</dd>
+          </dl>
+        </aside>
+      </main>
+    </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Stufen: Symbol mit Text daneben und nur Text</span>
+    <div class="w-full overflow-hidden rounded-lg border">
+    <div class="workspace h-160">
+      <header class="workspace-top">
+        <a href="#" class="brand"><span class="brand-mark"><svg data-icon-lu="book-open" class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg></span><span>Beispiel</span></a>
+        <form role="search"><input class="input" type="search" placeholder="Suchen /" aria-label="Suchen"></form>
+        <button type="button" class="btn" data-variant="outline" data-size="icon-sm" aria-label="Neu"><svg data-icon-lu="plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button>
+      </header>
+      <div class="workspace-tabs">
+        <div role="tablist" aria-label="Offen in diesem Fenster">
+          <div class="workspace-tab" data-general data-stack title="Allgemeiner Reiter: das nächste Dokument ersetzt ihn">
+            <button type="button" role="tab" aria-selected="true"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Netzwerkplan</span></button>
+            <div class="dropdown-menu" id="ws-c-hist">
+              <button type="button" id="ws-c-hist-t" aria-label="Vorher hier geöffnet" aria-haspopup="menu" aria-controls="ws-c-hist-m" aria-expanded="false"><svg data-icon-lu="chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+              <div id="ws-c-hist-p" data-popover aria-hidden="true">
+                <div role="menu" id="ws-c-hist-m" aria-labelledby="ws-c-hist-t">
+                  <div role="group" aria-labelledby="ws-c-hist-h"><div role="heading" id="ws-c-hist-h">Vorher hier geöffnet</div>
+                    <button type="button" role="menuitem"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>VLAN-Liste</button>
+                    <button type="button" role="menuitem"><svg data-icon-lu="table" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></svg>Kontakte</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Alle Reiter dieses Fensters"><svg data-icon-lu="list" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h.01"/><path d="M3 12h.01"/><path d="M3 19h.01"/><path d="M8 5h13"/><path d="M8 12h13"/><path d="M8 19h13"/></svg></button>
+        <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Assistent"><svg data-icon-lu="sparkles" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg></button>
+      </div>
+      <nav class="workspace-nav" data-level="1" data-step="3" aria-label="Ansichten">
+        <div>
+          <button type="button" class="workspace-item" title="Arbeitsbereich" aria-current="page"><svg data-icon-lu="panel-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg><span>Arbeitsbereich</span></button>
+          <span class="workspace-item" aria-disabled="true" title="Dateien: kommt später"><svg data-icon-lu="hard-drive" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 16h.01"/><path d="M2.212 11.577a2 2 0 0 0-.212.896V18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5.527a2 2 0 0 0-.212-.896L18.55 5.11A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/><path d="M21.946 12.013H2.054"/><path d="M6 16h.01"/></svg><span>Dateien</span></span>
+          <span class="workspace-item" aria-disabled="true" title="Ressourcen: kommt später"><svg data-icon-lu="database" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg><span>Ressourcen</span></span>
+          <span class="workspace-item" aria-disabled="true" title="Post: kommt später"><svg data-icon-lu="mail" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg><span>Post</span></span>
+          <hr>
+          <button type="button" class="workspace-item" title="Suche"><svg data-icon-lu="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg><span>Suche</span></button>
+          <span data-fill></span>
+          <span class="workspace-label" title="Nur für dich"><svg data-icon-lu="lock" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span>Privat</span></span>
+          <button type="button" class="workspace-item" title="Aufgaben"><svg data-icon-lu="square-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="m9 12 2 2 4-4"/></svg><span>Aufgaben</span></button>
+          <button type="button" class="workspace-item" title="Kalender"><svg data-icon-lu="calendar" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg><span>Kalender</span></button>
+          <span class="workspace-item" aria-disabled="true" title="Zeit: kommt später"><svg data-icon-lu="clock" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span>Zeit</span></span>
+        </div>
+        <footer>
+          <hr>
+          <button type="button" class="workspace-item" title="Profil"><span class="avatar" data-size="sm"><span>JB</span></span><span>Profil</span></button>
+        </footer>
+        <span data-grip role="separator" aria-orientation="vertical" aria-label="Breite der Ansichten" tabindex="0"></span>
+      </nav>
+      <nav class="workspace-nav" data-level="2" data-step="2" aria-label="Sammlungen">
+        <header><span>Sammlungen</span><button type="button" class="btn" data-variant="outline" data-size="xs" aria-label="Neue Sammlung"><span>Neu</span><svg data-icon-lu="plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button></header>
+        <div>
+          <button type="button" class="workspace-item" title="Betrieb" aria-current="page" data-pinned><svg data-icon-lu="activity" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"/></svg><span>Betrieb</span><svg data-icon-lu="pin" data-pin aria-label="offen gehalten" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg></button>
+          <button type="button" class="workspace-item" title="Projekte"><svg data-icon-lu="flag" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22V4a1 1 0 0 1 .4-.8A6 6 0 0 1 8 2c3 0 5 2 7.333 2q2 0 3.067-.8A1 1 0 0 1 20 4v10a1 1 0 0 1-.4.8A6 6 0 0 1 16 16c-3 0-5-2-8-2a6 6 0 0 0-4 1.528"/></svg><span>Projekte</span></button>
+          <button type="button" class="workspace-item" title="Meine Notizen"><svg data-icon-lu="pencil" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg><span>Meine Notizen</span></button>
+          <hr>
+          <button type="button" class="workspace-item" title="Archiv"><svg data-icon-lu="archive" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="5" x="2" y="3" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/></svg><span>Archiv</span></button>
+        </div>
+        <span data-grip role="separator" aria-orientation="vertical" aria-label="Breite der Sammlungen" tabindex="0"></span>
+      </nav>
+      <nav class="workspace-nav" data-level="3" aria-label="Offene Sammlungen">
+        <div class="context-menu">
+          <div>
+            <section>
+              <header><a href="#ws-c-betrieb" title="Betrieb öffnen"><svg data-icon-lu="pin" data-pin aria-label="offen gehalten" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg><span>Betrieb</span></a><button type="button" class="btn" data-variant="outline" data-size="xs" aria-label="Neu in Betrieb"><span>Neu</span><svg data-icon-lu="plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button></header>
+              <ul class="workspace-tree"><li><div><button type="button" data-toggle aria-expanded="true" aria-label="Netzwerk auf- oder zuklappen"><svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button><button type="button" title="Netzwerk"><svg data-icon-lu="folder" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg><span>Netzwerk</span></button></div><ul><li><div><button type="button" data-toggle aria-expanded="true" aria-label="Netzwerkplan auf- oder zuklappen"><svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button><button type="button" title="Netzwerkplan" aria-current="page"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Netzwerkplan</span></button><small>offen</small></div><ul><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="VLAN-Liste"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>VLAN-Liste</span></button></div></li><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Switch-Ports"><svg data-icon-lu="table" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></svg><span>Switch-Ports</span></button></div></li></ul></li><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Offene Tickets"><svg data-icon-lu="filter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 20a1 1 0 0 0 .553.895l2 1A1 1 0 0 0 14 21v-7a2 2 0 0 1 .517-1.341L21.74 4.67A1 1 0 0 0 21 3H3a1 1 0 0 0-.742 1.67l7.225 7.989A2 2 0 0 1 10 14z"/></svg><span>Offene Tickets</span></button></div></li><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="10.0.0.0/24"><svg data-icon-lu="network" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/></svg><span>10.0.0.0/24</span></button></div></li><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Netzgeräte"><svg data-icon-lu="hard-drive" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 16h.01"/><path d="M2.212 11.577a2 2 0 0 0-.212.896V18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5.527a2 2 0 0 0-.212-.896L18.55 5.11A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/><path d="M21.946 12.013H2.054"/><path d="M6 16h.01"/></svg><span>Netzgeräte</span></button></div></li></ul></li><li><div><button type="button" data-toggle aria-expanded="false" aria-label="Standort-Logbuch auf- oder zuklappen"><svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button><button type="button" title="Standort-Logbuch"><svg data-icon-lu="folder" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg><span>Standort-Logbuch</span></button></div><ul hidden><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Woche 44"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Woche 44</span></button></div></li><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Woche 45"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Woche 45</span></button></div></li></ul></li><li><div><button type="button" data-toggle aria-expanded="true" aria-label="Bereitschaft auf- oder zuklappen"><svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button><button type="button" title="Bereitschaft"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Bereitschaft</span></button></div><ul><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Eskalation"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Eskalation</span></button></div></li><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Kontakte"><svg data-icon-lu="table" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></svg><span>Kontakte</span></button></div></li></ul></li></ul>
+            </section>
+            <section>
+              <header><a href="#ws-c-projekte" title="Projekte öffnen"><span>Projekte</span></a><button type="button" class="btn" data-variant="outline" data-size="xs" aria-label="Neu in Projekte"><span>Neu</span><svg data-icon-lu="plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button></header>
+              <ul class="workspace-tree"><li><div><button type="button" data-toggle aria-expanded="true" aria-label="Turm 50 m auf- oder zuklappen"><svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button><button type="button" title="Turm 50 m"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Turm 50 m</span></button></div><ul><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Turmmaße"><svg data-icon-lu="table" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></svg><span>Turmmaße</span></button></div></li><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Baustellenfotos"><svg data-icon-lu="image" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg><span>Baustellenfotos</span></button></div></li></ul></li></ul>
+            </section>
+          </div>
+          <div data-cm-panel hidden role="menu" aria-label="Eintrag" class="w-56">
+            <div role="heading" aria-level="3" hidden></div>
+            <button type="button" role="menuitem">Öffnen</button>
+            <button type="button" role="menuitem">Als eigenen Reiter öffnen</button>
+            <button type="button" role="menuitem">In neuer Spalte öffnen</button>
+            <hr role="separator">
+            <button type="button" role="menuitem">Neue Seite darunter</button>
+            <button type="button" role="menuitem">Link kopieren</button>
+            <button type="button" role="menuitem">Einstellungen und Metadaten</button>
+          </div>
+        </div>
+        <span data-grip role="separator" aria-orientation="vertical" aria-label="Breite der Liste" tabindex="0"></span>
+      </nav>
+      <main class="workspace-main">
+        <header>
+          <div>
+            <nav class="breadcrumb" aria-label="Pfad">
+              <ol>
+                <li><a href="#">Betrieb</a></li>
+                <li aria-hidden="true"><svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></li>
+                <li><a href="#">Netzwerk</a></li>
+              </ol>
+            </nav>
+            <a href="#" class="badge" data-variant="outline">#netzwerk</a>
+            <a href="#" class="badge" data-variant="outline">#hauptstandort</a>
+            <div role="toolbar" aria-label="Werkzeuge">
+              <div class="dropdown-menu" id="ws-c-toc">
+                <button type="button" class="btn" data-variant="outline" data-size="xs" id="ws-c-toc-t" aria-haspopup="menu" aria-controls="ws-c-toc-m" aria-expanded="false"><svg data-icon-lu="list" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h.01"/><path d="M3 12h.01"/><path d="M3 19h.01"/><path d="M8 5h13"/><path d="M8 12h13"/><path d="M8 19h13"/></svg>5 Abschnitte<svg data-icon-lu="chevron-down" class="opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+                <div id="ws-c-toc-p" data-popover data-align="end" aria-hidden="true">
+                  <div role="menu" id="ws-c-toc-m" aria-labelledby="ws-c-toc-t">
+                    <div role="group" aria-labelledby="ws-c-toc-h"><div role="heading" id="ws-c-toc-h">In diesem Dokument</div>
+                      <a role="menuitem" href="#ws-c-h1">Überblick</a>
+                      <a role="menuitem" href="#ws-c-h2">Kern-Switches</a>
+                      <a role="menuitem" href="#ws-c-h3">Funkstrecke</a>
+                      <a role="menuitem" href="#ws-c-h4">Offene Tickets</a>
+                      <a role="menuitem" href="#ws-c-h5">Änderungen</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Auf der Seite suchen"><svg data-icon-lu="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Quelltext"><svg data-icon-lu="code" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Auch in einer neuen Spalte zeigen"><svg data-icon-lu="columns-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M12 3v18"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" data-count="3" aria-label="Kommentare, 3"><svg data-icon-lu="message-square" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" data-drawer-toggle="ws-c-drawer" aria-controls="ws-c-drawer" aria-expanded="false" aria-label="Einstellungen des Dokuments"><svg data-icon-lu="settings" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Mehr"><svg data-icon-lu="ellipsis" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>
+            </div>
+          </div>
+          <h1>Netzwerkplan</h1>
+          <p>Router, Kern-Switches und die Funkstrecke des Hauptstandorts.</p>
+        </header>
+        <section>
+          <div class="flex max-w-3xl flex-col gap-4 text-sm">
+            <p>Der Standort hat einen Router, zwei Kern-Switches und eine Funkstrecke am Turm.</p>
+            <h2 id="ws-c-h1" class="text-lg font-semibold">Überblick</h2>
+            <div class="comment-anchor">
+              <p>Der Router steht im Serverraum. Der Turm ist 50 m hoch, das setzt die Reichweite der Funkstrecke.</p>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-xs" data-comment aria-label="Kommentieren"><svg data-icon-lu="message-square" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/></svg></button>
+            </div>
+            <h2 id="ws-c-h2" class="text-lg font-semibold">Kern-Switches</h2>
+            <div class="comment-anchor">
+              <div class="table-container">
+                <table class="table">
+                  <thead><tr><th>Name</th><th>Raum</th><th>Uplink</th></tr></thead>
+                  <tbody><tr><td>core-a</td><td>Serverraum</td><td>10 Gbit</td></tr><tr><td>core-b</td><td>Werkstatt</td><td>10 Gbit</td></tr></tbody>
+                </table>
+              </div>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-xs" data-comment data-count="2" aria-label="2 Kommentare"><svg data-icon-lu="message-square" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/></svg></button>
+            </div>
+            <h2 id="ws-c-h3" class="text-lg font-semibold">Funkstrecke</h2>
+            <p>Die Funkstrecke läuft vom Turm zum Pförtnerhaus. Nach jedem Sturm prüfen.</p>
+          </div>
+        </section>
+        <aside data-drawer id="ws-c-drawer" aria-label="Einstellungen des Dokuments" hidden>
+          <header>Einstellungen des Dokuments<button type="button" class="btn" data-variant="ghost" data-size="icon-sm" data-drawer-toggle="ws-c-drawer" aria-label="Schließen"><svg data-icon-lu="x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></header>
+          <h3>Schlagworte</h3>
+          <div class="flex flex-wrap gap-1"><span class="badge" data-variant="outline">#netzwerk</span><span class="badge" data-variant="outline">#hauptstandort</span></div>
+          <h3>Metadaten</h3>
+          <dl>
+            <dt>Typ</dt><dd>Seite</dd>
+            <dt>Ort</dt><dd>Betrieb › Netzwerk</dd>
+            <dt>Geändert</dt><dd>heute 09:41</dd>
+            <dt>Sichtbar für</dt><dd>Gruppe Betrieb, geerbt</dd>
+          </dl>
+        </aside>
+      </main>
+    </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Zweiter Klick auf die aktive Ansicht: nav2 und nav3 treten zur Seite (<code>data-nav-hidden</code>)</span>
+    <div class="w-full overflow-hidden rounded-lg border">
+    <div class="workspace h-160" data-nav-hidden>
+      <header class="workspace-top">
+        <a href="#" class="brand"><span class="brand-mark"><svg data-icon-lu="book-open" class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg></span><span>Beispiel</span></a>
+        <form role="search"><input class="input" type="search" placeholder="Suchen /" aria-label="Suchen"></form>
+        <button type="button" class="btn" data-variant="outline" data-size="icon-sm" aria-label="Neu"><svg data-icon-lu="plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button>
+      </header>
+      <div class="workspace-tabs">
+        <div role="tablist" aria-label="Offen in diesem Fenster">
+          <div class="workspace-tab" data-general data-stack title="Allgemeiner Reiter: das nächste Dokument ersetzt ihn">
+            <button type="button" role="tab" aria-selected="true"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Netzwerkplan</span></button>
+            <div class="dropdown-menu" id="ws-d-hist">
+              <button type="button" id="ws-d-hist-t" aria-label="Vorher hier geöffnet" aria-haspopup="menu" aria-controls="ws-d-hist-m" aria-expanded="false"><svg data-icon-lu="chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+              <div id="ws-d-hist-p" data-popover aria-hidden="true">
+                <div role="menu" id="ws-d-hist-m" aria-labelledby="ws-d-hist-t">
+                  <div role="group" aria-labelledby="ws-d-hist-h"><div role="heading" id="ws-d-hist-h">Vorher hier geöffnet</div>
+                    <button type="button" role="menuitem"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>VLAN-Liste</button>
+                    <button type="button" role="menuitem"><svg data-icon-lu="table" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></svg>Kontakte</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Alle Reiter dieses Fensters"><svg data-icon-lu="list" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h.01"/><path d="M3 12h.01"/><path d="M3 19h.01"/><path d="M8 5h13"/><path d="M8 12h13"/><path d="M8 19h13"/></svg></button>
+        <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Assistent"><svg data-icon-lu="sparkles" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg></button>
+      </div>
+      <nav class="workspace-nav" data-level="1" data-step="0" aria-label="Ansichten">
+        <div>
+          <button type="button" class="workspace-item" title="Arbeitsbereich" aria-current="page"><svg data-icon-lu="panel-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg><span>Arbeitsbereich</span></button>
+          <span class="workspace-item" aria-disabled="true" title="Dateien: kommt später"><svg data-icon-lu="hard-drive" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 16h.01"/><path d="M2.212 11.577a2 2 0 0 0-.212.896V18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5.527a2 2 0 0 0-.212-.896L18.55 5.11A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/><path d="M21.946 12.013H2.054"/><path d="M6 16h.01"/></svg><span>Dateien</span></span>
+          <span class="workspace-item" aria-disabled="true" title="Ressourcen: kommt später"><svg data-icon-lu="database" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg><span>Ressourcen</span></span>
+          <span class="workspace-item" aria-disabled="true" title="Post: kommt später"><svg data-icon-lu="mail" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg><span>Post</span></span>
+          <hr>
+          <button type="button" class="workspace-item" title="Suche"><svg data-icon-lu="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg><span>Suche</span></button>
+          <span data-fill></span>
+          <span class="workspace-label" title="Nur für dich"><svg data-icon-lu="lock" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span>Privat</span></span>
+          <button type="button" class="workspace-item" title="Aufgaben"><svg data-icon-lu="square-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="m9 12 2 2 4-4"/></svg><span>Aufgaben</span></button>
+          <button type="button" class="workspace-item" title="Kalender"><svg data-icon-lu="calendar" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg><span>Kalender</span></button>
+          <span class="workspace-item" aria-disabled="true" title="Zeit: kommt später"><svg data-icon-lu="clock" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span>Zeit</span></span>
+        </div>
+        <footer>
+          <hr>
+          <button type="button" class="workspace-item" title="Profil"><span class="avatar" data-size="sm"><span>JB</span></span><span>Profil</span></button>
+        </footer>
+        <span data-grip role="separator" aria-orientation="vertical" aria-label="Breite der Ansichten" tabindex="0"></span>
+      </nav>
+      <nav class="workspace-nav" data-level="2" data-step="3" aria-label="Sammlungen">
+        <header><span>Sammlungen</span><button type="button" class="btn" data-variant="outline" data-size="xs" aria-label="Neue Sammlung"><span>Neu</span><svg data-icon-lu="plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button></header>
+        <div>
+          <button type="button" class="workspace-item" title="Betrieb" aria-current="page" data-pinned><svg data-icon-lu="activity" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"/></svg><span>Betrieb</span><svg data-icon-lu="pin" data-pin aria-label="offen gehalten" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg></button>
+          <button type="button" class="workspace-item" title="Projekte"><svg data-icon-lu="flag" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22V4a1 1 0 0 1 .4-.8A6 6 0 0 1 8 2c3 0 5 2 7.333 2q2 0 3.067-.8A1 1 0 0 1 20 4v10a1 1 0 0 1-.4.8A6 6 0 0 1 16 16c-3 0-5-2-8-2a6 6 0 0 0-4 1.528"/></svg><span>Projekte</span></button>
+          <button type="button" class="workspace-item" title="Meine Notizen"><svg data-icon-lu="pencil" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg><span>Meine Notizen</span></button>
+          <hr>
+          <button type="button" class="workspace-item" title="Archiv"><svg data-icon-lu="archive" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="5" x="2" y="3" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/></svg><span>Archiv</span></button>
+        </div>
+        <span data-grip role="separator" aria-orientation="vertical" aria-label="Breite der Sammlungen" tabindex="0"></span>
+      </nav>
+      <nav class="workspace-nav" data-level="3" aria-label="Offene Sammlungen">
+        <div class="context-menu">
+          <div>
+            <section>
+              <header><a href="#ws-d-betrieb" title="Betrieb öffnen"><svg data-icon-lu="pin" data-pin aria-label="offen gehalten" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg><span>Betrieb</span></a><button type="button" class="btn" data-variant="outline" data-size="xs" aria-label="Neu in Betrieb"><span>Neu</span><svg data-icon-lu="plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button></header>
+              <ul class="workspace-tree"><li><div><button type="button" data-toggle aria-expanded="true" aria-label="Netzwerk auf- oder zuklappen"><svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button><button type="button" title="Netzwerk"><svg data-icon-lu="folder" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg><span>Netzwerk</span></button></div><ul><li><div><button type="button" data-toggle aria-expanded="true" aria-label="Netzwerkplan auf- oder zuklappen"><svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button><button type="button" title="Netzwerkplan" aria-current="page"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Netzwerkplan</span></button><small>offen</small></div><ul><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="VLAN-Liste"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>VLAN-Liste</span></button></div></li><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Switch-Ports"><svg data-icon-lu="table" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></svg><span>Switch-Ports</span></button></div></li></ul></li><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Offene Tickets"><svg data-icon-lu="filter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 20a1 1 0 0 0 .553.895l2 1A1 1 0 0 0 14 21v-7a2 2 0 0 1 .517-1.341L21.74 4.67A1 1 0 0 0 21 3H3a1 1 0 0 0-.742 1.67l7.225 7.989A2 2 0 0 1 10 14z"/></svg><span>Offene Tickets</span></button></div></li><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="10.0.0.0/24"><svg data-icon-lu="network" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/></svg><span>10.0.0.0/24</span></button></div></li><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Netzgeräte"><svg data-icon-lu="hard-drive" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 16h.01"/><path d="M2.212 11.577a2 2 0 0 0-.212.896V18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5.527a2 2 0 0 0-.212-.896L18.55 5.11A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/><path d="M21.946 12.013H2.054"/><path d="M6 16h.01"/></svg><span>Netzgeräte</span></button></div></li></ul></li><li><div><button type="button" data-toggle aria-expanded="false" aria-label="Standort-Logbuch auf- oder zuklappen"><svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button><button type="button" title="Standort-Logbuch"><svg data-icon-lu="folder" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg><span>Standort-Logbuch</span></button></div><ul hidden><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Woche 44"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Woche 44</span></button></div></li><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Woche 45"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Woche 45</span></button></div></li></ul></li><li><div><button type="button" data-toggle aria-expanded="true" aria-label="Bereitschaft auf- oder zuklappen"><svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button><button type="button" title="Bereitschaft"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Bereitschaft</span></button></div><ul><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Eskalation"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Eskalation</span></button></div></li><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Kontakte"><svg data-icon-lu="table" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></svg><span>Kontakte</span></button></div></li></ul></li></ul>
+            </section>
+            <section>
+              <header><a href="#ws-d-projekte" title="Projekte öffnen"><span>Projekte</span></a><button type="button" class="btn" data-variant="outline" data-size="xs" aria-label="Neu in Projekte"><span>Neu</span><svg data-icon-lu="plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button></header>
+              <ul class="workspace-tree"><li><div><button type="button" data-toggle aria-expanded="true" aria-label="Turm 50 m auf- oder zuklappen"><svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button><button type="button" title="Turm 50 m"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Turm 50 m</span></button></div><ul><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Turmmaße"><svg data-icon-lu="table" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></svg><span>Turmmaße</span></button></div></li><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Baustellenfotos"><svg data-icon-lu="image" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg><span>Baustellenfotos</span></button></div></li></ul></li></ul>
+            </section>
+          </div>
+          <div data-cm-panel hidden role="menu" aria-label="Eintrag" class="w-56">
+            <div role="heading" aria-level="3" hidden></div>
+            <button type="button" role="menuitem">Öffnen</button>
+            <button type="button" role="menuitem">Als eigenen Reiter öffnen</button>
+            <button type="button" role="menuitem">In neuer Spalte öffnen</button>
+            <hr role="separator">
+            <button type="button" role="menuitem">Neue Seite darunter</button>
+            <button type="button" role="menuitem">Link kopieren</button>
+            <button type="button" role="menuitem">Einstellungen und Metadaten</button>
+          </div>
+        </div>
+        <span data-grip role="separator" aria-orientation="vertical" aria-label="Breite der Liste" tabindex="0"></span>
+      </nav>
+      <main class="workspace-main">
+        <header>
+          <div>
+            <nav class="breadcrumb" aria-label="Pfad">
+              <ol>
+                <li><a href="#">Betrieb</a></li>
+                <li aria-hidden="true"><svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></li>
+                <li><a href="#">Netzwerk</a></li>
+              </ol>
+            </nav>
+            <a href="#" class="badge" data-variant="outline">#netzwerk</a>
+            <a href="#" class="badge" data-variant="outline">#hauptstandort</a>
+            <div role="toolbar" aria-label="Werkzeuge">
+              <div class="dropdown-menu" id="ws-d-toc">
+                <button type="button" class="btn" data-variant="outline" data-size="xs" id="ws-d-toc-t" aria-haspopup="menu" aria-controls="ws-d-toc-m" aria-expanded="false"><svg data-icon-lu="list" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h.01"/><path d="M3 12h.01"/><path d="M3 19h.01"/><path d="M8 5h13"/><path d="M8 12h13"/><path d="M8 19h13"/></svg>5 Abschnitte<svg data-icon-lu="chevron-down" class="opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+                <div id="ws-d-toc-p" data-popover data-align="end" aria-hidden="true">
+                  <div role="menu" id="ws-d-toc-m" aria-labelledby="ws-d-toc-t">
+                    <div role="group" aria-labelledby="ws-d-toc-h"><div role="heading" id="ws-d-toc-h">In diesem Dokument</div>
+                      <a role="menuitem" href="#ws-d-h1">Überblick</a>
+                      <a role="menuitem" href="#ws-d-h2">Kern-Switches</a>
+                      <a role="menuitem" href="#ws-d-h3">Funkstrecke</a>
+                      <a role="menuitem" href="#ws-d-h4">Offene Tickets</a>
+                      <a role="menuitem" href="#ws-d-h5">Änderungen</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Auf der Seite suchen"><svg data-icon-lu="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Quelltext"><svg data-icon-lu="code" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Auch in einer neuen Spalte zeigen"><svg data-icon-lu="columns-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M12 3v18"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" data-count="3" aria-label="Kommentare, 3"><svg data-icon-lu="message-square" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" data-drawer-toggle="ws-d-drawer" aria-controls="ws-d-drawer" aria-expanded="false" aria-label="Einstellungen des Dokuments"><svg data-icon-lu="settings" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Mehr"><svg data-icon-lu="ellipsis" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>
+            </div>
+          </div>
+          <h1>Netzwerkplan</h1>
+          <p>Router, Kern-Switches und die Funkstrecke des Hauptstandorts.</p>
+        </header>
+        <section>
+          <div class="flex max-w-3xl flex-col gap-4 text-sm">
+            <p>Der Standort hat einen Router, zwei Kern-Switches und eine Funkstrecke am Turm.</p>
+            <h2 id="ws-d-h1" class="text-lg font-semibold">Überblick</h2>
+            <div class="comment-anchor">
+              <p>Der Router steht im Serverraum. Der Turm ist 50 m hoch, das setzt die Reichweite der Funkstrecke.</p>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-xs" data-comment aria-label="Kommentieren"><svg data-icon-lu="message-square" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/></svg></button>
+            </div>
+            <h2 id="ws-d-h2" class="text-lg font-semibold">Kern-Switches</h2>
+            <div class="comment-anchor">
+              <div class="table-container">
+                <table class="table">
+                  <thead><tr><th>Name</th><th>Raum</th><th>Uplink</th></tr></thead>
+                  <tbody><tr><td>core-a</td><td>Serverraum</td><td>10 Gbit</td></tr><tr><td>core-b</td><td>Werkstatt</td><td>10 Gbit</td></tr></tbody>
+                </table>
+              </div>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-xs" data-comment data-count="2" aria-label="2 Kommentare"><svg data-icon-lu="message-square" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/></svg></button>
+            </div>
+            <h2 id="ws-d-h3" class="text-lg font-semibold">Funkstrecke</h2>
+            <p>Die Funkstrecke läuft vom Turm zum Pförtnerhaus. Nach jedem Sturm prüfen.</p>
+          </div>
+        </section>
+        <aside data-drawer id="ws-d-drawer" aria-label="Einstellungen des Dokuments" hidden>
+          <header>Einstellungen des Dokuments<button type="button" class="btn" data-variant="ghost" data-size="icon-sm" data-drawer-toggle="ws-d-drawer" aria-label="Schließen"><svg data-icon-lu="x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></header>
+          <h3>Schlagworte</h3>
+          <div class="flex flex-wrap gap-1"><span class="badge" data-variant="outline">#netzwerk</span><span class="badge" data-variant="outline">#hauptstandort</span></div>
+          <h3>Metadaten</h3>
+          <dl>
+            <dt>Typ</dt><dd>Seite</dd>
+            <dt>Ort</dt><dd>Betrieb › Netzwerk</dd>
+            <dt>Geändert</dt><dd>heute 09:41</dd>
+            <dt>Sichtbar für</dt><dd>Gruppe Betrieb, geerbt</dd>
+          </dl>
+        </aside>
+      </main>
+    </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Handy: nav2 und nav3 über dem Fenster (<code>data-nav-open</code>, wirkt unter md)</span>
+    <div class="w-full overflow-hidden rounded-lg border">
+    <div class="workspace h-160" data-nav-open>
+      <header class="workspace-top">
+        <a href="#" class="brand"><span class="brand-mark"><svg data-icon-lu="book-open" class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg></span><span>Beispiel</span></a>
+        <form role="search"><input class="input" type="search" placeholder="Suchen /" aria-label="Suchen"></form>
+        <button type="button" class="btn" data-variant="outline" data-size="icon-sm" aria-label="Neu"><svg data-icon-lu="plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button>
+      </header>
+      <div class="workspace-tabs">
+        <div role="tablist" aria-label="Offen in diesem Fenster">
+          <div class="workspace-tab" data-general data-stack title="Allgemeiner Reiter: das nächste Dokument ersetzt ihn">
+            <button type="button" role="tab" aria-selected="true"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Netzwerkplan</span></button>
+            <div class="dropdown-menu" id="ws-e-hist">
+              <button type="button" id="ws-e-hist-t" aria-label="Vorher hier geöffnet" aria-haspopup="menu" aria-controls="ws-e-hist-m" aria-expanded="false"><svg data-icon-lu="chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+              <div id="ws-e-hist-p" data-popover aria-hidden="true">
+                <div role="menu" id="ws-e-hist-m" aria-labelledby="ws-e-hist-t">
+                  <div role="group" aria-labelledby="ws-e-hist-h"><div role="heading" id="ws-e-hist-h">Vorher hier geöffnet</div>
+                    <button type="button" role="menuitem"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>VLAN-Liste</button>
+                    <button type="button" role="menuitem"><svg data-icon-lu="table" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></svg>Kontakte</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Alle Reiter dieses Fensters"><svg data-icon-lu="list" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h.01"/><path d="M3 12h.01"/><path d="M3 19h.01"/><path d="M8 5h13"/><path d="M8 12h13"/><path d="M8 19h13"/></svg></button>
+        <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Assistent"><svg data-icon-lu="sparkles" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg></button>
+      </div>
+      <nav class="workspace-nav" data-level="1" data-step="0" aria-label="Ansichten">
+        <div>
+          <button type="button" class="workspace-item" title="Arbeitsbereich" aria-current="page"><svg data-icon-lu="panel-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg><span>Arbeitsbereich</span></button>
+          <span class="workspace-item" aria-disabled="true" title="Dateien: kommt später"><svg data-icon-lu="hard-drive" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 16h.01"/><path d="M2.212 11.577a2 2 0 0 0-.212.896V18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5.527a2 2 0 0 0-.212-.896L18.55 5.11A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/><path d="M21.946 12.013H2.054"/><path d="M6 16h.01"/></svg><span>Dateien</span></span>
+          <span class="workspace-item" aria-disabled="true" title="Ressourcen: kommt später"><svg data-icon-lu="database" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg><span>Ressourcen</span></span>
+          <span class="workspace-item" aria-disabled="true" title="Post: kommt später"><svg data-icon-lu="mail" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg><span>Post</span></span>
+          <hr>
+          <button type="button" class="workspace-item" title="Suche"><svg data-icon-lu="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg><span>Suche</span></button>
+          <span data-fill></span>
+          <span class="workspace-label" title="Nur für dich"><svg data-icon-lu="lock" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span>Privat</span></span>
+          <button type="button" class="workspace-item" title="Aufgaben"><svg data-icon-lu="square-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="m9 12 2 2 4-4"/></svg><span>Aufgaben</span></button>
+          <button type="button" class="workspace-item" title="Kalender"><svg data-icon-lu="calendar" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg><span>Kalender</span></button>
+          <span class="workspace-item" aria-disabled="true" title="Zeit: kommt später"><svg data-icon-lu="clock" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span>Zeit</span></span>
+        </div>
+        <footer>
+          <hr>
+          <button type="button" class="workspace-item" title="Profil"><span class="avatar" data-size="sm"><span>JB</span></span><span>Profil</span></button>
+        </footer>
+        <span data-grip role="separator" aria-orientation="vertical" aria-label="Breite der Ansichten" tabindex="0"></span>
+      </nav>
+      <nav class="workspace-nav" data-level="2" data-step="3" aria-label="Sammlungen">
+        <header><span>Sammlungen</span><button type="button" class="btn" data-variant="outline" data-size="xs" aria-label="Neue Sammlung"><span>Neu</span><svg data-icon-lu="plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button></header>
+        <div>
+          <button type="button" class="workspace-item" title="Betrieb" aria-current="page" data-pinned><svg data-icon-lu="activity" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"/></svg><span>Betrieb</span><svg data-icon-lu="pin" data-pin aria-label="offen gehalten" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg></button>
+          <button type="button" class="workspace-item" title="Projekte"><svg data-icon-lu="flag" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22V4a1 1 0 0 1 .4-.8A6 6 0 0 1 8 2c3 0 5 2 7.333 2q2 0 3.067-.8A1 1 0 0 1 20 4v10a1 1 0 0 1-.4.8A6 6 0 0 1 16 16c-3 0-5-2-8-2a6 6 0 0 0-4 1.528"/></svg><span>Projekte</span></button>
+          <button type="button" class="workspace-item" title="Meine Notizen"><svg data-icon-lu="pencil" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg><span>Meine Notizen</span></button>
+          <hr>
+          <button type="button" class="workspace-item" title="Archiv"><svg data-icon-lu="archive" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="5" x="2" y="3" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/></svg><span>Archiv</span></button>
+        </div>
+        <span data-grip role="separator" aria-orientation="vertical" aria-label="Breite der Sammlungen" tabindex="0"></span>
+      </nav>
+      <nav class="workspace-nav" data-level="3" aria-label="Offene Sammlungen">
+        <div class="context-menu">
+          <div>
+            <section>
+              <header><a href="#ws-e-betrieb" title="Betrieb öffnen"><svg data-icon-lu="pin" data-pin aria-label="offen gehalten" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg><span>Betrieb</span></a><button type="button" class="btn" data-variant="outline" data-size="xs" aria-label="Neu in Betrieb"><span>Neu</span><svg data-icon-lu="plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button></header>
+              <ul class="workspace-tree"><li><div><button type="button" data-toggle aria-expanded="true" aria-label="Netzwerk auf- oder zuklappen"><svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button><button type="button" title="Netzwerk"><svg data-icon-lu="folder" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg><span>Netzwerk</span></button></div><ul><li><div><button type="button" data-toggle aria-expanded="true" aria-label="Netzwerkplan auf- oder zuklappen"><svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button><button type="button" title="Netzwerkplan" aria-current="page"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Netzwerkplan</span></button><small>offen</small></div><ul><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="VLAN-Liste"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>VLAN-Liste</span></button></div></li><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Switch-Ports"><svg data-icon-lu="table" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></svg><span>Switch-Ports</span></button></div></li></ul></li><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Offene Tickets"><svg data-icon-lu="filter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 20a1 1 0 0 0 .553.895l2 1A1 1 0 0 0 14 21v-7a2 2 0 0 1 .517-1.341L21.74 4.67A1 1 0 0 0 21 3H3a1 1 0 0 0-.742 1.67l7.225 7.989A2 2 0 0 1 10 14z"/></svg><span>Offene Tickets</span></button></div></li><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="10.0.0.0/24"><svg data-icon-lu="network" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/></svg><span>10.0.0.0/24</span></button></div></li><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Netzgeräte"><svg data-icon-lu="hard-drive" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 16h.01"/><path d="M2.212 11.577a2 2 0 0 0-.212.896V18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5.527a2 2 0 0 0-.212-.896L18.55 5.11A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/><path d="M21.946 12.013H2.054"/><path d="M6 16h.01"/></svg><span>Netzgeräte</span></button></div></li></ul></li><li><div><button type="button" data-toggle aria-expanded="false" aria-label="Standort-Logbuch auf- oder zuklappen"><svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button><button type="button" title="Standort-Logbuch"><svg data-icon-lu="folder" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg><span>Standort-Logbuch</span></button></div><ul hidden><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Woche 44"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Woche 44</span></button></div></li><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Woche 45"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Woche 45</span></button></div></li></ul></li><li><div><button type="button" data-toggle aria-expanded="true" aria-label="Bereitschaft auf- oder zuklappen"><svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button><button type="button" title="Bereitschaft"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Bereitschaft</span></button></div><ul><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Eskalation"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Eskalation</span></button></div></li><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Kontakte"><svg data-icon-lu="table" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></svg><span>Kontakte</span></button></div></li></ul></li></ul>
+            </section>
+            <section>
+              <header><a href="#ws-e-projekte" title="Projekte öffnen"><span>Projekte</span></a><button type="button" class="btn" data-variant="outline" data-size="xs" aria-label="Neu in Projekte"><span>Neu</span><svg data-icon-lu="plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button></header>
+              <ul class="workspace-tree"><li><div><button type="button" data-toggle aria-expanded="true" aria-label="Turm 50 m auf- oder zuklappen"><svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button><button type="button" title="Turm 50 m"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Turm 50 m</span></button></div><ul><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Turmmaße"><svg data-icon-lu="table" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></svg><span>Turmmaße</span></button></div></li><li><div><span data-toggle aria-hidden="true"></span><button type="button" title="Baustellenfotos"><svg data-icon-lu="image" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg><span>Baustellenfotos</span></button></div></li></ul></li></ul>
+            </section>
+          </div>
+          <div data-cm-panel hidden role="menu" aria-label="Eintrag" class="w-56">
+            <div role="heading" aria-level="3" hidden></div>
+            <button type="button" role="menuitem">Öffnen</button>
+            <button type="button" role="menuitem">Als eigenen Reiter öffnen</button>
+            <button type="button" role="menuitem">In neuer Spalte öffnen</button>
+            <hr role="separator">
+            <button type="button" role="menuitem">Neue Seite darunter</button>
+            <button type="button" role="menuitem">Link kopieren</button>
+            <button type="button" role="menuitem">Einstellungen und Metadaten</button>
+          </div>
+        </div>
+        <span data-grip role="separator" aria-orientation="vertical" aria-label="Breite der Liste" tabindex="0"></span>
+      </nav>
+      <main class="workspace-main">
+        <header>
+          <div>
+            <nav class="breadcrumb" aria-label="Pfad">
+              <ol>
+                <li><a href="#">Betrieb</a></li>
+                <li aria-hidden="true"><svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></li>
+                <li><a href="#">Netzwerk</a></li>
+              </ol>
+            </nav>
+            <a href="#" class="badge" data-variant="outline">#netzwerk</a>
+            <a href="#" class="badge" data-variant="outline">#hauptstandort</a>
+            <div role="toolbar" aria-label="Werkzeuge">
+              <div class="dropdown-menu" id="ws-e-toc">
+                <button type="button" class="btn" data-variant="outline" data-size="xs" id="ws-e-toc-t" aria-haspopup="menu" aria-controls="ws-e-toc-m" aria-expanded="false"><svg data-icon-lu="list" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h.01"/><path d="M3 12h.01"/><path d="M3 19h.01"/><path d="M8 5h13"/><path d="M8 12h13"/><path d="M8 19h13"/></svg>5 Abschnitte<svg data-icon-lu="chevron-down" class="opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+                <div id="ws-e-toc-p" data-popover data-align="end" aria-hidden="true">
+                  <div role="menu" id="ws-e-toc-m" aria-labelledby="ws-e-toc-t">
+                    <div role="group" aria-labelledby="ws-e-toc-h"><div role="heading" id="ws-e-toc-h">In diesem Dokument</div>
+                      <a role="menuitem" href="#ws-e-h1">Überblick</a>
+                      <a role="menuitem" href="#ws-e-h2">Kern-Switches</a>
+                      <a role="menuitem" href="#ws-e-h3">Funkstrecke</a>
+                      <a role="menuitem" href="#ws-e-h4">Offene Tickets</a>
+                      <a role="menuitem" href="#ws-e-h5">Änderungen</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Auf der Seite suchen"><svg data-icon-lu="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Quelltext"><svg data-icon-lu="code" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Auch in einer neuen Spalte zeigen"><svg data-icon-lu="columns-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M12 3v18"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" data-count="3" aria-label="Kommentare, 3"><svg data-icon-lu="message-square" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" data-drawer-toggle="ws-e-drawer" aria-controls="ws-e-drawer" aria-expanded="false" aria-label="Einstellungen des Dokuments"><svg data-icon-lu="settings" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Mehr"><svg data-icon-lu="ellipsis" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>
+            </div>
+          </div>
+          <h1>Netzwerkplan</h1>
+          <p>Router, Kern-Switches und die Funkstrecke des Hauptstandorts.</p>
+        </header>
+        <section>
+          <div class="flex max-w-3xl flex-col gap-4 text-sm">
+            <p>Der Standort hat einen Router, zwei Kern-Switches und eine Funkstrecke am Turm.</p>
+            <h2 id="ws-e-h1" class="text-lg font-semibold">Überblick</h2>
+            <div class="comment-anchor">
+              <p>Der Router steht im Serverraum. Der Turm ist 50 m hoch, das setzt die Reichweite der Funkstrecke.</p>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-xs" data-comment aria-label="Kommentieren"><svg data-icon-lu="message-square" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/></svg></button>
+            </div>
+            <h2 id="ws-e-h2" class="text-lg font-semibold">Kern-Switches</h2>
+            <div class="comment-anchor">
+              <div class="table-container">
+                <table class="table">
+                  <thead><tr><th>Name</th><th>Raum</th><th>Uplink</th></tr></thead>
+                  <tbody><tr><td>core-a</td><td>Serverraum</td><td>10 Gbit</td></tr><tr><td>core-b</td><td>Werkstatt</td><td>10 Gbit</td></tr></tbody>
+                </table>
+              </div>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-xs" data-comment data-count="2" aria-label="2 Kommentare"><svg data-icon-lu="message-square" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/></svg></button>
+            </div>
+            <h2 id="ws-e-h3" class="text-lg font-semibold">Funkstrecke</h2>
+            <p>Die Funkstrecke läuft vom Turm zum Pförtnerhaus. Nach jedem Sturm prüfen.</p>
+          </div>
+        </section>
+        <aside data-drawer id="ws-e-drawer" aria-label="Einstellungen des Dokuments" hidden>
+          <header>Einstellungen des Dokuments<button type="button" class="btn" data-variant="ghost" data-size="icon-sm" data-drawer-toggle="ws-e-drawer" aria-label="Schließen"><svg data-icon-lu="x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></header>
+          <h3>Schlagworte</h3>
+          <div class="flex flex-wrap gap-1"><span class="badge" data-variant="outline">#netzwerk</span><span class="badge" data-variant="outline">#hauptstandort</span></div>
+          <h3>Metadaten</h3>
+          <dl>
+            <dt>Typ</dt><dd>Seite</dd>
+            <dt>Ort</dt><dd>Betrieb › Netzwerk</dd>
+            <dt>Geändert</dt><dd>heute 09:41</dd>
+            <dt>Sichtbar für</dt><dd>Gruppe Betrieb, geerbt</dd>
+          </dl>
+        </aside>
+      </main>
+    </div>
+    </div>
+  </div>
+</div>

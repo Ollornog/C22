@@ -29,6 +29,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Workspace:** new block `.workspace` (`blocks/navigation/workspace.html`), one grid with a top row (`.workspace-top`:
+  brand, search, New) over three columns and a tab row (`.workspace-tabs`) beside it. Columns are `.workspace-nav` with
+  `data-level` 1-3; nav1 and nav2 snap to `data-step` 0-3 (icon, icon with text below, text, icon with text beside), nav3
+  is free, the right edge `[data-grip]` drags with the pointer and the arrow keys. Sizes are custom properties on
+  `.workspace` (`--workspace-row`, `--workspace-step-0` … `-3`, `--workspace-nav3`, `-min`, `-max`), so each app sets its own
+  in its stylesheet and no other app changes. Also: `.workspace-item` (current = `aria-current`, built later =
+  `aria-disabled="true"`, kept open = `data-pinned` with a `[data-pin]` icon), column headings with a New button, the list
+  `.workspace-tree` (arrow or double click toggles, the name opens), tabs `.workspace-tab` with the general tab
+  `data-general` and its stack `data-stack`, the head of the window (`main > header`: breadcrumb, tags, `[role=toolbar]`,
+  title and description), the drawer `aside[data-drawer]` with `[data-drawer-toggle]`, `.comment-anchor` with a
+  `[data-comment]` bubble and `data-count`. Below md nav2 and nav3 open over the window (`data-nav-open`); a second click on
+  the current view hides them (`data-nav-hidden`). No `onclick`, no style attribute: `c22.js` delegates, and
+  `workspace-boot.js` (in `<head>`, without defer) puts the widths stored under `data-workspace-store` back before the first
+  paint. `c22:workspace-columns` reports each change, `window.C22.workspace` has `init`, `state` and `restore`.
 - **Application frame:** `data-head` puts a head (`.app-frame-head`) over rail and panel: brand and the title of what the
   panel shows, a search below, both as wide as the two columns. The panel is not collapsible there. Below md the head is the
   top bar, `[data-frame-menu]` opens rail and panel side by side as a drawer, and there is no bottom tab bar. The frame

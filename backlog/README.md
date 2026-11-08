@@ -24,7 +24,7 @@ Konventionen: [README-KONVENTION.md](README-KONVENTION.md).
 * ☑ **[T-10](T-10-kit-028-favicon.md)** Kit 0.28 übernehmen — jede Webseite hat ein Favicon · M-2
 * ☑ **[T-11](T-11-typeset-h1-und-tabelle.md)** Prosa-Fluss in .typeset für h1 und Tabellen-Container · M-2
 * ☐ **[T-12](T-12-go-adapter.md)** Adapter für Go-Vorlagen · M-2
-* ☐ **[T-13](T-13-arbeitsbereich-aus-underdoc.md)** Arbeitsbereich mit drei Spalten aus UnderDoc übernehmen · M-2
+* ◐ **[T-13](T-13-arbeitsbereich-aus-underdoc.md)** Arbeitsbereich mit drei Spalten aus UnderDoc übernehmen · M-2
 
 ## Entscheidungen (ADR)
 
