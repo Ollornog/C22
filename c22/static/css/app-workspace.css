@@ -201,9 +201,6 @@ body:has(> .c22-app-workspace) { background: var(--background); color: var(--for
 .c22-app-workspace .pad { padding: calc(8 * var(--app-workspace-space)) calc(4 * var(--app-workspace-space)); }
 .c22-app-workspace .lands { list-style: none; margin: calc(4 * var(--app-workspace-space)) 0 calc(8 * var(--app-workspace-space)); padding: 0; }
 .c22-app-workspace .grip { color: var(--ring); display: inline-grid; place-items: center; width: calc(14 * var(--app-workspace-space)); cursor: grab; }
-.c22-app-workspace .star { width: calc(24 * var(--app-workspace-space)); height: calc(24 * var(--app-workspace-space)); display: inline-grid; place-items: center; border-radius: calc(5 * var(--app-workspace-radius)); color: var(--muted-foreground); }
-.c22-app-workspace .star[aria-pressed="true"] { color: var(--foreground); }
-.c22-app-workspace .star[aria-pressed="true"] svg { fill: currentColor; }
 .c22-app-workspace .spanel { flex: 1; overflow-y: auto; padding: calc(8 * var(--app-workspace-space)) calc(12 * var(--app-workspace-space)) calc(20 * var(--app-workspace-space)); min-width: 0; }
 .c22-app-workspace .shead { display: flex; justify-content: space-between; align-items: center; font-weight: 600; margin-bottom: calc(4 * var(--app-workspace-space)); }
 .c22-app-workspace .spanel input[type=search], .c22-app-workspace .spanel select { width: 100%; height: calc(30 * var(--app-workspace-space)); padding: 0 calc(9 * var(--app-workspace-space)); border: 1px solid var(--border); border-radius: calc(6 * var(--app-workspace-radius)); background: var(--background); }
@@ -414,10 +411,6 @@ body.dragging .c22-app-workspace, body.dragging .c22-app-workspace * { user-sele
 .c22-app-workspace .col.s2 .navitem { padding: calc(6 * var(--app-workspace-space)) calc(9 * var(--app-workspace-space)); }
 .c22-app-workspace .collrow { display: flex; align-items: center; gap: 1px; }
 .c22-app-workspace .collrow .navitem { flex: 1; width: auto; }
-.c22-app-workspace .collrow .star { width: calc(22 * var(--app-workspace-space)); height: calc(26 * var(--app-workspace-space)); flex: none; }
-.c22-app-workspace .collrow .star svg { width: calc(14 * var(--app-workspace-space)); height: calc(14 * var(--app-workspace-space)); }
-.c22-app-workspace .star[aria-pressed="true"] svg { fill: none; }
-.c22-app-workspace .star[data-act="star"][aria-pressed="true"] svg { fill: currentColor; }
 .c22-app-workspace .nav2 #cq { width: 100%; height: calc(28 * var(--app-workspace-space)); padding: 0 calc(7 * var(--app-workspace-space)); border: 1px solid var(--border); border-radius: calc(6 * var(--app-workspace-radius)); background: var(--background); flex: none; }
 .c22-app-workspace #clist { display: flex; flex-direction: column; gap: calc(3 * var(--app-workspace-space)); }
 .c22-app-workspace .navitem.drop-before, .c22-app-workspace .row.drop-before { box-shadow: inset 0 3px 0 var(--primary); border-radius: 0; }
@@ -653,19 +646,10 @@ body:has(> .c22-app-workspace) > .ghost { position: fixed; z-index: 50; pointer-
 .c22-app-workspace .dtitle { flex: 1 0 100%; order: 10; min-width: 0; padding: 0 0 calc(3 * var(--app-workspace-space)); }
 .c22-app-workspace .dtitle h1 { font-size: calc(21 * var(--app-workspace-text)); line-height: 1.25; margin: 0; overflow-wrap: anywhere; }
 .c22-app-workspace .dtitle p { margin: calc(2 * var(--app-workspace-space)) 0 0; font-size: calc(13 * var(--app-workspace-text)); color: var(--muted-foreground); }
-.c22-app-workspace .cstar { display: none; }
-.c22-app-workspace .nav2.s2 .collrow .cstar, .c22-app-workspace .nav2.s3 .collrow .cstar { display: inline-grid; opacity: 0; }
-.c22-app-workspace .nav2 .collrow:hover .cstar, .c22-app-workspace .nav2 .collrow:focus-within .cstar, .c22-app-workspace .nav2 .cstar[aria-pressed="true"] { opacity: 1; }
 .c22-app-workspace [data-later] { opacity: .35; cursor: not-allowed; }
 .c22-app-workspace #clist.drop-into, .c22-app-workspace .nav2.drop-into { outline: 2px dashed var(--foreground); outline-offset: -2px; border-radius: calc(6 * var(--app-workspace-radius)); }
-.c22-app-workspace .pinmark { display: none; place-items: center; width: calc(18 * var(--app-workspace-space)); color: var(--muted-foreground); flex: none; }
-.c22-app-workspace .pinmark svg { width: calc(12 * var(--app-workspace-space)); height: calc(12 * var(--app-workspace-space)); }
-.c22-app-workspace .nav2.s2 .pinmark, .c22-app-workspace .nav2.s3 .pinmark { display: inline-grid; }
-.c22-app-workspace .nav2.s0 [data-pinned] svg, .c22-app-workspace .nav2.s1 [data-pinned] svg { stroke-width: calc(var(--icon-stroke) * 1.3); }
 .c22-app-workspace .chead svg { width: calc(11 * var(--app-workspace-space)); height: calc(11 * var(--app-workspace-space)); margin-right: calc(4 * var(--app-workspace-space)); vertical-align: -1px; }
 /* Round 9 */
-.c22-app-workspace .navitem .pinmark.in { margin-left: auto; display: none; }
-.c22-app-workspace .nav2.s2 .navitem .pinmark.in, .c22-app-workspace .nav2.s3 .navitem .pinmark.in { display: inline-grid; }
 .c22-app-workspace .chead .acc svg { width: calc(11 * var(--app-workspace-space)); height: calc(11 * var(--app-workspace-space)); margin-left: calc(5 * var(--app-workspace-space)); color: var(--muted-foreground); }
 .c22-app-workspace .accbadge { display: inline-flex; align-items: center; gap: calc(4 * var(--app-workspace-space)); font-size: calc(11.5 * var(--app-workspace-text)); color: var(--muted-foreground); border: 1px solid var(--border); border-radius: calc(infinity * 1px); padding: 1px calc(8 * var(--app-workspace-space)); white-space: nowrap; }
 .c22-app-workspace .accbadge svg { width: calc(11 * var(--app-workspace-space)); height: calc(11 * var(--app-workspace-space)); }
@@ -711,6 +695,23 @@ body:has(> .c22-app-workspace) > .ghost { position: fixed; z-index: 50; pointer-
 /* Task lists of real pages: the checkbox is the marker. */
 .c22-app-workspace article.doc li:has(> input[type="checkbox"]) { list-style: none; margin-left: -1.1em; }
 .c22-app-workspace article.doc li > input[type="checkbox"] { margin-right: calc(6 * var(--app-workspace-space)); vertical-align: -1px; }
+/* nav2 and nav3 after the maintainer's look at the first build (2026-11-08). In nav2 a collection open for now has
+   only its background; one kept open (data-pinned) also draws the line on the left, which replaces the pin. A line or
+   a space (.deco, data-deco) sets entries apart in both lists and is dragged like an entry. While dragging in nav2, a
+   line between the entries shows where the dragged one lands. */
+.c22-app-workspace .nav2 .navitem[aria-pressed="true"]:not([data-pinned]) { box-shadow: none; }
+.c22-app-workspace .deco { position: relative; cursor: grab; border-radius: calc(4 * var(--app-workspace-radius)); flex: none; }
+.c22-app-workspace .deco[data-deco="line"] { height: calc(11 * var(--app-workspace-space)); min-height: 0; }
+.c22-app-workspace .deco[data-deco="line"]::after { content: ""; position: absolute; left: calc(6 * var(--app-workspace-space)); right: calc(6 * var(--app-workspace-space)); top: 50%; height: 1px; background: var(--border); }
+.c22-app-workspace .deco[data-deco="space"] { height: calc(14 * var(--app-workspace-space)); min-height: 0; }
+.c22-app-workspace .deco:hover { background: var(--accent); }
+.c22-app-workspace .collrow.drop-before::before, .c22-app-workspace .collrow.drop-after::before { content: ""; position: absolute; left: 0; right: 0; height: 2px; background: var(--primary); z-index: 2; pointer-events: none; }
+.c22-app-workspace .collrow.drop-before::before { top: -1px; }
+.c22-app-workspace .collrow.drop-after::before { bottom: -1px; }
+/* At the step Text the head of nav2 has no room for the word New: the plus says it, and the label gives way. */
+.c22-app-workspace .n2head .lbl { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.c22-app-workspace .n2head .newplus { flex: none; }
+.c22-app-workspace .nav2.s2 .n2head .nt { display: none; }
 /* Editing a page block by block: each block a plain Markdown field, with a bar below it (add a block after it,
    delete it, its ID). Not part of the mockup, which left editing for later; added here in its look. */
 .c22-app-workspace .bedit { margin: 0 0 calc(12 * var(--app-workspace-space)); }
