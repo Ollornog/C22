@@ -3354,7 +3354,13 @@ document.addEventListener('basecoat:initialized', function (e) {
       return;
     }
     var tr = e.target.closest('tbody tr[data-value]');
-    if (tr) oeffne(table, tr);
+    if (!tr) return;
+    // Like a file manager: what a double click opens is the selection afterwards (its first click may have unselected it).
+    leereTabelle(table);
+    setze(tr, true);
+    anker.set(table, tr);
+    meldeAuswahl(table, 'replace');
+    oeffne(table, tr);
   });
   // Pointing: the row and the merged cells over it, or a merged cell and its rows.
   function ueber(zeilen) {

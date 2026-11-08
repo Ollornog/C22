@@ -3804,9 +3804,17 @@
   }
   /* A selectable table lights what a click would take (c22.js data-hover): the row with the merged
      cells over it, or a merged cell with its rows. What a double click opens is bold. */
-  .table[data-variant='levels'][data-selectable] tbody tr[data-hover] > td:not([data-merged]),
-  .table[data-variant='levels'][data-selectable] td[data-merged][data-hover] {
+  .table[data-variant='levels'][data-selectable] tbody tr[data-hover]:not([data-state='selected']) > td:not([data-merged]),
+  .table[data-variant='levels'][data-selectable] td[data-merged][data-hover]:not([data-state]) {
     background-color: var(--accent);
+  }
+  /* Pointing at what is selected keeps the selection and deepens it a little. */
+  .table[data-variant='levels'][data-selectable] tbody tr[data-hover][data-state='selected'] > td:not([data-merged]),
+  .table[data-variant='levels'][data-selectable] td[data-merged][data-hover][data-state='selected'] {
+    background-color: color-mix(in oklab, var(--selection) 88%, var(--foreground));
+  }
+  .table[data-variant='levels'][data-selectable] td[data-merged][data-hover][data-state='partial'] {
+    background-color: color-mix(in oklab, var(--selection) 60%, transparent);
   }
   .table[data-variant='levels'] [data-open-target],
   .table[data-variant='levels'] [data-open-target] :is(a, span) { font-weight: 700; }
