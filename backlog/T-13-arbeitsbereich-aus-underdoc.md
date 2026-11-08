@@ -2,7 +2,7 @@
 id: T-13
 type: Task
 title: Arbeitsbereich mit drei Spalten aus UnderDoc übernehmen
-status: in-arbeit
+status: erledigt
 milestone: M-2
 tags: [bausteine, layout, underdoc]
 created: 2026-11-08
@@ -51,4 +51,4 @@ jede App setzt ihr Aussehen selbst darauf).
 Bewusst nicht in C22, weil App-Sache: Reiter ziehen und schließen, mehrere Fenster, Inhalt des Kontextmenüs, was „Neu“
 anlegt. Der Verlauf am allgemeinen Reiter und die Inhaltsmarkierung sind ein `.dropdown-menu`.
 
-Offen: UnderDoc stellt um (zweiter Punkt von „Fertig, wenn“).
+UnderDoc hat umgestellt (UnderDoc PR #24, 2026-11-08). In UnderDoc bleiben nur sein Aussehen aus dem Entwurf (`shell.css`: die Maße an `.workspace` und ein paar Teile der eigenen Seiten) und App-Verhalten (`shell.js`: Fenster und Spalten nachladen, Aktionen im Menü eines Eintrags, Theme, Suchtasten). Damit ist „Fertig, wenn“ in der Sache erfüllt.
