@@ -69,7 +69,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   on the root. Light and dark from the C22 roles, print shows the active document only. Loaded with every pack.
 - **Conventions, rule 14:** every selector in `c22/static/css/app-*.css` names its root class `.c22-app-<name>`; the axis
   suite scans those files like `components.css`.
-
+- **App frame:** `data-head="bar"` makes the head one row over rail and content, its groups lined up from the start with space
+  between them; the axis grid rules of the head apply only without it. Third example in `blocks/navigation/app-frame.html`.
+- **Filter menus:** `.filter-menus`, one row of filter buttons (sign or icon, count, text): links switch a filter, a
+  `.dropdown-menu` lists a group as menu (`data-an` = on, `data-teil` = partly on, dashed, so state is not colour alone),
+  `span[role=separator]` splits button groups. The split button `.filter-split` lets the link take the whole group while
+  the arrow opens its menu at the start of the whole button; instead of the arrow a plain button may sit beside (e.g. clear).
+  Examples in `components/filter-bar.html`.
+- **Levels table:** a link with `data-follow` opens on a click (explorer tables otherwise select on a click); the content of a
+  merged cell (`td[data-merged] > div`) sticks under the table head while its rows scroll by (`--levels-sticky-top`). Example
+  in `blocks/tables/merge-table.html`.
+- **Archive:** `archive/` keeps removed built work (head rows, head over the rail, centred head bar, breadcrumb menu step,
+  panel tools, bold open target) with a header each; never built or shipped. Rule in `CLAUDE.md`.
 - **Workspace:** new block `.workspace` (`blocks/navigation/workspace.html`), one grid with a top row (`.workspace-top`:
   brand, search, New) over three columns and a tab row (`.workspace-tabs`) beside it. Columns are `.workspace-nav` with
   `data-level` 1-3; nav1 and nav2 snap to `data-step` 0-3 (icon, icon with text below, text, icon with text beside), nav3

@@ -1,0 +1,44 @@
+/* ARCHIVE: not built, not shipped. See archive/README.md.
+   What:  Head rows over rail and panel: a centred brand row ([data-frame-center]) and a row with two ends ([data-frame-split], organisation at the start, account at the end, wrapping when they do not fit); menus in a head row open from a full-height trigger.
+   Why archived: Beispiel-App moved to one head bar (data-head="bar"); nothing uses the rows any more.
+   Last live in commit e0e7e1d (c22/static/css/components.css, inside @layer components). */
+  /* A menu in a head row (account, organisation) opens from a full-height row trigger. */
+  .app-frame-head > div > .dropdown-menu { min-width: 0; }
+  .app-frame-head > div > .dropdown-menu > button { width: 100%; height: 2.25rem; justify-content: space-between; }
+  .app-frame-head :is(h1, h2, [data-frame-title]) {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: var(--text-sm);
+    font-weight: 650;
+  }
+  .app-frame-head > div > :is(.input, .input-group, form) { flex: 1 1 auto; min-width: 0; }
+  /* A centred head row ([data-frame-center], the brand): its content sits in the middle of the head, the menu button (narrow
+     screens) stays at the start. */
+  .app-frame-head > div[data-frame-center],
+  .app-frame[data-head] > .app-frame-head > div[data-frame-center] {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    padding-inline: 0;
+  }
+  .app-frame[data-head] > .app-frame-head > div[data-frame-center] > :not([data-frame-menu]) { padding-inline-start: 0; }
+  .app-frame-head > div[data-frame-center] > [data-frame-menu] { position: absolute; inset-inline-start: 0.25rem; }
+  /* A head row with two ends ([data-frame-split], e.g. account at the start and organisation at the end, each with its glyph on the
+     outer side): when both do not fit on one line, the second wraps under the first, close to it and still at the end. */
+  .app-frame-head > div[data-frame-split],
+  .app-frame[data-head] > .app-frame-head > div[data-frame-split] {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    column-gap: 0.5rem;
+    row-gap: 0.125rem;
+    padding-inline: 0.25rem 0;
+  }
+  .app-frame-head > div[data-frame-split] > *,
+  .app-frame[data-head] > .app-frame-head > div[data-frame-split] > :not([data-frame-axis]) { min-width: 0; max-width: 100%; padding-inline-start: 0; }
+  .app-frame-head > div[data-frame-split] > :last-child:not(:first-child) { margin-inline-start: auto; }
+  .app-frame-head > div[data-frame-split] > .dropdown-menu > button { width: auto; max-width: 100%; justify-content: flex-start; padding-inline: 0.375rem; }
+  .app-frame-head > div[data-frame-split] > .dropdown-menu > button > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

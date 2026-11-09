@@ -38,17 +38,24 @@ the look per component.
 | Multi-line code block | `<pre class="code-block"><code>…</code>` — copy button via `.btn.code-block-copy` + `[data-copy]`, line numbers via `data-line-numbers` | `code-block.html` |
 | Scrollable area | the token scrollbar is the **global default** (arrowless) — no class needed; variants via `class="scrollbar"` + `data-size`/`data-track`/`data-buttons`; rounded scroll containers get the track inset automatically (`data-scrollbar-inset` to force/disable) | `scrollbar.html` |
 | Popover / menu / dropdown / listbox | `[data-popover]` + `role="menu"`/`"menuitem"`/`"option"` | `dropdown-menu.html`, `select.html`, `combobox.html` |
-| Application frame (rail + panel) | `.app-frame` + `.sidebar` with `data-variant="rail"` / `"panel"`, toggle via `[data-panel-toggle]`; with a head over both (brand, title, search; drawer below md): `data-head` + `header.app-frame-head`, menu button `[data-frame-menu]` | `sidebar.html`, `blocks/navigation/app-frame.html` |
+| Application frame (rail + panel) | `.app-frame` + `.sidebar` with `data-variant="rail"` / `"panel"`, toggle via `[data-panel-toggle]`; with a head over both (brand, title, search; drawer below md): `data-head` + `header.app-frame-head`, menu button `[data-frame-menu]`; `data-head="bar"` makes the head one row over rail and content, its groups lined up from the start | `sidebar.html`, `blocks/navigation/app-frame.html` |
 | Workspace (three columns, tabs, head of the window) | `.workspace` > `.workspace-top`, `.workspace-tabs`, `.workspace-nav[data-level][data-step]` + `[data-grip]`, `.workspace-main`; entries `.workspace-item`, list `.workspace-tree`; sizes as `--workspace-*` on `.workspace`; stored widths via `data-workspace-store` + `workspace-boot.js` | `blocks/navigation/workspace.html` |
 | An app's approved mockup taken over whole (its own class names) | root class `.c22-app-<name>` on the element the app renders into, everything inside scoped to it (rule 14); lengths via `--app-<name>-space/-text/-radius` | `blocks/navigation/app-workspace.html` |
 | Filters with sign, count and text | `class="filter-bar"` | `filter-bar.html` |
-| Table with hierarchy lines, row selection | `class="table" data-variant="levels"` + `data-selectable` | `blocks/tables/merge-table.html` |
+| One row of filter buttons, groups as menus | `class="filter-menus"`: links, `.dropdown-menu` (state `data-an` / `data-teil`), `span[role=separator]`; split button `.filter-split` (link takes the group, arrow menu or a plain button beside it) | `filter-bar.html` |
+| Table with hierarchy lines, row selection | `class="table" data-variant="levels"` + `data-selectable` (`="explorer"` adds opening; a link with `data-follow` opens on a click; merged-cell content in a `div` sticks under the head, `--levels-sticky-top`) | `blocks/tables/merge-table.html` |
 | Page title as path | `class="breadcrumb" data-variant="title"`, last step is the `<h1>` | `breadcrumb.html` |
 | Stack of messages, closable alert | `class="alert-stack"`, `.btn-close` as direct child of `.alert` | `alert.html` |
 | Confirmation before an action | `[data-confirm="text"]` or `form[data-confirm]`, never `confirm()` | `alert-dialog.html` |
 | Floating button with counter | `class="btn" data-fab` | `button.html` |
 
 Do **not** write `<button class="inline-flex rounded-md px-3 py-2 …">` when `.btn` exists, and so on.
+
+## Archive instead of delete
+
+Built work that is taken out (a component, a variant, a rule set, a behaviour that worked) is not deleted: move it to
+[`archive/`](archive/README.md) with a header (what, why, last live commit) and a line in the archive's README. The archive is
+never built or shipped; pruning it is a separate, deliberate step.
 
 ## Tokens, not fixed colours
 

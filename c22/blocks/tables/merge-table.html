@@ -186,4 +186,27 @@
       </table>
     </div>
   </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Scrollender Ebenen-Tabelle (<code>data-selectable="explorer"</code>): der Inhalt einer verschmolzenen Zelle steht in einem <code>div</code> und klebt unter dem Tabellenkopf, solange seine Zeilen durchlaufen (<code>td[data-merged] &gt; div</code>; die App setzt <code>--levels-sticky-top</code> auf die Höhe eines klebenden Kopfs, sonst 0). Links mit <code>data-follow</code> (Code, Name) öffnen schon bei einem Klick; ein Klick sonst in der Zeile wählt sie nur.</span>
+    <div class="w-full max-h-56 overflow-auto rounded-md border">
+      <table class="table" data-variant="levels" data-selectable="explorer" aria-multiselectable="true">
+        <colgroup><col class="w-44"><col class="w-24"><col class="w-16"><col class="w-24"><col></colgroup>
+        <thead>
+          <tr><th>Kunde</th><th>Haus</th><th>Etage</th><th>Code</th><th>Tür</th></tr>
+        </thead>
+        <tbody>
+          <tr data-level="1" tabindex="0" data-value="K-1004" aria-selected="false"><td data-merged="1" rowspan="6"><div>Musterwerk<small>Beispielstadt</small></div></td><td data-merged="2" rowspan="6"><div>Haus A</div></td><td data-merged="3" rowspan="3"><div>EG</div></td><td class="font-mono"><a href="#" data-follow>K-1004</a></td><td class="font-medium"><a href="#" data-follow>Dachzugang</a></td></tr>
+          <tr tabindex="0" data-value="K-1006" aria-selected="false"><td class="font-mono"><a href="#" data-follow>K-1006</a></td><td class="font-medium"><a href="#" data-follow>Hörsaal</a></td></tr>
+          <tr tabindex="0" data-value="K-1007" aria-selected="false"><td class="font-mono"><a href="#" data-follow>K-1007</a></td><td class="font-medium"><a href="#" data-follow>Archiv</a></td></tr>
+          <tr data-level="3" tabindex="0" data-value="K-1002" aria-selected="false"><td data-merged="3" rowspan="3"><div>1. OG</div></td><td class="font-mono"><a href="#" data-follow>K-1002</a></td><td class="font-medium"><a href="#" data-follow>Foyer</a></td></tr>
+          <tr tabindex="0" data-value="K-1005" aria-selected="false"><td class="font-mono"><a href="#" data-follow>K-1005</a></td><td class="font-medium"><a href="#" data-follow>Müllraum</a></td></tr>
+          <tr tabindex="0" data-value="K-1008" aria-selected="false"><td class="font-mono"><a href="#" data-follow>K-1008</a></td><td class="font-medium"><a href="#" data-follow>Labor</a></td></tr>
+          <tr data-level="1" tabindex="0" data-value="K-2001" aria-selected="false"><td data-merged="1" rowspan="4"><div>Stadtwerke Probstadt<small>Probstadt</small></div></td><td data-merged="2" rowspan="4"><div>Zentrale</div></td><td data-merged="3" rowspan="4"><div>UG</div></td><td class="font-mono"><a href="#" data-follow>K-2001</a></td><td class="font-medium"><a href="#" data-follow>Technikraum</a></td></tr>
+          <tr tabindex="0" data-value="K-2002" aria-selected="false"><td class="font-mono"><a href="#" data-follow>K-2002</a></td><td class="font-medium"><a href="#" data-follow>Tiefgarage</a></td></tr>
+          <tr tabindex="0" data-value="K-2003" aria-selected="false"><td class="font-mono"><a href="#" data-follow>K-2003</a></td><td class="font-medium"><a href="#" data-follow>Lager</a></td></tr>
+          <tr tabindex="0" data-value="K-2004" aria-selected="false"><td class="font-mono"><a href="#" data-follow>K-2004</a></td><td class="font-medium"><a href="#" data-follow>Werkstatt</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>

@@ -1,0 +1,36 @@
+/* ARCHIVE: not built, not shipped. See archive/README.md.
+   What:  Head bar (data-head="bar") as three columns: brand at the start, a middle group (scan, search, new) centred, organisation and
+          account at the end; below md the middle group wraps under the brand.
+   Why archived: Beispiel-App moved search, scan and new into the page head of the content and puts organisation and account next to the
+          brand; the bar now lines its groups up from the start.
+   Last live in commit 7507e07 (c22/static/css/components.css, inside @layer components). */
+  /* Head as one bar over the whole frame (data-head="bar"): brand at the start, a middle group (scan, search, new) in the centre,
+     organisation and account at the end; rail, panel and content start below it. Below md it is the top bar as usual. */
+  .app-frame[data-head='bar'] > .app-frame-head,
+  .app-frame[data-head='bar']:not(:has(> .sidebar[data-variant='panel'])) > .app-frame-head {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(16rem, 38rem) minmax(0, 1fr);
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.375rem 0.75rem;
+    border-inline-end: 0;
+  }
+  .app-frame[data-head='bar'] > .app-frame-head > div,
+  .app-frame[data-head='bar'] > .app-frame-head > div:first-child {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+    padding: 0;
+  }
+  .app-frame[data-head='bar'] > .app-frame-head > div:last-child { justify-content: flex-end; }
+  .app-frame[data-head='bar'] > .app-frame-head > div > form { flex: 1 1 auto; min-width: 0; }
+  .app-frame[data-head='bar'] > .sidebar[data-variant='rail'],
+  .app-frame[data-head='bar'] > .sidebar[data-variant='panel'] { grid-row: 2; }
+  .app-frame[data-head='bar'] > main { grid-row: 2; }
+  @media (width < 48rem) {
+    .app-frame[data-head='bar'] > .app-frame-head,
+    .app-frame[data-head='bar']:not(:has(> .sidebar[data-variant='panel'])) > .app-frame-head { grid-template-columns: minmax(0, 1fr) auto; }
+    .app-frame[data-head='bar'] > .app-frame-head > div:nth-child(2) { grid-column: 1 / -1; grid-row: 2; }
+  }

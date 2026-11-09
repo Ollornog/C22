@@ -379,6 +379,13 @@ def verhalten(r: Report, b: Browser, basis: str) -> None:
       link.click();
       return { zu, auf, esc, wieder, nachLink: f.hasAttribute('data-menu-open') };
     })()""")
+    # Below md every frame with a head is one column, with or without a panel: the main area is as wide as the frame.
+    einspaltig = h.js("""(() => [...document.querySelectorAll('.app-frame[data-head]')].map(f => {
+      const fr = f.getBoundingClientRect(), m = f.querySelector(':scope > main').getBoundingClientRect();
+      return { cols: getComputedStyle(f).gridTemplateColumns.split(' ').length, main: Math.abs(m.width - fr.width) < 1, bar: f.dataset.head === 'bar' };
+    }))()""")
+    r.check("Rahmen mit Kopf: unter md eine Spalte, der Inhalt so breit wie der Rahmen (auch ohne Spalte, auch als Leiste)",
+            len(einspaltig) >= 3 and any(x["cols"] == 1 for x in einspaltig) and all(x["cols"] == 1 and x["main"] for x in einspaltig) and any(x["bar"] for x in einspaltig), str(einspaltig))
     r.check("Rahmen mit Kopf: unter md zu, das Menü öffnet Leiste und Spalte, die Leiste liegt oben (ihre Menüs öffnen über der Spalte)",
             schublade["zu"] == {"leiste": "none", "spalte": "none"} and schublade["auf"] == {"leiste": "block", "spalte": "block", "leisteOben": True, "offen": "false", "expanded": "true"},
             str(schublade))
