@@ -3925,6 +3925,16 @@
     font-weight: 500;
     color: var(--foreground);
   }
+  /* The content of a merged cell (wrapped in a div) stays in view while its rows scroll by: it sticks under the table head
+     (--levels-sticky-top, the head's height where the head sticks too) until the cell leaves at the top. The cell must not clip
+     (a clipping cell would be the frame the content sticks to), so the div cuts long names instead. */
+  .table[data-variant='levels'] td[data-merged]:has(> div) { overflow: visible; }
+  .table[data-variant='levels'] td[data-merged] > div {
+    position: sticky;
+    top: var(--levels-sticky-top, 0px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
   .table[data-variant='levels'] td[data-merged] small {
     display: block;
     overflow: hidden;
