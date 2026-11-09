@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **App workspace:** in nav2 an entry open for now draws a thin line on the left, one kept open a thick one (4px).
 - **App workspace:** in nav2 only an entry kept open (`data-pinned`) draws the line on the left; one open for now keeps
   just its background. This replaces the pin, and the favorite star is gone, as everything in nav2 is sorted by
   dragging. At the step Text the head of nav2 shows only the plus of New, so it is no longer cut off.
@@ -39,6 +40,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **App workspace:** selected entries in nav2 and nav3 (`[aria-selected="true"]` on `.row`, `.collrow`, `.navitem`), tinted
+  and framed; an entry a drag lands onto (`.drop-into` on `.row` and `.cheadrow`), with the ghost faint (`.ghost.lift.over`)
+  and the gap keeping its place unseen (`.dropgap.idle`); a count on the ghost of several entries (`.ghost.lift .count`);
+  and `.win.zone-open`, a window entries open in when dropped on it.
 - **App workspace:** New as the command menu of C22 inside a menu of the workspace (`.cmdpop` with `.command`), so typing
   filters it; a name written in place in nav2 or nav3 (`.collrow.ren`, `.renin`).
 - **App workspace:** lines and spaces between entries of nav2 and nav3 (`.deco` with `data-deco="line"` or `"space"`),
