@@ -3769,7 +3769,15 @@
     border-radius: 0 calc(var(--radius-md) - 1px) calc(var(--radius-md) - 1px) 0;
     color: var(--muted-foreground);
   }
-  .filter-menus > .filter-split > :is(a, .dropdown-menu > button):hover { background-color: var(--accent); color: var(--accent-foreground); }
+  /* Instead of the arrow a plain button may sit beside (e.g. ✕ to clear what the filter is about). */
+  .filter-menus > .filter-split > button {
+    height: auto;
+    padding-inline: 0.25rem;
+    border-inline-start: 1px solid var(--border);
+    border-radius: 0 calc(var(--radius-md) - 1px) calc(var(--radius-md) - 1px) 0;
+    color: var(--muted-foreground);
+  }
+  .filter-menus > .filter-split > :is(a, button, .dropdown-menu > button):hover { background-color: var(--accent); color: var(--accent-foreground); }
   .filter-menus > .filter-split[data-an] {
     background-color: var(--card);
     border-color: var(--foreground);
@@ -3777,7 +3785,7 @@
   }
   .filter-menus > .filter-split[data-teil] { border-style: dashed; border-color: var(--foreground); }
   .filter-menus > .filter-split:is([data-an], [data-teil]) > a > small { color: var(--foreground); }
-  .filter-menus > .filter-split:is([data-an], [data-teil]) > .dropdown-menu { border-inline-start-color: var(--foreground); }
+  .filter-menus > .filter-split:is([data-an], [data-teil]) > :is(.dropdown-menu, button) { border-inline-start-color: var(--foreground); }
   /* A vertical separator between groups of buttons (e.g. which doors, then what about them). */
   .filter-menus > [role='separator'] { align-self: stretch; width: 1px; margin-inline: 0.25rem; background-color: var(--border); }
   .filter-menus > a[aria-current='true'] > small,
