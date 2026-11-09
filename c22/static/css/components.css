@@ -3098,7 +3098,8 @@
   .app-frame[data-head] > .sidebar[data-variant='panel'] nav > section:first-child { padding-top: 0.5rem; }
 
   @media (width < 48rem) {
-    .app-frame[data-head] {
+    .app-frame[data-head],
+    .app-frame[data-head]:not(:has(> .sidebar[data-variant='panel'])) {
       grid-template-columns: minmax(0, 1fr);
       grid-template-rows: auto minmax(0, 1fr);
     }
