@@ -1,0 +1,14 @@
+/*
+ * Archived 2026-11-09. Lines on the edge of an entry where a dragged one would land, in nav2 and nav3 (.drop-before,
+ * .drop-after), a frame for a drop onto an entry or onto nav2 (.drop-into on .row, .cheadrow, #clist, .nav2).
+ * Why: the maintainer found the line jumping from one edge to the other of each gap; a gap the entry moves into
+ * replaced it (UnderDoc, 2026-11-08; C22 #108). The frame onto an entry came back on its own later (.drop-into).
+ * Last live: 8be2e6d.
+ */
+.c22-app-workspace .navitem.drop-before, .c22-app-workspace .row.drop-before { box-shadow: inset 0 3px 0 var(--primary); border-radius: 0; }
+.c22-app-workspace .navitem.drop-after, .c22-app-workspace .row.drop-after { box-shadow: inset 0 -3px 0 var(--primary); border-radius: 0; }
+.c22-app-workspace .row.drop-into, .c22-app-workspace .cheadrow.drop-into { background: var(--accent); box-shadow: inset 0 0 0 2px var(--primary); }
+.c22-app-workspace #clist.drop-into, .c22-app-workspace .nav2.drop-into { outline: 2px dashed var(--foreground); outline-offset: -2px; border-radius: calc(6 * var(--app-workspace-radius)); }
+.c22-app-workspace .collrow.drop-before::before, .c22-app-workspace .collrow.drop-after::before { content: ""; position: absolute; left: 0; right: 0; height: 2px; background: var(--primary); z-index: 2; pointer-events: none; }
+.c22-app-workspace .collrow.drop-before::before { top: -1px; }
+.c22-app-workspace .collrow.drop-after::before { bottom: -1px; }

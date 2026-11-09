@@ -22,6 +22,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Archive:** the lines on the edge of an entry where a dragged one landed, the floating picture of a dragged entry and
+  the box trial of children in nav2, taken out earlier today, now lie in `archive/` instead of being gone.
+
 - **App workspace:** while dragging, entries do not answer the pointer, so nothing lights up under it. Each open collection
   in nav3 begins with a band of its own (`.cheadrow` on `--muted`, more space above), set apart from the one before.
 - **App workspace:** the command menu of New keeps a scrollbar, which the vendor's command menu hides.
@@ -48,6 +51,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **App workspace:** `c22/static/js/app-workspace-drag.js`, dragging entries of nav2 and nav3 as approved in UnderDoc: the
+  entry is carried through the list as it looks when held, up and down between entries, onto one after waiting a moment
+  on its middle, deeper at once to the right; the lists are measured once without it, so nothing slides away from under
+  the pointer; Escape gives up. The app decides what may go where and what a drop does (`C22AppWorkspaceDrag.attach`).
+  The gallery has an example to try it, and the browser suite drags it.
 - **App workspace:** a collection that lies inside another can be shown in nav2 as well; the entry only points at it
   (`.collrow[data-alias]`, its name slanted). This replaces the trial of children in a box (`.collgroup`, `.collkids`,
   `.collrow.nest`), which is gone. A right click menu (`.ctxpop`) scrolls when it is longer than the window.

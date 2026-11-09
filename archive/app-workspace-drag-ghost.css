@@ -1,0 +1,14 @@
+/*
+ * Archived 2026-11-09. A picture of a dragged entry floating at the pointer: its look and width (.ghost.lift), faint while
+ * over an entry it would go onto (.over), and a count for several entries (.count).
+ * Why: the maintainer wanted the entry to move through the list as it looks when held, not to pop out and cover the
+ * rest (C22 #110). Tabs keep their plain label (.ghost).
+ * Last live: 54096d6.
+ */
+/* Dragging pulls the entry out: the ghost carries its look and its width, and a gap opens where it would land, the
+   entries around it sliding apart (2026-11-08). The gap is dashed, so it reads without colour. */
+body:has(> .c22-app-workspace) > .ghost.lift { display: flex; align-items: center; gap: calc(6 * var(--app-workspace-space)); max-width: none; min-height: calc(30 * var(--app-workspace-space)); padding: calc(3 * var(--app-workspace-space)) calc(8 * var(--app-workspace-space)); background: var(--card); color: var(--foreground); border: 1px solid var(--ring); opacity: .94; }
+body:has(> .c22-app-workspace) > .ghost.lift span { overflow: hidden; text-overflow: ellipsis; }
+body:has(> .c22-app-workspace) > .ghost.lift svg { width: calc(16 * var(--app-workspace-space)); height: calc(16 * var(--app-workspace-space)); flex: none; fill: none; stroke: currentColor; stroke-width: calc(var(--icon-stroke) * 0.85); stroke-linecap: round; stroke-linejoin: round; }
+body:has(> .c22-app-workspace) > .ghost.lift.over { opacity: .35; }
+body:has(> .c22-app-workspace) > .ghost.lift .count { margin-left: auto; flex: none; padding: 0 calc(6 * var(--app-workspace-space)); border-radius: calc(9 * var(--app-workspace-radius)); background: var(--primary); color: var(--primary-foreground); font-size: calc(11 * var(--app-workspace-text)); font-weight: 600; line-height: calc(18 * var(--app-workspace-space)); }
