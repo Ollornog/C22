@@ -22,6 +22,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **App workspace:** a dragged entry moves through the list as it looks when held: `.dropgap` holds it, framed by a dashed
+  line, faint while it waits (`.dropgap.idle`), with a plus when it is copied (`.dropgap.copy`); the floating picture of a
+  list entry (`.ghost.lift` and its count) is gone, tabs keep their label. A collection in nav2 can be framed as the place
+  of a drop (`.collrow.drop-into`). The line of a collection kept open in nav2 is 3px; the name of an open collection in
+  nav3 reads as a heading; the filter of New is a plain line without a box; the tab menu carries icons.
 - **App workspace:** in nav2 an entry open for now draws a thin line on the left, one kept open a thick one (4px).
 - **App workspace:** in nav2 only an entry kept open (`data-pinned`) draws the line on the left; one open for now keeps
   just its background. This replaces the pin, and the favorite star is gone, as everything in nav2 is sorted by
