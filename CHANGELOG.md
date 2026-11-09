@@ -22,6 +22,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **App workspace:** while dragging, entries do not answer the pointer, so nothing lights up under it. Each open collection
+  in nav3 begins with a band of its own (`.cheadrow` on `--muted`, more space above), set apart from the one before.
+- **App workspace:** the command menu of New keeps a scrollbar, which the vendor's command menu hides.
 - **App workspace:** a dragged entry moves through the list as it looks when held: `.dropgap` holds it, framed by a dashed
   line, faint while it waits (`.dropgap.idle`), with a plus when it is copied (`.dropgap.copy`); the floating picture of a
   list entry (`.ghost.lift` and its count) is gone, tabs keep their label. A collection in nav2 can be framed as the place
