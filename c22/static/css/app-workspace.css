@@ -787,3 +787,9 @@ body.dragging .c22-app-workspace :is(.row, .collrow, .navitem, .cheadrow, .chead
 .c22-app-workspace .cheadrow + ul.t.top { margin-top: calc(4 * var(--app-workspace-space)); }
 /* The command menu of New keeps a scrollbar, so a long list shows that there is more (2026-11-09). */
 .c22-app-workspace .cmdpop .command [role="menu"] { scrollbar-width: thin; }
+
+/* A trial: collections inside a collection show in nav2 inside the box of their parent, each level a step further in
+   (2026-11-09). */
+.c22-app-workspace .collgroup { border: 1px solid var(--border); border-radius: calc(7 * var(--app-workspace-radius)); padding: calc(2 * var(--app-workspace-space)); }
+.c22-app-workspace .collkids { padding-left: calc(10 * var(--app-workspace-space)); }
+.c22-app-workspace .collrow.nest .navitem { min-height: calc(30 * var(--app-workspace-space)); }

@@ -48,6 +48,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **App workspace:** a collection with its children in nav2, as a trial: `.collgroup` boxes the parent and its children,
+  `.collkids` steps each level in, `.collrow.nest` is a child.
 - **App workspace:** selected entries in nav2 and nav3 (`[aria-selected="true"]` on `.row`, `.collrow`, `.navitem`), tinted
   and framed; an entry a drag lands onto (`.drop-into` on `.row` and `.cheadrow`), with the ghost faint (`.ghost.lift.over`)
   and the gap keeping its place unseen (`.dropgap.idle`); a count on the ghost of several entries (`.ghost.lift .count`);
