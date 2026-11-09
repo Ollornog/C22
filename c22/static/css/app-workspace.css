@@ -743,6 +743,19 @@ body:has(> .c22-app-workspace) > .ghost { position: fixed; z-index: 50; pointer-
 .c22-app-workspace .bslash button[aria-selected="true"], .c22-app-workspace .bslash button:hover:not(:disabled) { background: var(--accent); color: var(--accent-foreground); }
 .c22-app-workspace .bslash button:disabled { color: var(--muted-foreground); }
 .c22-app-workspace .bslash small { margin-left: auto; font-size: calc(11 * var(--app-workspace-text)); }
+/* In reading, a handle at the left of every block, shown on hover, opens the block's menu (UnderDoc, 2026-11-09). */
+.c22-app-workspace .doc [data-b] { position: relative; }
+.c22-app-workspace .bhandle { position: absolute; left: calc(-28 * var(--app-workspace-space)); top: calc(2 * var(--app-workspace-space)); width: calc(22 * var(--app-workspace-space)); height: calc(24 * var(--app-workspace-space)); display: grid; place-items: center; border-radius: calc(5 * var(--app-workspace-radius)); color: var(--muted-foreground); opacity: 0; }
+.c22-app-workspace .bhandle svg { width: calc(15 * var(--app-workspace-space)); height: calc(15 * var(--app-workspace-space)); }
+.c22-app-workspace :is([data-b]:hover, [data-b]:focus-within) > .bhandle, .c22-app-workspace .bhandle[aria-expanded="true"] { opacity: 1; }
+.c22-app-workspace .bhandle:hover, .c22-app-workspace .bhandle[aria-expanded="true"] { background: var(--accent); color: var(--accent-foreground); }
+.c22-app-workspace .bmenu { position: absolute; left: calc(-28 * var(--app-workspace-space)); top: calc(28 * var(--app-workspace-space)); z-index: 6; width: calc(240 * var(--app-workspace-space)); padding: calc(4 * var(--app-workspace-space)); border: 1px solid var(--border); border-radius: calc(8 * var(--app-workspace-radius)); background: var(--popover); color: var(--popover-foreground); box-shadow: 0 6px 18px color-mix(in oklab, var(--foreground) 16%, transparent); }
+.c22-app-workspace .bmenu button { display: flex; align-items: center; gap: calc(8 * var(--app-workspace-space)); width: 100%; padding: calc(6 * var(--app-workspace-space)) calc(8 * var(--app-workspace-space)); border-radius: calc(6 * var(--app-workspace-radius)); text-align: left; font-size: calc(13 * var(--app-workspace-text)); }
+.c22-app-workspace .bmenu button svg { width: calc(16 * var(--app-workspace-space)); height: calc(16 * var(--app-workspace-space)); flex: none; }
+.c22-app-workspace .bmenu button:hover:not(:disabled) { background: var(--accent); color: var(--accent-foreground); }
+.c22-app-workspace .bmenu button:disabled { color: var(--muted-foreground); }
+.c22-app-workspace .bmenu small { margin-left: auto; font-family: var(--font-mono); font-size: calc(11 * var(--app-workspace-text)); color: var(--muted-foreground); }
+.c22-app-workspace .bmenu .bused { margin-top: calc(4 * var(--app-workspace-space)); padding: calc(6 * var(--app-workspace-space)) calc(8 * var(--app-workspace-space)) calc(3 * var(--app-workspace-space)); border-top: 1px solid var(--border); font-size: calc(12 * var(--app-workspace-text)); color: var(--muted-foreground); }
 /* Reading or editing: a square button, icon only, at the left of the head of a document, as tall as its path and title
    together (UnderDoc, 2026-11-09). Pressed means editing; the icon says which (book, pencil, lock), not only the fill. */
 .c22-app-workspace .tools:has(> .dstatus) { padding-left: calc(82 * var(--app-workspace-space)); }
@@ -768,7 +781,7 @@ body:has(> .c22-app-workspace) > .ghost { position: fixed; z-index: 50; pointer-
     color-scheme: light;
     display: block; height: auto;
   }
-  .c22-app-workspace :is(.side, .rail, .tabrow, .status, .winbar, .aidrawer, .newwin, .toc, .fdrawer, .pop, .ctxpop, .toast, .cblk, .blk, .grip, .btool, .bplus, .bslash, .dstatus),
+  .c22-app-workspace :is(.side, .rail, .tabrow, .status, .winbar, .aidrawer, .newwin, .toc, .fdrawer, .pop, .ctxpop, .toast, .cblk, .blk, .grip, .btool, .bplus, .bslash, .dstatus, .bhandle, .bmenu),
   body:has(> .c22-app-workspace) > .ghost { display: none !important; }
   .c22-app-workspace .tools > :not(.dtitle) { display: none; }
   .c22-app-workspace .tools { display: block; padding: 0; border: 0; }
