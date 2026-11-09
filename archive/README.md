@@ -16,3 +16,6 @@ Fixes and refactors of live code are not archived; neither are experiments that 
 | [`sidebar-panel-tools.css`](sidebar-panel-tools.css) | Panel header with tools (`header[data-tools]`, `[data-tools-wide]`) | 2026-11-09 |
 | [`table-open-target.css`](table-open-target.css), [`table-open-target.js`](table-open-target.js) | Bold "what a double click opens" in explorer tables (`data-open-target`) | 2026-11-09 |
 | [`app-frame-head-bar-centred.css`](app-frame-head-bar-centred.css) | Head bar with a centred middle group (three columns) | 2026-11-09 |
+| [`app-workspace-drop-lines.css`](app-workspace-drop-lines.css) | Lines on the edge of an entry where a dragged one lands, frames for a drop onto nav2 | 2026-11-09 |
+| [`app-workspace-drag-ghost.css`](app-workspace-drag-ghost.css) | A picture of a dragged entry floating at the pointer, with a count | 2026-11-09 |
+| [`app-workspace-nav2-children-box.css`](app-workspace-nav2-children-box.css) | The children of a collection in nav2, inside its box (a trial) | 2026-11-09 |

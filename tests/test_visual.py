@@ -671,6 +671,43 @@ def arbeitsbereich(r: Report, b: Browser, basis: str) -> None:
     s.medium("")
     r.check("Arbeitsbereich: auf Papier nur Titel und Inhalt",
             papier == {"top": "none", "tabs": "none", "nav": "none", "werkzeug": "none", "titel": "block", "inhalt": "block"}, str(papier))
+    # Dragging (app-workspace-drag.js), on the example to try it: up and down between entries, waiting on the middle of
+    # one puts it below that one, Escape gives up, and the entry is held in the list as it looks.
+    zug = s.js("""(async () => {
+      const box = document.querySelector('[data-drag-demo]');
+      box.scrollIntoView({ block: 'center' });
+      const pause = ms => new Promise(r => setTimeout(r, ms));
+      const row = n => [...box.querySelectorAll('.row')].find(x => !x.closest('.dropgap') && x.textContent.trim() === n);
+      const oben = () => [...box.querySelectorAll('ul.t.top > li > .row')].filter(n => n.closest('li').style.display !== 'none').map(n => n.textContent.trim()).join(' ');
+      const zieh = async (von, nach, anteil, warten, abbrechen) => {
+        const a = row(von).getBoundingClientRect(), x = a.left + a.width / 2, y = a.top + a.height / 2;
+        row(von).dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, button: 0, clientX: x, clientY: y, pointerId: 1 }));
+        window.dispatchEvent(new PointerEvent('pointermove', { bubbles: true, clientX: x, clientY: y + 8, pointerId: 1 }));
+        await pause(60);
+        const b = row(nach).getBoundingClientRect(), ty = b.top + b.height * anteil;
+        window.dispatchEvent(new PointerEvent('pointermove', { bubbles: true, clientX: x, clientY: ty, pointerId: 1 }));
+        await pause(warten);
+        const gehalten = [...box.querySelectorAll('.dropgap.held .row')].map(n => n.textContent.trim()).join();
+        const gerahmt = [...box.querySelectorAll('.drop-into')].map(n => n.textContent.trim()).join();
+        if (abbrechen) document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+        else window.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, clientX: x, clientY: ty, pointerId: 1 }));
+        await pause(20);
+        return { gehalten, gerahmt, danach: oben() };
+      };
+      const start = oben();
+      const hoch = await zieh('Kran', 'Turm', 0.1, 200, false);
+      const esc = await zieh('Strom', 'Turm', 0.1, 100, true);
+      const drauf = await zieh('Antennen', 'Turm', 0.5, 450, false);
+      const unter = [...row('Turm').closest('li').querySelectorAll(':scope > ul > li > .row')].map(n => n.textContent.trim()).join();
+      return { start, hoch, esc, drauf, unter, uebrig: box.querySelectorAll('.dropgap').length };
+    })()""")
+    r.check("Arbeitsbereich: Ziehen trägt den Eintrag, wie er aussieht, und legt ihn zwischen die Einträge",
+            zug["start"] == "Turm Antennen Strom Kran" and zug["hoch"] == {"gehalten": "Kran", "gerahmt": "", "danach": "Kran Turm Antennen Strom"}, str(zug))
+    r.check("Arbeitsbereich: Escape bricht das Ziehen ab, nichts bleibt zurück",
+            zug["esc"] == {"gehalten": "Strom", "gerahmt": "", "danach": "Kran Turm Antennen Strom"} and zug["uebrig"] == 0, str(zug))
+    r.check("Arbeitsbereich: kurz auf der Mitte eines Eintrags warten legt darunter",
+            zug["drauf"]["gerahmt"] == "Turm" and zug["unter"] == "Antennen" and zug["drauf"]["danach"] == "Kran Turm Strom", str(zug))
+
     s.sende("Page.close")
 
     h = b.seite(390, 844)
