@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **Docs:** CLAUDE.md no longer names `text-[11px]` in example labels as allowed; the axes suite fails on it.
 - **App workspace:** the ghost of a drag takes the tokens of the workspace; it hangs on `<body>`, outside the root, so
   its padding fell back to nothing.
 - **Panel:** a button group directly in a panel section stays a row; the vendor stacked every group of a section.

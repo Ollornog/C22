@@ -136,8 +136,8 @@ adjacent `text-xs`/`text-sm`.
 
 Utility-based on semantic HTML (shadcn-flavoured — see `typography.html`), no `.prose`-style wrapper class.
 Keep it consistent: secondary/help text is `text-muted-foreground`; small text is `text-sm`/`text-xs`;
-error/validation text is `text-destructive text-xs`. Don't introduce ad-hoc sizes (`text-[13px]`); the only
-sanctioned literal size is `<code class="text-[11px]">` inside example labels.
+error/validation text is `text-destructive text-xs`. Don't introduce ad-hoc sizes (`text-[13px]`), not even in example
+labels: code there is a plain `<code>`, its size comes from the label (the axes suite fails on `text-[11px]` in markup).
 
 ## Layout of the repo
 
