@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **App workspace:** the ghost of a drag takes the tokens of the workspace; it hangs on `<body>`, outside the root, so
+  its padding fell back to nothing.
 - **Panel:** a button group directly in a panel section stays a row; the vendor stacked every group of a section.
 - **Package:** the wheel now carries `static/fonts/`, so Inter no longer goes missing behind `url(../fonts/inter.woff2)`.
 - **Licence:** `c22/static/fonts/OFL.txt` ships next to Inter, as the SIL Open Font License demands for every copy.
@@ -20,6 +22,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **App workspace:** while dragging, entries do not answer the pointer, so nothing lights up under it. Each open collection
+  in nav3 begins with a band of its own (`.cheadrow` on `--muted`, more space above), set apart from the one before.
+- **App workspace:** the command menu of New keeps a scrollbar, which the vendor's command menu hides.
+- **App workspace:** a dragged entry moves through the list as it looks when held: `.dropgap` holds it, framed by a dashed
+  line, faint while it waits (`.dropgap.idle`), with a plus when it is copied (`.dropgap.copy`); the floating picture of a
+  list entry (`.ghost.lift` and its count) is gone, tabs keep their label. A collection in nav2 can be framed as the place
+  of a drop (`.collrow.drop-into`). The line of a collection kept open in nav2 is 3px; the name of an open collection in
+  nav3 reads as a heading; the filter of New is a plain line without a box; the tab menu carries icons.
+- **App workspace:** in nav2 an entry open for now draws a thin line on the left, one kept open a thick one (4px).
+- **App workspace:** in nav2 only an entry kept open (`data-pinned`) draws the line on the left; one open for now keeps
+  just its background. This replaces the pin, and the favorite star is gone, as everything in nav2 is sorted by
+  dragging. At the step Text the head of nav2 shows only the plus of New, so it is no longer cut off.
+- **App workspace:** dragging in nav2 and nav3 opens a gap where the entry would land (`.dropgap`, dashed, so it reads
+  without colour) instead of a line on one edge or the other of each entry; the ghost (`.ghost.lift`) carries the look
+  and the width of the entry. The lines and frames of the old marks (`.drop-before`, `.drop-after`, `.drop-into` on
+  entries of nav2 and nav3, on `#clist` and `.nav2`) are gone; tabs keep theirs.
+
 - **Levels table:** the top line of the first level no longer doubles its width; colour alone marks it.
 
 ### Removed
@@ -29,6 +48,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **App workspace:** a collection with its children in nav2, as a trial: `.collgroup` boxes the parent and its children,
+  `.collkids` steps each level in, `.collrow.nest` is a child.
+- **App workspace:** selected entries in nav2 and nav3 (`[aria-selected="true"]` on `.row`, `.collrow`, `.navitem`), tinted
+  and framed; an entry a drag lands onto (`.drop-into` on `.row` and `.cheadrow`), with the ghost faint (`.ghost.lift.over`)
+  and the gap keeping its place unseen (`.dropgap.idle`); a count on the ghost of several entries (`.ghost.lift .count`);
+  and `.win.zone-open`, a window entries open in when dropped on it.
+- **App workspace:** New as the command menu of C22 inside a menu of the workspace (`.cmdpop` with `.command`), so typing
+  filters it; a name written in place in nav2 or nav3 (`.collrow.ren`, `.renin`).
+- **App workspace:** lines and spaces between entries of nav2 and nav3 (`.deco` with `data-deco="line"` or `"space"`),
+  dragged like an entry; and a line between the entries of nav2 that shows where a dragged one lands.
+- **App workspace:** editing a page block by block, `.bedit` (a plain Markdown field) with `.bbar` below it (add a
+  block after it, delete it, its ID); the mockup left editing for later. Shown as a third example in the gallery.
+- **App workspace:** new building block `.c22-app-workspace` (`c22/static/css/app-workspace.css`, gallery
+  `blocks/navigation/app-workspace.html`): the workspace of an approved clickable mockup, taken over whole for the app that
+  renders that markup (UnderDoc). Every rule sits under the one root class, inside it the class names are the ones the app's
+  script emits, so its markup runs unchanged and nothing matches on a page without the root. Every length reads an axis
+  through `--app-workspace-space`, `-text` and `-radius` (1px at the default density, type scale and radius), so at vega it
+  is the mockup to the pixel; starting column widths `--app-workspace-nav1` … `-nav3`, fixed colours and shadows are tokens
+  on the root. Light and dark from the C22 roles, print shows the active document only. Loaded with every pack.
+- **Conventions, rule 14:** every selector in `c22/static/css/app-*.css` names its root class `.c22-app-<name>`; the axis
+  suite scans those files like `components.css`.
 - **App frame:** `data-head="bar"` makes the head one row over rail and content, its groups lined up from the start with space
   between them; the axis grid rules of the head apply only without it. Third example in `blocks/navigation/app-frame.html`.
 - **Filter menus:** `.filter-menus`, one row of filter buttons (sign or icon, count, text): links switch a filter, a

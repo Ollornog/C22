@@ -37,7 +37,8 @@ PACK_DIR = CSS / "packs"
 MARKUP_DIRS = ("c22/components", "c22/blocks", "c22/charts", "c22/typeset")
 # Die Kanon-Regeln selbst gehören mit geprüft: eine Component kann ihre Achse auch
 # über eine @apply-Kette in components.css verlieren (so blieb `.bubble` rund).
-KANON = ("c22/static/css/components.css",)
+KANON = ("c22/static/css/components.css",
+         *sorted(f"c22/static/css/{p.name}" for p in (ROOT / "c22" / "static" / "css").glob("app-*.css")))
 GENERATOR = ("gallery/build.py", "gallery/landing.py", "gallery/legal.py", "gallery/i18n.py")
 
 r = Report("Achsen — Packs und Components")

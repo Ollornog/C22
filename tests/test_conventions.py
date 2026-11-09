@@ -472,6 +472,57 @@ def r13_rtl_demos() -> list[str]:
     return treffer
 
 
+# ── Regel 14: App-Bausteine bleiben unter ihrer Wurzelklasse ─────────────────
+# c22/static/css/app-<name>.css übernimmt das ganze Aussehen einer App (z. B. app-workspace.css aus
+# einem freigegebenen Entwurf) mit den Klassennamen, die deren Skript ausgibt — `.brand`, `.avatar`,
+# `.marker`, `.row`, `.tab` … Ohne Gehege träfen diese Regeln C22s eigene Klassen und jede andere App.
+# Darum muss JEDER Selektor dort die Wurzelklasse `.c22-app-<name>` nennen (als Element selbst, als
+# Vorfahre oder in `:has(…)` am body/html, das die Wurzel direkt hält). Eine Seite ohne die Wurzel
+# kann so nichts davon treffen.
+APP_CSS = sorted((ROOT / "c22" / "static" / "css").glob("app-*.css"))
+
+
+def _css_selektoren(text: str) -> list[str]:
+    """Alle Selektoren einer CSS-Datei, @media/@supports aufgelöst, ohne Kommentare."""
+    text = re.sub(r"/\*.*?\*/", "", text, flags=re.S)
+    aus: list[str] = []
+    for kopf in re.findall(r"([^{}]+)\{", text):
+        kopf = kopf.strip()
+        if not kopf or kopf.startswith("@"):
+            continue
+        tiefe, teil = 0, ""
+        for z in kopf + ",":
+            tiefe += z in "([" 
+            tiefe -= z in ")]"
+            if z == "," and tiefe == 0:
+                aus.append(" ".join(teil.split()))
+                teil = ""
+            else:
+                teil += z
+    return [a for a in aus if a]
+
+
+def _ungehegt(text: str, wurzel: str) -> list[str]:
+    muster = re.compile(re.escape(wurzel) + r"(?![\w-])")
+    return [s for s in _css_selektoren(text) if not muster.search(s)]
+
+
+def r14_app_gehege() -> list[str]:
+    treffer: list[str] = []
+    for p in APP_CSS:
+        wurzel = "." + "c22-" + p.stem
+        for sel in _ungehegt(p.read_text(encoding="utf-8"), wurzel):
+            treffer.append(f"{rel(p)}  `{sel}` nennt {wurzel} nicht")
+    return treffer
+
+
+def r14_selbsttest() -> bool:
+    """Die Regel muss einen entlaufenen Selektor finden, auch in @media und hinter einem Komma."""
+    probe = (".c22-app-x .a { color: red; }\n@media (max-width: 1px) { .c22-app-x .b, .c { top: 0; } }\n"
+             "body:has(> .c22-app-x) { margin: 0; }\n.c22-app-xy .d { top: 0; }")
+    return _ungehegt(probe, ".c22-app-x") == [".c", ".c22-app-xy .d"]
+
+
 r = Report("Konventionen — Varianten-Vertrag & Tokens")
 r.check("Regel 1 — keine Literal-Farben im Markup", not (t := r1_literalfarben()), " | ".join(t[:4]))
 r.check("Regel 2 — keine Tailwind-Palette-Klassen", not (t := r2_palette_klassen()), " | ".join(t[:4]))
@@ -495,5 +546,8 @@ r.check("Regel 12 — data-variant nur aus dem festen Vokabular (color-roles.htm
 r.check("Regel 12 — Selbsttest (Vokabular-Regel greift wirklich)", r12_selbsttest())
 r.check("Regel 13 — keine RTL-Demos außerhalb von direction.html",
         not (t := r13_rtl_demos()), " | ".join(t[:6]))
+r.check(f"Regel 14 — App-Bausteine bleiben unter ihrer Wurzelklasse ({len(APP_CSS)} Dateien)",
+        bool(APP_CSS) and not (t := r14_app_gehege()), " | ".join(t[:6]))
+r.check("Regel 14 — Selbsttest (entlaufener Selektor wird gefunden)", r14_selbsttest())
 
 sys.exit(r.done())
