@@ -19,3 +19,4 @@ Fixes and refactors of live code are not archived; neither are experiments that 
 | [`app-workspace-drop-lines.css`](app-workspace-drop-lines.css) | Lines on the edge of an entry where a dragged one lands, frames for a drop onto nav2 | 2026-11-09 |
 | [`app-workspace-drag-ghost.css`](app-workspace-drag-ghost.css) | A picture of a dragged entry floating at the pointer, with a count | 2026-11-09 |
 | [`app-workspace-nav2-children-box.css`](app-workspace-nav2-children-box.css) | The children of a collection in nav2, inside its box (a trial) | 2026-11-09 |
+| [`app-workspace-block-bar.css`](app-workspace-block-bar.css) | The bar below each block in editing (UnderDoc): Block below, Delete, Copy address, ID | 2026-11-09 |
