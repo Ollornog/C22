@@ -743,6 +743,11 @@ body:has(> .c22-app-workspace) > .ghost { position: fixed; z-index: 50; pointer-
 .c22-app-workspace .bslash button[aria-selected="true"], .c22-app-workspace .bslash button:hover:not(:disabled) { background: var(--accent); color: var(--accent-foreground); }
 .c22-app-workspace .bslash button:disabled { color: var(--muted-foreground); }
 .c22-app-workspace .bslash small { margin-left: auto; font-size: calc(11 * var(--app-workspace-text)); }
+/* Comments of the database (UnderDoc, 2026-11-09): a reply is indented under its comment, a resolved thread is set back. */
+.c22-app-workspace .cmtrow.reply { margin-left: calc(14 * var(--app-workspace-space)); padding-left: calc(8 * var(--app-workspace-space)); border-left: 2px solid var(--border); }
+.c22-app-workspace .cmtrow.done > p:not(.hint), .c22-app-workspace .cmtrow.done b { color: var(--muted-foreground); }
+.c22-app-workspace .cmtrow .tagrow { margin-top: calc(5 * var(--app-workspace-space)); }
+.c22-app-workspace .addtag.reply { margin-left: calc(14 * var(--app-workspace-space)); width: calc(100% - 14 * var(--app-workspace-space)); }
 /* In reading, a handle at the left of every block, shown on hover, opens the block's menu (UnderDoc, 2026-11-09). */
 .c22-app-workspace .doc [data-b] { position: relative; }
 .c22-app-workspace .bhandle { position: absolute; left: calc(-28 * var(--app-workspace-space)); top: calc(2 * var(--app-workspace-space)); width: calc(22 * var(--app-workspace-space)); height: calc(24 * var(--app-workspace-space)); display: grid; place-items: center; border-radius: calc(5 * var(--app-workspace-radius)); color: var(--muted-foreground); opacity: 0; }
