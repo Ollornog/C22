@@ -49,6 +49,12 @@ the look per component.
 
 Do **not** write `<button class="inline-flex rounded-md px-3 py-2 …">` when `.btn` exists, and so on.
 
+## Archive instead of delete
+
+Built work that is taken out (a component, a variant, a rule set, a behaviour that worked) is not deleted: move it to
+[`archive/`](archive/README.md) with a header (what, why, last live commit) and a line in the archive's README. The archive is
+never built or shipped; pruning it is a separate, deliberate step.
+
 ## Tokens, not fixed colours
 
 Colours, radii and spacing come from **tokens / token utilities** only: `bg-primary`,

@@ -1,0 +1,7 @@
+/* ARCHIVE: not built, not shipped. See archive/README.md.
+   What:  A dropdown menu as a breadcrumb step (e.g. the organisation with its switcher as the first step of a title path), as small as the other steps.
+   Why archived: The organisation moved into the head bar.
+   Last live in commit e0e7e1d (c22/static/css/components.css, inside @layer components). */
+  /* A menu as a breadcrumb step (e.g. the organisation with its switcher): as small as the other steps. */
+  .breadcrumb .dropdown-menu > .btn { height: auto; gap: 0.25rem; padding: 0 0.25rem; font-size: inherit; font-weight: inherit; color: inherit; }
+  .breadcrumb .dropdown-menu > .btn > svg { width: 0.875rem; height: 0.875rem; }
