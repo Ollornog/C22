@@ -788,8 +788,8 @@ body.dragging .c22-app-workspace :is(.row, .collrow, .navitem, .cheadrow, .chead
 /* The command menu of New keeps a scrollbar, so a long list shows that there is more (2026-11-09). */
 .c22-app-workspace .cmdpop .command [role="menu"] { scrollbar-width: thin; }
 
-/* A trial: collections inside a collection show in nav2 inside the box of their parent, each level a step further in
+/* A collection that lies inside another, shown in nav2 as well: the entry only points at it, so its name is slanted
    (2026-11-09). */
-.c22-app-workspace .collgroup { border: 1px solid var(--border); border-radius: calc(7 * var(--app-workspace-radius)); padding: calc(2 * var(--app-workspace-space)); }
-.c22-app-workspace .collkids { padding-left: calc(10 * var(--app-workspace-space)); }
-.c22-app-workspace .collrow.nest .navitem { min-height: calc(30 * var(--app-workspace-space)); }
+.c22-app-workspace .collrow[data-alias] .lbl { font-style: italic; }
+/* A right click menu stays inside the window; a long one scrolls. */
+.c22-app-workspace .ctxpop { max-height: calc(100vh - 8 * var(--app-workspace-space)); overflow-y: auto; }
