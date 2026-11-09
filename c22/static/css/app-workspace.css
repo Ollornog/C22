@@ -776,3 +776,14 @@ body:has(> .c22-app-workspace) > .ghost { position: fixed; z-index: 50; pointer-
 /* The filter of New: a plain line to type in, no box of its own inside the menu (2026-11-09). */
 .c22-app-workspace .cmdpop .command > header { background: transparent; border-bottom: 1px solid var(--border); }
 .c22-app-workspace .cmdpop .command > header input:focus, .c22-app-workspace .cmdpop .command > header input:focus-visible { outline: none; box-shadow: none; }
+
+/* While dragging, entries do not answer the pointer: nothing lights up under it, only the place of the drop shows. The
+   app finds that place by where the lists are, not by what is under the pointer (2026-11-09). */
+body.dragging .c22-app-workspace :is(.row, .collrow, .navitem, .cheadrow, .chead, .dtab, button, a) { pointer-events: none; }
+/* Each open collection in nav3 begins with a band of its own, set apart from the one above (2026-11-09). */
+.c22-app-workspace .cheadrow { margin-top: calc(18 * var(--app-workspace-space)); border-top: 0; border-radius: calc(6 * var(--app-workspace-radius)); background: var(--muted); padding-right: calc(4 * var(--app-workspace-space)); }
+.c22-app-workspace .cheadrow .chead { padding-left: calc(8 * var(--app-workspace-space)); }
+.c22-app-workspace .cheadrow.first { margin-top: 0; }
+.c22-app-workspace .cheadrow + ul.t.top { margin-top: calc(4 * var(--app-workspace-space)); }
+/* The command menu of New keeps a scrollbar, so a long list shows that there is more (2026-11-09). */
+.c22-app-workspace .cmdpop .command [role="menu"] { scrollbar-width: thin; }
