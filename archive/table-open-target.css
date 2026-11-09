@@ -2,7 +2,7 @@
    What:  In an explorer table (data-selectable="explorer") what a double click would open is shown bold while pointing:
           the merged cell with data-href, or the row's cell marked data-primary (c22.js sets data-open-target, see
           table-open-target.js).
-   Why archived: SpecDoor shows a link underline on the item's code and name instead (links with data-follow open on a click).
+   Why archived: Beispiel-App shows a link underline on the item's code and name instead (links with data-follow open on a click).
    Last live in commit f2c8dcd (c22/static/css/components.css, inside @layer components). */
   .table[data-variant='levels'] [data-open-target],
   .table[data-variant='levels'] [data-open-target] :is(a, span) { font-weight: 700; }

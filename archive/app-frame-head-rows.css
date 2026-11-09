@@ -1,6 +1,6 @@
 /* ARCHIVE: not built, not shipped. See archive/README.md.
    What:  Head rows over rail and panel: a centred brand row ([data-frame-center]) and a row with two ends ([data-frame-split], organisation at the start, account at the end, wrapping when they do not fit); menus in a head row open from a full-height trigger.
-   Why archived: SpecDoor moved to one head bar (data-head="bar"); nothing uses the rows any more.
+   Why archived: Beispiel-App moved to one head bar (data-head="bar"); nothing uses the rows any more.
    Last live in commit e0e7e1d (c22/static/css/components.css, inside @layer components). */
   /* A menu in a head row (account, organisation) opens from a full-height row trigger. */
   .app-frame-head > div > .dropdown-menu { min-width: 0; }

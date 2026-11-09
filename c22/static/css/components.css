@@ -2733,7 +2733,7 @@
     width: auto;
     height: auto;
     padding: 0;
-    border-radius: 9999px;
+    border-radius: calc(infinity * 1px);
     background: none;
   }
   .dropdown-menu > button:has(> .avatar:only-child):is(:hover, [aria-expanded='true']) { background: none; }

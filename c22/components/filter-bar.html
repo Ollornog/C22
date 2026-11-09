@@ -1,4 +1,4 @@
-<!-- C22-custom: Filter bar. Filter groups (section + heading), each filter shows sign and count with
+<!-- C22-custom: Filter bar (+ compact "filter menus", see the last two examples). Filter groups (section + heading), each filter shows sign and count with
      the text below it, so no separate legend is needed. Pressed = line + underline in primary, not
      colour alone. Buttons toggle aria-pressed through c22.js (`data-single` on a section releases the
      others) and fire `c22:filter`; links (server filters) carry aria-current="true" and are followed. -->
@@ -53,6 +53,65 @@
           <a href="#" ><span><svg data-icon-lu="clock-alert" class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6v6l4 2"/><path d="M20 12v5"/><path d="M20 21h.01"/><path d="M21.25 8.2A10 10 0 1 0 16 21.16"/></svg>196</span><small>Überfällig</small></a>
         </div>
       </section>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Kompakt, eine Zeile (<code>.filter-menus</code>): Link = ein Filter, <code>.dropdown-menu</code> = Gruppe als Menü (<code>menuitemcheckbox</code>), <code>span[role=separator]</code> trennt Knopfgruppen. An = Linie plus Unterstrich in Primary (<code>data-an</code>), teilweise an = gestrichelte Linie (<code>data-teil</code>)</span>
+    <div class="filter-menus" role="toolbar" aria-label="Filter">
+      <a href="#" aria-current="true"><span><svg data-icon-lu="door-closed" class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 12h.01"/><path d="M18 20V6a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v14"/><path d="M2 20h20"/></svg>3.073</span><small>Alle Türen</small></a>
+      <a href="#"><span><svg data-icon-lu="clock" class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>310</span><small>Bald fällig</small></a>
+      <span role="separator"></span>
+      <div class="dropdown-menu" id="c22-fm-a" data-an>
+        <button type="button" id="c22-fm-a-trigger" aria-haspopup="menu" aria-controls="c22-fm-a-menu" aria-expanded="false"><span><svg data-icon-lu="triangle-alert" class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>2</span><small>Mängel<svg data-icon-lu="chevron-down" class="size-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></small></button>
+        <div id="c22-fm-a-popover" data-popover aria-hidden="true">
+          <div role="menu" id="c22-fm-a-menu" aria-labelledby="c22-fm-a-trigger">
+            <button type="button" role="menuitemcheckbox" aria-checked="true"><span data-indicator><svg data-icon-lu="check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Kritisch</button>
+            <button type="button" role="menuitemcheckbox" aria-checked="true"><span data-indicator><svg data-icon-lu="check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Offen</button>
+          </div>
+        </div>
+      </div>
+      <div class="dropdown-menu" id="c22-fm-b" data-teil>
+        <button type="button" id="c22-fm-b-trigger" aria-haspopup="menu" aria-controls="c22-fm-b-menu" aria-expanded="false"><span><svg data-icon-lu="clock" class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>1</span><small>Fristen<svg data-icon-lu="chevron-down" class="size-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></small></button>
+        <div id="c22-fm-b-popover" data-popover aria-hidden="true">
+          <div role="menu" id="c22-fm-b-menu" aria-labelledby="c22-fm-b-trigger">
+            <button type="button" role="menuitemcheckbox" aria-checked="true"><span data-indicator><svg data-icon-lu="check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Überfällig</button>
+            <button type="button" role="menuitemcheckbox" aria-checked="false"><span data-indicator><svg data-icon-lu="check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Bald fällig</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Geteilter Knopf (<code>.filter-split</code>): der Link schaltet die ganze Gruppe, der Pfeil öffnet ihr Menü am Anfang des ganzen Knopfs; Zustand (<code>data-an</code> / <code>data-teil</code>) am Rahmen. Statt des Pfeils darf ein einfacher Knopf stehen, z. B. ✕ zum Leeren</span>
+    <div class="filter-menus" role="toolbar" aria-label="Filter">
+      <div class="filter-split" data-an>
+        <a href="#"><span><svg data-icon-lu="triangle-alert" class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>2</span><small>Mängel</small></a>
+        <div class="dropdown-menu" id="c22-fm-c">
+          <button type="button" id="c22-fm-c-trigger" aria-haspopup="menu" aria-controls="c22-fm-c-menu" aria-expanded="false" aria-label="Mängel wählen"><svg data-icon-lu="chevron-down" class="size-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+          <div id="c22-fm-c-popover" data-popover aria-hidden="true">
+            <div role="menu" id="c22-fm-c-menu" aria-labelledby="c22-fm-c-trigger">
+              <button type="button" role="menuitemcheckbox" aria-checked="true"><span data-indicator><svg data-icon-lu="check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Kritisch</button>
+              <button type="button" role="menuitemcheckbox" aria-checked="true"><span data-indicator><svg data-icon-lu="check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Offen</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="filter-split" data-teil>
+        <a href="#"><span><svg data-icon-lu="clock" class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>1</span><small>Fristen</small></a>
+        <div class="dropdown-menu" id="c22-fm-d">
+          <button type="button" id="c22-fm-d-trigger" aria-haspopup="menu" aria-controls="c22-fm-d-menu" aria-expanded="false" aria-label="Fristen wählen"><svg data-icon-lu="chevron-down" class="size-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+          <div id="c22-fm-d-popover" data-popover aria-hidden="true">
+            <div role="menu" id="c22-fm-d-menu" aria-labelledby="c22-fm-d-trigger">
+              <button type="button" role="menuitemcheckbox" aria-checked="true"><span data-indicator><svg data-icon-lu="check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Überfällig</button>
+              <button type="button" role="menuitemcheckbox" aria-checked="false"><span data-indicator><svg data-icon-lu="check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Bald fällig</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="filter-split" data-an>
+        <a href="#"><span><svg data-icon-lu="door-closed" class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 12h.01"/><path d="M18 20V6a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v14"/><path d="M2 20h20"/></svg>12</span><small>Haus A › EG</small></a>
+        <button type="button" aria-label="Ort leeren"><svg data-icon-lu="x" class="size-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+      </div>
     </div>
   </div>
 </div>

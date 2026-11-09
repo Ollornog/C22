@@ -1,7 +1,7 @@
 /* ARCHIVE: not built, not shipped. See archive/README.md.
    What:  Head bar (data-head="bar") as three columns: brand at the start, a middle group (scan, search, new) centred, organisation and
           account at the end; below md the middle group wraps under the brand.
-   Why archived: SpecDoor moved search, scan and new into the page head of the content and puts organisation and account next to the
+   Why archived: Beispiel-App moved search, scan and new into the page head of the content and puts organisation and account next to the
           brand; the bar now lines its groups up from the start.
    Last live in commit 7507e07 (c22/static/css/components.css, inside @layer components). */
   /* Head as one bar over the whole frame (data-head="bar"): brand at the start, a middle group (scan, search, new) in the centre,
