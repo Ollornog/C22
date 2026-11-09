@@ -743,13 +743,14 @@ body:has(> .c22-app-workspace) > .ghost { position: fixed; z-index: 50; pointer-
 .c22-app-workspace .bslash button[aria-selected="true"], .c22-app-workspace .bslash button:hover:not(:disabled) { background: var(--accent); color: var(--accent-foreground); }
 .c22-app-workspace .bslash button:disabled { color: var(--muted-foreground); }
 .c22-app-workspace .bslash small { margin-left: auto; font-size: calc(11 * var(--app-workspace-text)); }
-/* Reading or editing: a large button left of the title says which, in words and an icon, and turns it. */
-.c22-app-workspace .dtline { display: flex; align-items: center; gap: calc(10 * var(--app-workspace-space)); min-width: 0; }
-.c22-app-workspace .dstatus { flex: none; display: inline-flex; align-items: center; gap: calc(6 * var(--app-workspace-space)); height: calc(30 * var(--app-workspace-space)); padding: 0 calc(12 * var(--app-workspace-space)) 0 calc(9 * var(--app-workspace-space)); border: 1px solid var(--border); border-radius: calc(8 * var(--app-workspace-radius)); background: var(--background); color: var(--foreground); font-size: calc(13 * var(--app-workspace-text)); font-weight: 600; }
-.c22-app-workspace .dstatus svg { width: calc(15 * var(--app-workspace-space)); height: calc(15 * var(--app-workspace-space)); }
-.c22-app-workspace .dstatus:hover:not(:disabled) { background: var(--accent); color: var(--accent-foreground); }
-.c22-app-workspace .dstatus[aria-pressed="true"] { background: var(--primary); color: var(--primary-foreground); border-color: var(--primary); }
-.c22-app-workspace .dstatus:disabled { color: var(--muted-foreground); cursor: not-allowed; }
+/* Reading or editing: a square button, icon only, at the left of the head of a document, as tall as its path and title
+   together (UnderDoc, 2026-11-09). Pressed means editing; the icon says which (book, pencil, lock), not only the fill. */
+.c22-app-workspace .tools:has(> .dstatus) { padding-left: calc(82 * var(--app-workspace-space)); }
+.c22-app-workspace .tools > .dstatus { position: absolute; left: calc(12 * var(--app-workspace-space)); top: calc(7 * var(--app-workspace-space)); width: calc(60 * var(--app-workspace-space)); height: calc(60 * var(--app-workspace-space)); display: grid; place-items: center; padding: 0; border: 1px solid var(--border); border-radius: calc(3 * var(--app-workspace-radius)); background: var(--background); color: var(--foreground); }
+.c22-app-workspace .tools > .dstatus svg { width: calc(22 * var(--app-workspace-space)); height: calc(22 * var(--app-workspace-space)); }
+.c22-app-workspace .tools > .dstatus:hover:not(:disabled) { background: var(--accent); color: var(--accent-foreground); }
+.c22-app-workspace .tools > .dstatus[aria-pressed="true"] { background: var(--primary); color: var(--primary-foreground); border-color: var(--primary); }
+.c22-app-workspace .tools > .dstatus:disabled { color: var(--muted-foreground); background: var(--muted); cursor: not-allowed; }
 .c22-app-workspace .bedit textarea { display: block; width: 100%; padding: calc(7 * var(--app-workspace-space)) calc(9 * var(--app-workspace-space)); border: 1px solid var(--border); border-radius: calc(7 * var(--app-workspace-radius)); background: var(--background); color: var(--foreground); font: calc(13 * var(--app-workspace-text))/1.55 var(--font-mono); resize: vertical; }
 .c22-app-workspace .bedit textarea:focus-visible { outline: 2px solid var(--ring); outline-offset: 0; }
 

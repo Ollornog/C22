@@ -53,7 +53,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **App workspace:** editing as Docmost shows it (the idea only): `.btool`, a bar floating above the block being written
   (kind as `select.btype`, formatting, block actions, `.bsep`), `.bplus` at the left of a block, `.bslash` the list of kinds
-  below an empty block, and `.dstatus` beside the title for reading or editing (`.dtline`); `data-bar="open"` shows the bar
+  below an empty block, and `.dstatus`, a square icon button for reading or editing at the left of the head, as tall as path and title (`.tools > .dstatus`); `data-bar="open"` shows the bar
   without focus. The bar below each block (`.bbar`) is archived.
 - **App workspace:** a block embedded from another page in a document (`.doc .embed` with `.embedbody` and a
   `figcaption` link back; `.embed.broken` says why something cannot be shown).
