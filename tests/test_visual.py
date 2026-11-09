@@ -725,6 +725,15 @@ def arbeitsbereich(r: Report, b: Browser, basis: str) -> None:
     r.check("Arbeitsbereich: unter md öffnen nav2 und nav3 über dem Fenster, Escape schließt",
             handy == {"zu": {"nav2": "none", "nav3": "none", "suche": "none"}, "auf": {"nav2": "flex", "nav3": "flex", "ueber": True}, "esc": "none"},
             str(handy))
+    # The app workspace at phone width (UnderDoc, 2026-11-09): nav2 and nav3 over the window take their width from the
+    # workspace (all of it but a strip at the left), not from the column of nav1 they sit in, where nav3 had none.
+    app = h.js("""(() => {
+      const w = document.querySelector('.c22-app-workspace'), m = w.querySelector('.main').getBoundingClientRect();
+      const r = w.querySelector('.rail').getBoundingClientRect(), n3 = w.querySelector('.rail .nav3').getBoundingClientRect();
+      return { leiste: Math.round(r.width), soll: Math.round(Math.min(320, m.width - 76)), nav3: n3.width > 0, rechts: r.right <= m.right + 1 };
+    })()""")
+    r.check("App-Arbeitsbereich: unter md nehmen nav2 und nav3 die Breite vom Arbeitsbereich, nav3 inklusive",
+            abs(app["leiste"] - app["soll"]) <= 1 and app["nav3"] and app["rechts"], str(app))
     h.sende("Page.close")
 
 
