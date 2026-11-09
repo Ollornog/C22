@@ -851,3 +851,22 @@ body.dragging .c22-app-workspace :is(.row, .collrow, .navitem, .cheadrow, .chead
 .c22-app-workspace .doc .embed figcaption { margin-top: calc(6 * var(--app-workspace-space)); font-size: calc(12 * var(--app-workspace-text)); color: var(--muted-foreground); }
 .c22-app-workspace .doc .embed figcaption a { color: inherit; }
 .c22-app-workspace .doc .embed.broken { border-left-color: var(--destructive); color: var(--destructive); font-size: calc(13 * var(--app-workspace-text)); }
+
+/* At phone width nothing is cut off and everything can be reached, before the phone has a layout of its own (UnderDoc,
+   2026-11-09; the layout itself comes later). */
+@media (max-width: 760px) {
+  /* nav2 and nav3 lie over the window and take their width from the whole workspace, not from the column of nav1 they
+     sit in: measured against it, nav3 had no width at all. */
+  .c22-app-workspace .side { position: static; }
+  /* A page with handles, pluses or speech bubbles beside its blocks keeps room for them at both sides: 28 for the
+     handle and the plus, 30 and the 2 of its count for the speech bubble. */
+  .c22-app-workspace .scroll:has(:is(.bhandle, .bplus, .cblk)) { padding-inline: calc(32 * var(--app-workspace-space)); }
+}
+/* A label of nav2 at the stage icon with text below, which a phone always shows, stands like the one of nav1 and ends in
+   dots where it is too long, as the entries there do. */
+.c22-app-workspace .n2lab .lbl { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.c22-app-workspace .col.s1 .n2lab { justify-content: center; font-size: calc(9.5 * var(--app-workspace-text)); }
+/* A touch screen has no hover: what a pointer brings up by hovering is always there, faintly. */
+@media (hover: none) {
+  .c22-app-workspace :is(.bhandle, .bplus, .cblk) { opacity: .45; }
+}

@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **App workspace:** at phone width nothing is cut off and everything can be reached, before the app has a phone layout
+  of its own. nav2 and nav3 over the window take their width from the whole workspace (`.side` no longer positions
+  them; nav3 had no width), a page with handles, pluses or speech bubbles beside its blocks keeps room for them at both
+  sides, a label of nav2 at the stage icon with text below ends in dots, and a touch screen (`hover: none`) shows the
+  handle, the plus and the speech bubble faintly instead of only on hover.
 - **Docs:** CLAUDE.md no longer names `text-[11px]` in example labels as allowed; the axes suite fails on it.
 - **App workspace:** the ghost of a drag takes the tokens of the workspace; it hangs on `<body>`, outside the root, so
   its padding fell back to nothing.
