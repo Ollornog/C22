@@ -15,3 +15,4 @@ Fixes and refactors of live code are not archived; neither are experiments that 
 | [`breadcrumb-menu-step.css`](breadcrumb-menu-step.css) | A dropdown menu as a breadcrumb step | 2026-11-09 |
 | [`sidebar-panel-tools.css`](sidebar-panel-tools.css) | Panel header with tools (`header[data-tools]`, `[data-tools-wide]`) | 2026-11-09 |
 | [`table-open-target.css`](table-open-target.css), [`table-open-target.js`](table-open-target.js) | Bold "what a double click opens" in explorer tables (`data-open-target`) | 2026-11-09 |
+| [`app-frame-head-bar-centred.css`](app-frame-head-bar-centred.css) | Head bar with a centred middle group (three columns) | 2026-11-09 |
