@@ -60,6 +60,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **App workspace:** the look of UnderDoc's page editor (CodeMirror): the bar once above the page (`.cm-ud-page >
+  .btool.cm-ud-bar`), the handle on the marker line of a block, the question in place before a used block goes
+  (`.cm-ud-ask`), the box of an embedding (`.cm-ud-embed`) and the slash menu in the editor's tooltip.
 - **App workspace:** editing as Docmost shows it (the idea only): `.btool`, a bar floating above the block being written
   (kind as `select.btype`, formatting, block actions, `.bsep`), `.bplus` at the left of a block, `.bslash` the list of kinds
   below an empty block, and `.dstatus`, a square icon button for reading or editing at the left of the head, as tall as path and title (`.tools > .dstatus`); `data-bar="open"` shows the bar

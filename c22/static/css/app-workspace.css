@@ -870,3 +870,16 @@ body.dragging .c22-app-workspace :is(.row, .collrow, .navitem, .cheadrow, .chead
 @media (hover: none) {
   .c22-app-workspace :is(.bhandle, .bplus, .cblk) { opacity: .45; }
 }
+
+/* The page editor of UnderDoc (CodeMirror 6, ADR-21 there, 2026-11-09): the bar stays once above the page, the marker
+   line of a block holds its handle, a block used elsewhere asks in place before it goes, an embedding shows as a compact
+   box, and the slash menu sits in a tooltip of the editor. The editor's own typography stays with the editor. */
+.c22-app-workspace .cm-ud-page > .btool.cm-ud-bar { position: sticky; top: 0; bottom: auto; margin-bottom: calc(8 * var(--app-workspace-space)); visibility: visible; opacity: 1; }
+.c22-app-workspace .cm-editor.cm-ud .cm-ud-marker { position: relative; height: 0; }
+.c22-app-workspace .cm-editor.cm-ud .cm-ud-marker[data-active] > .bhandle { opacity: 1; }
+.c22-app-workspace .cm-editor.cm-ud .cm-ud-ask { margin: calc(6 * var(--app-workspace-space)) 0; }
+.c22-app-workspace .cm-editor.cm-ud .cm-ud-ask .chip { margin-left: calc(4 * var(--app-workspace-space)); }
+.c22-app-workspace .cm-editor.cm-ud .cm-ud-embed { display: inline-flex; align-items: baseline; gap: calc(6 * var(--app-workspace-space)); padding: calc(2 * var(--app-workspace-space)) calc(8 * var(--app-workspace-space)); border: 1px solid var(--border); border-radius: calc(6 * var(--app-workspace-radius)); background: var(--muted); font-size: calc(13 * var(--app-workspace-text)); }
+.c22-app-workspace .cm-editor.cm-ud .cm-ud-embed-what { color: var(--muted-foreground); }
+.c22-app-workspace .cm-editor.cm-ud .cm-ud-embed a { color: inherit; text-decoration: underline; }
+.c22-app-workspace .cm-editor.cm-ud .cm-ud-slashbox > .bslash { position: static; }
