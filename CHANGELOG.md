@@ -51,6 +51,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **App workspace:** a block embedded from another page in a document (`.doc .embed` with `.embedbody` and a
+  `figcaption` link back; `.embed.broken` says why something cannot be shown).
 - **App workspace:** `c22/static/js/app-workspace-drag.js`, dragging entries of nav2 and nav3 as approved in UnderDoc: the
   entry is carried through the list as it looks when held, up and down between entries, onto one after waiting a moment
   on its middle, deeper at once to the right; the lists are measured once without it, so nothing slides away from under
