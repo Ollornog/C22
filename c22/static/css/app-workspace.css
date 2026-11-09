@@ -747,6 +747,8 @@ body:has(> .c22-app-workspace) > .ghost { position: fixed; z-index: 50; pointer-
 .c22-app-workspace .cmtrow.reply { margin-left: calc(14 * var(--app-workspace-space)); padding-left: calc(8 * var(--app-workspace-space)); border-left: 2px solid var(--border); }
 .c22-app-workspace .cmtrow.done > p:not(.hint), .c22-app-workspace .cmtrow.done b { color: var(--muted-foreground); }
 .c22-app-workspace .cmtrow .tagrow { margin-top: calc(5 * var(--app-workspace-space)); }
+.c22-app-workspace .cmtrow .tagc { display: inline-flex; align-items: center; gap: calc(4 * var(--app-workspace-space)); }
+.c22-app-workspace .cmtrow .tagc svg { width: calc(12 * var(--app-workspace-space)); height: calc(12 * var(--app-workspace-space)); }
 .c22-app-workspace .addtag.reply { margin-left: calc(14 * var(--app-workspace-space)); width: calc(100% - 14 * var(--app-workspace-space)); }
 /* In reading, a handle at the left of every block, shown on hover, opens the block's menu (UnderDoc, 2026-11-09). */
 .c22-app-workspace .doc [data-b] { position: relative; }
