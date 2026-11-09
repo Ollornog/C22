@@ -793,3 +793,12 @@ body.dragging .c22-app-workspace :is(.row, .collrow, .navitem, .cheadrow, .chead
 .c22-app-workspace .collrow[data-alias] .lbl { font-style: italic; }
 /* A right click menu stays inside the window; a long one scrolls. */
 .c22-app-workspace .ctxpop { max-height: calc(100vh - 8 * var(--app-workspace-space)); overflow-y: auto; }
+
+/* A block embedded from another page (UnderDoc, 2026-11-09): framed on the left, its source below it as a link back. What
+   cannot be shown says why, framed in the colour of an error and in words. */
+.c22-app-workspace .doc .embed { margin: calc(12 * var(--app-workspace-space)) 0; padding: calc(6 * var(--app-workspace-space)) calc(12 * var(--app-workspace-space)); border-left: 3px solid var(--border); border-radius: 0 calc(6 * var(--app-workspace-radius)) calc(6 * var(--app-workspace-radius)) 0; background: color-mix(in oklab, var(--muted) 55%, transparent); }
+.c22-app-workspace .doc .embed .embedbody > :first-child { margin-top: 0; }
+.c22-app-workspace .doc .embed .embedbody > :last-child { margin-bottom: 0; }
+.c22-app-workspace .doc .embed figcaption { margin-top: calc(6 * var(--app-workspace-space)); font-size: calc(12 * var(--app-workspace-text)); color: var(--muted-foreground); }
+.c22-app-workspace .doc .embed figcaption a { color: inherit; }
+.c22-app-workspace .doc .embed.broken { border-left-color: var(--destructive); color: var(--destructive); font-size: calc(13 * var(--app-workspace-text)); }
