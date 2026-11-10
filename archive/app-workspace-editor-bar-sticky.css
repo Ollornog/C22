@@ -1,0 +1,5 @@
+/* Archived 2026-11-10 from c22/static/css/app-workspace.css (last live commit c62b967).
+   What: the bar of UnderDoc's page editor, sticky at the top of the editor inside the page.
+   Why: the maintainer wanted it integrated into the page as a row of the window between head and content (.win > .btool.edbar).
+*/
+.c22-app-workspace .cm-ud-page > .btool.cm-ud-bar { position: sticky; top: 0; bottom: auto; margin-bottom: calc(8 * var(--app-workspace-space)); visibility: visible; opacity: 1; }

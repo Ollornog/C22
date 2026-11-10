@@ -874,7 +874,6 @@ body.dragging .c22-app-workspace :is(.row, .collrow, .navitem, .cheadrow, .chead
 /* The page editor of UnderDoc (CodeMirror 6, ADR-21 there, 2026-11-09): the bar stays once above the page, the marker
    line of a block holds its handle, a block used elsewhere asks in place before it goes, an embedding shows as a compact
    box, and the slash menu sits in a tooltip of the editor. The editor's own typography stays with the editor. */
-.c22-app-workspace .cm-ud-page > .btool.cm-ud-bar { position: sticky; top: 0; bottom: auto; margin-bottom: calc(8 * var(--app-workspace-space)); visibility: visible; opacity: 1; }
 .c22-app-workspace .cm-editor.cm-ud .cm-ud-marker { position: relative; height: 0; }
 .c22-app-workspace .cm-editor.cm-ud .cm-ud-marker[data-active] > .bhandle { opacity: 1; }
 .c22-app-workspace .cm-editor.cm-ud .cm-ud-ask { margin: calc(6 * var(--app-workspace-space)) 0; }
@@ -883,3 +882,10 @@ body.dragging .c22-app-workspace :is(.row, .collrow, .navitem, .cheadrow, .chead
 .c22-app-workspace .cm-editor.cm-ud .cm-ud-embed-what { color: var(--muted-foreground); }
 .c22-app-workspace .cm-editor.cm-ud .cm-ud-embed a { color: inherit; text-decoration: underline; }
 .c22-app-workspace .cm-editor.cm-ud .cm-ud-slashbox > .bslash { position: static; }
+/* The bar of the page editor is a row of the window while the page is written: between the head (.tools) and the
+   content, full width, flat, with a line below as the head has, outside what scrolls (UnderDoc, 2026-11-10). It keeps the
+   parts of .btool and drops the box of the floating bar. */
+.c22-app-workspace .win > .btool.edbar { position: static; flex: none; visibility: visible; opacity: 1; max-width: none; padding: calc(3 * var(--app-workspace-space)) calc(10 * var(--app-workspace-space)); border: 0; border-bottom: 1px solid var(--border); border-radius: 0; background: var(--background); color: inherit; box-shadow: none; }
+/* A block is dragged by its handle, also with a finger; while it is held nothing gets selected. The gap is .dropgap. */
+.c22-app-workspace .bhandle[data-drag] { touch-action: none; cursor: grab; }
+body.ud-bdrag .c22-app-workspace, body.ud-bdrag .c22-app-workspace * { user-select: none; cursor: grabbing !important; }
