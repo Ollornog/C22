@@ -62,7 +62,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **App workspace:** the look of UnderDoc's page editor (CodeMirror): the bar as a row of the window between head and
   content (`.win > .btool.edbar`; the sticky bar inside the editor is archived), a block dragged by its handle
-  (`.bhandle[data-drag]`, `body.ud-bdrag`), the handle on the marker line of a block, the question in place before a used block goes
+  (`.bhandle[data-drag]`, `body.ud-bdrag`), the menu of a handle as compact as the right-click menus (`.bmenu`), a held long block
+  showing only its first lines in its gap (`.doc .dropgap.held`), the handle on the marker line of a block, the question in place before a used block goes
   (`.cm-ud-ask`), the box of an embedding (`.cm-ud-embed`) and the slash menu in the editor's tooltip.
 - **App workspace:** editing as Docmost shows it (the idea only): `.btool`, a bar floating above the block being written
   (kind as `select.btype`, formatting, block actions, `.bsep`), `.bplus` at the left of a block, `.bslash` the list of kinds
