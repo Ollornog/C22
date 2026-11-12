@@ -52,8 +52,16 @@ jobs:
 
       # The browser suite builds the site. Fetched here, before the snapshot below, because the
       # binary is ignored but counts for the residue check.
+      # Cache of the binary (one file per version, checked against the pinned SHA256 before use): a 504 from
+      # github.com releases turned PRs red (2026-11-09). Key = the script, which pins version and checksum.
+      - name: Tailwind-Cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9  # v6.1.0
+        with:
+          path: ~/.cache/c22-tailwind
+          key: c22-tailwind-${{ hashFiles('scripts/fetch-tailwind.sh') }}
+
       - name: Tailwind-CLI holen
-        run: ./scripts/fetch-tailwind.sh
+        run: TAILWIND_CACHE="$HOME/.cache/c22-tailwind" ./scripts/fetch-tailwind.sh
 
       # Der Vorher-Stand macht den Rückstands-Check unten ENTSCHEIDBAR. Er muss NACH
       # der Installation liegen: `pip install -e` erzeugt `*.egg-info`, und ohne diesen

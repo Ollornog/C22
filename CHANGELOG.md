@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- `scripts/fetch-tailwind.sh` checks the binary against a pinned SHA256 and keeps one copy per version in a cache
+  (`TAILWIND_CACHE`, else `$XDG_CACHE_HOME/c22-tailwind`); the CI caches it with `actions/cache`. A 504 from GitHub
+  releases no longer turns a push or a pull request red once the binary has been fetched once.
 - **App workspace:** at phone width nothing is cut off and everything can be reached, before the app has a phone layout
   of its own. nav2 and nav3 over the window take their width from the whole workspace (`.side` no longer positions
   them; nav3 had no width), a page with handles, pluses or speech bubbles beside its blocks keeps room for them at both
