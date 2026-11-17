@@ -1,0 +1,56 @@
+<!-- c22-title: Tageszeile (Wochentag, Datum, Chips, Wert, Saldo) -->
+<!-- C22-custom: one day of a week to fill in, composed from C22's parts (EightPerDay, 2026-11-17): the head names the
+     weekday and the date and carries chips (.badge) for today, a holiday or an absence; below it the value as a duration
+     field, what is due and what was done in muted text, and the balance with its sign (+, −, ±), never colour alone. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Eine Woche (heute, Feiertag, Urlaub, halber Krankheitstag; der Saldo mit Vorzeichen)</span>
+    <div class="grid w-full max-w-md gap-3">
+      <div class="grid gap-2 rounded-md border p-3">
+        <div class="flex flex-wrap items-center gap-2"><span class="font-semibold">Montag</span><span class="text-muted-foreground text-xs tabular-nums">16.11.</span></div>
+        <div class="flex items-center gap-2">
+          <label class="sr-only" for="tag-montag">Stunden am Montag</label>
+          <input class="input w-24 tabular-nums" id="tag-montag" inputmode="decimal" value="8:00" placeholder="0:00" autocomplete="off">
+          <span class="min-w-0 flex-1 text-muted-foreground text-xs tabular-nums">Soll 8:00 · Ist 8:00</span>
+          <span class="font-semibold tabular-nums" aria-label="Saldo ±0:00">±0:00</span>
+        </div>
+      </div>
+      <div class="grid gap-2 rounded-md border p-3">
+        <div class="flex flex-wrap items-center gap-2"><span class="font-semibold">Dienstag</span><span class="text-muted-foreground text-xs tabular-nums">17.11.</span><span class="badge" data-variant="outline">Heute</span></div>
+        <div class="flex items-center gap-2">
+          <label class="sr-only" for="tag-dienstag">Stunden am Dienstag</label>
+          <input class="input w-24 tabular-nums" id="tag-dienstag" inputmode="decimal" value="8:30" placeholder="0:00" autocomplete="off">
+          <span class="min-w-0 flex-1 text-muted-foreground text-xs tabular-nums">Soll 8:00 · Ist 8:30</span>
+          <span class="font-semibold tabular-nums" aria-label="Saldo +0:30">+0:30</span>
+        </div>
+      </div>
+      <div class="grid gap-2 rounded-md border p-3">
+        <div class="flex flex-wrap items-center gap-2"><span class="font-semibold">Mittwoch</span><span class="text-muted-foreground text-xs tabular-nums">18.11.</span><span class="badge" data-variant="secondary"><svg data-icon-lu="calendar" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Buß- und Bettag</span></div>
+        <div class="flex items-center gap-2">
+          <label class="sr-only" for="tag-mittwoch">Stunden am Mittwoch</label>
+          <input class="input w-24 tabular-nums" id="tag-mittwoch" inputmode="decimal" value="" placeholder="0:00" autocomplete="off">
+          <span class="min-w-0 flex-1 text-muted-foreground text-xs tabular-nums">Soll 0:00 · Ist 0:00</span>
+          
+        </div>
+      </div>
+      <div class="grid gap-2 rounded-md border p-3">
+        <div class="flex flex-wrap items-center gap-2"><span class="font-semibold">Donnerstag</span><span class="text-muted-foreground text-xs tabular-nums">19.11.</span><span class="badge" data-variant="secondary">Urlaub</span></div>
+        <div class="flex items-center gap-2">
+          <label class="sr-only" for="tag-donnerstag">Stunden am Donnerstag</label>
+          <input class="input w-24 tabular-nums" id="tag-donnerstag" inputmode="decimal" value="" placeholder="0:00" autocomplete="off">
+          <span class="min-w-0 flex-1 text-muted-foreground text-xs tabular-nums">Soll 0:00 · Ist 0:00</span>
+          
+        </div>
+      </div>
+      <div class="grid gap-2 rounded-md border p-3">
+        <div class="flex flex-wrap items-center gap-2"><span class="font-semibold">Freitag</span><span class="text-muted-foreground text-xs tabular-nums">20.11.</span><span class="badge" data-variant="secondary">Krank, halber Tag</span></div>
+        <div class="flex items-center gap-2">
+          <label class="sr-only" for="tag-freitag">Stunden am Freitag</label>
+          <input class="input w-24 tabular-nums" id="tag-freitag" inputmode="decimal" value="3:00" placeholder="0:00" autocomplete="off">
+          <span class="min-w-0 flex-1 text-muted-foreground text-xs tabular-nums">Soll 4:00 · Ist 3:00</span>
+          <span class="font-semibold tabular-nums" aria-label="Saldo −1:00">−1:00</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

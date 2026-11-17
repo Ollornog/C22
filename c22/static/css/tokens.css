@@ -189,6 +189,9 @@
    * ab (weil --background mitkippt). Etwas stärker dosiert, weil Weiß über Dunkel mehr
    * Anteil braucht, um sichtbar zu sein. */
   --hover-veil-invers: color-mix(in oklab, var(--background) 18%, transparent);
+  /* Ground of a QR code (.qr-code): light in both themes on purpose, a camera reads dark modules on a light
+   * ground (the sanctioned exception, CLAUDE.md: a fixed colour as its own token). */
+  --qr-code-background: oklch(1 0 0);
 }
 
 /* Dark-Theme-Override nur dort, wo ein Token themeabhängig sein MUSS: die destructive-Fläche ist

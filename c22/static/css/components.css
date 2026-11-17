@@ -4289,3 +4289,88 @@
     [data-print] { display: none !important; }
   }
 }
+
+
+/* ============================================================
+ * Tab Bar (.tab-bar) — the navigation of a phone along the bottom edge (asked for by EightPerDay, 2026-11-17).
+ * Fixed to the bottom, above the home indicator (safe area; the page needs viewport-fit=cover), its entries share
+ * the width equally, icon above the label. From md (48rem) on it is gone: there the head has room for the same links.
+ * data-always keeps it at every width. The open page is aria-current="page": filled, bold and with a line on top,
+ * so it does not hang on the colour. The page keeps room below its content itself (e.g. pb-20 below md).
+ * ============================================================ */
+@layer components {
+  .tab-bar {
+    @apply bg-card fixed inset-x-0 bottom-0 z-10 grid auto-cols-fr grid-flow-col gap-1 border-t px-2 pt-1.5;
+    padding-bottom: calc(var(--spacing) * 1.5 + env(safe-area-inset-bottom));
+  }
+  @media (min-width: 48rem) {
+    .tab-bar:not([data-always]) { display: none; }
+  }
+  .tab-bar > :is(a, button) {
+    @apply text-muted-foreground hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring/50 flex min-w-0 flex-col items-center justify-center gap-0.5 rounded-md px-1 py-1.5 text-xs font-medium outline-none focus-visible:ring-[3px];
+  }
+  .tab-bar > :is(a, button) > svg {
+    @apply size-5 shrink-0;
+  }
+  .tab-bar > :is(a, button) > span {
+    @apply max-w-full truncate;
+  }
+  .tab-bar > :is(a, button):is([aria-current='page'], [aria-pressed='true']) {
+    @apply bg-accent text-accent-foreground font-semibold;
+    box-shadow: inset 0 2px 0 var(--primary);
+  }
+}
+
+/* ============================================================
+ * QR code (.qr-code) and a key to type off by hand (.secret-key) — setting up an authenticator app (EightPerDay).
+ * The QR image is square at a size a phone camera reads well and is scaled without smoothing; its frame is light
+ * in both themes, because a camera needs dark modules on a light ground. The key wraps anywhere (it has no spaces)
+ * and is spaced wider, so it can be read off and typed.
+ * ============================================================ */
+@layer components {
+  .qr-code {
+    @apply size-60 rounded-md border p-2;
+    background: var(--qr-code-background);
+    image-rendering: pixelated;
+  }
+  .qr-code[data-size='sm'] { @apply size-40; }
+  .secret-key {
+    @apply font-mono text-sm;
+    overflow-wrap: anywhere;
+    letter-spacing: var(--tracking-widest);
+  }
+}
+
+/* ============================================================
+ * Long lines in a code block: data-wrap breaks them, anywhere if need be (license texts, keys, long URLs), instead of
+ * scrolling sideways (EightPerDay, 2026-11-17). A height limit stays a utility (e.g. max-h-96), the block scrolls then.
+ * ============================================================ */
+@layer components {
+  .code-block[data-wrap] {
+    @apply overflow-y-auto;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+}
+
+/* ============================================================
+ * Collapsible card (details.card): the summary is the card's head, a chevron at its end turns when open, the rest is
+ * the card's body (section, footer). Without JS (EightPerDay, 2026-11-17).
+ * ============================================================ */
+@layer components {
+  details.card > summary {
+    @apply flex cursor-pointer list-none items-center gap-2 rounded-md px-6 font-medium outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50;
+  }
+  details.card[data-size='sm'] > summary { @apply px-4; }
+  details.card > summary::-webkit-details-marker { display: none; }
+  details.card > summary > :is(h2, h3, .card-title) { @apply min-w-0 flex-1 text-base font-medium; }
+  details.card[data-size='sm'] > summary > :is(h2, h3, .card-title) { @apply text-sm; }
+  details.card > summary::after {
+    content: "";
+    @apply bg-muted-foreground ms-auto size-4 shrink-0 transition-transform;
+    mask: var(--chevron-down-icon) center / contain no-repeat;
+  }
+  details.card[open] > summary::after { @apply rotate-180; }
+  /* Closed, the hidden body would still take the card's gap below the summary. */
+  details.card:not([open]) { row-gap: 0; }
+}

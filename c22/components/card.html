@@ -112,4 +112,26 @@
       </footer>
     </div>
   </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Einklappbar (details.card: die summary ist der Kopf, der Pfeil dreht sich beim Öffnen; ohne JS)</span>
+    <div class="grid w-full max-w-sm gap-4">
+      <details class="card" data-size="sm">
+        <summary><h3>Abwesenheit eintragen</h3></summary>
+        <section class="grid gap-3">
+          <div class="field" role="group"><label for="card-abw-art">Art</label><select class="select w-full" id="card-abw-art"><option>Urlaub</option><option>Krank</option></select></div>
+          <button type="button" class="btn" data-variant="outline">Eintragen</button>
+        </section>
+      </details>
+      <details class="card" data-size="sm" open>
+        <summary><h3>Zeitspanne nachtragen</h3></summary>
+        <section class="grid gap-3">
+          <div class="grid grid-cols-2 gap-2">
+            <div class="field" role="group"><label for="card-von">Beginn</label><input class="input tabular-nums" id="card-von" inputmode="numeric" value="8:00" autocomplete="off"></div>
+            <div class="field" role="group"><label for="card-bis">Ende</label><input class="input tabular-nums" id="card-bis" inputmode="numeric" value="16:30" autocomplete="off"></div>
+          </div>
+          <button type="button" class="btn">Speichern</button>
+        </section>
+      </details>
+    </div>
+  </div>
 </div>
