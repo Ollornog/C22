@@ -892,3 +892,46 @@ body.ud-bdrag .c22-app-workspace, body.ud-bdrag .c22-app-workspace * { user-sele
 /* A held block shows in its gap as its first lines, so a long block makes a short gap and the places around it stay in
    reach (UnderDoc, 2026-11-10). */
 .c22-app-workspace .doc .dropgap.held { max-height: 6.5em; overflow: hidden; }
+
+/* The rest of UnderDoc's editor milestone (M-8 part two, 2026-11-17), so the app takes it from here again. */
+/* A block used elsewhere, while the cursor is in it: a light frame round its lines, the corners of the first and last line
+   rounded, the text kept where it stands (the frame takes its room from outside the line), and at the end of its first
+   line where it is used, in words (.cm-ud-usedlabel with .lab), so it does not hang on the colour of the frame. */
+.c22-app-workspace .cm-editor.cm-ud .cm-line.cm-ud-used { margin-inline: calc(-6 * var(--app-workspace-space)); padding-inline: calc(6 * var(--app-workspace-space)); box-shadow: inset 1px 0 0 var(--ring), inset -1px 0 0 var(--ring); }
+.c22-app-workspace .cm-editor.cm-ud .cm-line.cm-ud-used.cm-ud-used-first { padding-top: calc(2 * var(--app-workspace-space)); border-radius: calc(6 * var(--app-workspace-radius)) calc(6 * var(--app-workspace-radius)) 0 0; box-shadow: inset 1px 0 0 var(--ring), inset -1px 0 0 var(--ring), inset 0 1px 0 var(--ring); }
+.c22-app-workspace .cm-editor.cm-ud .cm-line.cm-ud-used.cm-ud-used-last { padding-bottom: calc(2 * var(--app-workspace-space)); border-radius: 0 0 calc(6 * var(--app-workspace-radius)) calc(6 * var(--app-workspace-radius)); box-shadow: inset 1px 0 0 var(--ring), inset -1px 0 0 var(--ring), inset 0 -1px 0 var(--ring); }
+.c22-app-workspace .cm-editor.cm-ud .cm-line.cm-ud-used.cm-ud-used-first.cm-ud-used-last { border-radius: calc(6 * var(--app-workspace-radius)); box-shadow: inset 0 0 0 1px var(--ring); }
+.c22-app-workspace .cm-editor.cm-ud .cm-ud-usedlabel { float: right; margin-left: calc(12 * var(--app-workspace-space)); user-select: none; }
+/* Aligning a block from the menu of its handle: a row of three icon buttons over the whole width of the menu, the one in
+   force pressed (filled and bold, as every .seg). A centred or right-aligned block (text-center, text-right) keeps its menu
+   left-aligned. */
+.c22-app-workspace .bmenu { text-align: left; }
+.c22-app-workspace .bmenu .seg { display: flex; width: 100%; margin: calc(4 * var(--app-workspace-space)) 0 calc(2 * var(--app-workspace-space)); }
+.c22-app-workspace .bmenu .seg button { flex: 1; justify-content: center; width: auto; padding: calc(4 * var(--app-workspace-space)) 0; border-radius: 0; }
+.c22-app-workspace .bmenu .seg button[aria-pressed="true"] { background: var(--primary); color: var(--primary-foreground); }
+/* A .seg whose choice is not the reader's to make (the gear's view, Others can): its buttons are set back and do not
+   answer the pointer; the one in force stays pressed. */
+.c22-app-workspace .seg button:disabled { opacity: .55; cursor: default; }
+.c22-app-workspace .seg button:disabled:not([aria-pressed="true"]):hover { background: transparent; }
+/* Quick notes: each card is a block, its handle and menu sit inside the card at the top right (at the left they would
+   fall into the column beside it), and the text keeps clear of the handle. */
+.c22-app-workspace .keep .kard { position: relative; padding-right: calc(30 * var(--app-workspace-space)); }
+.c22-app-workspace .keep .kard > .bhandle { left: auto; right: calc(4 * var(--app-workspace-space)); top: calc(5 * var(--app-workspace-space)); }
+.c22-app-workspace .keep .kard > .bmenu { left: auto; right: 0; top: calc(32 * var(--app-workspace-space)); }
+.c22-app-workspace .keep .kard > :last-child { margin-bottom: 0; }
+/* A group of tools in the bar that comes and goes with where the cursor is (the table tools): .bgroup, hidden with the
+   attribute hidden. The page editor's bar breaks into a second row when it is narrow instead of scrolling sideways, a
+   group moving as a whole; only a group wider than the bar breaks inside itself. */
+.c22-app-workspace .btool .bgroup { display: flex; flex-wrap: wrap; align-items: center; gap: calc(2 * var(--app-workspace-space)); min-width: 0; }
+.c22-app-workspace .btool .bgroup[hidden] { display: none; }
+.c22-app-workspace .win > .btool.edbar { flex-wrap: wrap; row-gap: calc(2 * var(--app-workspace-space)); overflow: visible; }
+/* Starting a page from a template. In the command menu of New a template is a menu item with its description as a second
+   line (<span>name<small>description</small></span>); in the menu New of the top bar the templates are cards with name and
+   description (.newtypes.tplcards), two lines of description at most. */
+.c22-app-workspace .cmdpop [role="menuitem"] { text-align: left; }
+.c22-app-workspace .cmdpop [role="menuitem"] > span > small { display: block; font-size: calc(11.5 * var(--app-workspace-text)); line-height: 1.35; color: var(--muted-foreground); white-space: normal; }
+.c22-app-workspace .newtypes.tplcards { grid-template-columns: repeat(auto-fill, minmax(calc(150 * var(--app-workspace-space)), 1fr)); gap: calc(6 * var(--app-workspace-space)); margin-bottom: calc(6 * var(--app-workspace-space)); }
+.c22-app-workspace .newtypes.tplcards button { display: grid; grid-template-columns: auto 1fr; align-items: start; column-gap: calc(8 * var(--app-workspace-space)); padding: calc(7 * var(--app-workspace-space)) calc(9 * var(--app-workspace-space)); border: 1px solid var(--border); border-radius: calc(7 * var(--app-workspace-radius)); }
+.c22-app-workspace .newtypes.tplcards button > svg { grid-row: span 2; margin-top: calc(2 * var(--app-workspace-space)); }
+.c22-app-workspace .newtypes.tplcards button > b { font-weight: 600; }
+.c22-app-workspace .newtypes.tplcards button > small { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; font-size: calc(11.5 * var(--app-workspace-text)); line-height: 1.35; color: var(--muted-foreground); }
