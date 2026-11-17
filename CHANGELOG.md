@@ -60,6 +60,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **App workspace:** the rest of UnderDoc's editor milestone, so the app takes it from C22 again: a block used elsewhere
+  framed while the cursor is in it, with where it is used at the end of its first line (`.cm-ud-used`, `-first`, `-last`,
+  `.cm-ud-usedlabel`); aligning a block as a row of three icon buttons in the menu of its handle (`.bmenu .seg`, the menu
+  stays left-aligned in a centred block); quick notes with the handle and its menu inside the card at the top right
+  (`.keep .kard`); a group of tools in the bar that comes and goes, such as the table tools (`.btool .bgroup`, hidden
+  with `hidden`), and the page editor's bar breaking into a second row when it is narrow instead of scrolling sideways;
+  templates in New with their description, as a second line in the command menu (`[role=menuitem] > span > small`) and
+  as cards in the menu New (`.newtypes.tplcards`); a `.seg` button that may not be used set back (`:disabled`). Gallery
+  examples for all of it, and the windows of the editor examples marked `focus`, so a phone shows them.
 - **App workspace:** the look of UnderDoc's page editor (CodeMirror): the bar as a row of the window between head and
   content (`.win > .btool.edbar`; the sticky bar inside the editor is archived), a block dragged by its handle
   (`.bhandle[data-drag]`, `body.ud-bdrag`), the menu of a handle as compact as the right-click menus (`.bmenu`), a held long block
