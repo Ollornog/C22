@@ -76,6 +76,7 @@ BLOCK_KATEGORIEN = [
     ("full-page", "cat_full_page"),
     ("login-signup", "cat_login_signup"),
     ("tables", "cat_tables"),
+    ("data-entry", "cat_data_entry"),
 ]
 
 # (title, basecoat, shadcn, custom) — alphabetisch sortiert (Neusortierung 2026-07-19;
@@ -143,6 +144,7 @@ COMPONENTS: list[tuple[str, bool, bool, bool]] = [
     ("Spinner", True, True, True),
     ("Switch", True, True, False),
     ("Table", True, True, False),
+    ("Tab Bar", False, False, True),
     ("Tabs", True, True, False),
     ("Text Clamp", False, False, True),
     ("Textarea", True, True, False),

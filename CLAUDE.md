@@ -48,6 +48,10 @@ the look per component.
 | Stack of messages, closable alert | `class="alert-stack"`, `.btn-close` as direct child of `.alert` | `alert.html` |
 | Confirmation before an action | `[data-confirm="text"]` or `form[data-confirm]`, never `confirm()` | `alert-dialog.html` |
 | Floating button with counter | `class="btn" data-fab` | `button.html` |
+| Phone navigation along the bottom edge | `nav.tab-bar` with links, open one `aria-current="page"`; gone from md, `data-always` keeps it | `tab-bar.html` |
+| QR code / key to type off by hand | `img.qr-code` / `code.secret-key` | `input-otp.html` |
+| Collapsible card | `details.card` with `summary` as its head | `card.html` |
+| Long lines in a code block wrapped | `.code-block[data-wrap]` | `code-block.html` |
 
 Do **not** write `<button class="inline-flex rounded-md px-3 py-2 …">` when `.btn` exists, and so on.
 

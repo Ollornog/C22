@@ -1,0 +1,32 @@
+<!-- c22-title: Dauer-Eingabe (7:30, 7,5, 7h30m) -->
+<!-- C22-custom: a field for a duration (EightPerDay, 2026-11-17): a text input with inputmode="decimal" (a phone offers
+     digits and the separators), tabular figures, the accepted forms named in the description, a wrong entry marked with
+     aria-invalid and said in words below it. The app reads the value; the pattern only lets the browser say early that
+     it is not a duration. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Feld mit Beschreibung der Schreibweisen</span>
+    <div class="field w-full max-w-xs" role="group">
+      <label for="dauer-1">Arbeitszeit</label>
+      <input class="input tabular-nums" id="dauer-1" inputmode="decimal" placeholder="7:30" value="7:30" autocomplete="off" pattern="\d{1,2}([:.,]\d{1,2})?|\d{1,2}h(\d{1,2}m)?|\d{1,2}m" aria-describedby="dauer-1-hilfe">
+      <p id="dauer-1-hilfe">Als 7:30, 7,5 oder 7h30m.</p>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Falsche Eingabe</span>
+    <div class="field w-full max-w-xs" role="group" data-invalid="true">
+      <label for="dauer-2">Arbeitszeit</label>
+      <input class="input tabular-nums" id="dauer-2" inputmode="decimal" value="7 Stunden" autocomplete="off" aria-invalid="true" aria-describedby="dauer-2-fehler">
+      <p id="dauer-2-fehler" role="alert" class="text-destructive text-xs">Keine Dauer. Bitte als 7:30, 7,5 oder 7h30m.</p>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Kompakt in einer Zeile (w-24, daneben Soll und Ist)</span>
+    <div class="flex w-full max-w-sm items-center gap-2">
+      <label class="sr-only" for="dauer-3">Stunden am Montag</label>
+      <input class="input w-24 tabular-nums" id="dauer-3" inputmode="decimal" placeholder="0:00" value="7,5" autocomplete="off">
+      <span class="min-w-0 flex-1 text-muted-foreground text-xs tabular-nums">Soll 8:00 · Ist 7:30</span>
+      <span class="font-semibold tabular-nums">−0:30</span>
+    </div>
+  </div>
+</div>

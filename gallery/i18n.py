@@ -44,6 +44,7 @@ TEXTE: dict[str, tuple[str, str]] = {
     "cat_full_page": ("Komplette Seite", "Full page"),
     "cat_login_signup": ("Login & Signup", "Login & signup"),
     "cat_tables": ("Tabellen", "Tables"),
+    "cat_data_entry": ("Erfassen", "Data entry"),
     # Beschriftung der Reiterleiste auf der Charts-Seite (nur für aria-label, nicht sichtbar)
     "nav_chart_types": ("Diagrammtypen", "Chart types"),
     # Seiten-Titel (Reiter-Beschriftung ist der Eigenname, der Fenstertitel wird übersetzt)

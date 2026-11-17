@@ -65,6 +65,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Tab Bar** (`nav.tab-bar`): a phone's navigation along the bottom edge, fixed above the home indicator (safe area),
+  entries sharing the width, icon above label, the open one filled, bold and lined on top; gone from md (48rem) on,
+  `data-always` keeps it. **QR code** (`img.qr-code`, square, unsmoothed, on a light ground in both themes, token
+  `--qr-code-background`) and **a key to type off** (`code.secret-key`, wraps anywhere, wide tracking), shown as setting
+  up an authenticator app in Input OTP. **Code block** `data-wrap` breaks long lines instead of scrolling sideways.
+  **Collapsible card** `details.card`, its summary the head with a turning chevron. New block category **Data entry**:
+  a day row (weekday, date, chips, value, balance with sign), a row of three figures and a duration field (`7:30`,
+  `7,5`, `7h30m`). Asked for by EightPerDay (`.epd-tabbar` → `.tab-bar`, `.epd-qr` → `.qr-code`, `.epd-secret` →
+  `.secret-key`, `.epd-licenses` → `.code-block[data-wrap]`).
 - **App workspace:** the rest of UnderDoc's editor milestone, so the app takes it from C22 again: a block used elsewhere
   framed while the cursor is in it, with where it is used at the end of its first line (`.cm-ud-used`, `-first`, `-last`,
   `.cm-ud-usedlabel`); aligning a block as a row of three icon buttons in the menu of its handle (`.bmenu .seg`, the menu
