@@ -6,6 +6,13 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
+# Without the binary there is nothing to build. Said first and plainly: before 2026-11-17 a missing binary only left a
+# shell message ("not found") that the check below did not recognise, and the script still reported success.
+if [ ! -x tools/tailwindcss ]; then
+  echo "tools/tailwindcss fehlt oder ist nicht ausführbar — erst scripts/fetch-tailwind.sh ausführen." >&2
+  exit 1
+fi
+
 python3 gallery/build.py
 
 # Jedes Pack hat eine C22-ACHSENSCHICHT (c22/static/css/packs/<name>.css): dort entscheidet
@@ -51,11 +58,15 @@ for pack in "${PACKS[@]}"; do
     printf '@source "../../typeset/**/*.html";\n'
     printf '@source "../../../gallery/**/*.html";\n'
   } > "$in"
-  # Tailwind meldet Fehler auf stdout, beendet sich aber mit Exit 0 — ein stilles >/dev/null
-  # ließ kaputte Builds als Erfolg durchgehen (alte Pack-CSS blieben einfach liegen).
-  ausgabe="$(./tools/tailwindcss -i "$in" -o "c22/static/css/c22-$pack.css" --minify 2>&1)" || true
-  if printf '%s' "$ausgabe" | grep -q "Error"; then
-    echo "Tailwind-Fehler beim Pack '$pack':" >&2
+  # The exit code decides: Tailwind 4.3.2 ends with 1 on a broken input (checked 2026-11-17: unknown utility,
+  # missing import, syntax error). The word "Error" in its output stays a second net, because older versions
+  # printed errors and still ended with 0 — a silent >/dev/null let broken builds pass (old pack CSS stayed).
+  rc=0
+  ausgabe="$(./tools/tailwindcss -i "$in" -o "c22/static/css/c22-$pack.css" --minify 2>&1)" || rc=$?
+  # A here-string, not printf | grep -q: under pipefail an early exit of grep -q can fail printf with SIGPIPE and
+  # turn a found "Error" into a miss.
+  if [ "$rc" -ne 0 ] || grep -q "Error" <<<"$ausgabe"; then
+    echo "Tailwind-Fehler beim Pack '$pack' (Exit $rc):" >&2
     printf '%s\n' "$ausgabe" >&2
     rm -f "$in"
     exit 1

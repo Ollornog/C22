@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- `scripts/build-gallery.sh` no longer reports "10 Pack-CSS gebaut" when the build failed: it stops first with a clear
+  message when `tools/tailwindcss` is missing or not executable, and Tailwind's exit code decides (the word "Error" in
+  its output stays a second net, read without a pipe that `pipefail` could break). Before, only that word counted, so a
+  missing binary, whose shell message lacks it, passed as success. New suite `tests/test_build_gallery.py` (offline, fake
+  binary).
 - `scripts/fetch-tailwind.sh` checks the binary against a pinned SHA256 and keeps one copy per version in a cache
   (`TAILWIND_CACHE`, else `$XDG_CACHE_HOME/c22-tailwind`); the CI caches it with `actions/cache`. A 504 from GitHub
   releases no longer turns a push or a pull request red once the binary has been fetched once.
