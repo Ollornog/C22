@@ -1,4 +1,7 @@
-<!-- basecoat: Collapsible = natives <details>/<summary> (Basecoat-Transition, kein JS nötig). Chevron-Rotation + Disabled-Optik über C22-Snippet `.collapsible`. -->
+<!-- basecoat: Collapsible = natives <details>/<summary> (Basecoat-Transition, kein JS nötig). Chevron-Rotation + Disabled-Optik über C22-Snippet `.collapsible`.
+     Every <details> (also details.card) grows and fades in: ::details-content has a transition (Basecoat). A browser
+     test that clicks inside right after opening must wait for transitionend, or emulate prefers-reduced-motion: reduce,
+     under which tokens.css cuts every transition to ~0 (the events still fire). -->
 <div class="c22-examples">
   <div class="c22-example">
     <span class="c22-example-label">Standard (Trigger als Button)</span>

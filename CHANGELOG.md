@@ -65,6 +65,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Collected wishes of EightPerDay and UnderDoc (2026-11-19):**
+  - **Timeline** (`ol.timeline`, new component): a log of who did what and when, a dot and a line per entry, the state
+    as a badge in words with an icon; `data-size="sm"` denser.
+  - **Month sheet** (`table.month-sheet`, block *Data entry*): seven columns, each day its number and a short code or a
+    value; a cell can hold a checkbox to pick the day (the cell is its label; picked days tinted and framed);
+    `data-weekend`, `data-outside`, `aria-current="date"`. Months as cards in `sm:grid-cols-2 lg:grid-cols-3`.
+  - **Year grid** (`table.year-grid`, block): 12 × 31 short-code cells, days a month lacks hatched.
+  - **Weekly report** (block): a page as `.print-sheet` with `print:hidden` buttons; on paper the sheet takes the full
+    width, rows do not break across pages and the table head repeats.
+  - **Rejecting with a reason** (block): `details > summary.btn` opens the reason field; the summary loses its marker
+    and the accordion chevron.
+  - **Compact field:** `.input` with `data-size="sm"`, as low as the small native select, for a value typed into a table row.
+  - **Native progress bar:** `progress.progress` takes its value from `value`/`max` (no inline style, strict CSP), status
+    colours via `data-variant`. Shown as usage "used / limit".
+  - **Drop zone:** `[data-dropzone]` lights up while files are dragged over it (c22.js sets `data-over`).
+  - **Tab bar** makes its own room: the element that holds it gets padding below wherever the bar shows; a page no
+    longer needs its own `pb-20`.
+  - Examples: states in words (badge), a column hidden on phones (`hidden sm:table-cell`), a file list, versions with
+    actions, a sign-in log with a status column (table), a one-time link with copy button and hint (input group), the
+    sign-in card of a tenant (login block). Collapsible notes that every `details` animates its content.
+
 - **Tab Bar** (`nav.tab-bar`): a phone's navigation along the bottom edge, fixed above the home indicator (safe area),
   entries sharing the width, icon above label, the open one filled, bold and lined on top; gone from md (48rem) on,
   `data-always` keeps it. **QR code** (`img.qr-code`, square, unsmoothed, on a light ground in both themes, token

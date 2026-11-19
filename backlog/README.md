@@ -8,7 +8,7 @@ Konventionen: [README-KONVENTION.md](README-KONVENTION.md).
 ## Meilensteine
 
 * ☑ **[M-1](M-1-visuelle-testebene.md)** 0.3.0 — visuelle Test-Ebene — 3/3 erledigt
-* ☐ **[M-2](M-2-bausteine-aus-den-apps.md)** Bausteine, die eine App gebaut hat, gehören in C22 — 10/11 erledigt
+* ☐ **[M-2](M-2-bausteine-aus-den-apps.md)** Bausteine, die eine App gebaut hat, gehören in C22 — 10/12 erledigt
 
 ## Aufgaben
 
@@ -26,6 +26,7 @@ Konventionen: [README-KONVENTION.md](README-KONVENTION.md).
 * ☐ **[T-12](T-12-go-adapter.md)** Adapter für Go-Vorlagen · M-2
 * ☑ **[T-13](T-13-arbeitsbereich-aus-underdoc.md)** Arbeitsbereich mit drei Spalten aus UnderDoc übernehmen · M-2
 * ☑ **[T-14](T-14-app-arbeitsbereich-aus-entwurf.md)** Arbeitsbereich des freigegebenen UnderDoc-Entwurfs als App-Baustein · M-2
+* ◐ **[T-15](T-15-sammeldurchgang-app-wuensche.md)** Gesammelte Bausteinwünsche von EightPerDay und UnderDoc · M-2
 
 ## Entscheidungen (ADR)
 

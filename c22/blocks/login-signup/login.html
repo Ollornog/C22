@@ -111,4 +111,29 @@
       </footer>
     </form>
   </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Anmelde-Karte eines Mandanten (Marke oben, Name des Mandanten als Titel, Wege als Knöpfe)</span>
+    <form class="card w-full max-w-sm" method="post" action="#">
+      <header class="items-center text-center">
+        <span class="brand mx-auto" data-orientation="vertical"><span class="brand-mark"><svg data-icon-lu="book-open" class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg></span><span>UnderDoc</span></span>
+        <h3 class="card-title mt-2">Musterbetrieb GmbH</h3>
+        <p class="card-description">Anmelden, um weiterzulesen.</p>
+      </header>
+      <section class="grid gap-4">
+        <button type="button" class="btn w-full">Mit Passkey anmelden</button>
+        <div class="field-separator"><hr role="separator"><span class="text-muted-foreground text-xs">oder</span></div>
+        <div class="field" role="group">
+          <label for="c22-blk-li-t-login">Benutzername</label>
+          <input class="input" type="text" id="c22-blk-li-t-login" name="login" autocomplete="username" required>
+        </div>
+        <div class="field" role="group">
+          <label for="c22-blk-li-t-pw">Passwort</label>
+          <input class="input" type="password" id="c22-blk-li-t-pw" name="password" autocomplete="current-password" required>
+        </div>
+      </section>
+      <footer class="flex-col gap-2">
+        <button type="submit" class="btn w-full" data-variant="outline">Mit Passwort anmelden</button>
+      </footer>
+    </form>
+  </div>
 </div>

@@ -292,4 +292,56 @@
       </table>
     </div>
   </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Spalten auf dem Handy ausblenden (<code>hidden sm:table-cell</code> an Kopf- und Datenzelle — Notiz und Soll erst ab sm)</span>
+    <div class="table-container w-full max-w-2xl">
+      <table class="table">
+        <thead><tr><th>Tag</th><th class="text-end">Stunden</th><th class="hidden text-end sm:table-cell">Soll</th><th class="text-end">Differenz</th><th class="hidden w-full sm:table-cell">Notiz</th></tr></thead>
+        <tbody>
+          <tr><td class="tabular-nums">Mo 16.11.</td><td class="text-end tabular-nums">8,0</td><td class="hidden text-end tabular-nums sm:table-cell">8,0</td><td class="text-end tabular-nums">±0,0</td><td class="hidden sm:table-cell">Kunde Nord</td></tr>
+          <tr><td class="tabular-nums">Di 17.11.</td><td class="text-end tabular-nums">8,5</td><td class="hidden text-end tabular-nums sm:table-cell">8,0</td><td class="text-end tabular-nums">+0,5</td><td class="hidden sm:table-cell">Abnahme vor Ort</td></tr>
+          <tr><td class="tabular-nums">Mi 18.11.</td><td class="text-end tabular-nums">F</td><td class="hidden text-end tabular-nums sm:table-cell">0,0</td><td class="text-end tabular-nums"></td><td class="hidden sm:table-cell">Buß- und Bettag</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Dateiliste (Symbol je Typ, Größe und Datum, Aktionen am Zeilenende; Größe und Datum erst ab sm)</span>
+    <div class="table-container w-full max-w-2xl">
+      <table class="table">
+        <thead><tr><th>Name</th><th class="hidden text-end sm:table-cell">Größe</th><th class="hidden sm:table-cell">Geändert</th><th><span class="sr-only">Aktionen</span></th></tr></thead>
+        <tbody>
+          <tr><td><a href="#" class="flex items-center gap-2 font-medium"><svg data-icon-lu="folder" class="size-4 shrink-0 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>Pläne</a></td><td class="hidden text-end tabular-nums text-muted-foreground sm:table-cell">–</td><td class="hidden tabular-nums text-muted-foreground sm:table-cell">12.11.2026</td><td></td></tr>
+          <tr><td><a href="#" class="flex items-center gap-2 font-medium"><svg data-icon-lu="file-text" class="size-4 shrink-0 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>Angebot.pdf</a></td><td class="hidden text-end tabular-nums sm:table-cell">1,2 MB</td><td class="hidden tabular-nums sm:table-cell">18.11.2026</td><td class="text-end"><a class="btn" data-variant="ghost" data-size="icon-sm" href="#" aria-label="Angebot.pdf herunterladen"><svg data-icon-lu="download" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></svg></a></td></tr>
+          <tr><td><a href="#" class="flex items-center gap-2 font-medium"><svg data-icon-lu="file-image" class="size-4 shrink-0 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><circle cx="10" cy="12" r="2"/><path d="m20 17-1.296-1.296a2.41 2.41 0 0 0-3.408 0L9 22"/></svg>Turm-Nord.jpg</a></td><td class="hidden text-end tabular-nums sm:table-cell">3,4 MB</td><td class="hidden tabular-nums sm:table-cell">17.11.2026</td><td class="text-end"><a class="btn" data-variant="ghost" data-size="icon-sm" href="#" aria-label="Turm-Nord.jpg herunterladen"><svg data-icon-lu="download" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></svg></a></td></tr>
+          <tr><td><a href="#" class="flex items-center gap-2 font-medium"><svg data-icon-lu="file-spreadsheet" class="size-4 shrink-0 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M8 13h2"/><path d="M14 13h2"/><path d="M8 17h2"/><path d="M14 17h2"/></svg>Maße.xlsx</a></td><td class="hidden text-end tabular-nums sm:table-cell">48 KB</td><td class="hidden tabular-nums sm:table-cell">02.11.2026</td><td class="text-end"><a class="btn" data-variant="ghost" data-size="icon-sm" href="#" aria-label="Maße.xlsx herunterladen"><svg data-icon-lu="download" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></svg></a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Versionen (Aktionen in Worten: Herunterladen, Wiederherstellen — die aktuelle Version kann man nicht wiederherstellen)</span>
+    <div class="table-container w-full max-w-2xl">
+      <table class="table">
+        <thead><tr><th>Version</th><th>Wann</th><th class="hidden sm:table-cell">Wer</th><th class="text-end">Größe</th><th><span class="sr-only">Aktionen</span></th></tr></thead>
+        <tbody>
+          <tr><td class="tabular-nums">3 <span class="badge" data-variant="secondary">aktuell</span></td><td class="tabular-nums">heute 09:14</td><td class="hidden sm:table-cell">Mara Beispiel</td><td class="text-end tabular-nums">1,2 MB</td><td class="text-end whitespace-nowrap"><a class="btn" data-variant="ghost" data-size="sm" href="#"><svg data-icon-lu="download" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></svg>Herunterladen</a></td></tr>
+          <tr><td class="tabular-nums">2</td><td class="tabular-nums">17.11. 16:02</td><td class="hidden sm:table-cell">Jonas Kurz</td><td class="text-end tabular-nums">1,1 MB</td><td class="text-end whitespace-nowrap"><a class="btn" data-variant="ghost" data-size="sm" href="#"><svg data-icon-lu="download" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></svg>Herunterladen</a><button type="button" class="btn" data-variant="ghost" data-size="sm"><svg data-icon-lu="rotate-ccw" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>Wiederherstellen</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Protokoll mit Status-Spalte (Anmeldungen: Ergebnis als Badge in Worten mit Icon)</span>
+    <div class="table-container w-full max-w-2xl">
+      <table class="table">
+        <thead><tr><th>Wann</th><th>Konto</th><th class="hidden sm:table-cell">Weg</th><th>Ergebnis</th></tr></thead>
+        <tbody>
+          <tr><td class="tabular-nums whitespace-nowrap">19.11. 09:02</td><td>mara</td><td class="hidden sm:table-cell">Passkey</td><td><span class="badge" data-variant="secondary"><svg data-icon-lu="check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Angemeldet</span></td></tr>
+          <tr><td class="tabular-nums whitespace-nowrap">19.11. 08:57</td><td>mara</td><td class="hidden sm:table-cell">Passwort</td><td><span class="badge" data-variant="outline"><svg data-icon-lu="x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>Falsches Passwort</span></td></tr>
+          <tr><td class="tabular-nums whitespace-nowrap">18.11. 22:41</td><td>unbekannt</td><td class="hidden sm:table-cell">Passwort</td><td><span class="badge" data-variant="destructive"><svg data-icon-lu="ban" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Gedrosselt</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
