@@ -29,6 +29,8 @@ Offen und hier gesammelt, weil sie das Markup von UnderDoc brauchen oder eine En
   `data-confirm-value`), ohne JS weiter serverseitig geprüft.
 - **Stil für „(demo)“-Gruppen:** erfundene Inhalte im Arbeitsbereich sollen sich von echten absetzen. Wie (gedämpft,
   gestrichelt, Hinweiszeile) ist eine Entscheidung des PO.
+  **Entschieden (PO 2026-11-19):** gestrichelter Rahmen plus ruhige Textmarke „Demo“ (Badge `outline`). Der Inhalt wird
+  nicht gedämpft (lesbar, ohne Farbe unterscheidbar, auch im Druck); keine zusätzliche Hinweiszeile.
 
 ## Fertig, wenn
 
