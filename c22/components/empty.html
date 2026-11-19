@@ -20,8 +20,8 @@
     </div>
   </div>
   <div class="c22-example">
-    <span class="c22-example-label">Umrandet, gestrichelt (Ablagezone — <code>.border</code>)</span>
-    <div class="empty border w-full max-w-md">
+    <span class="c22-example-label">Umrandet, gestrichelt (Ablagezone — <code>.border</code> + <code>data-dropzone</code>; Dateien darüberziehen hebt sie hervor)</span>
+    <div class="empty border w-full max-w-md" data-dropzone>
       <header>
         <figure>
           <svg data-icon-lu="cloud-upload" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M12 12v9"/><path d="m16 16-4-4-4 4"/></svg>
@@ -100,6 +100,16 @@
           <span data-align="inline-end" class="kbd-group"><kbd class="kbd">Strg</kbd><kbd class="kbd">K</kbd></span>
         </div>
       </section>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Ablagezone beim Ziehen (<code>data-dropzone</code>: c22.js setzt <code>data-over</code>, solange Dateien darüber gezogen werden — hier fest gesetzt)</span>
+    <div class="empty border w-full max-w-md" data-dropzone data-over>
+      <header>
+        <figure><svg data-icon-lu="cloud-upload" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 13v8"/><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="m8 17 4-4 4 4"/></svg></figure>
+        <h2>Loslassen zum Hochladen</h2>
+        <p>3 Dateien in „Pläne“.</p>
+      </header>
     </div>
   </div>
 </div>

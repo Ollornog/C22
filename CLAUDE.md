@@ -48,10 +48,16 @@ the look per component.
 | Stack of messages, closable alert | `class="alert-stack"`, `.btn-close` as direct child of `.alert` | `alert.html` |
 | Confirmation before an action | `[data-confirm="text"]` or `form[data-confirm]`, never `confirm()` | `alert-dialog.html` |
 | Floating button with counter | `class="btn" data-fab` | `button.html` |
-| Phone navigation along the bottom edge | `nav.tab-bar` with links, open one `aria-current="page"`; gone from md, `data-always` keeps it | `tab-bar.html` |
+| Phone navigation along the bottom edge | `nav.tab-bar` with links, open one `aria-current="page"`; gone from md, `data-always` keeps it; its parent gets room below by itself | `tab-bar.html` |
 | QR code / key to type off by hand | `img.qr-code` / `code.secret-key` | `input-otp.html` |
 | Collapsible card | `details.card` with `summary` as its head | `card.html` |
 | Long lines in a code block wrapped | `.code-block[data-wrap]` | `code-block.html` |
+| Log of what happened (who, when, what) | `ol.timeline` > `li` > `header` (badge in words, who, `time`) + `p`; `data-size="sm"`; a long log is a table with a status column | `timeline.html`, `table.html` |
+| A month to read or pick days in / a year of short codes | `table.month-sheet` (cell: number + code, optional checkbox in a `label`; `data-weekend`, `data-outside`, `aria-current="date"`) / `table.year-grid` (12 × 31) | `blocks/data-entry/month-sheet.html`, `year-grid.html` |
+| Compact field in a table row | `.input` with `data-size="sm"` (a native `select.select` has the same size) | `input.html` |
+| Progress without inline style (strict CSP) | `progress.progress` (+ `data-variant` status) | `progress.html` |
+| Drop zone that lights up while files are dragged | `[data-dropzone]` (c22.js sets `data-over`) | `empty.html` |
+| A page that prints as a report | `.print-sheet` on the page, `print:hidden` on what stays off paper | `blocks/data-entry/week-report.html` |
 
 Do **not** write `<button class="inline-flex rounded-md px-3 py-2 …">` when `.btn` exists, and so on.
 

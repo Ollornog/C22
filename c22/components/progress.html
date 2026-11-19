@@ -82,4 +82,25 @@
       </div>
     </div>
   </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Verbrauch (genutzt / Grenze — Nutzer und Speicher; knapp: <code>data-variant="warning"</code>, das Wort sagt es auch)</span>
+    <div class="grid w-full max-w-sm gap-4">
+      <div class="grid gap-1.5">
+        <div class="flex items-center justify-between text-sm"><label for="c22-usage-users" class="font-medium">Nutzer</label><output for="c22-usage-users" class="text-muted-foreground tabular-nums">12 / 25</output></div>
+        <progress class="progress" id="c22-usage-users" max="25" value="12">12 von 25</progress>
+      </div>
+      <div class="grid gap-1.5">
+        <div class="flex items-center justify-between text-sm"><label for="c22-usage-store" class="font-medium">Speicher</label><output for="c22-usage-store" class="text-muted-foreground tabular-nums">9,2 / 10 GB · knapp</output></div>
+        <progress class="progress" id="c22-usage-store" data-variant="warning" max="100" value="92">9,2 von 10 GB</progress>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Nativ (<code>progress.progress</code> — Wert aus <code>value</code>/<code>max</code>, ohne Inline-Stil, für strenge CSP; Statusfarben per <code>data-variant</code>)</span>
+    <div class="grid w-full max-w-sm gap-3">
+      <progress class="progress" max="100" value="35" aria-label="Hochladen bericht.pdf">35 %</progress>
+      <progress class="progress" data-variant="success" max="100" value="100" aria-label="Fertig">100 %</progress>
+      <progress class="progress" data-variant="destructive" max="100" value="60" aria-label="Abgebrochen">60 %</progress>
+    </div>
+  </div>
 </div>

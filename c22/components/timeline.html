@@ -1,0 +1,20 @@
+<!-- custom: Timeline. A log of what happened (ol.timeline > li): a dot and a line per entry, a head with what (a badge
+     in words with an icon, never the colour alone), who and when (time, pushed to the end), and a line of detail below.
+     data-size="sm" is denser. For a long log with sorting and filters, a table with a status column fits better (Table). -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Protokoll eines Antrags (wer, wann, was)</span>
+    <ol class="timeline w-full max-w-md">
+      <li><header><span class="badge" data-variant="secondary"><svg data-icon-lu="check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Genehmigt</span><strong class="font-medium">Jonas Kurz</strong><time datetime="2026-11-19T09:12">19.11. 09:12</time></header><p>Woche 46 genehmigt.</p></li>
+      <li><header><span class="badge" data-variant="outline"><svg data-icon-lu="x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>Abgelehnt</span><strong class="font-medium">Jonas Kurz</strong><time datetime="2026-11-18T16:40">18.11. 16:40</time></header><p>„Dienstag fehlt die Pause.“</p></li>
+      <li><header><span class="badge" data-variant="outline"><svg data-icon-lu="clock" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Eingereicht</span><strong class="font-medium">Mara Beispiel</strong><time datetime="2026-11-18T08:03">18.11. 08:03</time></header><p>41,5 Stunden, 5 Arbeitstage.</p></li>
+    </ol>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Kompakt (<code>data-size="sm"</code>) — Zugriffe</span>
+    <ol class="timeline w-full max-w-md" data-size="sm">
+      <li><header><span class="badge" data-variant="outline"><svg data-icon-lu="eye" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>Angesehen</span><span>Jonas Kurz</span><time datetime="2026-11-19T09:10">19.11. 09:10</time></header><p>Woche 46 von Mara Beispiel</p></li>
+      <li><header><span class="badge" data-variant="outline"><svg data-icon-lu="eye" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>Angesehen</span><span>Lea Sommer</span><time datetime="2026-11-17T14:22">17.11. 14:22</time></header><p>Urlaubsübersicht des Teams</p></li>
+    </ol>
+  </div>
+</div>

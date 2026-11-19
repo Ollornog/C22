@@ -1,0 +1,46 @@
+<!-- c22-title: Ablehnen mit Begründung -->
+<!-- C22-custom: a decision with a reason (EightPerDay's approvals, 2026-11-19): approving is one button; rejecting opens a
+     field for the reason first. details > summary.btn is the button that opens it (no JS), the form below is the details'
+     body and is sent with the destructive button. The request's state is a badge in words with an icon. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Antrag prüfen (Genehmigen direkt, Ablehnen öffnet das Begründungsfeld)</span>
+    <div class="card w-full max-w-md" data-size="sm">
+      <header>
+        <h3 class="card-title">Urlaub 21.–23.12.</h3>
+        <p class="card-description">Mara Beispiel · 3 Tage · gestellt am 18.11.</p>
+        <div class="card-action"><span class="badge" data-variant="outline"><svg data-icon-lu="clock" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Offen</span></div>
+      </header>
+      <section class="grid gap-2">
+        <form method="post" action="#"><button type="submit" class="btn w-full" data-size="sm"><svg data-icon-lu="check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Genehmigen</button></form>
+        <details>
+          <summary class="btn w-full" data-variant="outline" data-size="sm"><svg data-icon-lu="x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>Ablehnen …</summary>
+          <form method="post" action="#" class="mt-2 grid gap-2">
+            <div class="field" role="group"><label for="c22-reject-reason">Begründung</label><textarea class="textarea" id="c22-reject-reason" name="reason" rows="2" required placeholder="z. B. Jahresabschluss, bitte eine Woche später"></textarea><p>Die Begründung sieht, wer den Antrag gestellt hat.</p></div>
+            <button type="submit" class="btn" data-variant="destructive" data-size="sm">Ablehnen und begründen</button>
+          </form>
+        </details>
+      </section>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Begründungsfeld offen (<code>details open</code>)</span>
+    <div class="card w-full max-w-md" data-size="sm">
+      <header>
+        <h3 class="card-title">Woche 46</h3>
+        <p class="card-description">Mara Beispiel · 41,5 Stunden</p>
+        <div class="card-action"><span class="badge" data-variant="outline"><svg data-icon-lu="clock" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Offen</span></div>
+      </header>
+      <section class="grid gap-2">
+        <form method="post" action="#"><button type="submit" class="btn w-full" data-size="sm"><svg data-icon-lu="check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Genehmigen</button></form>
+        <details open>
+          <summary class="btn w-full" data-variant="outline" data-size="sm"><svg data-icon-lu="x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>Ablehnen …</summary>
+          <form method="post" action="#" class="mt-2 grid gap-2">
+            <div class="field" role="group"><label for="c22-reject-reason-b">Begründung</label><textarea class="textarea" id="c22-reject-reason-b" name="reason" rows="2" required>Dienstag fehlt die Pause.</textarea></div>
+            <button type="submit" class="btn" data-variant="destructive" data-size="sm">Ablehnen und begründen</button>
+          </form>
+        </details>
+      </section>
+    </div>
+  </div>
+</div>

@@ -149,6 +149,7 @@ COMPONENTS: list[tuple[str, bool, bool, bool]] = [
     ("Text Clamp", False, False, True),
     ("Textarea", True, True, False),
     ("Theme Switcher", True, False, False),
+    ("Timeline", False, False, True),
     ("Toast", True, True, False),
     ("Toc", False, False, True),
     ("Toggle", False, True, True),

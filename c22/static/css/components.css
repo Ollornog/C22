@@ -4296,7 +4296,7 @@
  * Fixed to the bottom, above the home indicator (safe area; the page needs viewport-fit=cover), its entries share
  * the width equally, icon above the label. From md (48rem) on it is gone: there the head has room for the same links.
  * data-always keeps it at every width. The open page is aria-current="page": filled, bold and with a line on top,
- * so it does not hang on the colour. The page keeps room below its content itself (e.g. pb-20 below md).
+ * so it does not hang on the colour. The element holding the bar gets room below its content (rule further down).
  * ============================================================ */
 @layer components {
   .tab-bar {
@@ -4373,4 +4373,154 @@
   details.card[open] > summary::after { @apply rotate-180; }
   /* Closed, the hidden body would still take the card's gap below the summary. */
   details.card:not([open]) { row-gap: 0; }
+}
+
+/* ============================================================
+ * The tab bar makes its own room (EightPerDay, 2026-11-19): the element that holds it gets padding below, so the last
+ * line of the page never sits under the bar. Below md (48rem) only, where the bar shows; with data-always at every
+ * width. The page no longer needs a pb-20 of its own, and from md on it loses nothing.
+ * ============================================================ */
+@layer components {
+  @media (width < 48rem) {
+    :has(> .tab-bar) { padding-bottom: calc(var(--spacing) * 18 + env(safe-area-inset-bottom)); }
+  }
+  :has(> .tab-bar[data-always]) { padding-bottom: calc(var(--spacing) * 18 + env(safe-area-inset-bottom)); }
+}
+
+/* ============================================================
+ * Compact field (data-size="sm" on .input) — a value typed straight into a table row, a dense form (EightPerDay,
+ * 2026-11-19). As low as the vendor's small native select (select.select[data-size="sm"]), narrower inside; the type
+ * size stays the pack's, so a phone does not zoom in.
+ * ============================================================ */
+@layer components {
+  .input[data-size='sm']:not([type='checkbox'], [type='radio'], [type='range']) {
+    @apply h-8 px-2 py-0;
+  }
+}
+
+/* ============================================================
+ * Native progress bar (progress.progress) — the same bar as .progress, but the value is the element's own value/max,
+ * so it needs no inline style (strict CSP) and no ARIA of its own (UnderDoc's upload, 2026-11-19). data-variant takes
+ * the status roles as the ring does.
+ * ============================================================ */
+@layer components {
+  progress.progress {
+    @apply bg-muted h-1.5 w-full overflow-hidden rounded-full border-0 align-middle;
+    appearance: none;
+    color: var(--progress-color, var(--primary));
+  }
+  progress.progress::-webkit-progress-bar { @apply bg-muted; }
+  progress.progress::-webkit-progress-value { background: var(--progress-color, var(--primary)); transition: inline-size .2s; }
+  progress.progress::-moz-progress-bar { background: var(--progress-color, var(--primary)); }
+  progress.progress[data-variant='success'] { --progress-color: var(--success); }
+  progress.progress[data-variant='warning'] { --progress-color: var(--warning); }
+  progress.progress[data-variant='destructive'] { --progress-color: var(--destructive); }
+}
+
+/* ============================================================
+ * Month sheet (table.month-sheet) — a month as seven columns, each day a cell with its number and below it a short code
+ * or a value (EightPerDay's leave planning, 2026-11-19). A cell can carry a checkbox to pick the day: the whole cell is
+ * its label, a picked day is tinted and framed, and the check itself says it, not the colour. data-weekend tones a cell,
+ * data-outside is a day of the month before or after (or an empty cell), aria-current="date" is today.
+ * ============================================================ */
+@layer components {
+  .month-sheet {
+    @apply w-full table-fixed border-separate text-sm tabular-nums;
+    border-spacing: calc(var(--spacing) * 0.5);
+  }
+  .month-sheet > caption { @apply pb-1 text-start text-sm font-medium; }
+  .month-sheet th { @apply text-muted-foreground py-1 text-center text-xs font-medium; }
+  .month-sheet td { @apply h-10 rounded-sm p-0.5 text-center align-top; }
+  .month-sheet td > :is(span, b, strong) { @apply block leading-tight; }
+  .month-sheet td > span:first-child,
+  .month-sheet td > label > span:first-child { @apply text-muted-foreground text-xs; }
+  .month-sheet td > :is(b, strong) { @apply font-semibold; }
+  .month-sheet td > label {
+    @apply flex h-full cursor-pointer flex-col items-center gap-0.5 rounded-sm;
+  }
+  .month-sheet td > label > .input[type='checkbox'] { @apply size-3.5; }
+  .month-sheet td[data-weekend] { @apply bg-muted/60; }
+  .month-sheet td[data-outside] { @apply text-muted-foreground/60; }
+  .month-sheet td[data-outside] > span:first-child { @apply text-muted-foreground/60; }
+  .month-sheet td[aria-current='date'] { @apply font-semibold; box-shadow: inset 0 0 0 1px var(--ring); }
+  .month-sheet td:has(> label:hover) { @apply bg-accent text-accent-foreground; }
+  .month-sheet td:has(input:checked) { @apply bg-accent text-accent-foreground; box-shadow: inset 0 0 0 2px var(--primary); }
+  .month-sheet td:has(input:focus-visible) { @apply ring-ring/50 ring-[3px]; }
+}
+
+/* ============================================================
+ * Year grid (table.year-grid) — a whole year at a glance: a row per month, a column per day (1–31), each cell one short
+ * code (EightPerDay, 2026-11-19). Dense on purpose; inside .table-container it scrolls sideways on a phone. data-weekend
+ * and aria-current="date" as in the month sheet, data-outside marks a day the month does not have (30 February).
+ * ============================================================ */
+@layer components {
+  .year-grid { @apply border-collapse text-xs tabular-nums; }
+  .year-grid :is(th, td) { @apply border-border h-6 min-w-6 border p-0 text-center; }
+  .year-grid thead th { @apply text-muted-foreground border-x-0 border-t-0 font-normal; }
+  .year-grid tbody th { @apply text-muted-foreground border-y-0 border-s-0 pe-2 text-start font-medium whitespace-nowrap; }
+  .year-grid td { @apply font-semibold; }
+  .year-grid td[data-weekend] { @apply bg-muted/60; }
+  .year-grid td[data-outside] { @apply bg-muted; background-image: repeating-linear-gradient(135deg, transparent 0 3px, var(--border) 3px 4px); }
+  .year-grid td[aria-current='date'] { box-shadow: inset 0 0 0 2px var(--ring); }
+}
+
+/* ============================================================
+ * Timeline (ol.timeline) — a log of what happened, newest first or last as the app likes: a dot and a line per entry,
+ * a head with a badge (what), who and when, and a line of detail below (EightPerDay's access log, UnderDoc's sign-in log,
+ * 2026-11-19). The state is the badge's text and icon, never the colour alone. data-size="sm" is denser.
+ * ============================================================ */
+@layer components {
+  .timeline { @apply grid; }
+  .timeline > li { @apply relative ps-6 pb-4; }
+  .timeline > li:last-child { @apply pb-0; }
+  .timeline > li::before {
+    content: "";
+    @apply bg-background border-muted-foreground absolute start-1 top-1.5 size-2.5 rounded-full border-2;
+  }
+  .timeline > li::after {
+    content: "";
+    @apply bg-border absolute start-2 top-5 bottom-0.5 w-px -translate-x-1/2;
+  }
+  .timeline > li:last-child::after { @apply hidden; }
+  .timeline > li > header { @apply flex flex-wrap items-center gap-x-2 gap-y-1 text-sm; }
+  .timeline > li > header > time { @apply text-muted-foreground ms-auto text-xs tabular-nums; }
+  .timeline > li > :is(p, div):not(header) { @apply text-muted-foreground mt-1 text-sm; }
+  .timeline[data-size='sm'] > li { @apply pb-2.5; }
+  .timeline[data-size='sm'] > li > header { @apply text-xs; }
+  .timeline[data-size='sm'] > li > :is(p, div):not(header) { @apply mt-0.5 text-xs; }
+}
+
+/* ============================================================
+ * Drop zone ([data-dropzone]) while files are dragged over it: a ring and a tint (UnderDoc's files, 2026-11-19). c22.js
+ * sets data-over while a drag that carries files is over the zone; an app with its own drag code sets it itself.
+ * ============================================================ */
+@layer components {
+  [data-dropzone][data-over] {
+    @apply bg-accent/60 border-primary;
+    box-shadow: 0 0 0 2px var(--ring);
+  }
+}
+
+/* ============================================================
+ * A button that opens what is behind it (summary.btn in details): the marker of the summary goes, the button stays a
+ * button. The reply form below it — e.g. rejecting with a reason — is the details' body (EightPerDay, 2026-11-19).
+ * ============================================================ */
+@layer components {
+  details > summary.btn { @apply w-auto list-none justify-center; }
+  details > summary.btn::-webkit-details-marker { display: none; }
+  details > summary.btn::after { content: none; }
+}
+
+/* ============================================================
+ * Paper for a report (.print-sheet on a page that prints as a whole, e.g. a weekly report, 2026-11-19): on paper the
+ * sheet uses the full width, rows do not break across pages and the head of a table repeats. What has no place on paper
+ * carries the print:hidden utility (the back and print buttons).
+ * ============================================================ */
+@layer components {
+  @media print {
+    .print-sheet { @apply max-w-none p-0; }
+    .print-sheet :is(tr, li, .card) { break-inside: avoid; }
+    .print-sheet thead { display: table-header-group; }
+    .print-sheet .table-container { overflow: visible; }
+  }
 }

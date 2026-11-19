@@ -474,6 +474,41 @@ def verhalten(r: Report, b: Browser, basis: str) -> None:
     })()""")
     r.check("Druckblock: ein details-Block ist auf dem Papier offen", zu == {"offen": True, "rahmen": False}, str(zu))
 
+    # Drop zone: a drag that carries files lights it up and leaving takes it off; a drag of text does nothing.
+    z = s.js("""(() => {
+      const zone = document.querySelector('#empty [data-dropzone]:not([data-over])');
+      const mit = new DataTransfer(); mit.items.add(new File(['x'], 'a.txt', { type: 'text/plain' }));
+      const ohne = new DataTransfer(); ohne.setData('text/plain', 'x');
+      const ev = (t, dt, ziel) => (ziel || zone).dispatchEvent(new DragEvent(t, { bubbles: true, cancelable: true, dataTransfer: dt }));
+      ev('dragenter', ohne); const text = zone.hasAttribute('data-over');
+      ev('dragenter', mit); ev('dragenter', mit, zone.querySelector('h2')); ev('dragleave', mit);
+      const drinnen = zone.hasAttribute('data-over');
+      ev('dragleave', mit, zone.querySelector('h2')); const raus = zone.hasAttribute('data-over');
+      ev('dragenter', mit); ev('drop', mit); const fallen = zone.hasAttribute('data-over');
+      return { text, drinnen, raus, fallen };
+    })()""")
+    r.check("Ablagezone: Dateien darüber heben sie hervor, Verlassen und Ablegen nehmen es zurück",
+            z == {"text": False, "drinnen": True, "raus": False, "fallen": False}, str(z))
+
+    # Tab bar: the element that holds it gets room below where the bar shows (data-always at desktop width), and none
+    # where the bar is gone (the plain bar from md on).
+    t = s.js("""[...document.querySelectorAll('#tab-bar .tab-bar')].map(n => [n.hasAttribute('data-always'), parseFloat(getComputedStyle(n.parentElement).paddingBottom)])""")
+    r.check("Tab-Leiste: schafft sich selbst Platz, nur wo sie steht",
+            any(a and p >= 60 for a, p in t) and any(not a and p == 0 for a, p in t), str(t))
+
+    # Weekly report on paper: the buttons stay off, the head of the table repeats, rows do not break.
+    s.geh(f"{basis}/blocks.html?pack=vega&theme=light&lang=de")
+    s.medium("print")
+    w = s.js("""(() => {
+      const blatt = document.querySelector('[id*="week-report"] .print-sheet');
+      const knopf = blatt.querySelector('.print\\\\:hidden');
+      return { knopf: getComputedStyle(knopf).display, kopf: getComputedStyle(blatt.querySelector('thead')).display,
+               zeile: getComputedStyle(blatt.querySelector('tbody tr')).breakInside };
+    })()""")
+    s.medium("")
+    r.check("Wochenbericht: auf Papier ohne Knöpfe, Tabellenkopf wiederholt, Zeilen ungeteilt",
+            w == {"knopf": "none", "kopf": "table-header-group", "zeile": "avoid"}, str(w))
+
     # Chart: wide and flat stays flat, keeps its text size and reports a click.
     s.geh(f"{basis}/charts.html?pack=vega&theme=light&lang=de")
     s.js(AUSGEROLLT)
