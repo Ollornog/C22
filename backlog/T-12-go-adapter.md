@@ -32,3 +32,10 @@ Dazu kommen zwei Punkte, die jede Go-App trifft:
 Die Seitenleiste geht jetzt ohne Inline-Stil und ohne `onclick`: `data-sidebar-width` und `data-panel-toggle="#id"`, in der Galerie sichtbar.
 
 **Offen:** die Schicht für `html/template`. Sie wartet laut Befund auf eine zweite Go-App; bis dahin bleibt der Eintrag offen.
+
+## Stand (2026-11-19)
+
+Eine zweite Go-App gibt es jetzt (EightPerDay). Sie schreibt das kanonische HTML aber direkt in ihre Vorlagen und braucht
+keine Schicht für Brotkrume, Baum oder Inhaltsverzeichnis; ihr Bedarf war nur Bausteine, und die liefert C22 (T-15). Beide
+Apps prüfen jede Klasse gegen das Stylesheet. Die Schicht lohnt sich erst, wenn zwei Apps dieselben Go-Helfer kopieren;
+bis dahin bleibt der Eintrag offen.

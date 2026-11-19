@@ -124,7 +124,7 @@ body:has(> .c22-app-workspace) { background: var(--background); color: var(--for
 .c22-app-workspace .win { background: var(--background); display: flex; flex-direction: column; min-width: 0; min-height: 0; position: relative; }
 .c22-app-workspace .win.focus { box-shadow: inset 0 2px 0 var(--primary); }
 .c22-app-workspace .chip { padding: 1px calc(7 * var(--app-workspace-space)); border-radius: calc(5 * var(--app-workspace-radius)); border: 1px solid var(--border); font-size: calc(11.5 * var(--app-workspace-text)); white-space: nowrap; display: inline-flex; align-items: center; gap: calc(4 * var(--app-workspace-space)); }
-.c22-app-workspace button.chip:hover { background: var(--accent); }
+.c22-app-workspace :is(button, a).chip:hover { background: var(--accent); }
 .c22-app-workspace button.chip[aria-pressed="true"] { background: var(--accent); border-color: var(--ring); }
 .c22-app-workspace .wbody { flex: 1; display: flex; min-height: 0; position: relative; }
 .c22-app-workspace .toc { width: calc(150 * var(--app-workspace-space)); flex: none; overflow-y: auto; padding: calc(14 * var(--app-workspace-space)) calc(10 * var(--app-workspace-space)); border-right: 1px solid var(--border); font-size: calc(12 * var(--app-workspace-text)); }
@@ -381,7 +381,7 @@ body.resizing .c22-app-workspace { user-select: none; cursor: col-resize; }
 .c22-app-workspace .modrow { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: calc(8 * var(--app-workspace-space)); text-align: left; padding: calc(6 * var(--app-workspace-space)) calc(8 * var(--app-workspace-space)); border: 1px solid var(--border); border-radius: calc(6 * var(--app-workspace-radius)); margin-bottom: calc(4 * var(--app-workspace-space)); font-size: calc(13.5 * var(--app-workspace-text)); }
 .c22-app-workspace .modrow small { display: block; font-size: calc(12 * var(--app-workspace-text)); color: var(--muted-foreground); }
 .c22-app-workspace .modrow em { font-style: normal; font-size: calc(12.5 * var(--app-workspace-text)); flex: none; }
-.c22-app-workspace .modrow:hover { background: var(--accent); }
+.c22-app-workspace :is(button, a).modrow:hover { background: var(--accent); }
 .c22-app-workspace .modrow[aria-pressed="true"] em { font-weight: 600; }
 .c22-app-workspace .modrow[aria-pressed="false"] { color: var(--muted-foreground); border-style: dashed; }
 /* Content sits left, next to the navigation, whatever its width. */
@@ -935,3 +935,43 @@ body.ud-bdrag .c22-app-workspace, body.ud-bdrag .c22-app-workspace * { user-sele
 .c22-app-workspace .newtypes.tplcards button > svg { grid-row: span 2; margin-top: calc(2 * var(--app-workspace-space)); }
 .c22-app-workspace .newtypes.tplcards button > b { font-weight: 600; }
 .c22-app-workspace .newtypes.tplcards button > small { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; font-size: calc(11.5 * var(--app-workspace-text)); line-height: 1.35; color: var(--muted-foreground); }
+
+/* UnderDoc's collected wishes (2026-11-19). The rules UnderDoc kept for itself "until C22 has them", taken over so the app
+   can delete them, and a few states the workspace lacked.
+   A module row that only shows (div.modrow, a plain list for the reader) does not light up; a chip can be a link or the
+   submit button of a small form in a panel, and the fields of such a form look like the panel's search field. */
+.c22-app-workspace a.chip { color: inherit; text-decoration: none; }
+.c22-app-workspace .spanel form { display: flex; flex-wrap: wrap; align-items: center; gap: calc(6 * var(--app-workspace-space)); margin-bottom: calc(6 * var(--app-workspace-space)); }
+.c22-app-workspace .spanel form > input:not([type]), .c22-app-workspace .spanel form > input[type=text] { flex: 1; min-width: 0; height: calc(30 * var(--app-workspace-space)); padding: 0 calc(9 * var(--app-workspace-space)); border: 1px solid var(--border); border-radius: calc(6 * var(--app-workspace-radius)); background: var(--background); }
+.c22-app-workspace .spanel input[type=date] { height: calc(28 * var(--app-workspace-space)); padding: 0 calc(6 * var(--app-workspace-space)); border: 1px solid var(--border); border-radius: calc(5 * var(--app-workspace-radius)); background: var(--background); color: inherit; font: inherit; font-size: calc(12.5 * var(--app-workspace-text)); }
+/* Deleting something that is used elsewhere (ADR-22): a dialog with a way for each thing (.wayitem, its ways in a .wayrow,
+   the chosen one pressed), "the same for all" (.waysame) and the row that decides. It is a .pop, fixed to the window. */
+.c22-app-workspace .wayspop { position: fixed; z-index: 60; left: 50%; top: 10vh; transform: translateX(-50%); width: min(calc(544 * var(--app-workspace-space)), calc(100vw - 32px)); max-height: 80vh; overflow: auto; display: flex; flex-direction: column; gap: calc(8 * var(--app-workspace-space)); padding: calc(12 * var(--app-workspace-space)); border: 1px solid var(--border); border-radius: calc(9 * var(--app-workspace-radius)); background: var(--popover); color: var(--popover-foreground); }
+.c22-app-workspace .wayspop .wayitem { display: flex; flex-direction: column; gap: calc(4 * var(--app-workspace-space)); padding-top: calc(8 * var(--app-workspace-space)); border-top: 1px solid var(--border); }
+.c22-app-workspace .wayspop .wayrow { display: flex; flex-wrap: wrap; align-items: center; gap: calc(6 * var(--app-workspace-space)); }
+.c22-app-workspace .wayspop .wayrow select { height: calc(26 * var(--app-workspace-space)); padding: 0 calc(6 * var(--app-workspace-space)); border: 1px solid var(--border); border-radius: calc(5 * var(--app-workspace-radius)); background: var(--background); color: inherit; font-size: calc(12 * var(--app-workspace-text)); }
+.c22-app-workspace .wayspop .waysame { display: flex; align-items: center; gap: calc(6 * var(--app-workspace-space)); font-size: calc(13 * var(--app-workspace-text)); }
+/* A part (ADR-22). Embedded inside a paragraph it reads as the text around it, with a faint dotted line under it. Its
+   boundary while reading is drawn over the boxes of its range (.partedge, fixed, from the app's script) with its name
+   (.partlabel); in the editor its text is framed while the cursor is in it (.cm-ud-part, name in .cm-ud-partlabel). */
+.c22-app-workspace [data-embed-part] { text-decoration: underline dotted var(--ring); text-underline-offset: calc(3 * var(--app-workspace-space)); }
+.c22-app-workspace .partedge { position: fixed; z-index: 30; pointer-events: none; border-radius: calc(3 * var(--app-workspace-radius)); box-shadow: 0 0 0 1px var(--ring); }
+.c22-app-workspace .partlabel { position: fixed; z-index: 31; pointer-events: none; padding: 0 calc(6 * var(--app-workspace-space)); border-radius: calc(4 * var(--app-workspace-radius)); background: var(--popover); box-shadow: 0 0 0 1px var(--border); font-size: calc(11.5 * var(--app-workspace-text)); color: var(--muted-foreground); }
+.c22-app-workspace .cm-editor.cm-ud .cm-ud-part { border-radius: calc(3 * var(--app-workspace-radius)); box-shadow: 0 0 0 1px var(--ring); }
+.c22-app-workspace .cm-editor.cm-ud .cm-ud-partlabel { margin-left: .5em; font-size: calc(11.5 * var(--app-workspace-text)); color: var(--muted-foreground); }
+/* Where something embedded was removed (data-removed): who and when in words, and what one may do as chips beside it
+   (restore, keep a copy). The chips keep the normal text colour inside the red note. */
+.c22-app-workspace .doc .embed.broken[data-removed] { display: flex; flex-wrap: wrap; align-items: center; gap: calc(6 * var(--app-workspace-space)); }
+.c22-app-workspace .doc .embed.broken[data-removed] .chip { color: var(--foreground); }
+.c22-app-workspace .doc .badge[data-removed] ~ .chip { margin-left: calc(4 * var(--app-workspace-space)); vertical-align: baseline; }
+/* Marked text in the editor: its tools come as a group of the bar, one of them a field to name it as a value. */
+.c22-app-workspace .btool .bgroup input { flex: 0 1 auto; width: calc(120 * var(--app-workspace-space)); min-width: calc(60 * var(--app-workspace-space)); height: calc(26 * var(--app-workspace-space)); padding: 0 calc(6 * var(--app-workspace-space)); border: 1px solid var(--border); border-radius: calc(6 * var(--app-workspace-radius)); background: var(--background); color: inherit; font: inherit; font-size: calc(12.5 * var(--app-workspace-text)); }
+/* A file in the window: its preview in a frame (figure.preview: an image, a video or the pages of a PDF, never wider than
+   the window), its actions as a row of chips (.tagrow), its versions as a table whose last cell holds the actions. */
+.c22-app-workspace .doc figure.preview { margin: 0 0 calc(12 * var(--app-workspace-space)); padding: calc(6 * var(--app-workspace-space)); border: 1px solid var(--border); border-radius: calc(7 * var(--app-workspace-radius)); background: var(--muted); display: grid; justify-items: center; gap: calc(6 * var(--app-workspace-space)); }
+.c22-app-workspace .doc figure.preview :is(img, video, canvas) { display: block; max-width: 100%; height: auto; border-radius: calc(4 * var(--app-workspace-radius)); background: var(--background); }
+.c22-app-workspace .doc .tagrow + h2 { margin-top: calc(14 * var(--app-workspace-space)); }
+.c22-app-workspace .tw td:last-child:has(> .l) { white-space: nowrap; text-align: right; }
+.c22-app-workspace .tw td > .l + .l { margin-left: calc(10 * var(--app-workspace-space)); }
+/* An upload in progress in the list of a folder: the C22 bar (progress.progress) on a line of its own. */
+.c22-app-workspace .t li > progress.progress { display: block; margin: calc(3 * var(--app-workspace-space)) 0; }

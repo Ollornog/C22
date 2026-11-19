@@ -65,6 +65,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **App workspace, UnderDoc's collected wishes (2026-11-19, part 2 of T-15):** the rules UnderDoc kept "until C22 has
+  them" — the dialog for deleting what is used elsewhere (`.wayspop`, `.wayitem`, `.wayrow`, `.waysame`), a part in
+  running text (`[data-embed-part]`), its boundary while reading (`.partedge`, `.partlabel`) and in the editor
+  (`.cm-ud-part`, `.cm-ud-partlabel`), the note where something embedded was removed (`.embed.broken[data-removed]` and
+  the inline badge, with chips) and the name field in the bar's group for marked text (`.btool .bgroup input`). Also: a
+  module row only to show (`div.modrow` does not light up), a chip as a link (`a.chip`), a small form in a panel
+  (`.spanel form`), a date field in a panel, a file's preview in a frame (`figure.preview`), actions in the last cell of
+  a table (`.tw td > .l`), and an upload bar (`progress.progress`) in a folder's list. Three new gallery examples.
+
 - **Collected wishes of EightPerDay and UnderDoc (2026-11-19):**
   - **Timeline** (`ol.timeline`, new component): a log of who did what and when, a dot and a line per entry, the state
     as a badge in words with an icon; `data-size="sm"` denser.
