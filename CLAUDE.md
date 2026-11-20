@@ -58,6 +58,11 @@ the look per component.
 | Progress without inline style (strict CSP) | `progress.progress` (+ `data-variant` status) | `progress.html` |
 | Drop zone that lights up while files are dragged | `[data-dropzone]` (c22.js sets `data-over`) | `empty.html` |
 | A page that prints as a report | `.print-sheet` on the page, `print:hidden` on what stays off paper | `blocks/data-entry/week-report.html` |
+| Long table in a scrolling box: head, first column and a group row stick | `.table[data-sticky]`, group row `tr[data-group-row]` (sticks under the head, c22.js keeps `--table-head-height`); today `tr[aria-current="date"]` | `blocks/data-entry/time-sheet.html` |
+| A field that is the cell, a hint line below it | `td[data-field] > .input` + `small` (`data-type="number"` aligns to the end); outside a table the hint is the `.field`'s help text | `blocks/data-entry/time-sheet.html`, `field.html` |
+| A value shown as chips until it is typed into | `.chip-input` > `.input` + `[data-chips]` | `blocks/data-entry/time-sheet.html` |
+| Popover without JavaScript (settings, segment buttons) | `details.popover` > `summary.btn` + `[data-popover]`; segments `.button-group` of buttons with `aria-pressed` | `popover.html`, `toggle-group.html` |
+| Telling entities apart (employers, projects, people) | `.badge[data-mark="1"…"5"]` — the text tells, the chart-colour dot adds | `badge.html` |
 
 Do **not** write `<button class="inline-flex rounded-md px-3 py-2 …">` when `.btn` exists, and so on.
 

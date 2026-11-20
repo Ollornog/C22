@@ -125,4 +125,20 @@
       </div>
     </div>
   </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Ohne JavaScript (<code>details.popover</code>: <code>summary.btn</code> öffnet, c22.js schließt per Klick daneben und Escape)</span>
+    <details class="popover" id="c22-pop-details">
+      <summary class="btn" data-variant="outline">Ansicht</summary>
+      <form data-popover class="grid w-64 gap-3">
+        <fieldset class="grid gap-2">
+          <legend class="label mb-2">Darstellung</legend>
+          <div class="button-group" role="group" aria-label="Darstellung">
+            <button type="submit" name="view" value="table" class="btn" data-variant="outline" data-size="sm" aria-pressed="true">Tabelle</button>
+            <button type="submit" name="view" value="journal" class="btn" data-variant="outline" data-size="sm" aria-pressed="false">Journal</button>
+          </div>
+        </fieldset>
+        <p class="text-muted-foreground text-xs">Segment-Knöpfe schicken das Formular ab; der gedrückte trägt <code>aria-pressed="true"</code>.</p>
+      </form>
+    </details>
+  </div>
 </div>

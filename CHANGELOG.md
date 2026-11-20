@@ -65,6 +65,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Sheet that scrolls:** `.table[data-sticky]` keeps the head on top and the first cell of every row at the start
+  side; a group row (`tr[data-group-row]`, e.g. a week) sticks right below the head, its offset `--table-head-height`
+  kept by `c22.js` while the head changes (CSSOM, allowed by a strict CSP). Today's row is `tr[aria-current="date"]`.
+- **Field that is the cell:** `td[data-field] > .input` without a frame of its own, the focus a ring inside the cell;
+  a line below it in `small` (what is open, who sees it); `data-type="number"` puts both at the end.
+- **Chip line:** `.chip-input` shows a field's value as chips (`[data-chips]`) until it is typed into.
+- **Popover without JavaScript:** `details.popover` with `summary.btn`; `c22.js` closes it by a click outside or Escape
+  and gives the focus back.
+- **Mark per entity:** `.badge[data-mark="1"…"5"]`, a dot in a chart colour before the text.
+- Block "Stundenblatt" (data entry): table, journal and grid of a sheet of hours, built from the above. It also brings
+  `md:hidden`, `md:flex`, `z-20`, `top-10`, `border-l`, `grid-cols-7`, `table-fixed` and
+  `group-focus-within:opacity-0` into the packs. Backlog T-17 (EightPerDay M-6).
+
 - **App workspace, UnderDoc's collected wishes (2026-11-19, part 2 of T-15):** the rules UnderDoc kept "until C22 has
   them" — the dialog for deleting what is used elsewhere (`.wayspop`, `.wayitem`, `.wayrow`, `.waysame`), a part in
   running text (`[data-embed-part]`), its boundary while reading (`.partedge`, `.partlabel`) and in the editor
