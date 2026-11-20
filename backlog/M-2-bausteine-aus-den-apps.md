@@ -17,9 +17,11 @@ zurück, bis C22 ihn übernimmt.
 **Fertig, wenn:** jeder hier gelistete Baustein in C22 liegt, in der Galerie in jedem Zustand
 (hell, dunkel, Druck) zu sehen ist, und die App ihn nur noch über einen dünnen Adapter nutzt.
 
-**Stand (2026-11-19):** 11 von 13 Aufgaben sind erledigt. Offen sind zwei:
+**Stand (2026-11-20):** 13 von 15 Aufgaben sind erledigt. Offen sind zwei:
 
 - **T-12** (Adapter für Go-Vorlagen): wartet bewusst, bis zwei Apps dieselben Go-Helfer kopieren. Die zweite Go-App schreibt das kanonische HTML direkt und braucht die Schicht nicht.
 - **T-16** (Nachtrag von UnderDoc): drei der sieben Wünsche sind da; offen sind Seitenwahl im Blockmenü, Art-Label für Einbettungen, Gefahrenbereich mit eingetippter Bestätigung und der Stil für Demo-Gruppen (Entscheidung des PO).
+
+Neu erledigt (2026-11-20): T-17 (Stundenblatt von EightPerDay) und T-18 (Rechte von UnderDoc).
 
 Erledigt sind T-13 (Arbeitsbereich mit drei Spalten, UnderDoc hat umgestellt), T-14 (Arbeitsbereich des Entwurfs) und T-15 (Sammeldurchgang). paperlaiss hat seine Sonderwege zu T-7, T-8 und T-9 entfernt.

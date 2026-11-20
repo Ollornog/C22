@@ -1,0 +1,50 @@
+<!-- c22-title: In Schritten anlegen (Dialog mit Schritten, Freigabe beim Anlegen) -->
+<!-- C22-custom: making something in steps, as UnderDoc's "new collection" (name, then with whom it is shared; ADR-29,
+     2026-11-20). form[data-steps] holds one fieldset[data-step] per step and ol.steps names them; c22.js shows one step
+     at a time, checks its fields before "next" ([data-step-next]), and shows "back" ([data-step-back]) and the submit
+     button ([data-step-done]) where they belong. Enter in a field goes to the next step instead of sending. Without
+     JavaScript every step shows at once and only the submit button, so the form still works. In an app it sits in
+     dialog.dialog with the same header/section/footer. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Neue Sammlung: erst der Name, dann mit wem sie geteilt wird (Vorgabe „nur ich“)</span>
+    <form class="card w-full max-w-lg" data-steps id="c22-steps-new" method="post" action="#">
+      <header>
+        <h2 class="card-title">Neue Sammlung</h2>
+        <p class="card-description">Sie gehört dir allein, bis du sie teilst — hier oder später in ihren Rechten.</p>
+        <ol class="steps" aria-label="Schritte">
+          <li aria-current="step">Name</li>
+          <li>Freigeben</li>
+        </ol>
+      </header>
+      <section class="grid gap-4">
+        <fieldset class="grid gap-2" data-step>
+          <legend class="sr-only">Name</legend>
+          <div class="field">
+            <label class="label" for="c22-steps-new-title">Name</label>
+            <input class="input" id="c22-steps-new-title" name="title" required maxlength="200" autocomplete="off">
+            <p>Der Name steht über der Sammlung und in der Suche.</p>
+          </div>
+        </fieldset>
+        <fieldset class="grid gap-3" data-step>
+          <legend class="text-sm font-medium">Freigeben an</legend>
+          <table class="table">
+            <tbody>
+              <tr><td><span class="inline-flex items-center gap-2"><svg data-icon-lu="users" class="size-4 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Gruppe Büro</span></td><td class="w-40"><select class="select" aria-label="Rolle von Gruppe Büro"><option value="read">Lesen</option><option value="comment">Kommentieren</option><option value="edit" selected>Bearbeiten</option><option value="manage">Verwalten</option></select></td><td class="w-10 text-end"><button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Gruppe Büro herausnehmen"><svg data-icon-lu="x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></td></tr>
+            </tbody>
+          </table>
+          <div class="flex flex-wrap items-center gap-2">
+            <select class="select" aria-label="Wer"><option value="tenant:">Alle in diesem Arbeitsbereich</option><optgroup label="Gruppen"><option>Büro</option><option>Technik</option></optgroup><optgroup label="Personen"><option>Mara Albrecht (mara)</option><option>Jonas Weber (jonas)</option></optgroup></select>
+            <select class="select" aria-label="Rolle"><option value="read" selected>Lesen</option><option value="comment">Kommentieren</option><option value="edit">Bearbeiten</option><option value="manage">Verwalten</option></select>
+            <button type="button" class="btn" data-variant="outline" data-size="sm">Hinzufügen</button>
+          </div>
+        </fieldset>
+      </section>
+      <footer class="justify-end gap-2">
+        <button type="button" class="btn" data-variant="outline" data-step-back hidden>Zurück</button>
+        <button type="button" class="btn" data-step-next hidden>Weiter</button>
+        <button type="submit" class="btn" data-step-done>Anlegen</button>
+      </footer>
+    </form>
+  </div>
+</div>

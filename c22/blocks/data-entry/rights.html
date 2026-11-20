@@ -1,0 +1,88 @@
+<!-- c22-title: Rechte eines Objekts (Besitzer, Rollen, Vererbung, Freigabe an Person oder Gruppe) -->
+<!-- C22-custom: the rights of a document, folder or file, as UnderDoc's rights dialog (ADR-29, 2026-11-20), from C22's
+     parts only. The owner and the inheritance are items (.item[data-size="sm"]) with their action at the end; roles given
+     here are a table with a role select and a take-back button; what comes from above shows where it comes from and the
+     role as one split badge (.badge-split: origin | role). Sharing picks a person, a group or everyone in one combobox
+     grouped with icons (the icon and the group heading tell the kind, not a colour), then a role. In an app the same
+     header/section/footer sit in dialog.dialog. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Rechte-Dialog: Besitzer, Vererbung, Rollen hier, Rollen von oben, Freigabe an Person, Gruppe oder alle</span>
+    <div class="card w-full max-w-xl">
+      <header>
+        <h2 class="card-title">Rechte: Angebote 2026</h2>
+        <p class="card-description">Rollen für Personen, Gruppen und alle, vererbt an alles darunter. Nur erlauben: Enger heißt die Vererbung unterbrechen.</p>
+      </header>
+      <section class="grid gap-4">
+        <div class="item-group" role="list">
+          <article class="item" data-variant="outline" data-size="sm" role="listitem">
+            <section><h4 class="font-medium">Besitzer</h4><p class="text-muted-foreground text-sm">Mara Albrecht</p></section>
+            <aside class="flex items-center gap-2"><select class="select" aria-label="Neuer Besitzer"><option>Mara Albrecht</option><option>Jonas Weber</option></select><button type="button" class="btn" data-variant="outline" data-size="sm">Übertragen</button></aside>
+          </article>
+          <article class="item" data-variant="outline" data-size="sm" role="listitem">
+            <section><h4 class="font-medium">Übernimmt die Rollen von oben</h4><p class="text-muted-foreground text-sm">aus „Vertrieb“</p></section>
+            <aside><button type="button" class="btn" data-variant="outline" data-size="sm">Vererbung unterbrechen</button></aside>
+          </article>
+        </div>
+        <div class="grid gap-2">
+          <h3 class="text-sm font-medium">Rollen hier</h3>
+          <table class="table">
+            <tbody>
+              <tr><td><span class="inline-flex items-center gap-2"><svg data-icon-lu="users" class="size-4 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Gruppe Büro</span></td><td class="w-40"><select class="select" aria-label="Rolle von Gruppe Büro"><option value="read">Lesen</option><option value="comment">Kommentieren</option><option value="edit" selected>Bearbeiten</option><option value="manage">Verwalten</option></select></td><td class="w-10 text-end"><button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Gruppe Büro herausnehmen"><svg data-icon-lu="x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></td></tr>
+              <tr><td><span class="inline-flex items-center gap-2"><svg data-icon-lu="user" class="size-4 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Jonas Weber</span></td><td><select class="select" aria-label="Rolle von Jonas Weber"><option value="read" selected>Lesen</option><option value="comment">Kommentieren</option><option value="edit">Bearbeiten</option><option value="manage">Verwalten</option></select></td><td class="text-end"><button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Jonas Weber herausnehmen"><svg data-icon-lu="x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></td></tr>
+            </tbody>
+          </table>
+          <div class="flex flex-wrap items-center gap-2">
+            <div class="combobox w-full max-w-xs" id="c22-rights-who">
+              <input type="text" class="input" id="c22-rights-who-input" role="combobox" autocomplete="off" spellcheck="false" aria-autocomplete="list" aria-expanded="false" aria-controls="c22-rights-who-listbox" placeholder="Person oder Gruppe suchen …" aria-label="Wer">
+              <svg data-icon-lu="chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="combobox-trigger-icon"><path d="m6 9 6 6 6-6"/></svg>
+              <div id="c22-rights-who-popover" data-popover aria-hidden="true">
+                <div role="listbox" id="c22-rights-who-listbox" aria-orientation="vertical" aria-labelledby="c22-rights-who-input" data-empty="Niemand gefunden.">
+                  <div role="option" data-value="tenant:" data-label="Alle in diesem Arbeitsbereich" data-filter="Alle Arbeitsbereich"><svg data-icon-lu="globe" class="size-4 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg><span>Alle in diesem Arbeitsbereich</span></div>
+                  <hr role="separator">
+                  <div role="group" aria-labelledby="c22-rights-who-gruppen"><div role="heading" id="c22-rights-who-gruppen">Gruppen</div>
+                    <div role="option" data-value="group:buero" data-label="Gruppe Büro" data-filter="Büro Gruppe"><svg data-icon-lu="users" class="size-4 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="flex flex-col"><span>Büro</span><span class="text-muted-foreground text-xs">4 Mitglieder · lokal</span></span></div>
+                    <div role="option" data-value="group:technik" data-label="Gruppe Technik" data-filter="Technik Gruppe Anmeldung"><svg data-icon-lu="users" class="size-4 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="flex flex-col"><span>Technik</span><span class="text-muted-foreground text-xs">7 Mitglieder · aus der Anmeldung</span></span></div>
+                  </div>
+                  <hr role="separator">
+                  <div role="group" aria-labelledby="c22-rights-who-personen"><div role="heading" id="c22-rights-who-personen">Personen</div>
+                    <div role="option" data-value="person:mara" data-label="Mara Albrecht" data-filter="Mara Albrecht mara"><svg data-icon-lu="user" class="size-4 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="flex flex-col"><span>Mara Albrecht</span><span class="text-muted-foreground text-xs">mara</span></span></div>
+                    <div role="option" data-value="person:jonas" data-label="Jonas Weber" data-filter="Jonas Weber jonas"><svg data-icon-lu="user" class="size-4 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="flex flex-col"><span>Jonas Weber</span><span class="text-muted-foreground text-xs">jonas</span></span></div>
+                  </div>
+                </div>
+              </div>
+              <input type="hidden" name="who" value="">
+            </div>
+            <select class="select" aria-label="Rolle"><option value="read" selected>Lesen</option><option value="comment">Kommentieren</option><option value="edit">Bearbeiten</option><option value="manage">Verwalten</option></select>
+            <button type="button" class="btn" data-size="sm">Freigeben</button>
+          </div>
+        </div>
+        <div class="grid gap-2">
+          <h3 class="text-sm font-medium">Von oben</h3>
+          <ul class="grid gap-2 text-sm">
+            <li class="flex flex-wrap items-center justify-between gap-2"><span class="inline-flex items-center gap-2"><svg data-icon-lu="globe" class="size-4 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>Alle</span><span class="badge-split"><span>von Vertrieb</span><span>Lesen</span></span></li>
+            <li class="flex flex-wrap items-center justify-between gap-2"><span class="inline-flex items-center gap-2"><svg data-icon-lu="users" class="size-4 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Gruppe Technik</span><span class="badge-split"><span>von Firma</span><span>Verwalten</span></span></li>
+          </ul>
+        </div>
+      </section>
+      <footer class="justify-end"><button type="button" class="btn" data-variant="outline">Schließen</button></footer>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Wer darf was: Rolle und Herkunft je Eintrag (hier vergeben · von oben · als Besitzer)</span>
+    <div class="item-group w-full max-w-xl" role="list">
+      <article class="item" data-variant="outline" data-size="sm" role="listitem">
+        <section><h4 class="font-medium">Angebote 2026</h4><p class="text-muted-foreground text-sm">Ordner</p></section>
+        <aside><span class="badge-split"><span>Besitzer</span><span>Verwalten</span></span></aside>
+      </article>
+      <article class="item" data-variant="outline" data-size="sm" role="listitem">
+        <section><h4 class="font-medium">Preisliste</h4><p class="text-muted-foreground text-sm">Seite</p></section>
+        <aside><span class="badge-split"><span>über Gruppe Büro</span><span>Bearbeiten</span></span></aside>
+      </article>
+      <article class="item" data-variant="outline" data-size="sm" role="listitem">
+        <section><h4 class="font-medium">Handbuch</h4><p class="text-muted-foreground text-sm">Sammlung</p></section>
+        <aside><span class="badge-split"><span>von oben · Firma</span><span>Lesen</span></span></aside>
+      </article>
+    </div>
+  </div>
+</div>

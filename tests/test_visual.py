@@ -554,6 +554,31 @@ def verhalten(r: Report, b: Browser, basis: str) -> None:
     })()""")
     r.check("Popover ohne JavaScript: Klick daneben und Escape schließen, Fokus zurück, Klick darin nicht",
             p == {"aussen": False, "drin": True, "esc": False, "fokus": True, "innen": True}, str(p))
+    # Form in steps (UnderDoc's new collection): one step at a time, "next" checks the open step first, Enter goes on
+    # instead of sending, "back" returns; the steps list follows.
+    st = s.js("""(() => {
+      const f = document.getElementById('c22-steps-new');
+      const [eins, zwei] = f.querySelectorAll('[data-step]');
+      const marke = [...f.querySelectorAll('ol.steps > li')];
+      const knopf = (n) => f.querySelector('[data-step-' + n + ']');
+      const zu_sehen = (el) => el.getClientRects().length > 0;
+      const lage = () => ({ eins: zu_sehen(eins), zwei: zu_sehen(zwei), zurueck: zu_sehen(knopf('back')), weiter: zu_sehen(knopf('next')),
+                            fertig: zu_sehen(knopf('done')), offen: marke.findIndex(m => m.getAttribute('aria-current') === 'step'),
+                            erledigt: marke.filter(m => m.dataset.state === 'done').length });
+      const start = lage();
+      const name = f.querySelector('[name=title]'); name.value = '';
+      knopf('next').click(); const leer = lage();
+      name.value = 'Handbuch'; knopf('next').click(); const weiter = lage();
+      const fokus = zwei.contains(document.activeElement);
+      knopf('back').click(); const zurueck = lage();
+      f.requestSubmit(); const enter = lage();
+      knopf('back').click(); name.value = '';
+      return { start, leer, weiter, fokus, zurueck, enter };
+    })()""")
+    erst = {"eins": True, "zwei": False, "zurueck": False, "weiter": True, "fertig": False, "offen": 0, "erledigt": 0}
+    dann = {"eins": False, "zwei": True, "zurueck": True, "weiter": False, "fertig": True, "offen": 1, "erledigt": 1}
+    r.check("Schritte: einer zur Zeit, Weiter prüft den Schritt, Enter geht weiter, Zurück kehrt um",
+            st == {"start": erst, "leer": erst, "weiter": dann, "fokus": True, "zurueck": erst, "enter": dann}, str(st))
 
     # Chart: wide and flat stays flat, keeps its text size and reports a click.
     s.geh(f"{basis}/charts.html?pack=vega&theme=light&lang=de")

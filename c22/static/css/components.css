@@ -4606,3 +4606,23 @@
   .badge[data-mark='4'] { --badge-mark: var(--chart-4); }
   .badge[data-mark='5'] { --badge-mark: var(--chart-5); }
 }
+
+/* ============================================================
+ * Steps (ol.steps) — where a form in steps stands: a number per step, the open one aria-current="step" (filled, bold),
+ * one done data-state="done" (a check instead of its number); a line joins them. The words name the steps, the fill only
+ * adds to it (UnderDoc's new collection, 2026-11-20). c22.js keeps both in step with form[data-steps].
+ * ============================================================ */
+@layer components {
+  .steps { @apply flex flex-wrap items-center gap-2 text-xs; counter-reset: c22-step; }
+  .steps > li { @apply text-muted-foreground flex items-center gap-1.5; counter-increment: c22-step; }
+  .steps > li::before {
+    content: counter(c22-step);
+    @apply border-border flex size-5 shrink-0 items-center justify-center rounded-full border tabular-nums;
+  }
+  .steps > li:not(:last-child)::after { content: ""; @apply bg-border ms-1 h-px w-6; }
+  .steps > li[aria-current='step'] { @apply text-foreground font-medium; }
+  .steps > li[aria-current='step']::before { @apply bg-primary text-primary-foreground border-primary; }
+  .steps > li[data-state='done'] { @apply text-foreground; }
+  .steps > li[data-state='done']::before { content: "✓"; @apply bg-muted; }
+  .card > header > .steps { @apply mt-2; }
+}

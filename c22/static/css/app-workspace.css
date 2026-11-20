@@ -878,6 +878,9 @@ body.dragging .c22-app-workspace :is(.row, .collrow, .navitem, .cheadrow, .chead
 .c22-app-workspace .cm-editor.cm-ud .cm-ud-marker[data-active] > .bhandle { opacity: 1; }
 .c22-app-workspace .cm-editor.cm-ud .cm-ud-ask { margin: calc(6 * var(--app-workspace-space)) 0; }
 .c22-app-workspace .cm-editor.cm-ud .cm-ud-ask .chip { margin-left: calc(4 * var(--app-workspace-space)); }
+/* A value the editor asks about (UnderDoc #109, ADR-7: a password typed as text): a wavy line under it in the
+   destructive colour while the question beside it is open. The shape and the question say it, not the colour alone. */
+.c22-app-workspace .cm-editor.cm-ud .cm-ud-plain { text-decoration: underline wavy var(--destructive); text-underline-offset: 3px; }
 .c22-app-workspace .cm-editor.cm-ud .cm-ud-embed { display: inline-flex; align-items: baseline; gap: calc(6 * var(--app-workspace-space)); padding: calc(2 * var(--app-workspace-space)) calc(8 * var(--app-workspace-space)); border: 1px solid var(--border); border-radius: calc(6 * var(--app-workspace-radius)); background: var(--muted); font-size: calc(13 * var(--app-workspace-text)); }
 .c22-app-workspace .cm-editor.cm-ud .cm-ud-embed-what { color: var(--muted-foreground); }
 .c22-app-workspace .cm-editor.cm-ud .cm-ud-embed a { color: inherit; text-decoration: underline; }
