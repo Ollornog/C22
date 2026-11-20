@@ -6,8 +6,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Today as a column:** `th[aria-current="date"]` in the head and `td[aria-current="date"]` down the column tint the
+  column like the row, the head bold with a bar below it. Shown in the "Stundenblatt" block's week grid.
+- **Docs:** README and CLAUDE.md name the trap of `[data-confirm]`: `c22.js` takes every such element over by itself, so an
+  app that vendors it and has its own handler on one asks twice or never runs it; texts, variant and
+  `window.C22.confirm` are listed. No off switch (the attribute is the switch).
+
 ### Fixed
 
+- **Sheet that scrolls:** today's row (`tr[aria-current="date"]`) is tinted in its sticky first cell too; the cell's own
+  opaque background was the more specific rule and left it white beside the bar. The tint is opaque, so nothing shines
+  through when it scrolls. The running week (`aria-current="true"` on a group row) is checked in the same test.
+- **Browser suite:** `test_visual.py` no longer raises a `SyntaxWarning` for `\p` (the page script is a raw string).
 - `scripts/build-gallery.sh` no longer reports "10 Pack-CSS gebaut" when the build failed: it stops first with a clear
   message when `tools/tailwindcss` is missing or not executable, and Tailwind's exit code decides (the word "Error" in
   its output stays a second net, read without a pipe that `pipefail` could break). Before, only that word counted, so a

@@ -46,7 +46,7 @@ the look per component.
 | Table with hierarchy lines, row selection | `class="table" data-variant="levels"` + `data-selectable` (`="explorer"` adds opening; a link with `data-follow` opens on a click; merged-cell content in a `div` sticks under the head, `--levels-sticky-top`) | `blocks/tables/merge-table.html` |
 | Page title as path | `class="breadcrumb" data-variant="title"`, last step is the `<h1>` | `breadcrumb.html` |
 | Stack of messages, closable alert | `class="alert-stack"`, `.btn-close` as direct child of `.alert` | `alert.html` |
-| Confirmation before an action | `[data-confirm="text"]` or `form[data-confirm]`, never `confirm()` | `alert-dialog.html` |
+| Confirmation before an action | `[data-confirm="text"]` or `form[data-confirm]`, never `confirm()`; c22.js takes every such element over by itself (an app's own handler on it never runs, so use another attribute name there); texts on `<html>` as `data-confirm-title/-ok/-cancel`, `data-confirm-variant="destructive"` per trigger | `alert-dialog.html` |
 | Floating button with counter | `class="btn" data-fab` | `button.html` |
 | Phone navigation along the bottom edge | `nav.tab-bar` with links, open one `aria-current="page"`; gone from md, `data-always` keeps it; its parent gets room below by itself | `tab-bar.html` |
 | QR code / key to type off by hand | `img.qr-code` / `code.secret-key` | `input-otp.html` |
@@ -58,7 +58,7 @@ the look per component.
 | Progress without inline style (strict CSP) | `progress.progress` (+ `data-variant` status) | `progress.html` |
 | Drop zone that lights up while files are dragged | `[data-dropzone]` (c22.js sets `data-over`) | `empty.html` |
 | A page that prints as a report | `.print-sheet` on the page, `print:hidden` on what stays off paper | `blocks/data-entry/week-report.html` |
-| Long table in a scrolling box: head, first column and a group row stick | `.table[data-sticky]`, group row `tr[data-group-row]` (sticks under the head, c22.js keeps `--table-head-height`); today `tr[aria-current="date"]` | `blocks/data-entry/time-sheet.html` |
+| Long table in a scrolling box: head, first column and a group row stick | `.table[data-sticky]`, group row `tr[data-group-row]` (sticks under the head, c22.js keeps `--table-head-height`); today `tr[aria-current="date"]`, or as a column `th`/`td[aria-current="date"]` (the sticky first cell is tinted too) | `blocks/data-entry/time-sheet.html` |
 | A field that is the cell, a hint line below it | `td[data-field] > .input` + `small` (`data-type="number"` aligns to the end); outside a table the hint is the `.field`'s help text | `blocks/data-entry/time-sheet.html`, `field.html` |
 | A value shown as chips until it is typed into | `.chip-input` > `.input` + `[data-chips]` | `blocks/data-entry/time-sheet.html` |
 | Popover without JavaScript (settings, segment buttons) | `details.popover` > `summary.btn` + `[data-popover]`; segments `.button-group` of buttons with `aria-pressed` | `popover.html`, `toggle-group.html` |

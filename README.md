@@ -60,6 +60,14 @@ The look is the shared source of truth: design questions are solved **in C22** (
 and adopted by the apps — not hard-coded per app. Other stacks take the partials' HTML and the
 compiled CSS directly.
 
+**Trap for apps that vendor `c22.js`:** it takes over every `form[data-confirm]` and every other `[data-confirm]` button
+or link on its own, in the capture phase, before htmx or the app's own handlers see the click or the submit: a `<dialog>`
+asks first, the action goes on only after "confirm". An app that already has its own confirmation on an element with that
+attribute (its own dialog, `hx-confirm` next to it) therefore asks twice, or its handler never runs. Either let C22 ask
+(texts per page on `<html>`: `data-confirm-title`, `data-confirm-ok`, `data-confirm-cancel`; per trigger the same
+attributes plus `data-confirm-variant="destructive"`; from code `window.C22.confirm(message, onConfirm, options)`) or give
+your own mechanism another attribute name. There is deliberately no off switch: the attribute is the switch.
+
 ## Development
 
 ```bash

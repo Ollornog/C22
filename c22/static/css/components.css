@@ -4553,6 +4553,20 @@
   .table tr[aria-current='date'] > * { @apply bg-accent text-accent-foreground; }
   .table tr[aria-current='date'] > :first-child { @apply font-semibold; box-shadow: inset 2px 0 0 var(--primary); }
   .table tr[aria-current='date'] > :first-child:dir(rtl) { box-shadow: inset -2px 0 0 var(--primary); }
+  /* In a sheet that scrolls the first cell has its own opaque background (it must cover what slides under it), and that
+     rule is the more specific one: the row's tint has to be put on it again, as opaque as before. */
+  .table[data-sticky] tbody > tr[aria-current='date'] > :first-child { @apply bg-accent text-accent-foreground; }
+}
+
+/* ============================================================
+ * Today as a column (th[aria-current="date"] in the head, td[aria-current="date"] in the cells of that column): the
+ * same tint as the row, the head bold with a bar below it. A cell that is the field (td[data-field]) keeps its input
+ * transparent, so the tint shows through (EightPerDay's week grid, 2026-11-21).
+ * ============================================================ */
+@layer components {
+  .table :is(th, td)[aria-current='date'] { @apply bg-accent text-accent-foreground; }
+  .table thead th[aria-current='date'] { @apply font-semibold; box-shadow: inset 0 -2px 0 var(--primary); }
+  .table[data-sticky] thead tr > th[aria-current='date'] { @apply bg-accent text-accent-foreground; }
 }
 
 /* ============================================================
