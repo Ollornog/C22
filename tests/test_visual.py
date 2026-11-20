@@ -509,6 +509,52 @@ def verhalten(r: Report, b: Browser, basis: str) -> None:
     r.check("Wochenbericht: auf Papier ohne Knöpfe, Tabellenkopf wiederholt, Zeilen ungeteilt",
             w == {"knopf": "none", "kopf": "table-header-group", "zeile": "avoid"}, str(w))
 
+    # Sheet (EightPerDay M-6): the week row sticks right below the head, also after the head grew; today stays a word.
+    k = s.js("""(async () => {
+      const t = document.querySelector('#data-entry-time-sheet .table[data-sticky]');
+      const box = t.parentElement, head = t.tHead, zeile = t.querySelector('tr[data-group-row]');
+      const frame = () => new Promise(ok => requestAnimationFrame(() => requestAnimationFrame(ok)));
+      box.scrollTop = 120; await frame();
+      const oben = () => Math.round(zeile.cells[1].getBoundingClientRect().top - box.getBoundingClientRect().top - box.clientTop);
+      const vorher = { kopf: Math.round(head.getBoundingClientRect().height), zeile: oben(),
+                       tag: Math.round(t.querySelector('tbody th').getBoundingClientRect().left - box.getBoundingClientRect().left - box.clientLeft) };
+      head.rows[0].cells[1].insertAdjacentHTML('beforeend', '<span class="block">zweite Zeile</span>');
+      await frame(); await frame();
+      const nachher = { kopf: Math.round(head.getBoundingClientRect().height), zeile: oben() };
+      head.rows[0].cells[1].lastElementChild.remove(); box.scrollTop = 0;
+      return { vorher, nachher };
+    })()""")
+    r.check("Stundenblatt: die Wochenzeile klebt unter dem Kopf, auch wenn er wächst",
+            k["vorher"]["zeile"] == k["vorher"]["kopf"] and k["nachher"]["zeile"] == k["nachher"]["kopf"]
+            and k["nachher"]["kopf"] > k["vorher"]["kopf"] and k["vorher"]["tag"] == 0, str(k))
+    # A field that is the cell has no frame of its own; the chip line shows the field only with the focus.
+    f = s.js("""(() => {
+      const zelle = document.querySelector('#data-entry-time-sheet td[data-field] > .input');
+      const feld = document.querySelector('#data-entry-time-sheet .chip-input > .input');
+      const ohne = getComputedStyle(feld).opacity;
+      feld.focus(); const mit = getComputedStyle(feld).opacity; feld.blur();
+      return { rand: getComputedStyle(zelle).borderTopWidth, ohne, mit };
+    })()""")
+    r.check("Feld als Zelle ohne eigenen Rahmen, Chip-Zeile zeigt das Feld nur mit Fokus",
+            f == {"rand": "0px", "ohne": "0", "mit": "1"}, str(f))
+    # Popover without JavaScript: a click outside closes it, Escape closes it and gives the focus back to its button.
+    p = s.js("""(async () => {
+      const d = document.getElementById('c22-sheet-ansicht');
+      const frame = () => new Promise(ok => requestAnimationFrame(() => requestAnimationFrame(ok)));
+      d.open = true; document.body.click(); const aussen = d.open;
+      // The body of a details that just opened takes the focus only once it is laid out: try until it does.
+      d.open = true; const knopf = d.querySelector('button');
+      for (let i = 0; i < 30 && document.activeElement !== knopf; i++) { await frame(); knopf.focus(); }
+      const drin = document.activeElement === knopf;
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+      const esc = d.open, fokus = document.activeElement === d.querySelector('summary');
+      d.open = true; d.querySelector('form p').click(); const innen = d.open;
+      d.open = false;
+      return { aussen, drin, esc, fokus, innen };
+    })()""")
+    r.check("Popover ohne JavaScript: Klick daneben und Escape schließen, Fokus zurück, Klick darin nicht",
+            p == {"aussen": False, "drin": True, "esc": False, "fokus": True, "innen": True}, str(p))
+
     # Chart: wide and flat stays flat, keeps its text size and reports a click.
     s.geh(f"{basis}/charts.html?pack=vega&theme=light&lang=de")
     s.js(AUSGEROLLT)

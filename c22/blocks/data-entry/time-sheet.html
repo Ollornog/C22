@@ -1,0 +1,177 @@
+<!-- c22-title: Stundenblatt (klebender Kopf, Wochenzeile, Feld als Zelle, Journal mit Chips) -->
+<!-- C22-custom: a sheet of hours to type into, as EightPerDay's start page (M-6, 2026-11-20). The table scrolls in a
+     container of the app's: .table[data-sticky] keeps the head on top and the day on the start side, a week row
+     (tr[data-group-row]) sticks below the head (c22.js keeps --table-head-height). Each field is the cell
+     (td[data-field] > .input, a line below it in small), today is tr[aria-current="date"], an employer a .badge[data-mark].
+     The settings are a popover without JavaScript (details.popover) with segment buttons (aria-pressed). The journal
+     shows a day as chips until it is typed into (.chip-input). -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Tabelle: Kopf und Tag kleben, die Woche klebt unter dem Kopf; heute markiert, ein Feld je Zelle mit Hinweiszeile</span>
+    <div class="grid w-full max-w-3xl gap-2">
+      <div class="flex flex-wrap items-center gap-2">
+        <p class="hidden flex-wrap items-baseline gap-x-4 text-sm tabular-nums md:flex"><span>Diese Woche <b>26 / 40 h</b></span><span>Saldo <b>−2:00</b></span></p>
+        <p class="text-sm tabular-nums md:hidden"><b>26 / 40 h</b></p>
+        <div class="ms-auto flex items-center gap-1">
+          <a href="#c22-sheet-heute" class="btn" data-variant="outline" data-size="sm">Heute</a>
+          <details class="popover" id="c22-sheet-ansicht">
+            <summary class="btn" data-variant="outline" data-size="sm"><svg data-icon-lu="settings" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>Ansicht</summary>
+            <form data-popover data-align="end" class="grid w-72 gap-3">
+              <fieldset class="grid gap-2">
+                <legend class="label mb-2">Darstellung</legend>
+                <div class="button-group" role="group" aria-label="Darstellung">
+                  <button type="submit" name="view" value="table" class="btn" data-variant="outline" data-size="sm" aria-pressed="true">Tabelle</button>
+                  <button type="submit" name="view" value="journal" class="btn" data-variant="outline" data-size="sm" aria-pressed="false">Journal</button>
+                  <button type="submit" name="view" value="grid" class="btn" data-variant="outline" data-size="sm" aria-pressed="false">Raster</button>
+                </div>
+              </fieldset>
+              <fieldset class="grid gap-2">
+                <legend class="label mb-2">Detailstufe</legend>
+                <div class="button-group" role="group" aria-label="Detailstufe">
+                  <button type="submit" name="detail" value="hours" class="btn" data-variant="outline" data-size="sm" aria-pressed="false">Stunden</button>
+                  <button type="submit" name="detail" value="projects" class="btn" data-variant="outline" data-size="sm" aria-pressed="true">Projekte</button>
+                </div>
+                <p class="text-muted-foreground text-xs">Ohne JavaScript schickt jeder Knopf das Formular ab; die Wahl gilt für diese Person.</p>
+              </fieldset>
+            </form>
+          </details>
+        </div>
+      </div>
+      <p class="flex items-center gap-x-4 overflow-x-auto whitespace-nowrap text-muted-foreground text-xs"><span><kbd class="kbd">Enter</kbd> nächster Tag</span><span><kbd class="kbd">Tab</kbd> nächste Spalte</span><span><kbd class="kbd">Esc</kbd> zurücknehmen</span><span><kbd class="kbd">U</kbd> <kbd class="kbd">K</kbd> <kbd class="kbd">F</kbd> Urlaub, krank, frei</span></p>
+      <div class="max-h-80 overflow-auto rounded-lg border">
+        <table class="table" data-variant="grid" data-sticky>
+          <thead>
+            <tr>
+              <th scope="col">Tag</th>
+              <th scope="col" class="text-end"><span class="badge" data-variant="outline" data-mark="1">S</span> Studio Nord</th>
+              <th scope="col" class="text-end"><span class="badge" data-variant="outline" data-mark="2">W</span> Werkstatt</th>
+              <th scope="col" class="text-end">Σ</th>
+              <th scope="col" class="w-full">Notiz</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-group-row aria-current="true">
+              <th scope="rowgroup">KW 47 <span class="text-xs font-normal">16.–22.11.</span></th>
+              <td class="text-end">18</td><td class="text-end">6</td><td class="text-end">24</td>
+              <td><span class="badge" data-variant="primary">Diese Woche</span></td>
+            </tr>
+          <tr>
+            <th scope="row">Mo 16.11.</th>
+            <td data-field data-type="number"><input class="input" data-size="sm" value="8" placeholder="0" aria-label="Studio Nord am Mo 16.11." autocomplete="off"></td>
+            <td data-field data-type="number"><input class="input" data-size="sm" value="" placeholder="0" aria-label="Werkstatt am Mo 16.11." autocomplete="off"></td>
+            <td class="text-end tabular-nums">8</td>
+            <td data-field><input class="input" data-size="sm" value="Kickoff" aria-label="Notiz am Mo 16.11." autocomplete="off"><small>sichtbar für Studio Nord</small></td>
+          </tr>
+          <tr>
+            <th scope="row">Di 17.11.</th>
+            <td data-field data-type="number"><input class="input" data-size="sm" value="6" placeholder="0" aria-label="Studio Nord am Di 17.11." autocomplete="off"></td>
+            <td data-field data-type="number"><input class="input" data-size="sm" value="2" placeholder="0" aria-label="Werkstatt am Di 17.11." autocomplete="off"></td>
+            <td class="text-end tabular-nums">8</td>
+            <td data-field><input class="input" data-size="sm" value="" aria-label="Notiz am Di 17.11." autocomplete="off"><small>sichtbar für Studio Nord</small></td>
+          </tr>
+          <tr>
+            <th scope="row">Mi 18.11.</th>
+            <td data-field data-type="number"><input class="input" data-size="sm" value="U" placeholder="0" aria-label="Studio Nord am Mi 18.11." autocomplete="off"><small>Urlaub</small></td>
+            <td data-field data-type="number"><input class="input" data-size="sm" value="" placeholder="0" aria-label="Werkstatt am Mi 18.11." autocomplete="off"></td>
+            <td class="text-end tabular-nums">8</td>
+            <td data-field><input class="input" data-size="sm" value="" aria-label="Notiz am Mi 18.11." autocomplete="off"><small>sichtbar für Studio Nord</small></td>
+          </tr>
+          <tr id="c22-sheet-heute" aria-current="date">
+            <th scope="row">Do 19.11. <span class="badge" data-variant="primary">Heute</span></th>
+            <td data-field data-type="number"><input class="input" data-size="sm" value="4v" placeholder="0" aria-label="Studio Nord am Do 19.11." autocomplete="off"><small>3:00 offen</small></td>
+            <td data-field data-type="number"><input class="input" data-size="sm" value="4" placeholder="0" aria-label="Werkstatt am Do 19.11." autocomplete="off"></td>
+            <td class="text-end tabular-nums">8</td>
+            <td data-field><input class="input" data-size="sm" value="" aria-label="Notiz am Do 19.11." autocomplete="off"><small>sichtbar für Studio Nord</small></td>
+          </tr>
+          <tr>
+            <th scope="row">Fr 20.11.</th>
+            <td data-field data-type="number"><input class="input" data-size="sm" value="" placeholder="0" aria-label="Studio Nord am Fr 20.11." autocomplete="off"></td>
+            <td data-field data-type="number"><input class="input" data-size="sm" value="" placeholder="0" aria-label="Werkstatt am Fr 20.11." autocomplete="off"></td>
+            <td class="text-end tabular-nums"></td>
+            <td data-field><input class="input" data-size="sm" value="" aria-label="Notiz am Fr 20.11." autocomplete="off"><small>sichtbar für Studio Nord</small></td>
+          </tr>
+          </tbody>
+          <tbody>
+            <tr data-group-row>
+              <th scope="rowgroup">KW 48 <span class="text-xs font-normal">23.–29.11.</span></th>
+              <td class="text-end"></td><td class="text-end"></td><td class="text-end"></td>
+              <td><span class="badge" data-variant="outline">Planung</span></td>
+            </tr>
+          <tr>
+            <th scope="row">Mo 23.11.</th>
+            <td data-field data-type="number"><input class="input" data-size="sm" value="" placeholder="0" aria-label="Studio Nord am Mo 23.11." autocomplete="off"></td>
+            <td data-field data-type="number"><input class="input" data-size="sm" value="" placeholder="0" aria-label="Werkstatt am Mo 23.11." autocomplete="off"></td>
+            <td class="text-end tabular-nums"></td>
+            <td data-field><input class="input" data-size="sm" value="" aria-label="Notiz am Mo 23.11." autocomplete="off"><small>sichtbar für Studio Nord</small></td>
+          </tr>
+          <tr>
+            <th scope="row">Di 24.11.</th>
+            <td data-field data-type="number"><input class="input" data-size="sm" value="" placeholder="0" aria-label="Studio Nord am Di 24.11." autocomplete="off"></td>
+            <td data-field data-type="number"><input class="input" data-size="sm" value="" placeholder="0" aria-label="Werkstatt am Di 24.11." autocomplete="off"></td>
+            <td class="text-end tabular-nums"></td>
+            <td data-field><input class="input" data-size="sm" value="" aria-label="Notiz am Di 24.11." autocomplete="off"><small>sichtbar für Studio Nord</small></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Journal: eine Zeile je Tag, ohne Fokus als Chips (<code>.chip-input</code>); Wochenkopf klebt unter der Leiste</span>
+    <div class="max-h-80 w-full max-w-xl overflow-auto rounded-lg border">
+      <div class="bg-background sticky top-0 z-20 flex h-10 items-center gap-2 border-b px-3 text-sm"><b>KW 47</b><span class="text-muted-foreground text-xs">Tippen: <code>5</code> · <code>s3 studio</code> · <code>½U 4n</code></span></div>
+      <div class="bg-muted sticky top-10 z-10 grid grid-cols-7 gap-1 px-3 py-1 text-center text-xs tabular-nums" aria-label="Summen der Tage"><span>Mo 8</span><span>Di 8</span><span>Mi U</span><span>Do 8</span><span>Fr –</span><span>Sa –</span><span>So –</span></div>
+      <div class="grid px-3">
+        <div class="group flex items-center gap-2 border-b py-1">
+          <span class="w-16 shrink-0 text-sm tabular-nums">Mo 16.11.</span>
+          <div class="chip-input flex-1">
+            <input class="input" data-size="sm" value="s8 kickoff" aria-label="Montag, 16.11." autocomplete="off" spellcheck="false">
+            <div data-chips><span class="badge" data-variant="outline" data-mark="1">S · 8</span><small>Kickoff</small></div>
+          </div>
+          <span class="text-muted-foreground shrink-0 group-focus-within:opacity-0"><svg data-icon-lu="pencil" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5" aria-hidden="true"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg></span>
+          <span class="w-12 shrink-0 border-l text-end text-sm tabular-nums">8</span>
+        </div>
+        <div class="group flex items-center gap-2 border-b py-1">
+          <span class="w-16 shrink-0 text-sm tabular-nums">Di 17.11.</span>
+          <div class="chip-input flex-1">
+            <input class="input" data-size="sm" value="s6 w2" aria-label="Dienstag, 17.11." autocomplete="off" spellcheck="false">
+            <div data-chips><span class="badge" data-variant="outline" data-mark="1">S · 6</span><span class="badge" data-variant="outline" data-mark="2">W · 2</span></div>
+          </div>
+          <span class="text-muted-foreground shrink-0 group-focus-within:opacity-0"><svg data-icon-lu="pencil" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5" aria-hidden="true"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg></span>
+          <span class="w-12 shrink-0 border-l text-end text-sm tabular-nums">8</span>
+        </div>
+        <div class="group flex items-center gap-2 border-b py-1">
+          <span class="w-16 shrink-0 text-sm tabular-nums">Mi 18.11.</span>
+          <div class="chip-input flex-1">
+            <input class="input" data-size="sm" value="U" aria-label="Mittwoch, 18.11." autocomplete="off" spellcheck="false">
+            <div data-chips><span class="badge" data-variant="secondary">S · Urlaub</span></div>
+          </div>
+          <span class="text-muted-foreground shrink-0 group-focus-within:opacity-0"><svg data-icon-lu="pencil" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5" aria-hidden="true"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg></span>
+          <span class="w-12 shrink-0 border-l text-end text-sm tabular-nums">8</span>
+        </div>
+        <div class="group flex items-center gap-2 border-b py-1">
+          <span class="w-16 shrink-0 text-sm tabular-nums">Do 19.11.</span>
+          <div class="chip-input flex-1">
+            <input class="input" data-size="sm" value="s4v w4" aria-label="Donnerstag, 19.11." autocomplete="off" spellcheck="false">
+            <div data-chips><span class="badge" data-variant="outline" data-mark="1">S · 4 VM</span><span class="badge" data-variant="outline" data-mark="2">W · 4</span><span class="badge" data-variant="warning">3:00 offen</span></div>
+          </div>
+          <span class="text-muted-foreground shrink-0 group-focus-within:opacity-0"><svg data-icon-lu="pencil" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5" aria-hidden="true"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg></span>
+          <span class="w-12 shrink-0 border-l text-end text-sm tabular-nums">8</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Raster: Tage als Spalten gleicher Breite (<code>table-fixed</code>), Arbeitgeber als Zeilen</span>
+    <div class="w-full max-w-3xl overflow-x-auto">
+      <table class="table min-w-xl table-fixed" data-variant="grid">
+        <thead><tr><th scope="col" class="w-32"></th><th scope="col" class="text-end">Mo</th><th scope="col" class="text-end">Di</th><th scope="col" class="text-end">Mi</th><th scope="col" class="text-end">Do</th><th scope="col" class="text-end">Fr</th><th scope="col" class="text-end">Σ</th></tr></thead>
+        <tbody>
+          <tr><th scope="row"><span class="badge" data-variant="outline" data-mark="1">S</span> Studio Nord</th><td data-field data-type="number"><input class="input" data-size="sm" value="8" aria-label="Studio Nord, Montag"></td><td data-field data-type="number"><input class="input" data-size="sm" value="6" aria-label="Studio Nord, Dienstag"></td><td data-field data-type="number"><input class="input" data-size="sm" value="U" aria-label="Studio Nord, Mittwoch"></td><td data-field data-type="number"><input class="input" data-size="sm" value="4v" aria-label="Studio Nord, Donnerstag"><small>3:00 offen</small></td><td data-field data-type="number"><input class="input" data-size="sm" aria-label="Studio Nord, Freitag"></td><td class="text-end tabular-nums">18</td></tr>
+          <tr><th scope="row"><span class="badge" data-variant="outline" data-mark="2">W</span> Werkstatt</th><td data-field data-type="number"><input class="input" data-size="sm" aria-label="Werkstatt, Montag"></td><td data-field data-type="number"><input class="input" data-size="sm" value="2" aria-label="Werkstatt, Dienstag"></td><td data-field data-type="number"><input class="input" data-size="sm" aria-label="Werkstatt, Mittwoch"></td><td data-field data-type="number"><input class="input" data-size="sm" value="4" aria-label="Werkstatt, Donnerstag"></td><td data-field data-type="number"><input class="input" data-size="sm" aria-label="Werkstatt, Freitag"></td><td class="text-end tabular-nums">6</td></tr>
+          <tr><th scope="row"><span class="badge" data-variant="outline" data-mark="3">P</span> Praxis Süd</th><td data-field data-type="number"><input class="input" data-size="sm" aria-label="Praxis Süd, Montag"></td><td data-field data-type="number"><input class="input" data-size="sm" aria-label="Praxis Süd, Dienstag"></td><td data-field data-type="number"><input class="input" data-size="sm" aria-label="Praxis Süd, Mittwoch"></td><td data-field data-type="number"><input class="input" data-size="sm" aria-invalid="true" value="25" aria-label="Praxis Süd, Donnerstag"><small class="text-destructive">mehr als 24 h</small></td><td data-field data-type="number"><input class="input" data-size="sm" aria-label="Praxis Süd, Freitag"></td><td class="text-end tabular-nums"></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

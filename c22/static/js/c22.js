@@ -2724,6 +2724,39 @@
     zone.addEventListener('drop', off);
   }
 
+  // ---- Sheet that scrolls (table.table[data-sticky]) ---------------------------
+  // A row that heads a group (tr[data-group-row]) sticks right below the head: its offset is --table-head-height, kept at
+  // the head's height while the head changes. Set through the CSSOM, which a strict CSP allows (components.css).
+  function wireStickyTable(table) {
+    if (table.dataset.c22StickyWired || !table.tHead) return;
+    table.dataset.c22StickyWired = '1';
+    var head = table.tHead;
+    var set = function () { table.style.setProperty('--table-head-height', head.getBoundingClientRect().height + 'px'); };
+    set();
+    if ('ResizeObserver' in window) new ResizeObserver(set).observe(head);
+  }
+
+  // ---- Popover without JavaScript (details.popover) -----------------------------
+  // It works without this; this only closes an open one by a click outside or by Escape (the focus goes back to its
+  // summary when it was inside). Once for the document, so popovers drawn later are covered too.
+  var detailsPopoversWired = false;
+  function wireDetailsPopovers() {
+    if (detailsPopoversWired) return;
+    detailsPopoversWired = true;
+    var open = function () { return [].slice.call(document.querySelectorAll('details.popover[open]')); };
+    document.addEventListener('click', function (e) {
+      open().forEach(function (d) { if (!d.contains(e.target)) d.open = false; });
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      open().forEach(function (d) {
+        var inside = d.contains(document.activeElement);
+        d.open = false;
+        if (inside) d.querySelector(':scope > summary').focus();
+      });
+    });
+  }
+
   // ---- Reaktions-Leiste (Chat-Reaktionen) -----------------------------------
   // REINE DEMO-/UI-LOGIK — KEINE Persistenz: welche Reaktionen es gibt und wer reagiert
   // hat, weiß nur die App; die bindet das an ihr Backend (Klick abfangen / State setzen).
@@ -2893,6 +2926,8 @@
     (root || document).querySelectorAll('[data-copy]').forEach(wireCopy);
     (root || document).querySelectorAll('[data-dropzone]').forEach(wireDropzone);
     (root || document).querySelectorAll('[data-reactions]').forEach(wireReactions);
+    (root || document).querySelectorAll('.table[data-sticky]').forEach(wireStickyTable);
+    wireDetailsPopovers();
     wireGlobals();
   }
 

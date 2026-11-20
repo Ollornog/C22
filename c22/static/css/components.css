@@ -4524,3 +4524,85 @@
     .print-sheet .table-container { overflow: visible; }
   }
 }
+
+/* ============================================================
+ * A sheet that scrolls (table.table[data-sticky]) — the head sticks on top, the first cell of every row on the start
+ * side, and a row that heads a group (tr[data-group-row], e.g. a week) sticks right below the head (EightPerDay's sheet,
+ * M-6, 2026-11-20). The offset of that row is --table-head-height: c22.js keeps it at the head's height while the head
+ * changes (a property set through the CSSOM, which a strict CSP allows). The table sits in a scrolling container of the
+ * app's; .table-container clips, so it is not the one. A group row that is the current one carries aria-current.
+ * ============================================================ */
+@layer components {
+  .table[data-sticky] thead th { @apply bg-background sticky top-0 z-20; }
+  .table[data-variant='grid'][data-sticky] thead th { @apply bg-muted; }
+  .table[data-sticky] tbody > tr > :first-child { @apply bg-background sticky start-0 z-10; }
+  .table[data-sticky] thead th:first-child { @apply start-0 z-30; }
+  .table[data-sticky] tr[data-group-row] > * {
+    @apply bg-muted sticky z-10 font-semibold tabular-nums;
+    top: var(--table-head-height, 0px);
+  }
+  .table[data-sticky] tr[data-group-row] > :first-child { @apply z-20; }
+  .table[data-sticky] tr[data-group-row][aria-current]:not([aria-current='false']) > * { @apply bg-accent text-accent-foreground; }
+}
+
+/* ============================================================
+ * Today in a table (tr[aria-current="date"]): the row is tinted and its first cell bold with a bar on the start side.
+ * The word for it ("today", a badge) comes from the markup, the tint only adds to it (EightPerDay, 2026-11-20).
+ * ============================================================ */
+@layer components {
+  .table tr[aria-current='date'] > * { @apply bg-accent text-accent-foreground; }
+  .table tr[aria-current='date'] > :first-child { @apply font-semibold; box-shadow: inset 2px 0 0 var(--primary); }
+  .table tr[aria-current='date'] > :first-child:dir(rtl) { box-shadow: inset -2px 0 0 var(--primary); }
+}
+
+/* ============================================================
+ * A field that is the cell (td[data-field] > .input): no frame of its own, the table's lines are its frame; the focus is
+ * a ring inside the cell, a refused value a red one. A line below the field (small) says more about it: what is open,
+ * what was asked for, who sees it. data-type="number" on the cell puts both at the end (EightPerDay, 2026-11-20).
+ * ============================================================ */
+@layer components {
+  .table td[data-field] { @apply p-0 align-top; }
+  .table td[data-field] > .input {
+    @apply h-8 w-full min-w-16 rounded-none border-0 bg-transparent shadow-none;
+  }
+  .table td[data-field] > .input:focus-visible { @apply ring-0; box-shadow: inset 0 0 0 2px var(--ring); }
+  .table td[data-field] > .input[aria-invalid='true'] { box-shadow: inset 0 0 0 2px var(--destructive); }
+  .table td[data-field] > small { @apply text-muted-foreground block px-3 pb-1 text-xs; }
+  .table td[data-field][data-type='number'] > :is(.input, small) { @apply text-end tabular-nums; }
+}
+
+/* ============================================================
+ * A line that shows as chips until it is typed into (.chip-input): the field lies over the chips, unseen; with the focus
+ * it shows what was typed and covers them. The chips repeat the field's value in a form that reads at a glance — the
+ * field keeps its own label (EightPerDay's journal, 2026-11-20).
+ * ============================================================ */
+@layer components {
+  .chip-input { @apply relative min-w-0; }
+  .chip-input > .input { @apply absolute inset-0 z-10 h-full w-full opacity-0; }
+  .chip-input:focus-within > .input { @apply bg-background opacity-100; }
+  .chip-input > [data-chips] { @apply pointer-events-none flex min-h-9 flex-wrap items-center gap-1 px-3 py-1; }
+  .chip-input > [data-chips] > small { @apply text-muted-foreground truncate text-xs; }
+}
+
+/* ============================================================
+ * A popover without JavaScript (details.popover): the summary is the button, the body opens below it. c22.js only adds
+ * closing it by a click outside or Escape; without it the button closes it again (EightPerDay's settings, 2026-11-20).
+ * ============================================================ */
+@layer components {
+  details.popover > summary { @apply list-none; }
+  details.popover > summary::-webkit-details-marker { display: none; }
+}
+
+/* ============================================================
+ * A mark per entity (.badge[data-mark="1"…"5"]): a dot in a chart colour before the badge's text, so an employer, a
+ * project or a person is told apart at a glance. The text (a key letter, a name) carries it, the colour only adds to it.
+ * The colours are the chart tokens, so a pack changes them with the charts (EightPerDay, 2026-11-20).
+ * ============================================================ */
+@layer components {
+  .badge[data-mark]::before { content: ""; @apply size-2 shrink-0 rounded-full; background: var(--badge-mark); }
+  .badge[data-mark='1'] { --badge-mark: var(--chart-1); }
+  .badge[data-mark='2'] { --badge-mark: var(--chart-2); }
+  .badge[data-mark='3'] { --badge-mark: var(--chart-3); }
+  .badge[data-mark='4'] { --badge-mark: var(--chart-4); }
+  .badge[data-mark='5'] { --badge-mark: var(--chart-5); }
+}
