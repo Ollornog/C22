@@ -2757,6 +2757,50 @@
     });
   }
 
+  // ---- Form in steps (form[data-steps]) ----------------------------------------
+  // One fieldset[data-step] shows at a time. "Next" ([data-step-next]) first checks the fields of the open step, "back"
+  // ([data-step-back]) and the submit button ([data-step-done]) show where they belong, and Enter in a field of an
+  // earlier step goes on instead of sending. ol.steps follows (aria-current="step", data-state="done"). Without this
+  // every step shows at once with only the submit button, so the form still works. Event c22:step with {index}.
+  function wireSteps(form) {
+    if (form.dataset.c22StepsWired) return;
+    var steps = [].slice.call(form.querySelectorAll('[data-step]'));
+    if (steps.length < 2) return;
+    form.dataset.c22StepsWired = '1';
+    var marks = [].slice.call(form.querySelectorAll('ol.steps > li'));
+    var back = form.querySelector('[data-step-back]'), next = form.querySelector('[data-step-next]');
+    var done = form.querySelector('[data-step-done]');
+    var last = steps.length - 1, at = 0;
+    var show = function (i, focus) {
+      at = i;
+      steps.forEach(function (st, k) { st.hidden = k !== i; });
+      marks.forEach(function (m, k) {
+        if (k === i) m.setAttribute('aria-current', 'step'); else m.removeAttribute('aria-current');
+        if (k < i) m.setAttribute('data-state', 'done'); else m.removeAttribute('data-state');
+      });
+      if (back) back.hidden = i === 0;
+      if (next) next.hidden = i === last;
+      if (done) done.hidden = i !== last;
+      if (focus) {
+        var first = steps[i].querySelector('input:not([type=hidden]), select, textarea');
+        if (first) first.focus();
+      }
+      form.dispatchEvent(new CustomEvent('c22:step', { bubbles: true, detail: { index: i } }));
+    };
+    var valid = function () {
+      return [].every.call(steps[at].querySelectorAll('input, select, textarea'), function (el) { return el.reportValidity(); });
+    };
+    var forward = function () { if (at < last && valid()) show(at + 1, true); };
+    if (next) next.addEventListener('click', forward);
+    if (back) back.addEventListener('click', function () { if (at > 0) show(at - 1, true); });
+    form.addEventListener('submit', function (e) {
+      if (at === last) return;
+      e.preventDefault();
+      forward();
+    });
+    show(0, false);
+  }
+
   // ---- Reaktions-Leiste (Chat-Reaktionen) -----------------------------------
   // REINE DEMO-/UI-LOGIK — KEINE Persistenz: welche Reaktionen es gibt und wer reagiert
   // hat, weiß nur die App; die bindet das an ihr Backend (Klick abfangen / State setzen).
@@ -2927,6 +2971,7 @@
     (root || document).querySelectorAll('[data-dropzone]').forEach(wireDropzone);
     (root || document).querySelectorAll('[data-reactions]').forEach(wireReactions);
     (root || document).querySelectorAll('.table[data-sticky]').forEach(wireStickyTable);
+    (root || document).querySelectorAll('form[data-steps]').forEach(wireSteps);
     wireDetailsPopovers();
     wireGlobals();
   }

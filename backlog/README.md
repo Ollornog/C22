@@ -8,7 +8,7 @@ Konventionen: [README-KONVENTION.md](README-KONVENTION.md).
 ## Meilensteine
 
 * ☑ **[M-1](M-1-visuelle-testebene.md)** 0.3.0 — visuelle Test-Ebene — 3/3 erledigt
-* ☐ **[M-2](M-2-bausteine-aus-den-apps.md)** Bausteine, die eine App gebaut hat, gehören in C22 — 12/14 erledigt
+* ☐ **[M-2](M-2-bausteine-aus-den-apps.md)** Bausteine, die eine App gebaut hat, gehören in C22 — 13/15 erledigt
 
 ## Aufgaben
 
@@ -29,6 +29,7 @@ Konventionen: [README-KONVENTION.md](README-KONVENTION.md).
 * ☑ **[T-15](T-15-sammeldurchgang-app-wuensche.md)** Gesammelte Bausteinwünsche von EightPerDay und UnderDoc · M-2
 * ☐ **[T-16](T-16-underdoc-nachtrag.md)** Weitere Bausteinwünsche von UnderDoc (Nachtrag zum Sammeldurchgang) · M-2
 * ☑ **[T-17](T-17-eightperday-blatt.md)** Bausteine aus dem Stundenblatt von EightPerDay (M-6) · M-2
+* ☑ **[T-18](T-18-underdoc-rechte.md)** Bausteine aus den Rechten von UnderDoc (#92, Rechte-Sprint, #109) · M-2
 
 ## Entscheidungen (ADR)
 

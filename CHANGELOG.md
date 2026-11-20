@@ -65,6 +65,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Form in steps:** `form[data-steps]` shows one `fieldset[data-step]` at a time; "next" checks the open step first,
+  Enter goes on instead of sending, `ol.steps` follows (`aria-current="step"`, `data-state="done"`). Without JavaScript
+  every step shows with only the submit button. Block "In Schritten anlegen".
+- Blocks for UnderDoc's rights (backlog T-18): "Rechte eines Objekts" (owner, inheritance, roles here and from above as
+  `.badge-split` origin | role, sharing through a combobox grouped into everyone, groups and people), "Verwaltung in
+  einem Panel" (what `setrow`/`chip`/`modrow`/`hint`/`lab` are outside the app workspace, a number with its unit, the
+  log as a timeline) and "Öffentliche Seite hinter einem Link".
+- **App workspace:** `.cm-ud-plain`, a wavy line under a value the editor asks about (UnderDoc #109).
 - **Sheet that scrolls:** `.table[data-sticky]` keeps the head on top and the first cell of every row at the start
   side; a group row (`tr[data-group-row]`, e.g. a week) sticks right below the head, its offset `--table-head-height`
   kept by `c22.js` while the head changes (CSSOM, allowed by a strict CSP). Today's row is `tr[aria-current="date"]`.

@@ -1,0 +1,59 @@
+<!-- c22-title: Verwaltung in einem Panel (Gruppen, Mitglieder, Aufbewahrung, Protokoll) -->
+<!-- C22-custom: a panel of settings outside the app workspace, as UnderDoc's tab "Rights" (2026-11-20). Inside
+     .c22-app-workspace the app uses its own setrow/chip/modrow/hint/lab; outside it these are C22's general parts:
+     a section head is an h3, a row with actions is .item[data-size="sm"] (title, small line, actions in aside), a small
+     action is .btn[data-variant="outline"][data-size="sm"], a hint is muted text-sm, a label is .label. A number with a
+     unit is an .input-group with the unit after the field; the log is ol.timeline with "newer entries" below. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Gruppen mit Mitgliedern, neue Gruppe, Aufbewahrung in Tagen, Protokoll</span>
+    <div class="grid w-full max-w-xl gap-6">
+      <section class="grid gap-2">
+        <h3 class="font-semibold">Gruppen</h3>
+        <p class="text-muted-foreground text-sm">Jede Gruppe dieses Arbeitsbereichs. Gruppen aus der Anmeldung kommen mit ihr und sind hier nur lesbar.</p>
+        <div class="item-group" role="list">
+          <article class="item" data-variant="outline" data-size="sm" role="listitem">
+            <section><h4 class="font-medium">Büro</h4><p class="text-muted-foreground text-sm">4 Mitglieder · lokal</p></section>
+            <aside class="flex gap-2"><button type="button" class="btn" data-variant="outline" data-size="sm" aria-expanded="true">Mitglieder</button><button type="button" class="btn" data-variant="outline" data-size="sm">Löschen</button></aside>
+          </article>
+          <div class="grid gap-2 ps-4" role="listitem">
+            <div class="item-group" role="list">
+              <article class="item" data-size="sm" role="listitem"><section><h4>Mara Albrecht</h4><p class="text-muted-foreground text-sm">mara</p></section><aside><button type="button" class="btn" data-variant="outline" data-size="sm">Herausnehmen</button></aside></article>
+              <article class="item" data-size="sm" role="listitem"><section><h4>Jonas Weber</h4><p class="text-muted-foreground text-sm">jonas</p></section><aside><button type="button" class="btn" data-variant="outline" data-size="sm">Herausnehmen</button></aside></article>
+            </div>
+            <form class="flex items-center gap-2"><select class="select" aria-label="Person"><option>Lena Krüger (lena)</option></select><button type="submit" class="btn" data-variant="outline" data-size="sm">Hinzufügen</button></form>
+          </div>
+          <article class="item" data-variant="outline" data-size="sm" role="listitem">
+            <section><h4 class="font-medium">Technik</h4><p class="text-muted-foreground text-sm">7 Mitglieder · aus der Anmeldung, nur lesbar</p></section>
+            <aside><button type="button" class="btn" data-variant="outline" data-size="sm" aria-expanded="false">Mitglieder</button></aside>
+          </article>
+        </div>
+        <form class="grid gap-2">
+          <h4 class="text-sm font-medium">Neue Gruppe</h4>
+          <input class="input" name="name" required maxlength="200" placeholder="Name" aria-label="Name der Gruppe">
+          <input class="input" name="description" maxlength="1000" placeholder="Wofür sie ist (optional)" aria-label="Beschreibung">
+          <div><button type="submit" class="btn" data-variant="outline" data-size="sm">Gruppe anlegen</button></div>
+        </form>
+      </section>
+      <section class="grid gap-2">
+        <h3 class="font-semibold">Protokoll</h3>
+        <p class="text-muted-foreground text-sm">Alles dieses Arbeitsbereichs. Öffnen und Ändern zählen einmal je Stunde.</p>
+        <form class="flex flex-wrap items-center gap-2">
+          <label class="label" for="c22-panel-keep">Einträge aufbewahren</label>
+          <div class="input-group w-36">
+            <input class="input" id="c22-panel-keep" type="number" name="days" min="30" max="3650" value="365" required>
+            <span data-align="inline-end">Tage</span>
+          </div>
+          <button type="submit" class="btn" data-variant="outline" data-size="sm">Speichern</button>
+        </form>
+        <ol class="timeline" data-size="sm">
+          <li><header><span class="badge" data-variant="outline">Rolle</span><span>Mara Albrecht</span><time datetime="2026-11-20T09:14">heute 09:14</time></header><p>Angebote 2026: Gruppe Büro darf bearbeiten</p></li>
+          <li><header><span class="badge" data-variant="outline">Link erstellt</span><span>Mara Albrecht</span><time datetime="2026-11-20T09:10">heute 09:10</time></header><p>Preisliste: lesen, bis 30.11.</p></li>
+          <li><header><span class="badge" data-variant="outline">Geöffnet</span><span>jemand mit einem Link</span><time datetime="2026-11-19T17:02">gestern 17:02</time></header><p>Preisliste</p></li>
+          <li><header><span class="badge" data-variant="destructive">✗ Falsches Passwort</span><span>jemand mit einem Link</span><time datetime="2026-11-19T16:58">gestern 16:58</time></header><p>Preisliste</p></li>
+        </ol>
+        <div><button type="button" class="btn" data-variant="outline" data-size="sm">Neuere Einträge</button></div>
+      </section>
+    </div>
+  </div>
+</div>

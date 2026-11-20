@@ -1,0 +1,46 @@
+<!-- c22-title: Öffentliche Seite hinter einem Link (ohne App-Rahmen) -->
+<!-- C22-custom: what someone without an account sees behind a share link, as UnderDoc's share page (2026-11-20): no app
+     frame, one column (mx-auto max-w-3xl p-4), a head with the title and one muted line (shared until …, as it was on …),
+     messages as .alert, then the content — a password card, a frozen page in .typeset, a file list as .table, or an
+     upload card — and at the end a way to sign in. Nothing on the page loads from elsewhere. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Ordner hinter einem Link, mit Hinweis und Anmelden</span>
+    <main class="mx-auto grid w-full max-w-3xl gap-4 p-4">
+      <header>
+        <h1 class="text-2xl font-semibold">Angebote 2026</h1>
+        <p class="text-muted-foreground text-sm">Über einen Link geteilt, bis 30.11.2026.</p>
+      </header>
+      <div class="alert" role="status"><p>Dieser Link zeigt nur, was darin freigegeben ist.</p></div>
+      <div class="table-container">
+        <table class="table" data-wrap>
+          <thead><tr><th>Name</th><th class="text-end">Größe</th></tr></thead>
+          <tbody>
+            <tr><td><a class="underline underline-offset-4" href="#">Entwürfe/</a></td><td class="text-end tabular-nums"></td></tr>
+            <tr><td><a class="underline underline-offset-4" href="#">Preisliste.pdf</a></td><td class="text-end tabular-nums">412 KB</td></tr>
+            <tr><td><a class="underline underline-offset-4" href="#">Angebot Muster GmbH.docx</a></td><td class="text-end tabular-nums">88 KB</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><a class="btn" href="#">Anmelden zum Bearbeiten</a></p>
+    </main>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Link mit Passwort, und ein abgelaufener Link</span>
+    <main class="mx-auto grid w-full max-w-3xl gap-4 p-4">
+      <header>
+        <h1 class="text-2xl font-semibold">Preisliste</h1>
+        <p class="text-muted-foreground text-sm">Über einen Link geteilt. Stand vom 19.11.2026.</p>
+      </header>
+      <div class="alert" data-variant="destructive" role="alert"><p>Das Passwort stimmt nicht.</p></div>
+      <form class="card w-full max-w-md" method="post" action="#">
+        <header><h2 class="card-title">Dieser Link hat ein Passwort</h2></header>
+        <section>
+          <div class="field"><label class="label" for="c22-public-password">Passwort</label>
+            <input class="input" id="c22-public-password" type="password" autocomplete="off" required maxlength="1000"></div>
+        </section>
+        <footer><button type="submit" class="btn">Öffnen</button></footer>
+      </form>
+    </main>
+  </div>
+</div>

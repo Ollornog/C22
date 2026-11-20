@@ -62,6 +62,10 @@ the look per component.
 | A field that is the cell, a hint line below it | `td[data-field] > .input` + `small` (`data-type="number"` aligns to the end); outside a table the hint is the `.field`'s help text | `blocks/data-entry/time-sheet.html`, `field.html` |
 | A value shown as chips until it is typed into | `.chip-input` > `.input` + `[data-chips]` | `blocks/data-entry/time-sheet.html` |
 | Popover without JavaScript (settings, segment buttons) | `details.popover` > `summary.btn` + `[data-popover]`; segments `.button-group` of buttons with `aria-pressed` | `popover.html`, `toggle-group.html` |
+| A form in steps (e.g. name, then sharing) | `form[data-steps]` > `fieldset[data-step]`, `ol.steps`, buttons `[data-step-back]` / `[data-step-next]` / `[data-step-done]` (c22.js) | `blocks/data-entry/steps-dialog.html` |
+| Rights of an object; picking a person, a group or everyone | owner/inheritance as `.item[data-size="sm"]`, origin and role as `.badge-split`, a grouped `.combobox` with an icon per kind | `blocks/data-entry/rights.html` |
+| A settings panel outside the app workspace (what `setrow`/`chip`/`modrow`/`hint`/`lab` are there) | `h3`, `.item[data-size="sm"]`, `.btn[data-variant="outline"][data-size="sm"]`, muted `text-sm`, `.label`; a number with its unit is an `.input-group` | `blocks/data-entry/admin-panel.html` |
+| A public page behind a link (no app frame) | `main.mx-auto.max-w-3xl.p-4`, head with a muted line, `.alert`, content | `blocks/full-page/public-page.html` |
 | Telling entities apart (employers, projects, people) | `.badge[data-mark="1"…"5"]` — the text tells, the chart-colour dot adds | `badge.html` |
 
 Do **not** write `<button class="inline-flex rounded-md px-3 py-2 …">` when `.btn` exists, and so on.
