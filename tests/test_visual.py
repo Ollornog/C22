@@ -602,6 +602,55 @@ def verhalten(r: Report, b: Browser, basis: str) -> None:
     r.check("Schritte: einer zur Zeit, Weiter prüft den Schritt, Enter geht weiter, Zurück kehrt um",
             st == {"start": erst, "leer": erst, "weiter": dann, "fokus": True, "zurueck": erst, "enter": dann}, str(st))
 
+    # C22 inside the app workspace (UnderDoc ADR-31, 2026-11-21): the root's element defaults must not beat a utility or a
+    # component. Before, td{text-align:left} of the root won over .text-right and the button reset took the padding of a
+    # tab. The same tabs outside the root are the measure.
+    aw = s.js("""(() => {
+      const ex = document.querySelector('.c22-example:has(#c22-aw-sheets)');
+      const a = e => getComputedStyle(e).textAlign;
+      const tabs = ex.querySelector('.tabs'), kopie = tabs.cloneNode(true);
+      kopie.removeAttribute('id'); kopie.querySelectorAll('[id]').forEach(e => e.removeAttribute('id'));
+      document.body.appendChild(kopie);
+      const masz = t => { const tab = getComputedStyle(t.querySelector('[role=tab]')), l = getComputedStyle(t.querySelector('[role=tablist]'));
+                          return [tab.paddingLeft, tab.paddingTop, tab.backgroundColor, l.paddingLeft, getComputedStyle(t).gap]; };
+      const out = { rechts: [...ex.querySelectorAll('.tw .text-right')].map(a), zahl: a(ex.querySelector('.table td[data-type="number"]')),
+                    links: a(ex.querySelector('.tw td:not([class])')), innen: masz(tabs), aussen: masz(kopie) };
+      kopie.remove();
+      return out;
+    })()""")
+    r.check("App-Arbeitsbereich: .text-right und data-type=\"number\" richten Zellen aus wie überall",
+            aw["rechts"] and set(aw["rechts"]) == {"right"} and aw["zahl"] == "end" and aw["links"] == "start", str(aw))
+    r.check("App-Arbeitsbereich: .tabs sind gepolstert wie außerhalb",
+            aw["innen"] == aw["aussen"] and aw["innen"][0] != "0px", str(aw))
+    # The spreadsheet (data-sticky="sheet"): the box scrolls inside its bounded height, letters and row numbers stick to
+    # it; a selected cell is tinted AND framed, the active one framed thicker, the selected letter and number are bold.
+    sh = s.js("""(async () => {
+      const t = document.querySelector('#c22-aw-sheets .table[data-sticky="sheet"]'), box = t.parentElement;
+      const frame = () => new Promise(ok => requestAnimationFrame(() => requestAnimationFrame(ok)));
+      // Narrower than the table's least width (row numbers and three dense columns are about 12rem), so it scrolls sideways.
+      // The height comes from --table-max-height here, not from the example's max-h-* utility: that is the bounded box C22 gives.
+      box.classList.remove('max-h-48'); box.style.setProperty('--table-max-height', '8rem');
+      box.style.maxWidth = '6rem'; box.scrollTop = 60; box.scrollLeft = 40; await frame();
+      const bb = box.getBoundingClientRect(), cs = getComputedStyle;
+      const lage = { hoch: box.scrollHeight > box.clientHeight, kopf: Math.round(t.tHead.rows[0].cells[2].getBoundingClientRect().top - bb.top - box.clientTop),
+                     nummer: Math.round(t.tBodies[0].rows[4].cells[0].getBoundingClientRect().left - bb.left - box.clientLeft),
+                     gerollt: box.scrollTop > 0 && box.scrollLeft > 0 };
+      const hoehe = Math.round(box.getBoundingClientRect().height);
+      box.scrollTop = 0; box.scrollLeft = 0; box.style.maxWidth = ''; box.style.removeProperty('--table-max-height'); box.classList.add('max-h-48');
+      const sel = t.querySelector('td[aria-selected="true"]:not([data-active])'), akt = t.querySelector('td[data-active]');
+      const leer = t.querySelector('tbody td:not([aria-selected])');
+      const bs = e => cs(e).boxShadow;
+      return { lage, hoehe, getoent: cs(sel).backgroundColor !== cs(leer).backgroundColor, gerahmt: bs(sel) !== 'none' && bs(leer) === 'none',
+               aktiv: /2px/.test(bs(akt)), buchstabe: +cs(t.querySelector('thead th[aria-selected="true"]')).fontWeight,
+               nummerFett: +cs(t.querySelector('tbody th[aria-selected="true"]')).fontWeight,
+               ruhig: +cs(t.querySelector('tbody th:not([aria-selected])')).fontWeight };
+    })()""")
+    r.check("Tabellenraster: der Kasten rollt in begrenzter Höhe, Buchstaben und Zeilennummern kleben",
+            sh["lage"] == {"hoch": True, "kopf": 0, "nummer": 0, "gerollt": True} and sh["hoehe"] == 128, str(sh))
+    r.check("Tabellenraster: Markierung getönt und gerahmt (nicht nur Farbe), aktive Zelle dicker, Kopf und Nummer fett",
+            sh["getoent"] and sh["gerahmt"] and sh["aktiv"] and sh["buchstabe"] >= 600 and sh["nummerFett"] >= 600
+            and sh["ruhig"] < 600, str(sh))
+
     # Chart: wide and flat stays flat, keeps its text size and reports a click.
     s.geh(f"{basis}/charts.html?pack=vega&theme=light&lang=de")
     s.js(AUSGEROLLT)

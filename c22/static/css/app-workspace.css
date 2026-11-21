@@ -27,7 +27,9 @@
  *
  * Cascade. Unlayered on purpose: the mockup ran as the app's own stylesheet after C22, i.e. above every
  * cascade layer, and its rules are written against that. Kept that way it renders exactly as approved;
- * the root class is what keeps it from touching anything else. The rules keep the order of the
+ * the root class is what keeps it from touching anything else. The exception are the element defaults
+ * (button, input, select, focus ring, table cells): they sit in @layer base, so a C22 component or a
+ * utility used inside the root (.btn, .tabs, .table, .text-right …) is not overridden by them. The rules keep the order of the
  * mockup's rounds, later rounds refine earlier ones (the round comments mark where each begins).
  */
 
@@ -66,9 +68,14 @@ html:has(> body > .c22-app-workspace), body:has(> .c22-app-workspace) { height: 
 body:has(> .c22-app-workspace) { background: var(--background); color: var(--foreground); font: calc(14 * var(--app-workspace-text))/1.5 var(--font-sans); overflow: hidden; }
 .c22-app-workspace { background: var(--background); color: var(--foreground); font: calc(14 * var(--app-workspace-text))/1.5 var(--font-sans); }
 .c22-app-workspace, .c22-app-workspace * { box-sizing: border-box; }
-.c22-app-workspace button, .c22-app-workspace input, .c22-app-workspace select { font: inherit; color: inherit; }
-.c22-app-workspace button { cursor: pointer; background: none; border: 0; padding: 0; }
-.c22-app-workspace :focus-visible { outline: 2px solid var(--ring); outline-offset: 1px; }
+/* Element defaults sit in the base layer (2026-11-21): unlayered they beat every C22 component and utility used inside
+   the root — a .btn or the [role=tab] of .tabs lost its padding and frame, .text-right its alignment. In base they stay
+   the defaults of the app's own markup (its class rules below are unlayered and still win) and give way to C22's. */
+@layer base {
+  .c22-app-workspace button, .c22-app-workspace input, .c22-app-workspace select { font: inherit; color: inherit; }
+  .c22-app-workspace button { cursor: pointer; background: none; border: 0; padding: 0; }
+  .c22-app-workspace :focus-visible { outline: 2px solid var(--ring); outline-offset: 1px; }
+}
 .c22-app-workspace svg.i { width: calc(15 * var(--app-workspace-space)); height: calc(15 * var(--app-workspace-space)); flex: none; fill: none; stroke: currentColor; stroke-width: calc(var(--icon-stroke) * 0.85); stroke-linecap: round; stroke-linejoin: round; }
 .c22-app-workspace { height: 100%; display: flex; flex-direction: column; min-height: 0; }
 .c22-app-workspace .spacer { flex: 1; }
@@ -85,7 +92,6 @@ body:has(> .c22-app-workspace) { background: var(--background); color: var(--for
 .c22-app-workspace .seg button:hover { background: var(--accent); }
 .c22-app-workspace .seg button[aria-pressed="true"] { background: var(--primary); color: var(--primary-foreground); font-weight: 500; }
 .c22-app-workspace .lab { font-size: calc(12 * var(--app-workspace-text)); color: var(--muted-foreground); }
-.c22-app-workspace .tabs { display: flex; gap: calc(2 * var(--app-workspace-space)); }
 .c22-app-workspace .tab { padding: calc(4 * var(--app-workspace-space)) calc(11 * var(--app-workspace-space)); border-radius: calc(6 * var(--app-workspace-radius)); font-weight: 500; font-size: calc(13 * var(--app-workspace-text)); color: var(--muted-foreground); display: inline-flex; align-items: center; gap: calc(6 * var(--app-workspace-space)); }
 .c22-app-workspace .tab:hover { background: var(--accent); color: var(--foreground); }
 .c22-app-workspace .tab[aria-pressed="true"] { background: var(--accent); color: var(--foreground); box-shadow: inset 0 -2px 0 var(--primary); }
@@ -146,10 +152,14 @@ body:has(> .c22-app-workspace) { background: var(--background); color: var(--for
 .c22-app-workspace .v { font-family: var(--font-mono); font-size: calc(12.5 * var(--app-workspace-text)); background: var(--muted); padding: 0 calc(4 * var(--app-workspace-space)); border-radius: calc(3 * var(--app-workspace-radius)); }
 .c22-app-workspace a.l { color: inherit; text-decoration: underline; text-underline-offset: calc(2 * var(--app-workspace-space)); }
 .c22-app-workspace .tw { overflow-x: auto; margin-bottom: calc(12 * var(--app-workspace-space)); border: 1px solid var(--border); border-radius: calc(7 * var(--app-workspace-radius)); }
-.c22-app-workspace table { border-collapse: collapse; width: 100%; font-size: calc(13 * var(--app-workspace-text)); font-variant-numeric: tabular-nums; }
-.c22-app-workspace th, .c22-app-workspace td { text-align: left; padding: calc(5 * var(--app-workspace-space)) calc(9 * var(--app-workspace-space)); border-bottom: 1px solid var(--border); white-space: nowrap; }
-.c22-app-workspace tr:last-child td { border-bottom: 0; }
-.c22-app-workspace th { background: var(--muted); font-weight: 500; font-size: calc(12 * var(--app-workspace-text)); }
+/* Tables: element defaults as well, in the base layer, so .text-right/.text-center/.text-end, td[data-type="number"] and a
+   C22 .table inside the root align and look as they do everywhere else (2026-11-21). */
+@layer base {
+  .c22-app-workspace table { border-collapse: collapse; width: 100%; font-size: calc(13 * var(--app-workspace-text)); font-variant-numeric: tabular-nums; }
+  .c22-app-workspace th, .c22-app-workspace td { text-align: start; padding: calc(5 * var(--app-workspace-space)) calc(9 * var(--app-workspace-space)); border-bottom: 1px solid var(--border); white-space: nowrap; }
+  .c22-app-workspace tr:last-child td { border-bottom: 0; }
+  .c22-app-workspace th { background: var(--muted); font-weight: 500; font-size: calc(12 * var(--app-workspace-text)); }
+}
 .c22-app-workspace .note { font-size: calc(12.5 * var(--app-workspace-text)); padding: calc(7 * var(--app-workspace-space)) calc(10 * var(--app-workspace-space)); border-radius: calc(7 * var(--app-workspace-radius)); background: var(--muted); margin-bottom: calc(12 * var(--app-workspace-space)); }
 .c22-app-workspace .imgs { display: grid; grid-template-columns: repeat(auto-fill, minmax(calc(112 * var(--app-workspace-space)), 1fr)); gap: calc(8 * var(--app-workspace-space)); }
 .c22-app-workspace .imgs div { aspect-ratio: 4/3; border-radius: calc(6 * var(--app-workspace-radius)); display: flex; align-items: flex-end; padding: calc(5 * var(--app-workspace-space)) calc(7 * var(--app-workspace-space)); font-size: calc(11 * var(--app-workspace-text)); color: var(--app-workspace-on-image); }
