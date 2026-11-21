@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-11-21
+
+### Changed — Highlights of this release
+
+- Large expansion of the component library, pattern book and gallery since 0.2.0.
+- Theming axes are driven through tokens only (see `docs/theming.md`).
+- Spreadsheet grid and the app workspace shell; the sticky today row and column in sheets.
+- Hardened CI: shared test kit via `repokit`, Pages deployment checked after merge, auto-merging dependency updates.
+- The release below keeps the full change log as it was collected under Unreleased.
+
 ### Added
 
 - **Spreadsheet (Tabellenraster):** `.table[data-variant="grid"][data-sticky="sheet"]` extends the sticky sheet: the head row
