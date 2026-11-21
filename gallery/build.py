@@ -451,6 +451,8 @@ PACKS = [
     ("luma", "Luma", {"de": ["luftig", "sehr rund"], "en": ["airy", "very round"]}),
     ("sera", "Sera", {"de": ["Großbuchstaben", "eckig"], "en": ["uppercase", "square"]}),
     ("rhea", "Rhea", {"de": ["abgerundet", "ruhig"], "en": ["rounded", "calm"]}),
+    # Layout pack (ADR-2): also changes the form of building blocks, here the workspace as in UnderDoc's mockup.
+    ("underdoc", "UnderDoc", {"de": ["Layout", "Arbeitsbereich"], "en": ["layout", "workspace"]}),
 ]
 
 

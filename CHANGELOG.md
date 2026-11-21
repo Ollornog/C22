@@ -6,6 +6,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Layout pack `underdoc`** (ADR-2): a pack that changes the *form* of building blocks, not only their colours. It
+  sets the workspace's form tokens and carries a few block-scoped rules in `@layer components`; no class or markup
+  of its own. With it the workspace looks like UnderDoc's approved mockup (band behind the heading of an open
+  collection, smaller capitals, tags as square chips, compact path, 15px document, accent-tinted rows); without it
+  the same block looks like the rest of the chosen pack. Link `c22-underdoc.css`; in the gallery's pack picker as
+  "UnderDoc" (`?pack=underdoc`). Also turns the radius axis a notch tighter (`--radius: 0.5rem`) and the typeset
+  axis to the mockup's prose (leading 1.5, shorter paragraph gap) for everything in that pack.
+- **Block "Arbeitsbereich mit Dokument"** (`blocks/navigation/document-workspace.html`): UnderDoc's workspace built
+  from `.workspace` only, light and dark; reference images in vega and in `underdoc`.
+- **Workspace: document column and status line.** `main > section > article.typeset` is centred with a width from
+  `data-width` (`slim` default, `wide`, `full`); `main > footer` is a status line under the window (`[data-fill]`
+  pushes the rest to the end). `[data-fill]` before the tools of the window head takes the free room of the first
+  line.
+- **Workspace form tokens** on `.workspace`: `--workspace-item-text`, `--workspace-caps-text`,
+  `--workspace-section-head-text/-bg/-radius/-padding`, `--workspace-doc-text`, `--workspace-doc-heading`,
+  `--workspace-doc-slim/-wide`. Their defaults are today's look, so no other pack changes.
+- **Tests:** `tests/test_axes.py` part D holds layout packs to their limits (only tokens outside a layer; rules in
+  `@layer components`, starting at a block named in `@c22-layout`, C22 classes only; every block token a pack sets
+  has a default, every default has a reader); the axis rules apply to layout packs. `tests/test_visual.py` compares
+  sections a layout pack reshapes in that pack as well (`PACK_ABSCHNITTE`, references `…@underdoc.png`)
+  and reads the decisive values (band, capitals, entries, document size, radius) in `underdoc` and in vega, because
+  the image comparison does not see a faint tint or half a pixel of text.
+
+### Fixed
+
+- **Workspace:** the tools of the window head wrap in a narrow window instead of running out of it (they were cut
+  off at the edge on a phone).
+
+### Deprecated
+
+- **`app-workspace.css` and the block "App-Arbeitsbereich"** (`.c22-app-workspace`): an own look in own classes. Its
+  successor is `.workspace` with the pack `underdoc`; the replacement list for UnderDoc is in backlog T-19. It stays
+  unchanged until UnderDoc has switched, then T-20 archives it.
+
 ## [0.3.0] - 2026-11-21
 
 ### Changed — Highlights of this release

@@ -37,8 +37,11 @@ PACK_DIR = CSS / "packs"
 MARKUP_DIRS = ("c22/components", "c22/blocks", "c22/charts", "c22/typeset")
 # Die Kanon-Regeln selbst gehören mit geprüft: eine Component kann ihre Achse auch
 # über eine @apply-Kette in components.css verlieren (so blieb `.bubble` rund).
+# Seit ADR-2 (2026-11-21) dürfen Packs Regeln für Bausteine tragen; dieselben Achsen-Grenzen gelten auch dort.
 KANON = ("c22/static/css/components.css",
-         *sorted(f"c22/static/css/{p.name}" for p in (ROOT / "c22" / "static" / "css").glob("app-*.css")))
+         *sorted(f"c22/static/css/{p.name}" for p in (ROOT / "c22" / "static" / "css").glob("app-*.css")),
+         *sorted(f"c22/static/css/packs/{p.name}" for p in (ROOT / "c22" / "static" / "css" / "packs").glob("*.css")
+                 if "@c22-layout:" in p.read_text(encoding="utf-8")))
 GENERATOR = ("gallery/build.py", "gallery/landing.py", "gallery/legal.py", "gallery/i18n.py")
 
 r = Report("Achsen — Packs und Components")
@@ -219,5 +222,116 @@ tokens_im_generator = set(re.findall(r'data-achse="(--[a-z0-9-]+)"', generator_p
 unbekannt = sorted(t for t in tokens_im_generator if t not in axes.ALLE_TOKENS)
 r.check(f"jeder Regler dreht an einer registrierten Achse ({len(tokens_im_generator)} Regler)",
         not unbekannt, ", ".join(unbekannt))
+
+
+# ── D: Layout-Packs (ADR-2) ───────────────────────────────────────────────────
+# Ein Pack darf die FORM von Bausteinen ändern — über deren Form-Tokens und, für den Rest, über Regeln, die an einem
+# Baustein hängen. Damit daraus kein zweites Block-CSS mit eigenem Aussehen wird, gelten vier Grenzen:
+#   D1  ausserhalb eines Layers nur Custom Properties (Tokens), keine Regeln;
+#   D2  jede Regel liegt in @layer components (Utilities gewinnen weiter) und beginnt an einem Baustein aus
+#       `@c22-layout:` — eine Klasse, die components.css definiert; keine eigene Klasse;
+#   D3  jedes Baustein-Token (`--<baustein>-…`), das ein Pack setzt, hat in components.css eine Vorgabe (sonst
+#       ein Regler ohne Leser);
+#   D4  jedes Form-Token, das components.css an einem Baustein vorgibt, wird dort auch gelesen.
+KOMPONENTEN_CSS = (CSS / "components.css").read_text(encoding="utf-8")
+VENDOR_CSS = (ROOT / "c22" / "vendor" / "basecoat" / "dist" / "basecoat-components.css").read_text(encoding="utf-8")
+KANON_KLASSEN = {k for t in (KOMPONENTEN_CSS, VENDOR_CSS)
+                 for k in re.findall(r"\.([a-z][a-z0-9-]*)", re.sub(r"/\*.*?\*/", "", t, flags=re.S))}
+DEFINIERTE_KLASSEN = set(re.findall(r"\.([a-z][a-z0-9-]*)", re.sub(r"/\*.*?\*/", "", KOMPONENTEN_CSS, flags=re.S)))
+
+
+def bausteine_des_packs(text: str) -> list[str]:
+    m = re.search(r"@c22-layout:\s*([a-z0-9, -]+)", text)
+    return [b for b in re.split(r"[,\s]+", m.group(1).strip()) if b] if m else []
+
+
+def regelbloecke(text: str) -> list[tuple[str, str, bool]]:
+    """(Selektor, Rumpf, in_layer_components) für jede Regel; @layer components { … } wird aufgelöst."""
+    text = re.sub(r"/\*.*?\*/", "", text, flags=re.S)
+    aus: list[tuple[str, str, bool]] = []
+    pos = 0
+    tiefe_layer = None
+    stapel: list[str] = []
+    kopf = ""
+    rumpf_start = 0
+    while pos < len(text):
+        z = text[pos]
+        if z == "{":
+            stapel.append(kopf.strip())
+            rumpf_start = pos + 1
+            kopf = ""
+        elif z == "}":
+            sel = stapel.pop() if stapel else ""
+            if not sel.startswith("@"):
+                im_layer = any(s.startswith("@layer components") for s in stapel)
+                aus.append((sel, text[rumpf_start:pos], im_layer))
+            kopf = ""
+        elif z == ";" and not stapel:
+            kopf = ""
+        else:
+            kopf += z
+        pos += 1
+    return aus
+
+
+def selektoren_einzeln(sel: str) -> list[str]:
+    """Eine Selektorliste an den Kommas der obersten Ebene teilen — `:is(a, button)` bleibt ganz."""
+    aus, tiefe, teil = [], 0, ""
+    for z in sel + ",":
+        tiefe += z in "(["
+        tiefe -= z in ")]"
+        if z == "," and tiefe == 0:
+            aus.append(" ".join(teil.split()))
+            teil = ""
+        else:
+            teil += z
+    return [a for a in aus if a]
+
+
+def nur_tokens(rumpf: str) -> bool:
+    deklarationen = [d.strip() for d in rumpf.split(";") if d.strip()]
+    return all(d.startswith("--") for d in deklarationen)
+
+
+layout_befunde: list[str] = []
+layout_packs = 0
+for pack in PACKS:
+    datei = PACK_DIR / f"{pack}.css"
+    if not datei.exists():
+        continue
+    text = datei.read_text(encoding="utf-8")
+    bausteine = bausteine_des_packs(text)
+    if bausteine:
+        layout_packs += 1
+    for b in bausteine:
+        if b not in DEFINIERTE_KLASSEN:
+            layout_befunde.append(f"{pack}: @c22-layout nennt .{b}, das components.css nicht definiert")
+    for sel, rumpf, im_layer in regelbloecke(text):
+        if not im_layer:
+            if not nur_tokens(rumpf):
+                layout_befunde.append(f"{pack}: `{sel}` ausserhalb von @layer components setzt mehr als Tokens")
+            continue
+        for einzel in selektoren_einzeln(sel):
+            m = re.match(r"\.([a-z][a-z0-9-]*)", einzel)
+            wurzel = m.group(1) if m else ""
+            if not any(wurzel == b or wurzel.startswith(b + "-") for b in bausteine):
+                layout_befunde.append(f"{pack}: `{einzel}` beginnt nicht an einem Baustein aus @c22-layout")
+            for klasse in re.findall(r"\.([a-z][a-z0-9-]*)", einzel):
+                if klasse not in KANON_KLASSEN:
+                    layout_befunde.append(f"{pack}: `.{klasse}` ist keine Klasse von C22")
+    for token in sorted(gesetzte_tokens(text)):
+        if any(token.startswith(f"--{b}-") for b in bausteine) and not re.search(
+                rf"^\s*{re.escape(token)}\s*:", KOMPONENTEN_CSS, re.M):
+            layout_befunde.append(f"{pack}: {token} hat in components.css keine Vorgabe (Regler ohne Leser)")
+r.check(f"Layout-Packs halten ihre Grenzen ({layout_packs} Layout-Pack(s))", not layout_befunde,
+        " | ".join(layout_befunde[:6]))
+
+# D4: die Gegenrichtung — ein Form-Token, das components.css vorgibt, muss dort auch gelesen werden.
+# Gelesen heisst: per var() in components.css oder vom Verhalten in c22.js (die Grenzen von nav3 misst das Skript).
+C22_JS = (ROOT / "c22" / "static" / "js" / "c22.js").read_text(encoding="utf-8")
+vorgaben = set(re.findall(r"^\s*(--workspace-[a-z0-9-]+)\s*:", KOMPONENTEN_CSS, re.M))
+ungelesen = sorted(t for t in vorgaben if f"var({t})" not in KOMPONENTEN_CSS and f"var({t}," not in KOMPONENTEN_CSS
+                   and f"'{t}'" not in C22_JS)
+r.check(f"jedes Form-Token eines Bausteins wird gelesen ({len(vorgaben)} Tokens)", not ungelesen, ", ".join(ungelesen))
 
 sys.exit(r.done())

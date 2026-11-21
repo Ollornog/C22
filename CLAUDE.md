@@ -39,8 +39,9 @@ the look per component.
 | Scrollable area | the token scrollbar is the **global default** (arrowless) — no class needed; variants via `class="scrollbar"` + `data-size`/`data-track`/`data-buttons`; rounded scroll containers get the track inset automatically (`data-scrollbar-inset` to force/disable) | `scrollbar.html` |
 | Popover / menu / dropdown / listbox | `[data-popover]` + `role="menu"`/`"menuitem"`/`"option"` | `dropdown-menu.html`, `select.html`, `combobox.html` |
 | Application frame (rail + panel) | `.app-frame` + `.sidebar` with `data-variant="rail"` / `"panel"`, toggle via `[data-panel-toggle]`; with a head over both (brand, title, search; drawer below md): `data-head` + `header.app-frame-head`, menu button `[data-frame-menu]`; `data-head="bar"` makes the head one row over rail and content, its groups lined up from the start | `sidebar.html`, `blocks/navigation/app-frame.html` |
-| Workspace (three columns, tabs, head of the window) | `.workspace` > `.workspace-top`, `.workspace-tabs`, `.workspace-nav[data-level][data-step]` + `[data-grip]`, `.workspace-main`; entries `.workspace-item`, list `.workspace-tree`; sizes as `--workspace-*` on `.workspace`; stored widths via `data-workspace-store` + `workspace-boot.js` | `blocks/navigation/workspace.html` |
-| An app's approved mockup taken over whole (its own class names) | root class `.c22-app-<name>` on the element the app renders into, everything inside scoped to it (rule 14); lengths via `--app-<name>-space/-text/-radius`; dragging entries of nav2/nav3: `app-workspace-drag.js` (`C22AppWorkspaceDrag.attach`, the app decides what may go where) | `blocks/navigation/app-workspace.html` |
+| Workspace (three columns, tabs, head of the window) | `.workspace` > `.workspace-top`, `.workspace-tabs`, `.workspace-nav[data-level][data-step]` + `[data-grip]`, `.workspace-main`; entries `.workspace-item`, list `.workspace-tree`; document column `main > section > article.typeset[data-width="slim\|wide\|full"]`, status line `main > footer` (`[data-fill]` pushes the rest to the end); sizes and form tokens as `--workspace-*` on `.workspace`; stored widths via `data-workspace-store` + `workspace-boot.js` | `blocks/navigation/workspace.html`, `document-workspace.html` |
+| An app's own look for a layout | its own **layout pack** `packs/<repo>.css` (ADR-2): block form tokens on the block root, block-scoped rules in `@layer components`, header `@c22-layout: <block>`; never block CSS with own classes. Example: `underdoc` | `packs/underdoc.css`, `blocks/navigation/document-workspace.html` |
+| ~~An app's approved mockup taken over whole~~ — **deprecated** (ADR-2, removal T-20) | root class `.c22-app-<name>`, everything scoped to it (rule 14); only the old UnderDoc workspace still uses it, until it has switched to `.workspace` + pack `underdoc` (replacement list in backlog T-19) | `blocks/navigation/app-workspace.html` |
 | Filters with sign, count and text | `class="filter-bar"` | `filter-bar.html` |
 | One row of filter buttons, groups as menus | `class="filter-menus"`: links, `.dropdown-menu` (state `data-an` / `data-teil`), `span[role=separator]`; split button `.filter-split` (link takes the group, arrow menu or a plain button beside it) | `filter-bar.html` |
 | Table with hierarchy lines, row selection | `class="table" data-variant="levels"` + `data-selectable` (`="explorer"` adds opening; a link with `data-follow` opens on a click; merged-cell content in a `div` sticks under the head, `--levels-sticky-top`) | `blocks/tables/merge-table.html` |
@@ -84,6 +85,8 @@ Colours, radii and spacing come from **tokens / token utilities** only: `bg-prim
 **No hex, no `bg-[#…]`/`text-[#…]` with a literal colour, no inline `oklch()`/`rgb()`** in component markup.
 Re-theming must be "swap the tokens", which only works if nothing hardcodes a colour. The style packs
 (`vega`/`nova`/`maia`/`lyra`/`mira`/`luma`/`sera`/`rhea`, plus the brand packs `spica` and `ankaa`) are just different token sets.
+A **layout pack** (`underdoc`, ADR-2) additionally changes the *form* of building blocks — through their form tokens first,
+through block-scoped rules for the rest — and never brings classes or markup of its own.
 
 **The one sanctioned exception** is a colour that must stay fixed *independent* of the theme — a brand
 badge (shields-style), or a control sitting on an arbitrary photo (carousel overlay) that needs guaranteed
@@ -177,8 +180,10 @@ c22/static/css/
                         class .c22-app-<name> (rule 14); unlayered, see the file head — except the
                         element defaults (button, table cells …), which sit in @layer base so C22
                         components and utilities used inside the root win over them
-  packs/<name>.css      OWN style packs = pure token overrides riding on the vega shape
-                        (de-monolithisation phase B; e.g. packs/spica.css — brand blue)
+  packs/<name>.css      OWN style packs = token overrides riding on the vega shape
+                        (de-monolithisation phase B; e.g. packs/spica.css — brand blue); a layout pack
+                        (@c22-layout, ADR-2; packs/underdoc.css) also sets block form tokens and carries
+                        block-scoped rules in @layer components (tests/test_axes.py part D)
   input.css             Tailwind entry (imports vendored basecoat + tokens + components)
   c22-<pack>.css        compiled output per style pack (generated — do not hand-edit)
 c22/static/js/c22.js    minimal own behaviour (context menu, interactive calendar/carousel/chart, palette tweaks)

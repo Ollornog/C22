@@ -1,0 +1,105 @@
+/* C22 layout pack "UnderDoc" — the look of UnderDoc's approved workspace mockup on C22's building blocks.
+ *
+ * What this is (ADR-2): a LAYOUT pack. Like every pack it names its axes; in addition it changes the FORM of the
+ * building blocks listed under @c22-layout — first through their form tokens (set on the block root, read by
+ * components.css, where the defaults are every other pack's look), then, for the fine fit of a foundation component
+ * inside a block, through block-scoped rules in @layer components. No class of its own, no markup of its own: the
+ * markup is the block's (blocks/navigation/document-workspace.html). The name is the repository's; any app may take
+ * the pack (link c22-underdoc.css instead of c22-vega.css).
+ *
+ * Rules the suite checks (tests/test_axes.py, part D): outside a layer only custom properties; every rule inside
+ * @layer components starts at a block named under @c22-layout; every --<block>-* token set here is declared in
+ * components.css; values through tokens (the axis rules apply here as everywhere).
+ *
+ * @c22-form: vega   (the vendor shape is vega's; the colours stay the base roles)
+ * @c22-layout: workspace
+ *
+ * @achse base-color: erbt — the neutral surfaces of the base, like vega.
+ * @achse accent: erbt — the base roles; the mockup was drawn on them.
+ * @achse status: erbt — the status pairs of tokens.css.
+ * @achse chart: erbt — the base palette.
+ * @achse font: erbt — the embedded Inter.
+ * @achse type-scale: erbt — sizes stay on the scale; the few smaller ones are derived below from its steps.
+ * @achse typeset: gesetzt — prose leads 1.5 with a short paragraph gap, like the mockup's document.
+ * @achse radius: gesetzt — a notch tighter than vega: controls and entries 6px, small parts 4px.
+ * @achse menu: erbt — sidebar colours of the base.
+ * @achse menu-accent: gesetzt — hover and current rows take the accent tint, like every list of the mockup.
+ * @achse density: erbt — the mockup's spacing is vega's.
+ * @achse elevation: erbt — like vega.
+ * @achse motion: erbt — like vega.
+ * @achse icon-weight: erbt — like vega.
+ */
+
+:root {
+  /* --radius-md = 6px (buttons, fields, entries, tabs), --radius-sm = 4px (rows, small buttons). */
+  --radius: 0.5rem;
+  /* The document of the mockup: 1.5 line height, a paragraph gap of about two thirds of a line. */
+  --leading-body: 1.5;
+  --flow: 0.667em;
+}
+
+/* The mockup tints hovered and current rows of its columns with the accent, in light and dark alike. Declared on
+   .dark as well: the base sets the sidebar tokens there, and var(--accent) has to resolve to the dark value. */
+:root, .dark {
+  --sidebar-accent: var(--accent);
+  --sidebar-accent-foreground: var(--accent-foreground);
+}
+
+/* Form tokens of the workspace (declared with their defaults in components.css). */
+.workspace {
+  --workspace-item-text: calc(var(--text-sm) * 27 / 28);          /* 13.5px: entries of nav1/nav2, tab names */
+  --workspace-caps-text: calc(var(--text-xs) * 0.875);            /* 10.5px: labels and column headings */
+  --workspace-section-head-text: calc(var(--text-xs) * 1.125);    /* 13.5px: the heading of an open collection */
+  --workspace-section-head-bg: var(--muted);                      /* … sits on a band */
+  --workspace-section-head-radius: var(--radius-md);
+  --workspace-section-head-padding: calc(var(--spacing) * 0.5) calc(var(--spacing) * 1) calc(var(--spacing) * 0.5) calc(var(--spacing) * 2);
+  --workspace-line: var(--ring);                                  /* dashed tab, grips, lines between sections */
+  --workspace-doc-text: calc(var(--text-sm) * 15 / 14);           /* 15px body of the document */
+  --workspace-doc-heading: calc(var(--text-base) * 1.0625);       /* 17px headings in the document */
+}
+
+@layer components {
+  /* Top row: a bold name beside a bare glyph (no plate), a lower search field and New button. */
+  .workspace-top > .brand { font-weight: var(--font-weight-bold); }
+  .workspace-top > .brand > .brand-mark { background-color: transparent; color: var(--muted-foreground); }
+  .workspace-top > form > .input { height: calc(var(--spacing) * 7.5); box-shadow: none; }
+  .workspace-top > .btn { width: calc(var(--spacing) * 7.5); height: calc(var(--spacing) * 7.5); border-color: var(--ring); box-shadow: none; }
+
+  /* "New +" in a column heading: dark text on a ring-coloured outline. */
+  .workspace-nav header > .btn { color: var(--foreground); border-color: var(--ring); box-shadow: none; }
+
+  /* Buttons at the end of the tab row, a step smaller. */
+  .workspace-tabs > .btn { width: calc(var(--spacing) * 7); height: calc(var(--spacing) * 7); margin-bottom: calc(var(--spacing) * 0.75); }
+
+  /* Icons of the entries and the list a step smaller (15px). */
+  .workspace-item > svg,
+  .workspace-tree li > div > :is(a, button):not([data-toggle]) > svg { width: calc(var(--spacing) * 3.75); height: calc(var(--spacing) * 3.75); }
+
+  /* The word beside the open entry, smaller than the names. */
+  .workspace-tree li > div > small { font-size: calc(var(--text-xs) * 5 / 6); }
+
+  /* Head of the window: a compact path; tools that wrap start their line on the left. */
+  .workspace-main > header > div > .breadcrumb { font-size: calc(var(--text-xs) * 25 / 24); }
+  .workspace-main > header > div > .breadcrumb > ol { gap: calc(var(--spacing) * 1); }
+  .workspace-main > header > div > .breadcrumb li > svg { width: 0.75rem; height: 0.75rem; }
+  .workspace-main > header > div > [role='toolbar'] { margin-inline-start: 0; }
+
+  /* Tags and the section menu as square chips, quiet until hovered. */
+  .workspace-main > header > div > .badge {
+    padding: 0 calc(var(--spacing) * 1.5);
+    border-radius: var(--radius-sm);
+    color: var(--muted-foreground);
+    font-size: calc(var(--text-xs) * 23 / 24);
+    font-weight: var(--font-weight-normal);
+  }
+  .workspace-main > header > div > [role='toolbar'] > .dropdown-menu > .btn {
+    height: auto;
+    padding: 1px calc(var(--spacing) * 1.75);
+    border-radius: var(--radius-sm);
+    box-shadow: none;
+    color: var(--muted-foreground);
+    font-size: calc(var(--text-xs) * 23 / 24);
+    font-weight: var(--font-weight-normal);
+  }
+  .workspace-main > section { padding-inline-end: calc(var(--spacing) * 7.5); }
+}
