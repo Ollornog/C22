@@ -29,6 +29,11 @@ of the mockup moves into the pack `underdoc` (`c22/static/css/packs/underdoc.css
    elsewhere, marked text in the editor, file in a window with its panel, spreadsheet in the workspace (the
    grid is already `.table[data-variant="grid"]`).
 
+## State (2026-11-21)
+
+- Step 1 (core): #140. Steps 2 and 3: blocks `workspace-editing.html` and `workspace-more.html`, the third example of
+  `document-workspace.html`; reference images in vega and `underdoc`.
+
 ## Done when
 
 - Every example of `app-workspace.html` has a counterpart from building blocks that looks like the rest of
@@ -91,6 +96,93 @@ Load `c22-underdoc.css` instead of `c22-vega.css` and drop the root class `.c22-
 | `article.doc.slim` / `.wide` / `.full` | `article.typeset[data-width="slim"/"wide"/"full"]` |
 | `.status` (+ `.spacer`) | `main > footer` (+ `span[data-fill]`) |
 
-Still open for step 2 and 3: `.toc` (contents column beside the document), several windows (`.wins.many`, drop
-zones), `.strip .tab`/`.seg`/`.bar` of the old top bar, and every class of the editing and panel examples
-(`.bedit`, `.btool`, `.bmenu`, `.emb*`, `.facts`, `.kids`, `.imgs`, `.note`, `.v`, `.tw`, `.src`, `.spanel` …).
+## Replacement list for UnderDoc (steps 2 and 3)
+
+Markup to copy: `blocks/navigation/workspace-editing.html` (editing), `workspace-more.html` (drag, New, gear, file,
+sheet) and the third example of `document-workspace.html` (several windows, contents as a column). Every class of
+`app-workspace.css` not in the core list above:
+
+| Old class | Building block |
+|---|---|
+| **Editor** | |
+| `.bedit` | `.editor-block` (block being edited: `[data-add]` button + `textarea.textarea`) |
+| `.btool`, `.btool.edbar` | `.editor-bar[role=toolbar]` — above a block inside `.editor-block`, as a window row `.workspace-main > .editor-bar` |
+| `.bgroup`, `.bsep` | `div[role=group]` inside `.editor-bar` (the line before a group is the group's) |
+| `.btype` | `select.select[data-size=sm]` first in the bar |
+| `.asking`, `.cnum` | `.btn[data-variant=ghost][data-size=icon-sm]` with `aria-pressed`; a count via `[data-count]` |
+| `.bplus` | `.btn[data-add][data-variant=ghost][data-size=icon-xs]` |
+| `.bslash`, `.cm-ud-slashbox` | `.command` (list of block kinds, `aria-disabled` + "später") |
+| `.bhandle`, `.bmenu`, `.bused` | `[data-block]` > `.dropdown-menu.editor-handle` (trigger `.btn` ghost icon-xs with grip icon; `data-align="end"` in a card); "Verwendet in" as `div[role=heading]` after an `hr` |
+| `.cblk`, `.has` | comment bubble `.comment-anchor` > `[data-comment]` (+ `data-count`) |
+| `.dstatus` | `.btn[data-mode]` first in `.workspace-main > header`, `aria-pressed="true"` while editing |
+| `.cm-editor.cm-ud` (and `.cm-line`) | the page in the editor: `.editor` (CodeMirror keeps its own DOM; its decorations take these:) |
+| `.cm-ud-used`, `-used-first/-last`, `-usedlabel` | `.editor [data-used]` + `small` (where it is used) |
+| `.cm-ud-ask` | `.item[data-variant=muted][data-size=sm]` with the question in `section` and `.btn[data-size=xs]` in `aside` |
+| `.cm-ud-plain` | `underline decoration-wavy decoration-destructive` (utilities) |
+| `.cm-ud-embed`, `-embed-what` | `a.badge[data-variant=secondary]` with a muted first `span` |
+| `.cm-ud-part`, `-partlabel`, `.partedge`, `.partlabel` | `[data-part="<name>"]` (dotted underline), `data-framed` shows frame and name |
+| `.cm-ud-marker` | stays the app's (an empty CodeMirror widget, no look) |
+| `.embed`, `.embhead`, `.embedbody` | `figure.editor-embed` (content, `figcaption` with the link back) |
+| `.embed.broken`, `.unplaced` | `figure.editor-embed[data-state=missing]` with the words; removed with actions: buttons inside |
+| `.badge[data-removed]`, `.placed` | `.badge[data-variant=destructive]` + `.btn[data-variant=outline][data-size=xs]` |
+| `.wayspop`, `.wayitem`, `.wayrow`, `.waysame` | a `.card` (or `.dialog`) with one section per thing: `h4`, muted `p`, `.btn[aria-pressed]` choices + `select.select`; `label` > checkbox "Dasselbe für alle"; `.btn` destructive + outline |
+| `.keep`, `.kard`, `.noteadd` | `.input` to add, a grid of `article.card[data-size=sm][data-block]` (handle inside) |
+| `.findin` | `.input-group` in the bar (search on the page) |
+| `.src` | `pre.code-block[data-line-numbers]` |
+| **Lists, drag, New** | |
+| `.dropgap`, `.held`, `.idle`, `.copy`, `.drop-into`, `body.dragging`, `body.ud-bdrag` | same classes, written by `app-workspace-drag.js`; styled for `.workspace-tree`/`.workspace-nav` (rows `li > div`, clones `.dropgap > div`) |
+| `.row.just` | `li > div[aria-selected="true"]` (tint + frame) |
+| `.ren`, `.renin` | `.input[data-size=sm]` in place of the name inside the row |
+| `.drop-before`, `.drop-after`, `.slot`, `.blank` (tabs) | open — tab dragging stays the app's (T-13); a drop line on `.workspace-tab` is a follow-up |
+| `.coll`, `.acc` | `section > header` of nav3 (the band) |
+| `.n2lab`, `.slab`, `.lab` | `.workspace-label` |
+| `.fav`, `.favsep` | `.workspace-item` / `hr` |
+| `.lockline` | `.workspace-label` with lock icon |
+| `.cmdpop`, `.command` (inside it) | `.command` with `header` filter, groups, `hr` |
+| `.addmenu`, `.addpop`, `.newpop`, `.pop`, `.opt` | `.dropdown-menu` / `.command`; New of the top row as a popover card: `.button-group` (where), `.input`, muted `p` |
+| `.newtypes`, `.tplcards` | grid of `a.item[data-variant=outline][data-size=sm]` (icon, `h4`, two-line muted `p`) |
+| entry with description (template) | menu item `div > span + small` in `.command`/`.dropdown-menu` |
+| `.tabmenu`, `.tlistpop`, `.histpop`, `.tabctx`, `.ctxpop` | `.dropdown-menu` / `.context-menu` |
+| **Windows** | |
+| `.wins.many`, `.win`, `.focus` | `.workspace-windows` > `.workspace-window` (own `.workspace-tabs` + `.workspace-main`), active one `data-focus` |
+| `.winbar` | not needed (hidden in the mockup as well) |
+| `.newwin`, `.left`, `.right`, `.zone-left/-mid/-right/-open` | open — drop zones for a new window are the app's behaviour; a frame for them is a follow-up |
+| `.toc` | `nav.toc[data-variant=compact][data-marker=bar]` first in `.workspace-main > section`, width `--workspace-toc` |
+| `.dhead`, `.b`, `.c`, `.place.two`, `.crumbs` | `main > header` (variants of the head are the path + `h1`/`p` there) |
+| `.page`, `.pad` | `main > section` |
+| **Panels and settings** | |
+| `.fdrawer`, `.fhead`, `.hint` | `.workspace-main > aside[data-drawer]` with `header`, `h3`, muted `p` |
+| `.seg` | `.button-group` of `.btn[data-variant=outline][data-size=xs][aria-pressed]` (disabled: `disabled` + `aria-disabled` on the group) |
+| `.setrow`, `.modrow` | a row `div.flex.items-center.justify-between` / `.item[data-variant=outline][data-size=sm]` (admin-panel block) |
+| `.spanel`, `.facts`, `.colfacts` | `aside.card` with `h3`, `dl` (drawer `dl`), `.item` lists |
+| `.dropzone` | `[data-dropzone]` (`empty.html`) |
+| `.progress` (in a list) | `progress.progress` |
+| `.preview`, `.vid`, `.slide`, `.thumb`, `.thumbs`, `.imgs` | `figure.card` / `.aspect-ratio` with the image; a grid of them |
+| `.stepper` | `.input-group` with buttons (number) |
+| `.addtag`, `.tagrow` | `.input[data-size=sm]` / `.badge` row |
+| `.signout`, `.who`, `.avatar.small` | `.btn` / `.item` with `.avatar` |
+| **Content in the document** | |
+| `.sub` | `main > header > p` |
+| `.v` | `code` |
+| `a.l` | `a` (typeset link) |
+| `.tw` | `.table-container` > `table.table` |
+| `.note` | `.alert` |
+| `.kids` | `a.item[data-variant=outline]` list |
+| `.i` (`svg.i`) | lucide icon with `data-icon-lu` (size from its parent block) |
+| `.empty` | `.empty` |
+| `.withic`, `.blk`, `.accbadge`, `.later`, `.due`, `.tick` | `.badge` / muted `small` / `.btn` icon |
+| **Other views of the mockup** (mail, calendar, tasks, board, assistant, search) | |
+| `.mailrow`, `.mailhead`, `.mfrom`, `.msubj`, `.unread`, `.reply`, `.cmtrow` | `.item` list (unread: `font-semibold`), comments `.timeline` |
+| `.calgrid`, `.day`, `.today` | `.calendar` / `table.month-sheet` (`aria-current="date"`) |
+| `.todos`, `.todo`, `.done`, `.box` | `.item` list with `input.input[type=checkbox]` (done: `line-through`) |
+| `.board`, `.kard` (board) | grid of `.card[data-size=sm]` columns |
+| `.aidrawer`, `.aichat`, `.aiq`, `.aia`, `.aiin`, `.aictx`, `.ai`, `.answer` | `aside[data-drawer]` with `.message`/`.bubble` and `.input-group` |
+| `.filters`, `.filterbtn`, `.ssbar`, `.sshits`, `.hit`, `.snip` | `.filter-bar` / `.filter-menus`, results as `.item` list |
+| `.clockbtn` | `[data-clock]` (`date-picker.html`) |
+| `.toast` | `.toast` |
+| `.intorow`, `.lands`, `.cfor`, `.cgo`, `.cfocus`, `.cmore`, `.copy` (button) | `.item`/`.btn`; focus ring of C22 |
+| `.bar`, `.tab`, `.strip .tab`, `.tight`, `.text`, `body.resizing` | old top bar of round 1: `header.workspace-top`, `.workspace-item`, `[data-grip]` (`.workspace[data-resizing]`) |
+
+Open after steps 2 and 3: the look of the other views (mail, calendar, tasks, board, assistant) in the pack
+`underdoc` — they map to C22 components, but their mockup look was not part of the gallery examples, so the pack
+does not reshape them yet; drop lines on tabs and drop zones for new windows.

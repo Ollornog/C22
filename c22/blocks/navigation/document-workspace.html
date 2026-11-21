@@ -252,4 +252,56 @@
     </div>
     </div>
   </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Zwei Fenster nebeneinander (das Fenster, in dem man arbeitet, ist gerahmt, das andere tritt zurück); links das Inhaltsverzeichnis als Spalte neben dem Dokument; nav2 und nav3 zur Seite getreten</span>
+    <div class="w-full overflow-hidden rounded-lg border">
+    <div class="workspace h-120" data-nav-hidden>
+      <header class="workspace-top">
+        <button type="button" class="btn" data-variant="outline" data-size="icon-sm" aria-label="Neu"><svg data-icon-lu="plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button>
+      </header>
+      <nav class="workspace-nav" data-level="1" data-step="0" aria-label="Ansichten">
+        <div>
+          <button type="button" class="workspace-item" title="Arbeitsbereich" aria-current="page"><svg data-icon-lu="panel-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg><span>Arbeitsbereich</span></button>
+          <button type="button" class="workspace-item" title="Dateien"><svg data-icon-lu="hard-drive" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 16h.01"/><path d="M2.212 11.577a2 2 0 0 0-.212.896V18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5.527a2 2 0 0 0-.212-.896L18.55 5.11A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/><path d="M21.946 12.013H2.054"/><path d="M6 16h.01"/></svg><span>Dateien</span></button>
+          <button type="button" class="workspace-item" title="Suche"><svg data-icon-lu="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><span>Suche</span></button>
+        </div>
+      </nav>
+      <div class="workspace-windows">
+        <section class="workspace-window" data-focus aria-label="Fenster 1">
+          <div class="workspace-tabs"><div role="tablist" aria-label="Offen in Fenster 1"><div class="workspace-tab" data-general><button type="button" role="tab" aria-selected="true"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Netzwerkplan</span></button></div></div></div>
+          <main class="workspace-main">
+            <header>
+              <div><nav class="breadcrumb" aria-label="Pfad"><ol><li><a href="#">Betrieb</a></li><li aria-hidden="true"><svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></li><li><a href="#">Netzwerk</a></li></ol></nav></div>
+              <h1>Netzwerkplan</h1>
+            </header>
+            <section>
+              <nav class="toc" data-variant="compact" data-marker="bar" aria-label="Inhalt">
+                <a href="#dw-c-h1" aria-current="true">Überblick</a>
+                <a href="#dw-c-h2">Kern-Switches</a>
+                <a href="#dw-c-h3">Funkstrecke</a>
+              </nav>
+              <article class="typeset" data-width="slim">
+                <h2 id="dw-c-h1">Überblick</h2>
+                <p>Der Router steht im Serverraum.</p>
+                <h2 id="dw-c-h2">Kern-Switches</h2>
+                <p>Zwei, verbunden mit 10 Gbit.</p>
+                <h2 id="dw-c-h3">Funkstrecke</h2>
+                <p>Vom Turm zum Pförtnerhaus.</p>
+              </article>
+            </section>
+            <footer aria-label="Status des Dokuments"><span>16 Wörter</span><span data-fill></span><span>Markdown · UTF-8</span></footer>
+          </main>
+        </section>
+        <section class="workspace-window" aria-label="Fenster 2">
+          <div class="workspace-tabs"><div role="tablist" aria-label="Offen in Fenster 2"><div class="workspace-tab"><button type="button" role="tab" aria-selected="true"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>VLAN-Liste</span></button></div></div></div>
+          <main class="workspace-main">
+            <header><div><nav class="breadcrumb" aria-label="Pfad"><ol><li><a href="#">Netzwerkplan</a></li></ol></nav></div><h1>VLAN-Liste</h1></header>
+            <section><article class="typeset" data-width="slim"><p>Jedes VLAN am Standort.</p></article></section>
+            <footer aria-label="Status des Dokuments"><span>4 Wörter</span><span data-fill></span><span>Markdown · UTF-8</span></footer>
+          </main>
+        </section>
+      </div>
+    </div>
+    </div>
+  </div>
 </div>

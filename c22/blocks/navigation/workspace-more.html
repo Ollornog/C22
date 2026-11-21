@@ -1,0 +1,186 @@
+<!-- c22-title: Arbeitsbereich: Ziehen, Neu, Ansicht, Datei, Tabelle -->
+<!-- C22-custom: the remaining parts of UnderDoc's workspace (ADR-2, T-19 step 3), built from C22 building blocks only:
+     the list while dragging (.dropgap/.idle/.copy/.drop-into from app-workspace-drag.js; aria-selected, data-ref, a
+     rename .input in the row), New as a .command with groups and entries with a description (div > span + small), New
+     from a template as a popover of .button-group, .input and item links, the gear as the window's drawer with
+     .button-group segments, a file in the window (figure, .table with actions in the last cell) beside a panel
+     (.progress, .input-group, .item), the spreadsheet grid in .tabs. In the pack "underdoc" the same markup takes
+     UnderDoc's look. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Ziehen und Neu (der gezogene Eintrag wandert gestrichelt gerahmt durch die Liste; auf die Mitte eines Eintrags gezogen wird dieser umrahmt; ein markierter Eintrag ist getönt und gerahmt; eine Collection, die hier nur verwiesen wird, steht schräg; ein neuer Name wird an Ort und Stelle geschrieben; New als Befehlsmenü, Tippen filtert)</span>
+    <div class="flex w-full flex-wrap items-start gap-8 rounded-lg border p-4">
+      <div class="flex w-60 flex-col gap-4">
+        <ul class="workspace-tree">
+          <li><div class="drop-into"><span data-toggle aria-hidden="true"></span><button type="button" title="A"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>A</span></button></div></li>
+          <div class="dropgap held"><div><span data-toggle aria-hidden="true"></span><button type="button" title="C"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>C</span></button></div></div>
+          <li><div aria-selected="true"><span data-toggle aria-hidden="true"></span><button type="button" title="B"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>B</span></button></div></li>
+        </ul>
+        <div class="command w-60 border shadow-md" id="mo-new" aria-label="Neu">
+          <header><svg data-icon-lu="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><input type="text" id="mo-new-input" placeholder="Zum Filtern tippen" autocomplete="off" spellcheck="false" aria-autocomplete="list" role="combobox" aria-expanded="true" aria-controls="mo-new-menu"></header>
+          <div role="menu" id="mo-new-menu" aria-orientation="vertical" data-empty="Nichts gefunden.">
+            <div role="group" aria-labelledby="mo-new-h1"><span role="heading" id="mo-new-h1">Anlegen</span>
+              <div role="menuitem" data-filter="Collection"><svg data-icon-lu="layout-grid" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>Collection</div>
+            </div>
+            <hr role="separator">
+            <div role="group" aria-labelledby="mo-new-h2"><span role="heading" id="mo-new-h2">Absetzen</span>
+              <div role="menuitem" data-filter="Linie"><svg data-icon-lu="minus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" x2="19" y1="12" y2="12"/></svg>Linie</div>
+              <div role="menuitem" data-filter="Abstand"><svg data-icon-lu="chevrons-up-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg>Abstand</div>
+            </div>
+            <hr role="separator">
+            <div role="group" aria-labelledby="mo-new-h3"><span role="heading" id="mo-new-h3">Hereinholen</span>
+              <div role="menuitem" data-filter="Import" aria-disabled="true"><svg data-icon-lu="arrow-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>Import</div>
+              <div role="menuitem" data-filter="Link" aria-disabled="true"><svg data-icon-lu="link" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>Link</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ul class="workspace-tree w-56">
+        <li><div data-ref><span data-toggle aria-hidden="true"></span><button type="button" title="Budget, verwiesen aus Projekte"><svg data-icon-lu="layout-grid" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg><span>Budget</span></button></div></li>
+      </ul>
+      <ul class="workspace-tree w-56">
+        <li><div><span data-toggle aria-hidden="true"></span><svg class="size-4 text-muted-foreground" data-icon-lu="layout-grid" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg><input class="input" data-size="sm" type="text" value="New collection (1)" aria-label="Name der neuen Collection"></div></li>
+      </ul>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Ziehen zum Ausprobieren (app-workspace-drag.js: hoch und runter zwischen die Einträge, kurz auf der Mitte warten legt darunter, nach rechts ordnet sofort unter, Escape bricht ab)</span>
+    <div class="w-full rounded-lg border p-4">
+      <nav class="workspace-nav w-64" data-level="3" aria-label="Ziehen ausprobieren" data-drag-demo>
+        <section>
+          <header><a href="#" title="Projekte öffnen"><span>Projekte</span></a></header>
+          <ul class="workspace-tree">
+            <li><div data-demo-id="Turm"><span data-toggle aria-hidden="true"></span><button type="button" title="Turm"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Turm</span></button></div></li>
+            <li><div data-demo-id="Antennen"><span data-toggle aria-hidden="true"></span><button type="button" title="Antennen"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Antennen</span></button></div></li>
+            <li><div data-demo-id="Strom"><span data-toggle aria-hidden="true"></span><button type="button" title="Strom"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Strom</span></button></div></li>
+            <li><div data-demo-id="Kran"><span data-toggle aria-hidden="true"></span><button type="button" title="Kran"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Kran</span></button></div></li>
+          </ul>
+        </section>
+      </nav>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Neu aus einer Vorlage (im Befehlsmenü von New eine Gruppe, jede Vorlage mit ihrer Beschreibung als zweiter Zeile; im Menü Neu der Kopfleiste: wohin, ein Feld, Vorlagen als Karten mit Name und Beschreibung)</span>
+    <div class="flex w-full flex-wrap items-start gap-8 rounded-lg border p-4">
+      <div class="command w-64 border shadow-md" id="mo-tpl" aria-label="Neu">
+        <header><svg data-icon-lu="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><input type="text" id="mo-tpl-input" placeholder="Zum Filtern tippen" autocomplete="off" spellcheck="false" aria-autocomplete="list" role="combobox" aria-expanded="true" aria-controls="mo-tpl-menu"></header>
+        <div role="menu" id="mo-tpl-menu" aria-orientation="vertical" data-empty="Nichts gefunden.">
+          <div role="group" aria-labelledby="mo-tpl-h1"><span role="heading" id="mo-tpl-h1">Anlegen</span>
+            <div role="menuitem" data-filter="Seite"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>Seite</div>
+          </div>
+          <hr role="separator">
+          <div role="group" aria-labelledby="mo-tpl-h2"><span role="heading" id="mo-tpl-h2">Aus einer Vorlage</span>
+            <div role="menuitem" data-filter="Besprechung"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><div><span>Besprechung</span><small>Teilnehmer, Punkte, Beschlüsse und Aufgaben</small></div></div>
+            <div role="menuitem" data-filter="Anleitung"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><div><span>Anleitung</span><small>Ziel, Voraussetzungen und Schritte</small></div></div>
+            <div role="menuitem" data-filter="Runbook"><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><div><span>Runbook</span><small>Was tun, wenn ein Dienst ausfällt, Schritt für Schritt</small></div></div>
+          </div>
+        </div>
+      </div>
+      <section class="card w-96 gap-3 py-3 shadow-lg" aria-label="Neu">
+        <div class="flex flex-col gap-3 px-3">
+          <div class="flex items-center gap-2 text-sm"><span class="text-muted-foreground">In</span>
+            <div class="button-group" role="group" aria-label="Wohin">
+              <button type="button" class="btn" data-variant="outline" data-size="xs" aria-pressed="false"><svg data-icon-lu="pen-line" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.376 3.622a1 1 0 0 1 3.002 3.002L7.368 18.635a2 2 0 0 1-.855.506l-2.872.838a.5.5 0 0 1-.62-.62l.838-2.872a2 2 0 0 1 .506-.854z"/></svg>Schnellnotizen</button>
+              <button type="button" class="btn" data-variant="outline" data-size="xs" aria-pressed="true"><svg data-icon-lu="layout-grid" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>Projekte</button>
+            </div>
+          </div>
+          <input class="input" type="text" placeholder="Einfach tippen, Enter legt eine Seite an" aria-label="Titel der neuen Seite">
+          <p class="text-muted-foreground text-sm">Eine Markdown-Seite oben in Projekte. Ziehen bringt sie an ihren Platz.</p>
+          <h3 class="text-muted-foreground text-xs font-semibold tracking-wider uppercase">Aus einer Vorlage</h3>
+          <div class="grid grid-cols-2 gap-2">
+            <a href="#" class="item" data-variant="outline" data-size="sm"><figure><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg></figure><section><h4 class="font-semibold">Besprechung</h4><p class="text-muted-foreground line-clamp-2 text-xs">Teilnehmer, Punkte, Beschlüsse und Aufgaben</p></section></a>
+            <a href="#" class="item" data-variant="outline" data-size="sm"><figure><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg></figure><section><h4 class="font-semibold">Anleitung</h4><p class="text-muted-foreground line-clamp-2 text-xs">Ziel, Voraussetzungen und Schritte</p></section></a>
+            <a href="#" class="item" data-variant="outline" data-size="sm"><figure><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg></figure><section><h4 class="font-semibold">Runbook</h4><p class="text-muted-foreground line-clamp-2 text-xs">Was tun, wenn ein Dienst ausfällt, Schritt für Schritt</p></section></a>
+            <a href="#" class="item" data-variant="outline" data-size="sm"><figure><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg></figure><section><h4 class="font-semibold">Entscheidung</h4><p class="text-muted-foreground line-clamp-2 text-xs">Frage, Optionen, Entscheidung und Folgen</p></section></a>
+          </div>
+          <h3 class="text-muted-foreground text-xs font-semibold tracking-wider uppercase">Oder beginnen als</h3>
+          <div class="grid grid-cols-2 gap-2">
+            <a href="#" class="item" data-size="sm"><figure><svg data-icon-lu="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg></figure><section><h4>Seite, Markdown</h4></section></a>
+            <a href="#" class="item" data-size="sm"><figure><svg data-icon-lu="pen-line" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.376 3.622a1 1 0 0 1 3.002 3.002L7.368 18.635a2 2 0 0 1-.855.506l-2.872.838a.5.5 0 0 1-.62-.62l.838-2.872a2 2 0 0 1 .506-.854z"/></svg></figure><section><h4>Schnellnotizen</h4></section></a>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Zahnrad: Ansicht (die Schublade des Fensters; Inhalt, Breite und Vorlage als Segmente; was der Leser nicht einstellen darf, ist zurückgenommen und antwortet nicht)</span>
+    <div class="w-full overflow-hidden rounded-lg border">
+      <div class="workspace-main h-88">
+        <section><article class="typeset" data-width="slim"><p class="text-muted-foreground">Das Dokument liegt unter der Schublade.</p></article></section>
+        <aside data-drawer id="mo-gear" aria-label="Dokument-Einstellungen">
+          <header>Dokument-Einstellungen<button type="button" class="btn" data-variant="ghost" data-size="icon-sm" data-drawer-toggle="mo-gear" aria-label="Schließen"><svg data-icon-lu="x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></header>
+          <h3>Ansicht</h3>
+          <div class="flex items-center justify-between gap-3"><span class="text-sm">Inhalt</span>
+            <div class="button-group" role="group" aria-label="Inhalt"><button type="button" class="btn" data-variant="outline" data-size="xs" aria-pressed="false">Markierung</button><button type="button" class="btn" data-variant="outline" data-size="xs" aria-pressed="true">Seite</button><button type="button" class="btn" data-variant="outline" data-size="xs" aria-pressed="false">aus</button></div></div>
+          <div class="flex items-center justify-between gap-3"><span class="text-sm">Breite</span>
+            <div class="button-group" role="group" aria-label="Breite"><button type="button" class="btn" data-variant="outline" data-size="xs" aria-pressed="false">schmal</button><button type="button" class="btn" data-variant="outline" data-size="xs" aria-pressed="true">breit</button><button type="button" class="btn" data-variant="outline" data-size="xs" aria-pressed="false">voll</button></div></div>
+          <div class="flex items-center justify-between gap-3"><span class="text-sm">Vorlage</span>
+            <div class="button-group" role="group" aria-label="Vorlage"><button type="button" class="btn" data-variant="outline" data-size="xs" aria-pressed="false">aus</button><button type="button" class="btn" data-variant="outline" data-size="xs" aria-pressed="true">angeboten</button></div></div>
+          <h3>Andere dürfen</h3>
+          <p class="text-sm">Geerbt: bearbeiten</p>
+          <div class="button-group" role="group" aria-label="Andere dürfen" aria-disabled="true"><button type="button" class="btn" data-variant="outline" data-size="xs" aria-pressed="true" disabled>geerbt</button><button type="button" class="btn" data-variant="outline" data-size="xs" aria-pressed="false" disabled>bearbeiten</button><button type="button" class="btn" data-variant="outline" data-size="xs" aria-pressed="false" disabled>kommentieren</button><button type="button" class="btn" data-variant="outline" data-size="xs" aria-pressed="false" disabled>lesen</button></div>
+          <p class="text-muted-foreground text-xs">Beides bleibt bei diesem Dokument, für alle, die es öffnen.</p>
+        </aside>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Datei im Fenster und Panel (Vorschau im Rahmen, Aktionen als Knöpfe, Versionen mit Aktionen in der letzten Zelle; im Panel ein Hochladen mit Balken, ein kleines Formular, ein Knopf als Link, Module nur zur Anzeige)</span>
+    <div class="flex w-full flex-wrap items-start gap-6 rounded-lg border p-4">
+      <div class="flex min-w-0 grow basis-96 flex-col gap-3">
+        <figure class="card text-muted-foreground items-center py-8" aria-label="Vorschau plan-nord.pdf"><svg class="size-24" data-icon-lu="image" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.09-3.09a2 2 0 0 0-2.82 0L6 21"/></svg></figure>
+        <div class="flex flex-wrap gap-1.5"><button type="button" class="btn" data-variant="outline" data-size="xs"><svg data-icon-lu="download" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></svg>Herunterladen</button><button type="button" class="btn" data-variant="outline" data-size="xs"><svg data-icon-lu="cloud-upload" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M12 12v9"/><path d="m16 16-4-4-4 4"/></svg>Neue Version hochladen</button><button type="button" class="btn" data-variant="outline" data-size="xs"><svg data-icon-lu="trash-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>In den Papierkorb</button></div>
+        <h2 class="text-lg font-semibold">Versionen</h2>
+        <div class="table-container">
+          <table class="table">
+            <thead><tr><th>Version</th><th>Wann</th><th>Wer</th><th>Größe</th><th><span class="sr-only">Aktionen</span></th></tr></thead>
+            <tbody>
+              <tr><td>3</td><td>heute</td><td>Anna Berg</td><td>1,2 MB</td><td class="text-right"><a href="#" class="btn" data-variant="link" data-size="sm">Herunterladen</a></td></tr>
+              <tr><td>2</td><td>17.11.</td><td>Jonas Kurz</td><td>1,1 MB</td><td class="text-right"><a href="#" class="btn" data-variant="link" data-size="sm">Herunterladen</a><a href="#" class="btn" data-variant="link" data-size="sm">Wiederherstellen</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <aside class="card w-72 gap-3 px-4 py-4" aria-label="Panel">
+        <h3 class="font-semibold">Dateien</h3>
+        <div class="flex flex-col gap-1"><span class="text-xs">plan-nord.pdf</span><progress class="progress" value="62" max="100" aria-label="plan-nord.pdf wird hochgeladen">62 %</progress><span class="text-muted-foreground text-xs">wird hochgeladen</span></div>
+        <form class="flex gap-1.5" action="#"><input class="input" data-size="sm" type="text" value="Neuer Ordner" aria-label="Name des Ordners"><button type="submit" class="btn" data-variant="outline" data-size="sm">Anlegen</button></form>
+        <p class="text-muted-foreground text-sm">Nur Titel durchsucht. <a href="#" class="btn" data-variant="outline" data-size="xs">Volltext einschalten</a></p>
+        <h3 class="font-semibold">Module</h3>
+        <div class="item-group" role="list">
+          <article class="item" data-variant="outline" data-size="sm" role="listitem"><section><h4>Dateien</h4><p class="text-muted-foreground text-xs">Ablage mit Versionen</p></section><aside><span class="badge" data-variant="secondary">an</span></aside></article>
+          <article class="item" data-variant="outline" data-size="sm" role="listitem"><section><h4>Mail</h4><p class="text-muted-foreground text-xs">Postfach im Arbeitsbereich</p></section><aside><span class="badge" data-variant="outline">aus</span></aside></article>
+        </div>
+      </aside>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Tabelle einer Tabellenkalkulation (die Blätter als <code>.tabs</code>, das Blatt als Tabellenraster <code>data-sticky="sheet"</code>; daneben eine schlichte Tabelle, deren Zahlen rechtsbündig stehen)</span>
+    <div class="flex w-full flex-wrap items-start gap-6 rounded-lg border p-4">
+      <div class="tabs min-w-0 grow basis-80" id="mo-sheets">
+        <nav role="tablist">
+          <button type="button" role="tab" id="mo-sheets-1" aria-controls="mo-sheets-p1" aria-selected="true" tabindex="0">Ports</button>
+          <button type="button" role="tab" id="mo-sheets-2" aria-controls="mo-sheets-p2" aria-selected="false" tabindex="-1">VLANs</button>
+        </nav>
+        <div role="tabpanel" id="mo-sheets-p1" aria-labelledby="mo-sheets-1" tabindex="-1">
+          <div class="table-container max-h-48">
+            <table class="table" data-variant="grid" data-sticky="sheet" role="grid" aria-multiselectable="true" aria-label="Ports">
+              <thead><tr><th scope="col"><span class="sr-only">Zeile</span></th><th scope="col">A</th><th scope="col" aria-selected="true">B</th><th scope="col">C</th></tr></thead>
+              <tbody>
+                <tr><th scope="row">1</th><td>Port</td><td data-type="number">VLAN</td><td data-type="number">Kabel</td></tr>
+                <tr><th scope="row">2</th><td>Port 1</td><td data-type="number">10</td><td data-type="number">114</td></tr>
+                <tr><th scope="row" aria-selected="true">3</th><td>Port 2</td><td data-type="number" aria-selected="true" data-active>20</td><td data-type="number">121</td></tr>
+                <tr><th scope="row" aria-selected="true">4</th><td>Port 3</td><td data-type="number" aria-selected="true">30</td><td data-type="number">128</td></tr>
+                <tr><th scope="row">5</th><td>Port 4</td><td data-type="number">40</td><td data-type="number">135</td></tr>
+                <tr><th scope="row">6</th><td>Port 5</td><td data-type="number">50</td><td data-type="number">142</td></tr>
+                <tr><th scope="row">7</th><td>Port 6</td><td data-type="number">60</td><td data-type="number">149</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div role="tabpanel" id="mo-sheets-p2" aria-labelledby="mo-sheets-2" tabindex="-1" hidden class="text-muted-foreground pt-4 text-sm">VLAN-Blatt.</div>
+      </div>
+      <div class="table-container w-56"><table class="table"><thead><tr><th>VLAN</th><th class="text-right">Ports</th></tr></thead><tbody><tr><td>Büro</td><td class="text-right">12</td></tr><tr><td>Gäste</td><td class="text-right">4</td></tr><tr><td>Technik</td><td class="text-right">108</td></tr></tbody></table></div>
+    </div>
+  </div>
+</div>

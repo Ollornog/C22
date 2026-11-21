@@ -12,7 +12,7 @@
  * components.css; values through tokens (the axis rules apply here as everywhere).
  *
  * @c22-form: vega   (the vendor shape is vega's; the colours stay the base roles)
- * @c22-layout: workspace
+ * @c22-layout: workspace, editor
  *
  * @achse base-color: erbt — the neutral surfaces of the base, like vega.
  * @achse accent: erbt — the base roles; the mockup was drawn on them.
@@ -102,4 +102,21 @@
     font-weight: var(--font-weight-normal);
   }
   .workspace-main > section { padding-inline-end: calc(var(--spacing) * 7.5); }
+
+  /* Chosen states of the mockup are filled with the primary role: editing, a segment of the gear, an alignment. The
+     shape says it too (a filled square, a filled segment among outlined ones). */
+  .workspace-main > header > [data-mode][aria-pressed='true'],
+  .workspace-main > aside[data-drawer] .button-group > .btn[aria-pressed='true'],
+  .editor-handle .button-group > .btn[aria-pressed='true'] {
+    border-color: var(--primary);
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+  }
+
+  /* The editor's bar is compact: smaller icon buttons, a select without its own frame. */
+  .editor-bar .btn[data-size='icon-sm'] { width: calc(var(--spacing) * 7); height: calc(var(--spacing) * 7); }
+  .editor-bar > select { border-color: transparent; box-shadow: none; }
+
+  /* A question in the editor reads like the text around it. */
+  .editor .item p { color: var(--foreground); }
 }
