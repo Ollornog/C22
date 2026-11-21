@@ -72,7 +72,7 @@ FEST = """
 })();
 """
 # The page scrolls inside <main>; laid out in full, every section can be captured whole.
-AUSGEROLLT = """
+AUSGEROLLT = r"""
 (() => {
   const st = document.createElement('style');
   st.textContent = `
@@ -527,6 +527,28 @@ def verhalten(r: Report, b: Browser, basis: str) -> None:
     r.check("Stundenblatt: die Wochenzeile klebt unter dem Kopf, auch wenn er wächst",
             k["vorher"]["zeile"] == k["vorher"]["kopf"] and k["nachher"]["zeile"] == k["nachher"]["kopf"]
             and k["nachher"]["kopf"] > k["vorher"]["kopf"] and k["vorher"]["tag"] == 0, str(k))
+    # Today and the running week in a sheet that sticks: the whole row is tinted, the sticky first cell too, and it stays
+    # opaque (what scrolls under it must not shine through). Today as a column tints head and cells alike.
+    h = s.js("""(() => {
+      const b = e => getComputedStyle(e).backgroundColor;
+      const t = document.querySelector('#data-entry-time-sheet .table[data-sticky]');
+      const heute = t.querySelector('tbody tr[aria-current="date"]'), woche = t.querySelector('tr[data-group-row][aria-current="true"]');
+      const normal = t.querySelector('tbody tr:not([aria-current]):not([data-group-row])');
+      const raster = document.querySelector('#data-entry-time-sheet .table:not([data-sticky])');
+      const sp = raster.querySelector('thead th[aria-current="date"]'), i = sp.cellIndex;
+      const andere = raster.querySelector('thead th:not([aria-current])');
+      const zellen = [...raster.tBodies[0].rows].map(r => r.cells[i]);
+      return { zeile: [...heute.cells].map(c => b(c)), woche: [...woche.cells].map(c => b(c)), normal: b(normal.cells[0]),
+               kopf: b(sp), andererKopf: b(andere), spalte: zellen.map(b), nachbar: b(raster.tBodies[0].rows[0].cells[i + 1]),
+               kopfFett: getComputedStyle(sp).fontWeight, andererFett: getComputedStyle(andere).fontWeight,
+               balken: getComputedStyle(sp).boxShadow !== 'none', ohneBalken: getComputedStyle(andere).boxShadow === 'none' };
+    })()""")
+    ein = lambda l: len(set(l)) == 1 and l[0] != "rgba(0, 0, 0, 0)" and "/" not in l[0]  # one colour, opaque
+    r.check("Stundenblatt: heute und laufende Woche ganz getönt, auch die klebende erste Zelle, deckend",
+            ein(h["zeile"]) and ein(h["woche"]) and h["zeile"][0] != h["normal"], str(h))
+    r.check("Raster: heute als Spalte, Kopf und Zellen getönt, die anderen nicht",
+            ein(h["spalte"] + [h["kopf"]]) and h["kopf"] == h["zeile"][0] and h["nachbar"] == "rgba(0, 0, 0, 0)"
+            and h["balken"] and h["ohneBalken"], str(h))
     # A field that is the cell has no frame of its own; the chip line shows the field only with the focus.
     f = s.js("""(() => {
       const zelle = document.querySelector('#data-entry-time-sheet td[data-field] > .input');
