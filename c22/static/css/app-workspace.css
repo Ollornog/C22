@@ -1,5 +1,10 @@
 /* C22 app workspace — the workspace of an approved clickable mockup (UnderDoc), as one building block.
  *
+ * DEPRECATED (ADR-2, 2026-11-21): an own look in own classes is what the rule "structure only from building blocks,
+ * an own look only as a pack" forbids. The successor is the .workspace building block with the pack "underdoc"
+ * (packs/underdoc.css, block blocks/navigation/document-workspace.html); the replacement list for the app is in
+ * backlog T-19. This file stays, unchanged in its look, until UnderDoc has switched; then T-20 archives it.
+ *
  * Gallery: blocks/navigation/app-workspace.html. Loaded with every pack (input.css, build-gallery.sh).
  *
  * Scope. Every rule sits under ONE root class, .c22-app-workspace. An app puts it on the element that

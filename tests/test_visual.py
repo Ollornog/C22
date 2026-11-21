@@ -57,7 +57,11 @@ ANSICHTEN = {
 }
 SEITEN = ("components", "blocks", "charts", "typeset")
 ALLE_SEITEN = ("index", *SEITEN, "generator", "legal")
-PACKS = ("vega", "spica", "ankaa", "nova", "maia", "lyra", "mira", "luma", "sera", "rhea")
+PACKS = ("vega", "spica", "ankaa", "nova", "maia", "lyra", "mira", "luma", "sera", "rhea", "underdoc")
+# Sections a layout pack reshapes (ADR-2) are compared in that pack as well, next to the vega images:
+# reference <page>--<section>@<pack>.png. Without the pack the block must look like the rest of vega,
+# with it like the app it was made for — both are pinned.
+PACK_ABSCHNITTE = {"underdoc": {"blocks": ("navigation-document-workspace",)}}
 
 # Time and chance stand still, so a calendar or a clock looks the same on every run.
 FEST = """
@@ -194,11 +198,17 @@ def bilder(r: Report, b: Browser, basis: str, erneuern: bool, ablage: Path) -> N
         fehlend: list[str] = []
         neu = 0
         anzahl = 0
-        for seite in SEITEN:
-            lade_ausgerollt(s, f"{basis}/{seite}.html?pack=vega&theme={theme}&lang=de")
-            for kennung in abschnitte(s):
+        laeufe = [(seite, "vega", None) for seite in SEITEN] + [
+            (seite, pack, kennungen) for pack, je_seite in PACK_ABSCHNITTE.items() for seite, kennungen in je_seite.items()]
+        for seite, pack, nur in laeufe:
+            lade_ausgerollt(s, f"{basis}/{seite}.html?pack={pack}&theme={theme}&lang=de")
+            vorhanden = abschnitte(s)
+            if nur is not None:
+                fehlend += [f"{seite}--{k}@{pack} (Abschnitt fehlt)" for k in nur if k not in vorhanden]
+            for kennung in (vorhanden if nur is None else [k for k in nur if k in vorhanden]):
                 anzahl += 1
-                datei = REFERENZ / ansicht / f"{seite}--{kennung}.png"
+                zusatz = "" if pack == "vega" else f"@{pack}"
+                datei = REFERENZ / ansicht / f"{seite}--{kennung}{zusatz}.png"
                 gefunden.add(datei)
                 ist = foto_abschnitt(s, kennung)
                 if not datei.exists():
@@ -912,6 +922,30 @@ def arbeitsbereich(r: Report, b: Browser, basis: str) -> None:
     r.check("App-Arbeitsbereich: unter md nehmen nav2 und nav3 die Breite vom Arbeitsbereich, nav3 inklusive",
             abs(app["leiste"] - app["soll"]) <= 1 and app["nav3"] and app["rechts"], str(app))
     h.sende("Page.close")
+
+    # Layout pack (ADR-2): the pack changes the form, vega keeps the block's defaults. The image comparison sees
+    # geometry, not a faint tint or half a pixel of text, so the decisive values are read here as well.
+    def form(pack: str) -> dict:
+        f = b.seite(1280, 900)
+        f.geh(f"{basis}/blocks.html?pack={pack}&theme=light&lang=de")
+        werte = f.js("""(() => {
+          const w = document.querySelector('#navigation-document-workspace .workspace'), c = e => getComputedStyle(w.querySelector(e));
+          const kopf = c('.workspace-nav[data-level="3"] section > header'), muted = getComputedStyle(w).getPropertyValue('--muted');
+          const probe = document.createElement('i'); probe.style.color = muted; w.append(probe);
+          const band = getComputedStyle(probe).color; probe.remove();
+          return { band: kopf.backgroundColor === band, kopf: kopf.fontSize, kapitaelchen: c('.workspace-nav[data-level="2"] header').fontSize,
+                   eintrag: c('.workspace-item').fontSize, dokument: c('.workspace-main > section > article').fontSize,
+                   status: c('.workspace-main > footer').display, radius: c('.workspace-item').borderTopLeftRadius };
+        })()""")
+        f.sende("Page.close")
+        return werte
+    ud, vega = form("underdoc"), form("vega")
+    r.check("Pack underdoc: Band hinter dem Kopf der Sammlung, kleinere Kapitälchen und Einträge, 15px-Dokument, engere Radien",
+            ud["band"] and ud["kopf"] == "13.5px" and ud["kapitaelchen"] == "10.5px" and ud["eintrag"] == "13.5px"
+            and ud["dokument"] == "15px" and ud["radius"] != vega["radius"], str(ud))
+    r.check("Pack vega: derselbe Baustein mit seinen Vorgaben (kein Band, Kapitälchen 12px, Einträge 14px), Statuszeile in beiden",
+            not vega["band"] and vega["kopf"] == "12px" and vega["kapitaelchen"] == "12px" and vega["eintrag"] == "14px"
+            and vega["status"] == ud["status"] == "flex", str(vega))
 
 
 def main() -> int:

@@ -200,6 +200,25 @@ components keep the familiar utilities:
 Rule: components **MUST** use the utility (`text-sm`), never a literal (`text-[13px]`) — the only
 sanctioned literal stays `<code class="text-[11px]">` inside example labels, as in `CLAUDE.md`.
 
+## Layout packs: a pack that changes the form of building blocks
+
+Decision: [ADR-2](../backlog/ADR-2-layout-packs.md). An app that does not want the standard look of a layout takes
+its **own pack**, named after its repository — never block CSS with classes of its own. Such a pack is an ordinary
+pack file (`c22/static/css/packs/<name>.css`, `@c22-form`, every axis named) that names the blocks it shapes in its
+head, `@c22-layout: workspace`, and may then:
+
+1. **set the block's form tokens** on the block root (`.workspace { --workspace-section-head-bg: … }`). The block
+   declares each of them in `components.css` with a default that is the look of every other pack, and reads it;
+2. **carry block-scoped rules** in `@layer components` for the fine fit of foundation components inside the block
+   (the search field in the top row, a badge as a square chip in the window head). Every selector starts at a
+   block named under `@c22-layout`, uses only C22 classes, and takes its values from tokens.
+
+`tests/test_axes.py` (part D) checks those limits; the axis rules (no literal radius, size, shadow, duration) apply
+to a layout pack like to `components.css`. An app picks the pack the usual way, by linking `c22-<name>.css`; the
+gallery shows it with `?pack=<name>`, and `tests/test_visual.py` pins the reshaped blocks in both the pack and vega
+(`PACK_ABSCHNITTE`). First layout pack: `underdoc` (UnderDoc's approved workspace mockup on `.workspace`, block
+`blocks/navigation/document-workspace.html`).
+
 ## Current state
 
 Per axis: ✅ present · ⚠️ partial · ❌ missing.
