@@ -61,7 +61,7 @@ PACKS = ("vega", "spica", "ankaa", "nova", "maia", "lyra", "mira", "luma", "sera
 # Sections a layout pack reshapes (ADR-2) are compared in that pack as well, next to the vega images:
 # reference <page>--<section>@<pack>.png. Without the pack the block must look like the rest of vega,
 # with it like the app it was made for — both are pinned.
-PACK_ABSCHNITTE = {"underdoc": {"blocks": ("navigation-document-workspace",)}}
+PACK_ABSCHNITTE = {"underdoc": {"blocks": ("navigation-document-workspace", "navigation-workspace-editing", "navigation-workspace-more")}}
 
 # Time and chance stand still, so a calendar or a clock looks the same on every run.
 FEST = """
@@ -713,6 +713,37 @@ ERSTES_BILD = """
 """
 
 
+# Dragging (app-workspace-drag.js) on an example to try it, for any list: the selectors name its rows.
+ZIEHEN_JS = """(async () => {
+      const box = document.querySelector(%(box)r);
+      box.scrollIntoView({ block: 'center' });
+      const pause = ms => new Promise(r => setTimeout(r, ms));
+      const row = n => [...box.querySelectorAll(%(row)r)].find(x => !x.closest('.dropgap') && x.textContent.trim() === n);
+      const oben = () => [...box.querySelectorAll(%(oben)r)].filter(n => n.closest('li').style.display !== 'none').map(n => n.textContent.trim()).join(' ');
+      const zieh = async (von, nach, anteil, warten, abbrechen) => {
+        const a = row(von).getBoundingClientRect(), x = a.left + a.width / 2, y = a.top + a.height / 2;
+        row(von).dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, button: 0, clientX: x, clientY: y, pointerId: 1 }));
+        window.dispatchEvent(new PointerEvent('pointermove', { bubbles: true, clientX: x, clientY: y + 8, pointerId: 1 }));
+        await pause(60);
+        const b = row(nach).getBoundingClientRect(), ty = b.top + b.height * anteil;
+        window.dispatchEvent(new PointerEvent('pointermove', { bubbles: true, clientX: x, clientY: ty, pointerId: 1 }));
+        await pause(warten);
+        const gehalten = [...box.querySelectorAll(%(held)r)].map(n => n.textContent.trim()).join();
+        const gerahmt = [...box.querySelectorAll('.drop-into')].map(n => n.textContent.trim()).join();
+        if (abbrechen) document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+        else window.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, clientX: x, clientY: ty, pointerId: 1 }));
+        await pause(20);
+        return { gehalten, gerahmt, danach: oben() };
+      };
+      const start = oben();
+      const hoch = await zieh('Kran', 'Turm', 0.1, 200, false);
+      const esc = await zieh('Strom', 'Turm', 0.1, 100, true);
+      const drauf = await zieh('Antennen', 'Turm', 0.5, 450, false);
+      const unter = [...row('Turm').closest('li').querySelectorAll(%(kinder)r)].map(n => n.textContent.trim()).join();
+      return { start, hoch, esc, drauf, unter, uebrig: box.querySelectorAll('.dropgap').length };
+    })()"""
+
+
 def arbeitsbereich(r: Report, b: Browser, basis: str) -> None:
     """The workspace: columns snap and drag, the list toggles, menus, drawer, phone, paper, strict CSP."""
     url = f"{basis}/blocks.html?pack=vega&theme=light&lang=de"
@@ -860,40 +891,19 @@ def arbeitsbereich(r: Report, b: Browser, basis: str) -> None:
             papier == {"top": "none", "tabs": "none", "nav": "none", "werkzeug": "none", "titel": "block", "inhalt": "block"}, str(papier))
     # Dragging (app-workspace-drag.js), on the example to try it: up and down between entries, waiting on the middle of
     # one puts it below that one, Escape gives up, and the entry is held in the list as it looks.
-    zug = s.js("""(async () => {
-      const box = document.querySelector('[data-drag-demo]');
-      box.scrollIntoView({ block: 'center' });
-      const pause = ms => new Promise(r => setTimeout(r, ms));
-      const row = n => [...box.querySelectorAll('.row')].find(x => !x.closest('.dropgap') && x.textContent.trim() === n);
-      const oben = () => [...box.querySelectorAll('ul.t.top > li > .row')].filter(n => n.closest('li').style.display !== 'none').map(n => n.textContent.trim()).join(' ');
-      const zieh = async (von, nach, anteil, warten, abbrechen) => {
-        const a = row(von).getBoundingClientRect(), x = a.left + a.width / 2, y = a.top + a.height / 2;
-        row(von).dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, button: 0, clientX: x, clientY: y, pointerId: 1 }));
-        window.dispatchEvent(new PointerEvent('pointermove', { bubbles: true, clientX: x, clientY: y + 8, pointerId: 1 }));
-        await pause(60);
-        const b = row(nach).getBoundingClientRect(), ty = b.top + b.height * anteil;
-        window.dispatchEvent(new PointerEvent('pointermove', { bubbles: true, clientX: x, clientY: ty, pointerId: 1 }));
-        await pause(warten);
-        const gehalten = [...box.querySelectorAll('.dropgap.held .row')].map(n => n.textContent.trim()).join();
-        const gerahmt = [...box.querySelectorAll('.drop-into')].map(n => n.textContent.trim()).join();
-        if (abbrechen) document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
-        else window.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, clientX: x, clientY: ty, pointerId: 1 }));
-        await pause(20);
-        return { gehalten, gerahmt, danach: oben() };
-      };
-      const start = oben();
-      const hoch = await zieh('Kran', 'Turm', 0.1, 200, false);
-      const esc = await zieh('Strom', 'Turm', 0.1, 100, true);
-      const drauf = await zieh('Antennen', 'Turm', 0.5, 450, false);
-      const unter = [...row('Turm').closest('li').querySelectorAll(':scope > ul > li > .row')].map(n => n.textContent.trim()).join();
-      return { start, hoch, esc, drauf, unter, uebrig: box.querySelectorAll('.dropgap').length };
-    })()""")
-    r.check("Arbeitsbereich: Ziehen trägt den Eintrag, wie er aussieht, und legt ihn zwischen die Einträge",
-            zug["start"] == "Turm Antennen Strom Kran" and zug["hoch"] == {"gehalten": "Kran", "gerahmt": "", "danach": "Kran Turm Antennen Strom"}, str(zug))
-    r.check("Arbeitsbereich: Escape bricht das Ziehen ab, nichts bleibt zurück",
-            zug["esc"] == {"gehalten": "Strom", "gerahmt": "", "danach": "Kran Turm Antennen Strom"} and zug["uebrig"] == 0, str(zug))
-    r.check("Arbeitsbereich: kurz auf der Mitte eines Eintrags warten legt darunter",
-            zug["drauf"]["gerahmt"] == "Turm" and zug["unter"] == "Antennen" and zug["drauf"]["danach"] == "Kran Turm Strom", str(zug))
+    def ziehen(was: str, sel: dict) -> None:
+        zug = s.js(ZIEHEN_JS % sel)
+        r.check(f"{was}: Ziehen trägt den Eintrag, wie er aussieht, und legt ihn zwischen die Einträge",
+                zug["start"] == "Turm Antennen Strom Kran" and zug["hoch"] == {"gehalten": "Kran", "gerahmt": "", "danach": "Kran Turm Antennen Strom"}, str(zug))
+        r.check(f"{was}: Escape bricht das Ziehen ab, nichts bleibt zurück",
+                zug["esc"] == {"gehalten": "Strom", "gerahmt": "", "danach": "Kran Turm Antennen Strom"} and zug["uebrig"] == 0, str(zug))
+        r.check(f"{was}: kurz auf der Mitte eines Eintrags warten legt darunter",
+                zug["drauf"]["gerahmt"] == "Turm" and zug["unter"] == "Antennen" and zug["drauf"]["danach"] == "Kran Turm Strom", str(zug))
+    ziehen("Arbeitsbereich", {"box": ".c22-app-workspace [data-drag-demo]", "row": ".row", "oben": "ul.t.top > li > .row",
+                              "held": ".dropgap.held .row", "kinder": ":scope > ul > li > .row"})
+    # The same module on the building block (T-19 step 3): rows are li > div of .workspace-tree.
+    ziehen("Arbeitsbereich aus Bausteinen", {"box": ".workspace-nav[data-drag-demo]", "row": "li > div", "oben": "ul.workspace-tree > li > div",
+                                              "held": ".dropgap.held > div", "kinder": ":scope > ul > li > div"})
 
     s.sende("Page.close")
 
@@ -932,20 +942,54 @@ def arbeitsbereich(r: Report, b: Browser, basis: str) -> None:
           const w = document.querySelector('#navigation-document-workspace .workspace'), c = e => getComputedStyle(w.querySelector(e));
           const kopf = c('.workspace-nav[data-level="3"] section > header'), muted = getComputedStyle(w).getPropertyValue('--muted');
           const probe = document.createElement('i'); probe.style.color = muted; w.append(probe);
-          const band = getComputedStyle(probe).color; probe.remove();
+          const band = getComputedStyle(probe).color;
+          probe.style.color = getComputedStyle(w).getPropertyValue('--primary'); const primary = getComputedStyle(probe).color; probe.remove();
+          const modus = getComputedStyle(document.querySelector('#navigation-workspace-editing [data-mode][aria-pressed="true"]')).backgroundColor === primary;
           return { band: kopf.backgroundColor === band, kopf: kopf.fontSize, kapitaelchen: c('.workspace-nav[data-level="2"] header').fontSize,
                    eintrag: c('.workspace-item').fontSize, dokument: c('.workspace-main > section > article').fontSize,
-                   status: c('.workspace-main > footer').display, radius: c('.workspace-item').borderTopLeftRadius };
+                   status: c('.workspace-main > footer').display, radius: c('.workspace-item').borderTopLeftRadius, modus };
         })()""")
         f.sende("Page.close")
         return werte
     ud, vega = form("underdoc"), form("vega")
-    r.check("Pack underdoc: Band hinter dem Kopf der Sammlung, kleinere Kapitälchen und Einträge, 15px-Dokument, engere Radien",
+
+    # Editing parts and windows (T-19 steps 2 and 3): what no picture shows.
+    teile = b.seite(1280, 900)
+    teile.geh(f"{basis}/blocks.html?pack=vega&theme=light&lang=de")
+    werte = teile.js("""(() => {
+      const griff = document.querySelector('#navigation-workspace-editing [data-block] > .editor-handle');
+      const knopf = griff.querySelector(':scope > button'), sicht = () => getComputedStyle(griff).opacity;
+      const offen = sicht(); knopf.setAttribute('aria-expanded', 'false'); const zu = sicht();
+      knopf.focus(); const fokus = sicht(); knopf.blur(); knopf.setAttribute('aria-expanded', 'true');
+      const leisten = [...document.querySelectorAll('#navigation-workspace-editing .editor-bar')];
+      const zeilen = l => new Set([...l.querySelectorAll('.btn')].map(n => Math.round(n.getBoundingClientRect().top))).size;
+      // The bar wraps between its groups; a group itself stays on one line (it only breaks when it alone is wider).
+      const ganz = l => [...l.querySelectorAll(':scope > [role=group]')].every(g => zeilen(g) === 1);
+      const fenster = [...document.querySelectorAll('#navigation-document-workspace .workspace-window')];
+      const rahmen = getComputedStyle(fenster[0], '::after').borderTopWidth;
+      const zurueck = getComputedStyle(fenster[1].querySelector('.workspace-tabs')).opacity;
+      const vorne = getComputedStyle(fenster[0].querySelector('.workspace-tabs')).opacity;
+      const toc = fenster[0].querySelector('nav.toc').getBoundingClientRect(), art = fenster[0].querySelector('article').getBoundingClientRect();
+      return { offen, zu, fokus, schmal: Math.max(...leisten.map(zeilen)), gruppen: leisten.every(ganz), rahmen, zurueck, vorne, toc: toc.right <= art.left };
+    })()""")
+    teile.sende("Page.close")
+    r.check("Griff eines Blocks: unsichtbar, bis man darüberfährt oder ihn fokussiert; offen, solange sein Menü offen ist",
+            werte["offen"] == "1" and werte["zu"] == "0" and werte["fokus"] == "1", str(werte))
+    r.check("Editor-Leiste: in einem schmalen Fenster bricht sie zwischen den Gruppen in eine zweite Zeile um",
+            werte["schmal"] >= 2 and werte["gruppen"], str(werte))
+    r.check("Zwei Fenster: das aktive gerahmt, das andere tritt zurück; das Inhaltsverzeichnis steht als Spalte vor dem Dokument",
+            werte["rahmen"] == "2px" and werte["vorne"] == "1" and float(werte["zurueck"]) < 1 and werte["toc"], str(werte))
+    handy = b.seite(390, 844)
+    handy.geh(f"{basis}/blocks.html?pack=vega&theme=light&lang=de")
+    sichtbar = handy.js("""[...document.querySelectorAll('#navigation-document-workspace .workspace-window')].map(f => getComputedStyle(f).display)""")
+    handy.sende("Page.close")
+    r.check("Zwei Fenster am Handy: nur das aktive Fenster", sichtbar == ["grid", "none"], str(sichtbar))
+    r.check("Pack underdoc: Band hinter dem Kopf der Sammlung, kleinere Kapitälchen und Einträge, 15px-Dokument, engere Radien, Bearbeiten gefüllt",
             ud["band"] and ud["kopf"] == "13.5px" and ud["kapitaelchen"] == "10.5px" and ud["eintrag"] == "13.5px"
-            and ud["dokument"] == "15px" and ud["radius"] != vega["radius"], str(ud))
+            and ud["dokument"] == "15px" and ud["radius"] != vega["radius"] and ud["modus"], str(ud))
     r.check("Pack vega: derselbe Baustein mit seinen Vorgaben (kein Band, Kapitälchen 12px, Einträge 14px), Statuszeile in beiden",
             not vega["band"] and vega["kopf"] == "12px" and vega["kapitaelchen"] == "12px" and vega["eintrag"] == "14px"
-            and vega["status"] == ud["status"] == "flex", str(vega))
+            and vega["status"] == ud["status"] == "flex" and not vega["modus"], str(vega))
 
 
 def main() -> int:

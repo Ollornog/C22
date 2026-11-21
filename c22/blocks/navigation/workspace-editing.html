@@ -1,0 +1,284 @@
+<!-- c22-title: Arbeitsbereich: Bearbeiten (Editor-Leiste, Griff, Einbettung, Teile) -->
+<!-- C22-custom: the editing parts of the workspace (ADR-2, T-19 step 2), built from C22 building blocks only:
+     .editor-bar (a toolbar that wraps; a row of the window as .workspace-main > .editor-bar, above a block as
+     .editor-block > .editor-bar), .editor (the page in the editor, [data-used] frames a block used elsewhere),
+     .editor-block (add button + .textarea), [data-block] with .editor-handle (a .dropdown-menu at its start, shown on
+     hover/focus), figure.editor-embed (data-state="missing"), [data-part] (data-framed shows its name), the read/edit toggle
+     .btn[data-mode] in the window head. Menus are .dropdown-menu and .command, questions .item, choices .button-group.
+     Nothing has a look of its own: in the pack "underdoc" the same markup takes UnderDoc's look. -->
+<div class="c22-examples">
+  <div class="c22-example">
+    <span class="c22-example-label">Bearbeiten (Lesen/Bearbeiten als quadratischer Knopf vor Pfad und Titel; über dem Block, in dem man schreibt, die Leiste: umwandeln, formatieren, verschieben, duplizieren, löschen; links ein Plus; „/“ in einem leeren Block öffnet die Arten)</span>
+    <div class="w-full overflow-hidden rounded-lg border">
+      <main class="workspace-main">
+        <header>
+          <button type="button" class="btn" data-mode data-variant="outline" aria-pressed="true" aria-label="Bearbeiten" title="Bearbeiten. Klick zum Lesen"><svg data-icon-lu="pencil" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg></button>
+          <div>
+            <nav class="breadcrumb" aria-label="Pfad"><ol><li><a href="#">Netz</a></li><li aria-hidden="true"><svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></li><li><a href="#">Netzplan</a></li></ol></nav>
+          </div>
+          <h1>VLAN-Liste</h1>
+        </header>
+        <section>
+          <article class="typeset" data-width="slim">
+            <div class="editor-block">
+              <div class="editor-bar" role="toolbar" aria-label="Block b1">
+                <select class="select" data-size="sm" aria-label="Umwandeln in"><option>Text</option><option selected>Überschrift 2</option><option>Aufzählung</option></select>
+                <div role="group" aria-label="Formatieren">
+                  <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Fett"><svg data-icon-lu="bold" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12h9a4 4 0 0 1 0 8H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h7a4 4 0 0 1 0 8"/></svg></button>
+                  <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Kursiv"><svg data-icon-lu="italic" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" x2="10" y1="4" y2="4"/><line x1="14" x2="5" y1="20" y2="20"/><line x1="15" x2="9" y1="4" y2="20"/></svg></button>
+                  <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Durchgestrichen"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-icon-lu="strikethrough" aria-hidden="true"><path d="M16 4H9a3 3 0 0 0-2.83 4"/><path d="M14 12a4 4 0 0 1 0 8H6"/><line x1="4" x2="20" y1="12" y2="12"/></svg></button>
+                  <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Code"><svg data-icon-lu="code" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/></svg></button>
+                  <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Link"><svg data-icon-lu="link" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></button>
+                </div>
+                <div role="group" aria-label="Block">
+                  <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Nach oben" disabled><svg data-icon-lu="arrow-up" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg></button>
+                  <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Nach unten"><svg data-icon-lu="arrow-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg></button>
+                  <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Duplizieren"><svg data-icon-lu="copy" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg></button>
+                  <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Löschen"><svg data-icon-lu="trash-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg></button>
+                  <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Kommentieren"><svg data-icon-lu="message-square" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/></svg></button>
+                </div>
+                <small>Verwendet in 1 · #b1</small>
+              </div>
+              <button type="button" class="btn" data-add data-variant="ghost" data-size="icon-xs" aria-label="Block darunter einfügen"><svg data-icon-lu="plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button>
+              <textarea class="textarea" rows="3" aria-label="Block b1">## Büro
+
+VLAN 10, für Arbeitsplätze und Drucker.</textarea>
+            </div>
+            <div class="editor-block">
+              <button type="button" class="btn" data-add data-variant="ghost" data-size="icon-xs" aria-label="Block darunter einfügen"><svg data-icon-lu="plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button>
+              <textarea class="textarea" rows="1" aria-label="Neuer Block">/</textarea>
+            </div>
+            <div class="command w-64 border shadow-md" aria-label="Art des Blocks">
+              <div role="menu" aria-orientation="vertical">
+                <div role="menuitem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-icon-lu="type" aria-hidden="true"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" x2="15" y1="20" y2="20"/><line x1="12" x2="12" y1="4" y2="20"/></svg>Text</div>
+                <div role="menuitem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-icon-lu="heading" aria-hidden="true"><path d="M6 12h12"/><path d="M6 20V4"/><path d="M18 20V4"/></svg>Überschrift 1</div>
+                <div role="menuitem"><svg data-icon-lu="list" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>Aufzählung</div>
+                <div role="menuitem"><svg data-icon-lu="table" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></svg>Tabelle</div>
+                <div role="menuitem" aria-disabled="true"><svg data-icon-lu="image" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.09-3.09a2 2 0 0 0-2.82 0L6 21"/></svg>Bild<span class="ms-auto text-xs">später</span></div>
+              </div>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Lesen mit Griff (links an jedem Block beim Darüberfahren; sein Menü: Adresse kopieren, Block bearbeiten, kommentieren, wo verwendet)</span>
+    <div class="w-full rounded-lg border px-14 py-6">
+      <article class="typeset" data-width="slim">
+        <div data-block>
+          <div class="dropdown-menu editor-handle" id="ed-g" data-dropdown-menu-initialized="true">
+            <button type="button" class="btn" data-variant="ghost" data-size="icon-xs" id="ed-g-t" aria-label="Block b1" aria-haspopup="menu" aria-controls="ed-g-m" aria-expanded="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-icon-lu="grip-vertical" aria-hidden="true"><circle cx="9" cy="12" r="1"/><circle cx="9" cy="5" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="19" r="1"/></svg></button>
+            <div id="ed-g-p" data-popover aria-hidden="false">
+              <div role="menu" id="ed-g-m" aria-labelledby="ed-g-t">
+                <button type="button" role="menuitem"><svg data-icon-lu="link" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>Adresse kopieren<span class="ms-auto font-mono text-xs text-muted-foreground">#b1</span></button>
+                <button type="button" role="menuitem"><svg data-icon-lu="pencil" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>Diesen Block bearbeiten</button>
+                <button type="button" role="menuitem"><svg data-icon-lu="message-square" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/></svg>Kommentieren</button>
+                <hr role="separator">
+                <div role="heading">Verwendet in Schrankübersicht</div>
+              </div>
+            </div>
+          </div>
+          <h2 class="text-lg font-semibold">Büro</h2>
+        </div>
+        <p data-block>VLAN 10, für Arbeitsplätze und Drucker.</p>
+        <p data-block>VLAN 20, für Kameras und Sensoren.</p>
+      </article>
+      <div class="h-28"></div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Seiten-Editor (die Leiste als Zeile des Fensters zwischen Kopf und Inhalt; ein Block, der anderswo verwendet wird, fragt an Ort und Stelle; eine Einbettung als knapper Kasten)</span>
+    <div class="w-full overflow-hidden rounded-lg border">
+      <main class="workspace-main">
+        <div class="editor-bar" role="toolbar" aria-label="Seite">
+          <select class="select" data-size="sm" aria-label="Umwandeln in"><option selected>Text</option><option>Überschrift 2</option></select>
+          <div role="group" aria-label="Formatieren">
+            <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Fett"><svg data-icon-lu="bold" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12h9a4 4 0 0 1 0 8H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h7a4 4 0 0 1 0 8"/></svg></button>
+            <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Kursiv"><svg data-icon-lu="italic" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" x2="10" y1="4" y2="4"/><line x1="14" x2="5" y1="20" y2="20"/><line x1="15" x2="9" y1="4" y2="20"/></svg></button>
+            <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Link"><svg data-icon-lu="link" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></button>
+          </div>
+          <small>Gespeichert</small>
+        </div>
+        <section>
+          <div class="editor">
+            <article class="item" data-variant="muted" data-size="sm"><section><p class="text-sm">Block #b2 ist in Schrankübersicht eingebettet. Trotzdem löschen?</p></section><aside><button type="button" class="btn" data-variant="destructive" data-size="xs">Löschen</button><button type="button" class="btn" data-variant="outline" data-size="xs">Behalten</button></aside></article>
+            <article class="item" data-variant="muted" data-size="sm"><section><p class="text-sm">Das sieht nach einem Passwort aus. Versiegeln?</p></section><aside><button type="button" class="btn" data-variant="outline" data-size="xs">Versiegeln</button><button type="button" class="btn" data-variant="outline" data-size="xs">Ist keins</button></aside></article>
+            <p>Zugang zum Router: Kennwort <span class="underline decoration-wavy decoration-destructive">Beispiel-123</span></p>
+            <p>Die Ports: <a href="#" class="badge" data-variant="secondary"><span class="text-muted-foreground">Eingebettet</span><span class="underline">Netzplan · #b2</span></a></p>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Seiten-Editor mit Tabelle (steht der Cursor in einer Tabelle, kommen ihre Werkzeuge als Gruppe in die Leiste; ist sie schmal, bricht sie in eine zweite Zeile um; ein Block, der anderswo verwendet wird, ist gerahmt und sagt, wo)</span>
+    <div class="grid w-full gap-6 md:grid-cols-[3fr_2fr]">
+      <div class="overflow-hidden rounded-lg border">
+        <main class="workspace-main">
+          <div class="editor-bar" role="toolbar" aria-label="Seite">
+            <select class="select" data-size="sm" aria-label="Umwandeln in"><option selected>Text</option></select>
+            <div role="group" aria-label="Formatieren">
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Fett"><svg data-icon-lu="bold" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12h9a4 4 0 0 1 0 8H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h7a4 4 0 0 1 0 8"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Kursiv"><svg data-icon-lu="italic" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" x2="10" y1="4" y2="4"/><line x1="14" x2="5" y1="20" y2="20"/><line x1="15" x2="9" y1="4" y2="20"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Link"><svg data-icon-lu="link" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></button>
+            </div>
+            <div role="group" aria-label="Tabelle">
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Zeile darüber"><svg data-icon-lu="arrow-up" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Zeile darunter"><svg data-icon-lu="arrow-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Spalte links"><svg data-icon-lu="arrow-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Spalte rechts"><svg data-icon-lu="arrow-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Zeile löschen"><svg data-icon-lu="minus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" x2="19" y1="12" y2="12"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Spalte löschen"><svg data-icon-lu="trash" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+            </div>
+            <div role="group" aria-label="Ausrichten">
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Links"><svg data-icon-lu="text-align-start" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="21" x2="3" y1="6" y2="6"/><line x1="15" x2="3" y1="12" y2="12"/><line x1="17" x2="3" y1="18" y2="18"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Mitte"><svg data-icon-lu="text-align-center" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="21" x2="3" y1="6" y2="6"/><line x1="17" x2="7" y1="12" y2="12"/><line x1="19" x2="5" y1="18" y2="18"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Rechts"><svg data-icon-lu="text-align-end" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 5H3"/><path d="M21 12H9"/><path d="M21 19H7"/></svg></button>
+            </div>
+            <small>Gespeichert</small>
+          </div>
+          <section>
+            <div class="editor">
+              <p>Die Ports im Schrank:</p>
+              <div data-used><small>Verwendet an 2 Stellen</small>| Port | VLAN |
+| --- | --- |
+| 1 | 10 |
+| 2 | 20 |</div>
+              <p>Strom kommt aus der Leiste unten.</p>
+            </div>
+          </section>
+        </main>
+      </div>
+      <div class="overflow-hidden rounded-lg border">
+        <main class="workspace-main">
+          <div class="editor-bar" role="toolbar" aria-label="Seite">
+            <select class="select" data-size="sm" aria-label="Umwandeln in"><option selected>Text</option></select>
+            <div role="group" aria-label="Formatieren">
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Fett"><svg data-icon-lu="bold" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12h9a4 4 0 0 1 0 8H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h7a4 4 0 0 1 0 8"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Kursiv"><svg data-icon-lu="italic" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" x2="10" y1="4" y2="4"/><line x1="14" x2="5" y1="20" y2="20"/><line x1="15" x2="9" y1="4" y2="20"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Link"><svg data-icon-lu="link" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></button>
+            </div>
+            <div role="group" aria-label="Tabelle">
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Zeile darüber"><svg data-icon-lu="arrow-up" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Zeile darunter"><svg data-icon-lu="arrow-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Spalte links"><svg data-icon-lu="arrow-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Spalte rechts"><svg data-icon-lu="arrow-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Zeile löschen"><svg data-icon-lu="minus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" x2="19" y1="12" y2="12"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Spalte löschen"><svg data-icon-lu="trash" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+            </div>
+            <div role="group" aria-label="Ausrichten">
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Links"><svg data-icon-lu="text-align-start" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="21" x2="3" y1="6" y2="6"/><line x1="15" x2="3" y1="12" y2="12"/><line x1="17" x2="3" y1="18" y2="18"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Mitte"><svg data-icon-lu="text-align-center" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="21" x2="3" y1="6" y2="6"/><line x1="17" x2="7" y1="12" y2="12"/><line x1="19" x2="5" y1="18" y2="18"/></svg></button>
+              <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Rechts"><svg data-icon-lu="text-align-end" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 5H3"/><path d="M21 12H9"/><path d="M21 19H7"/></svg></button>
+            </div>
+            <small>Gespeichert</small>
+          </div>
+          <section>
+            <div class="editor">
+              <p>Die Ports im Schrank:</p>
+              <div data-used><small>Verwendet an 2 Stellen</small>| Port | VLAN |
+| --- | --- |
+| 1 | 10 |
+| 2 | 20 |</div>
+              <p>Strom kommt aus der Leiste unten.</p>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Markierter Text im Editor (eine Gruppe der Leiste: als Text kopieren, anderswo einbetten, mit Namen als Wert anlegen)</span>
+    <div class="w-full overflow-hidden rounded-lg border">
+      <main class="workspace-main">
+        <div class="editor-bar" role="toolbar" aria-label="Markierung">
+          <select class="select" data-size="sm" aria-label="Umwandeln in"><option selected>Text</option></select>
+          <div role="group" aria-label="Formatieren">
+            <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Fett"><svg data-icon-lu="bold" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12h9a4 4 0 0 1 0 8H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h7a4 4 0 0 1 0 8"/></svg></button>
+          </div>
+          <div role="group" aria-label="Markierung">
+            <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Als Text kopieren"><svg data-icon-lu="copy" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg></button>
+            <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Anderswo einbetten"><svg data-icon-lu="link" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></button>
+            <input class="input" data-size="sm" type="text" value="router.ip" aria-label="Name des Werts">
+            <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Als Wert anlegen"><svg data-icon-lu="list" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg></button>
+          </div>
+          <small>gespeichert</small>
+        </div>
+      </main>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Eingebettet (ein Block einer anderen Seite, live, darunter der Rückweg zur Quelle; was nicht gezeigt werden kann, sagt warum)</span>
+    <div class="w-full rounded-lg border p-4">
+      <article class="typeset" data-width="slim">
+        <p>Die Ports im Schrank:</p>
+        <figure class="editor-embed">
+          <div class="table-container"><table class="table"><thead><tr><th>Port</th><th>VLAN</th></tr></thead><tbody><tr><td>1</td><td>10</td></tr><tr><td>2</td><td>20</td></tr></tbody></table></div>
+          <figcaption><a href="#">Netzplan · #b2</a></figcaption>
+        </figure>
+        <figure class="editor-embed" data-state="missing"><p>Block #b9 ist nicht mehr in Netzplan</p></figure>
+      </article>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Löschen, was anderswo verwendet wird (je Sache ein Weg als Knopf, „dasselbe für alle“, erst dann Löschen; ein Teil im Fließtext gepunktet unterstrichen, sein Rahmen beim Lesen mit Namen; Entferntes sagt, wer und wann, mit Wiederherstellen und Kopie behalten)</span>
+    <div class="w-full rounded-lg border px-4 pt-8 pb-4">
+      <article class="typeset" data-width="slim">
+        <p>Der Turm hat <span data-part="Teil #b2.t1" data-framed>zwei Kernswitches</span>, Zugang: <span class="badge" data-variant="destructive">Entfernt von Anna Berg am 2026-11-18</span> <button type="button" class="btn" data-variant="outline" data-size="xs">Wiederherstellen</button></p>
+        <figure class="editor-embed" data-state="missing"><div class="flex flex-wrap items-center gap-2"><p>Entfernt von Anna Berg am 2026-11-18 aus Netzplan</p><button type="button" class="btn" data-variant="outline" data-size="xs">Wiederherstellen</button><button type="button" class="btn" data-variant="outline" data-size="xs">Kopie hier behalten</button></div></figure>
+      </article>
+      <section class="card mt-4 max-w-lg shadow-lg" aria-labelledby="ed-m-h">
+        <header>
+          <h3 id="ed-m-h" class="text-muted-foreground text-xs font-semibold tracking-wider uppercase">Anderswo verwendet</h3>
+          <p class="text-muted-foreground text-sm">Wähle, was dort geschieht, wo es verwendet wird. Nichts ist vorgewählt.</p>
+        </header>
+        <section class="flex flex-col gap-4">
+          <div class="flex flex-col gap-1.5 border-t pt-3">
+            <h4 class="font-semibold">Block #b2 in Netzplan</h4>
+            <p class="text-muted-foreground text-sm">Verwendet in Runbook Ausfall, Übergabe</p>
+            <div class="flex flex-wrap items-center gap-1.5"><button type="button" class="btn" data-variant="outline" data-size="xs" aria-pressed="true">Überall löschen</button><button type="button" class="btn" data-variant="outline" data-size="xs" aria-pressed="false">Eine Kopie je Verwendung</button><select class="select" data-size="sm" aria-label="Neuer Master"><option>Neuer Master in …</option><option>Runbook Ausfall</option></select></div>
+          </div>
+          <div class="flex flex-col gap-1.5 border-t pt-3">
+            <h4 class="font-semibold">Teil #b4.t2 in Netzplan</h4>
+            <p class="text-muted-foreground text-sm">Verwendet in Übergabe</p>
+            <div class="flex flex-wrap items-center gap-1.5"><button type="button" class="btn" data-variant="outline" data-size="xs" aria-pressed="true">Überall löschen</button><button type="button" class="btn" data-variant="outline" data-size="xs" aria-pressed="false">Eine Kopie je Verwendung</button><select class="select" data-size="sm" aria-label="Neuer Master"><option>Neuer Master in …</option><option>Übergabe</option></select></div>
+          </div>
+          <label class="label"><input class="input" type="checkbox" checked> Dasselbe für alle</label>
+        </section>
+        <footer class="flex gap-2"><button type="button" class="btn" data-variant="destructive" data-size="sm">Löschen</button><button type="button" class="btn" data-variant="outline" data-size="sm">Behalten</button></footer>
+      </section>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Schnellnotizen mit Griff (jede Karte ist ein Block: der Griff oben rechts in der Karte, sein Menü mit Ausrichten als Zeile aus drei Symbolen; eine Karte zentriert)</span>
+    <div class="flex w-full flex-col gap-4 rounded-lg border p-4">
+      <input class="input mx-auto max-w-lg" type="text" placeholder="Notiz schreiben, dann Enter" aria-label="Neue Notiz">
+      <div class="grid grid-cols-2 gap-2 md:grid-cols-3">
+        <article class="card text-center" data-size="sm" data-block>
+          <div class="dropdown-menu editor-handle" data-align="end" id="ed-n" data-dropdown-menu-initialized="true">
+            <button type="button" class="btn" data-variant="ghost" data-size="icon-xs" id="ed-n-t" aria-label="Notiz n1" aria-haspopup="menu" aria-controls="ed-n-m" aria-expanded="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-icon-lu="grip-vertical" aria-hidden="true"><circle cx="9" cy="12" r="1"/><circle cx="9" cy="5" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="19" r="1"/></svg></button>
+            <div id="ed-n-p" data-popover data-align="end" aria-hidden="false">
+              <div role="menu" id="ed-n-m" aria-labelledby="ed-n-t">
+                <button type="button" role="menuitem"><svg data-icon-lu="link" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>Adresse kopieren<span class="ms-auto font-mono text-xs text-muted-foreground">#n1</span></button>
+                <button type="button" role="menuitem"><svg data-icon-lu="pencil" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>Diesen Block bearbeiten</button>
+                <button type="button" role="menuitem"><svg data-icon-lu="message-square" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/></svg>Kommentieren</button>
+                <div class="button-group w-full" role="group" aria-label="Ausrichten">
+                  <button type="button" class="btn flex-1" data-variant="outline" data-size="sm" aria-pressed="false" aria-label="Links"><svg data-icon-lu="text-align-start" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="21" x2="3" y1="6" y2="6"/><line x1="15" x2="3" y1="12" y2="12"/><line x1="17" x2="3" y1="18" y2="18"/></svg></button>
+                  <button type="button" class="btn flex-1" data-variant="outline" data-size="sm" aria-pressed="true" aria-label="Mitte"><svg data-icon-lu="text-align-center" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="21" x2="3" y1="6" y2="6"/><line x1="17" x2="7" y1="12" y2="12"/><line x1="19" x2="5" y1="18" y2="18"/></svg></button>
+                  <button type="button" class="btn flex-1" data-variant="outline" data-size="sm" aria-pressed="false" aria-label="Rechts"><svg data-icon-lu="text-align-end" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 5H3"/><path d="M21 12H9"/><path d="M21 19H7"/></svg></button>
+                </div>
+                <hr role="separator">
+                <div role="heading">Nicht anderswo verwendet</div>
+              </div>
+            </div>
+          </div>
+          <section><h4 class="font-semibold">Einkauf</h4><p class="text-sm">Kabelbinder und Patchkabel</p></section>
+        </article>
+        <article class="card" data-size="sm" data-block><section><h4 class="font-semibold">Idee</h4><p class="text-sm">Netzplan als Vorlage anbieten, damit jedes Projekt gleich anfängt.</p></section></article>
+        <article class="card" data-size="sm" data-block><section><p class="text-sm">Kamera am Tor neu ausrichten.</p></section></article>
+      </div>
+      <div class="h-40"></div>
+    </div>
+  </div>
+</div>

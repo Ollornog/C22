@@ -8,6 +8,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Block editor building blocks** (T-19 step 2, block "Arbeitsbereich: Bearbeiten"): `.editor-bar` (a toolbar of
+  groups that wraps into a second line; as a row of the window or floating above a block), `.editor-block` (add button
+  + text area), `.editor` with `[data-used]` (a block used elsewhere, framed, says where), a block's handle
+  (`[data-block]` > `.dropdown-menu.editor-handle`, shown on hover, focus and while open), `figure.editor-embed`
+  (`data-state="missing"`), `[data-part]` (`data-framed` shows its name), the read/edit toggle `.btn[data-mode]` in the
+  window head. Menu entries may carry a description line (`div > span + small`).
+- **Workspace: several windows and contents as a column** (T-19 step 3): `.workspace-windows` > `.workspace-window`,
+  the active one `data-focus` (frame; the others fade); on a phone only the active one. `nav.toc` first in the window's
+  section stands beside the document (`--workspace-toc`).
+- **Dragging on the building block**: the drag module's states (`.dropgap`, `.idle`, `.copy`, `.drop-into`) for
+  `.workspace-tree`, plus `aria-selected`, `data-ref` (italic) and renaming in the row; the gallery demo of
+  `app-workspace-drag.js` runs on both lists.
+- **Block "Arbeitsbereich: Ziehen, Neu, Ansicht, Datei, Tabelle"**: drag states and New, New from a template, the gear
+  as the window's drawer with segments, a file with its panel, the spreadsheet — the rest of UnderDoc's examples from
+  C22 parts. Pack `underdoc` fills chosen states (editing, segments, alignment) with the primary role and makes the
+  editor bar compact. Reference images of both new blocks in vega and `underdoc`; the replacement list in backlog T-19
+  now covers every class of `app-workspace.css`.
+
+
 - **Layout pack `underdoc`** (ADR-2): a pack that changes the *form* of building blocks, not only their colours. It
   sets the workspace's form tokens and carries a few block-scoped rules in `@layer components`; no class or markup
   of its own. With it the workspace looks like UnderDoc's approved mockup (band behind the heading of an open

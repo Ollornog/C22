@@ -216,8 +216,9 @@ head, `@c22-layout: workspace`, and may then:
 `tests/test_axes.py` (part D) checks those limits; the axis rules (no literal radius, size, shadow, duration) apply
 to a layout pack like to `components.css`. An app picks the pack the usual way, by linking `c22-<name>.css`; the
 gallery shows it with `?pack=<name>`, and `tests/test_visual.py` pins the reshaped blocks in both the pack and vega
-(`PACK_ABSCHNITTE`). First layout pack: `underdoc` (UnderDoc's approved workspace mockup on `.workspace`, block
-`blocks/navigation/document-workspace.html`).
+(`PACK_ABSCHNITTE`). First layout pack: `underdoc` (`@c22-layout: workspace, editor` — UnderDoc's approved
+workspace mockup on `.workspace` and the `.editor-*` parts; blocks `document-workspace.html`, `workspace-editing.html`,
+`workspace-more.html` in `blocks/navigation/`).
 
 ## Current state
 
