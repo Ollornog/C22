@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Spreadsheet (Tabellenraster):** `.table[data-variant="grid"][data-sticky="sheet"]` extends the sticky sheet: the head row
+  holds column letters, `th[scope="row"]` the row numbers (small, muted, centred, both sticky). Selection by attribute,
+  never by colour alone: `td[aria-selected="true"]` is tinted and framed, the active cell `td[data-active]` framed thicker,
+  the letter and number of a selected column or row (`th[aria-selected="true"]`) bold with a bar. A `.table-container`
+  holding a sticky table now scrolls both ways inside a bounded height (`--table-max-height`, 24rem; a `max-h-*` utility
+  overrides). Shown in `table.html` and, with the sheets as `.tabs`, in the app workspace block (UnderDoc ADR-31).
 - **Today as a column:** `th[aria-current="date"]` in the head and `td[aria-current="date"]` down the column tint the
   column like the row, the head bold with a bar below it. Shown in the "Stundenblatt" block's week grid.
 - **Docs:** README and CLAUDE.md name the trap of `[data-confirm]`: `c22.js` takes every such element over by itself, so an
@@ -16,6 +22,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **App workspace:** C22 components and utilities used inside `.c22-app-workspace` were overridden by the root's unlayered
+  element defaults: `td{text-align:left}` beat `.text-right`/`.text-center`/`td[data-type="number"]`, and the button reset
+  took the padding and frame of `.tabs` (`[role=tab]`), `.btn` and the active row of a `.command`. The element defaults
+  (button, input, select, focus ring, table cells) now sit in `@layer base`; the app's own class rules stay unlayered.
+  The unused mockup rule `.c22-app-workspace .tabs` that collided with C22's `.tabs` is gone. Visible change for the app:
+  `.command` menus inside the root now show C22's row padding and the highlighted active row.
 - **Sheet that scrolls:** today's row (`tr[aria-current="date"]`) is tinted in its sticky first cell too; the cell's own
   opaque background was the more specific rule and left it white beside the bar. The tint is opaque, so nothing shines
   through when it scrolls. The running week (`aria-current="true"` on a group row) is checked in the same test.

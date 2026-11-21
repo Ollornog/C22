@@ -59,6 +59,7 @@ the look per component.
 | Drop zone that lights up while files are dragged | `[data-dropzone]` (c22.js sets `data-over`) | `empty.html` |
 | A page that prints as a report | `.print-sheet` on the page, `print:hidden` on what stays off paper | `blocks/data-entry/week-report.html` |
 | Long table in a scrolling box: head, first column and a group row stick | `.table[data-sticky]`, group row `tr[data-group-row]` (sticks under the head, c22.js keeps `--table-head-height`); today `tr[aria-current="date"]`, or as a column `th`/`td[aria-current="date"]` (the sticky first cell is tinted too) | `blocks/data-entry/time-sheet.html` |
+| A spreadsheet: column letters and row numbers stick, cells and ranges selected | `.table[data-variant="grid"][data-sticky="sheet"]` inside a `.table-container` (scrolls both ways, height `--table-max-height` or a `max-h-*`); letters in `thead th`, numbers as `th[scope="row"]`; selection `td[aria-selected="true"]` (tint + thin frame), active cell `td[data-active]` (thick frame), selected letter/number `th[aria-selected="true"]` (bold + bar); `role="grid"` + `aria-multiselectable="true"` when it reacts | `table.html` |
 | A field that is the cell, a hint line below it | `td[data-field] > .input` + `small` (`data-type="number"` aligns to the end); outside a table the hint is the `.field`'s help text | `blocks/data-entry/time-sheet.html`, `field.html` |
 | A value shown as chips until it is typed into | `.chip-input` > `.input` + `[data-chips]` | `blocks/data-entry/time-sheet.html` |
 | Popover without JavaScript (settings, segment buttons) | `details.popover` > `summary.btn` + `[data-popover]`; segments `.button-group` of buttons with `aria-pressed` | `popover.html`, `toggle-group.html` |
@@ -173,7 +174,9 @@ c22/static/css/
   tokens.css            the token definitions (the look)
   components.css        shared C22 rules (@layer components) — the SPOT home for anything cross-component
   app-<name>.css        an app's whole look taken over as one building block, every selector under the root
-                        class .c22-app-<name> (rule 14); unlayered, see the file head
+                        class .c22-app-<name> (rule 14); unlayered, see the file head — except the
+                        element defaults (button, table cells …), which sit in @layer base so C22
+                        components and utilities used inside the root win over them
   packs/<name>.css      OWN style packs = pure token overrides riding on the vega shape
                         (de-monolithisation phase B; e.g. packs/spica.css — brand blue)
   input.css             Tailwind entry (imports vendored basecoat + tokens + components)

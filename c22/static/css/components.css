@@ -4570,6 +4570,54 @@
 }
 
 /* ============================================================
+ * The box a sheet scrolls in: a .table-container holding a .table[data-sticky] scrolls both ways inside a bounded height
+ * (--table-max-height, 24rem by default; a max-h-* utility or the property on the container changes it), so the head and
+ * the first column stick to the box itself. Without a sticky table the container stays what it was (sideways only).
+ * ============================================================ */
+@layer components {
+  .table-container:has(> .table[data-sticky]) {
+    @apply overflow-auto;
+    max-height: var(--table-max-height, calc(var(--spacing) * 96));
+  }
+}
+
+/* ============================================================
+ * A spreadsheet (table.table[data-variant="grid"][data-sticky="sheet"], UnderDoc's tables of spreadsheets, ADR-31): the
+ * sticky sheet above, with the head row as column letters and the first cell of every row (th scope="row") as row number
+ * — both small, muted and centred, the corner cell on top of both. Cells are dense; data-type="number" aligns to the end
+ * as in every table.
+ * Selection by attribute, never by colour alone: a selected cell (td[aria-selected="true"]) is tinted AND framed by a thin
+ * line, the active cell (td[data-active]) carries a thick frame on the background; the letter and the number of a selected
+ * column or row (th[aria-selected="true"]) turn bold with a bar towards the cells, as today's column does. An interactive
+ * sheet is role="grid" with aria-multiselectable="true"; the app moves the attributes, C22 only draws them.
+ * ============================================================ */
+@layer components {
+  .table[data-sticky='sheet'] { @apply w-auto min-w-full text-xs tabular-nums; }
+  .table[data-sticky='sheet'] :is(th, td) { @apply h-7 px-2 py-0; }
+  .table[data-sticky='sheet'] thead th,
+  .table[data-sticky='sheet'] tbody > tr > th:first-child {
+    @apply bg-muted text-muted-foreground min-w-10 text-center font-medium;
+  }
+  .table[data-sticky='sheet'] td[aria-selected='true'] {
+    @apply bg-primary/10;
+    box-shadow: inset 0 0 0 1px var(--primary);
+  }
+  .table[data-sticky='sheet'] td[data-active] {
+    @apply bg-background;
+    box-shadow: inset 0 0 0 2px var(--primary);
+  }
+  .table[data-sticky='sheet'] thead th[aria-selected='true'] {
+    @apply bg-accent text-accent-foreground font-semibold;
+    box-shadow: inset 0 -2px 0 var(--primary);
+  }
+  .table[data-sticky='sheet'] tbody > tr > th:first-child[aria-selected='true'] {
+    @apply bg-accent text-accent-foreground font-semibold;
+    box-shadow: inset -2px 0 0 var(--primary);
+  }
+  .table[data-sticky='sheet'] tbody > tr > th:first-child[aria-selected='true']:dir(rtl) { box-shadow: inset 2px 0 0 var(--primary); }
+}
+
+/* ============================================================
  * A field that is the cell (td[data-field] > .input): no frame of its own, the table's lines are its frame; the focus is
  * a ring inside the cell, a refused value a red one. A line below the field (small) says more about it: what is open,
  * what was asked for, who sees it. data-type="number" on the cell puts both at the end (EightPerDay, 2026-11-20).
