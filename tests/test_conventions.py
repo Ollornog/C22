@@ -404,6 +404,8 @@ ERLAUBTE_VARIANTEN = {
     # Application frame (sidebar.html): the second column next to the rail; the table whose lines
     # follow the hierarchy (blocks/tables/merge-table.html); the breadcrumb that is the page title.
     "panel", "levels", "title",
+    # Workspace (blocks/navigation/document-workspace.html): an hr that sets entries apart by a space, not a line.
+    "space",
 }
 VARIANT_ATTR = re.compile(r'data-variant="([^"]*)"')
 

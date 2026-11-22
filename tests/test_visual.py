@@ -1116,6 +1116,109 @@ def arbeitsbereich_ansichten(r: Report, b: Browser, basis: str) -> None:
             ud["heute"] and ud["heuteHoch"] == 62 and not v["heute"] and v["heuteHoch"] < 62, f"underdoc {ud} | vega {v}")
 
 
+LUECKEN_WERTE = r"""(() => {
+  // What UnderDoc's frame found missing (2026-11-22): a space between entries, open against kept open, the flow of a
+  // document whose blocks sit in wrappers, room for the handles, an icon in the head of a collection, the avatar.
+  const ex = [...document.querySelectorAll('#navigation-document-workspace .workspace')], hell = ex[0], dunkel = ex[1];
+  const r = e => e.getBoundingClientRect(), c = e => getComputedStyle(e), h = e => Math.round(r(e).height * 10) / 10;
+  const n2 = dunkel.querySelector('.workspace-nav[data-level="2"]'), n3 = dunkel.querySelector('.workspace-nav[data-level="3"]');
+  const abstand2 = n2.querySelector('div > hr[data-variant="space"]'), linie3 = n3.querySelector('.workspace-tree li > div > hr:not([data-variant])');
+  const abstand3 = n3.querySelector('.workspace-tree li > div > hr[data-variant="space"]');
+  const eintraege = { abstand: [h(abstand2), h(abstand2.parentElement), c(abstand2).backgroundColor],
+    linieListe: [h(linie3), h(linie3.parentElement), Math.round(r(linie3).width) > 100],
+    abstandListe: [h(abstand3), h(abstand3.parentElement)], eintrag: h(n3.querySelector('.workspace-tree li > div:has(> button)')) };
+  const balken = e => c(e).boxShadow.match(/(\d+(?:\.\d+)?)px 0px 0px 0px inset/)?.[1] + 'px';
+  const offen = { gehalten: balken(n2.querySelector('.workspace-item[aria-current][data-pinned]')),
+                  nurOffen: balken(n2.querySelector('.workspace-item[aria-current]:not([data-pinned])')) };
+  // The flow: the same blocks bare and each in a wrapper with a handle stand at the same places.
+  const art = hell.querySelector('.workspace-main > section > article');
+  // Smaller text right after a heading (a code block, a small paragraph) shows whether the wrapper itself takes a gap.
+  const folge = ['p', 'h2', 'p', 'p', 'h3', 'h2', 'pre.code-block', 'ul', 'h1', 'p.text-xs', 'blockquote', 'h3', 'p'];
+  const baue = (mitHuelle, gemischt) => {
+    const a = document.createElement('article'); a.className = 'typeset'; a.dataset.width = 'slim';
+    folge.forEach((art_, i) => {
+      const [tag, klasse] = art_.split('.'), e = document.createElement(tag); e.textContent = 'Block ' + i;
+      if (klasse) e.className = klasse;
+      if (tag === 'ul') e.innerHTML = '<li>Eins</li><li>Zwei</li>';
+      if (!mitHuelle || (gemischt && i % 3 === 1)) { a.append(e); return; }
+      const w = document.createElement('div'); w.setAttribute('data-block', '');
+      w.append(art.querySelector('.editor-handle').cloneNode(true), e); a.append(w);
+    });
+    art.after(a); art.hidden = true;
+    const oben = r(a).top, lagen = [...a.children].map(k => Math.round((r(k).top - oben) * 10) / 10);
+    a.remove(); art.hidden = false;
+    return lagen.join(' ');
+  };
+  const fluss = { nackt: baue(false), huelle: baue(true), gemischt: baue(true, true) };
+  const kopf = n3.querySelector('section > header > a > svg'), av = hell.querySelector('.workspace-item > .avatar');
+  return { eintraege, offen, fluss, schloss: [r(kopf).width, r(kopf).height], avatar: [r(av).width, c(av.firstElementChild).fontSize] };
+})()"""
+
+GRIFF_HANDY = r"""(() => {
+  // Phone (and a narrow window): the handle of a block stays inside the window; without handles the old margin.
+  const w = document.querySelector('#navigation-document-workspace .workspace'), sec = w.querySelector('.workspace-main > section');
+  const r = e => e.getBoundingClientRect(), griff = sec.querySelector('[data-block] > .editor-handle');
+  const sicht = r(griff).left >= r(sec).left, rand = getComputedStyle(sec).paddingLeft;
+  const weg = [...sec.querySelectorAll('.editor-handle')].map(g => [g, g.parentElement]);
+  weg.forEach(([g]) => g.remove()); const ohne = getComputedStyle(sec).paddingLeft; weg.forEach(([g, p]) => p.prepend(g));
+  // With contents beside the document (hidden on the phone) the handles need the same room.
+  const toc = document.createElement('nav'); toc.className = 'toc'; sec.prepend(toc); const mitToc = getComputedStyle(sec).paddingLeft; toc.remove();
+  w.setAttribute('data-nav-open', '');
+  const n = l => r(w.querySelector(':scope > .workspace-nav[data-level="' + l + '"]'));
+  const spalten = [Math.round(n(1).width), Math.round(n(2).left - r(w).left), Math.round(n(3).left - r(w).left)];
+  w.removeAttribute('data-nav-open');
+  const wort = getComputedStyle(w.querySelector(':scope > .workspace-nav[data-level="1"] .workspace-item')).fontSize;
+  return { sicht, rand, ohne, mitToc, spalten, wort };
+})()"""
+
+GRIFF_SCHMAL = r"""(() => {
+  const main = document.querySelector('#navigation-document-workspace .workspace-main'), sec = main.querySelector(':scope > section');
+  const r = e => e.getBoundingClientRect(), alt = main.style.width;
+  main.style.width = '420px';
+  const sicht = r(sec.querySelector('[data-block] > .editor-handle')).left >= r(sec).left;
+  main.style.width = alt;
+  return sicht;
+})()"""
+
+
+def arbeitsbereich_luecken(r: Report, b: Browser, basis: str) -> None:
+    """What UnderDoc's frame on the building blocks found missing (2026-11-22): what no picture shows exactly."""
+    werte, handy = {}, {}
+    for pack in ("vega", "underdoc"):
+        f = b.seite(1280, 900)
+        f.geh(f"{basis}/blocks.html?pack={pack}&theme=light&lang=de")
+        werte[pack] = f.js(LUECKEN_WERTE)
+        werte[pack]["schmal"] = f.js(GRIFF_SCHMAL)
+        f.sende("Page.close")
+        f = b.seite(390, 844)
+        f.geh(f"{basis}/blocks.html?pack={pack}&theme=light&lang=de")
+        handy[pack] = f.js(GRIFF_HANDY)
+        f.sende("Page.close")
+    v, ud = werte["vega"], werte["underdoc"]
+    r.check("Abstand und Linie als Einträge: der Abstand 14px ohne Strich, in der Liste so hoch wie Linie bzw. Abstand, "
+            "nicht wie ein Eintrag; die Linie füllt ihre Zeile (in beiden Packs)",
+            all(x["eintraege"]["abstand"][:2] == [14, 14] and x["eintraege"]["abstand"][2] == "rgba(0, 0, 0, 0)"
+                and x["eintraege"]["linieListe"] == [1, 13, True] and x["eintraege"]["abstandListe"] == [14, 14]
+                and x["eintraege"]["eintrag"] >= 28 for x in (v, ud)), f"vega {v['eintraege']} | underdoc {ud['eintraege']}")
+    r.check("Offen gegenüber offen gehalten: im Pack underdoc dünne Linie (1px) gegen dicke (3px); vega beide 3px",
+            ud["offen"] == {"gehalten": "3px", "nurOffen": "1px"} and v["offen"] == {"gehalten": "3px", "nurOffen": "3px"},
+            f"vega {v['offen']} | underdoc {ud['offen']}")
+    r.check("Typeset: Blöcke in Hüllen mit Griff stehen genau wie dieselben Blöcke ohne Hülle (auch gemischt, in beiden Packs)",
+            all(x["fluss"]["nackt"] == x["fluss"]["huelle"] == x["fluss"]["gemischt"] for x in (v, ud)),
+            f"vega {v['fluss']} | underdoc {ud['fluss']}")
+    r.check("Symbol im Kopf einer offenen Sammlung 13px wie das einer Beschriftung",
+            v["schloss"] == ud["schloss"] == [13, 13], f"vega {v['schloss']} | underdoc {ud['schloss']}")
+    r.check("Avatar im Eintrag: im Pack underdoc 20px mit 9px-Kürzel wie im Entwurf, vega bleibt 24px",
+            ud["avatar"] == [20, "9px"] and v["avatar"] == [24, "12px"], f"vega {v['avatar']} | underdoc {ud['avatar']}")
+    r.check("Griffe: auf dem Handy (auch mit Inhaltsverzeichnis) und in einem schmalen Fenster bleibt der Griff im Fenster (36px Rand nur mit Griffen, sonst 16px)",
+            all(x["sicht"] and x["rand"] == x["mitToc"] == "36px" and x["ohne"] == "16px" for x in handy.values()) and v["schmal"] and ud["schmal"],
+            f"vega {handy['vega']} schmal {v['schmal']} | underdoc {handy['underdoc']} schmal {ud['schmal']}")
+    r.check("Handy: nav1 im Pack underdoc 70px mit 10px-Wörtern (nav2 und nav3 schließen daran an), vega bleibt 84px",
+            handy["underdoc"]["spalten"] == [70, 70, 154] and handy["underdoc"]["wort"] == "10px"
+            and handy["vega"]["spalten"] == [84, 84, 168] and handy["vega"]["wort"] == "12px",
+            f"vega {handy['vega']} | underdoc {handy['underdoc']}")
+
+
 def main() -> int:
     erneuern = "--renew" in sys.argv
     r = Report("Browser — Galerie in Chrome")
@@ -1134,6 +1237,7 @@ def main() -> int:
                     verhalten(r, b, basis)
                     arbeitsbereich(r, b, basis)
                     arbeitsbereich_ansichten(r, b, basis)
+                    arbeitsbereich_luecken(r, b, basis)
         except BrowserFehler as fehler:
             r.check("Browser läuft durch", False, str(fehler))
         finally:

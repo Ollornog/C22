@@ -220,6 +220,10 @@ gallery shows it with `?pack=<name>`, and `tests/test_visual.py` pins the reshap
 workspace mockup on `.workspace` and the `.editor-*` parts; blocks `document-workspace.html`, `workspace-editing.html`,
 `workspace-more.html`, `workspace-views.html` in `blocks/navigation/`).
 
+What `underdoc` sets as form tokens of the workspace, beside sizes of text and the head of a collection: the bar of an
+open entry against one kept open (`--workspace-open-bar` 1px, `--workspace-pinned-bar` 3px; other packs draw both at
+3px) and the width of nav1 on the phone (`--workspace-phone-nav1`, 70px; otherwise `--workspace-step-1`).
+
 **Where an app hangs what a layout pack shapes.** A pack rule starts at a block root, so a part takes the pack's form
 only *inside* that block. For the workspace this means: the app's menus (`.command`, `.dropdown-menu`, popovers) hang
 inside `.workspace` — beside their trigger, or as a child of `.workspace` the app positions itself — not at the end of

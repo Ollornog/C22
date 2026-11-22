@@ -57,6 +57,9 @@
   --workspace-doc-text: calc(var(--text-sm) * 15 / 14);           /* 15px body of the document */
   --workspace-doc-heading: calc(var(--text-base) * 1.0625);       /* 17px headings in the document */
   --workspace-mode-size: calc(var(--spacing) * 15);               /* 60px read/edit toggle, as tall as path and title */
+  --workspace-open-bar: 1px;                                      /* open for now: a thin line at the start … */
+  --workspace-pinned-bar: 3px;                                    /* … kept open: a thick one */
+  --workspace-phone-nav1: calc(var(--spacing) * 17.5);            /* 70px nav1 on the phone */
 }
 
 @layer components {
@@ -75,6 +78,10 @@
   /* Icons of the entries and the list a step smaller (15px). */
   .workspace-item > svg,
   .workspace-tree li > div > :is(a, button):not([data-toggle]) > svg { width: calc(var(--spacing) * 3.75); height: calc(var(--spacing) * 3.75); }
+
+  /* The avatar of the profile entry at the mockup's size: 20px, its initials 9px. */
+  .workspace-item > .avatar[data-size='sm'] { width: calc(var(--spacing) * 5); height: calc(var(--spacing) * 5); }
+  .workspace-item > .avatar[data-size='sm'] > span { font-size: calc(var(--text-xs) * 0.75); }
 
   /* The word beside the open entry, smaller than the names. */
   .workspace-tree li > div > small { font-size: calc(var(--text-xs) * 5 / 6); }
@@ -229,4 +236,9 @@
 
   /* Drop zones: the word at 13px. */
   .workspace-main > [data-drop-zone] { font-size: calc(var(--text-sm) * 13 / 14); }
+
+  /* The phone: nav1 is 70px wide (--workspace-phone-nav1 above), its words 10px, as in the mockup. */
+  @media (width < 48rem) {
+    .workspace > .workspace-nav[data-level='1'] .workspace-item { font-size: calc(var(--text-xs) * 5 / 6); }
+  }
 }
