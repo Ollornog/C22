@@ -164,6 +164,11 @@ class Seite:
             raise BrowserFehler(f"{url}: {antwort['errorText']}")
         self.b.warte_auf("Page.loadEventFired", self.s)
         self.js("document.fonts.ready.then(() => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))))")
+        # The gallery picks the pack of ?pack= by a script at the end of the page, after the page was first styled with
+        # the default one: everything with a transition (a .btn: all, 150 ms) then runs from that pack's value to the
+        # chosen one's, and a probe reading at once got a value in between (2026-11-22, "Bearbeiten gefüllt" red on main).
+        # So a page counts as loaded once no transition runs any more — its state, not a fixed time.
+        self.warte("!document.getAnimations().some(a => a instanceof CSSTransition && a.playState === 'running')")
 
     def js(self, ausdruck: str):
         """Evaluates an expression; promises are awaited, a thrown error is a test error."""

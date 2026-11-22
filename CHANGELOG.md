@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Browser suite: a page counts as loaded once no CSS transition runs any more. The gallery picks the pack of `?pack=`
+  after the page was first styled with the default pack, so every `.btn` ran 150 ms from vega's value to the chosen
+  pack's; the probe "Pack underdoc: … Bearbeiten gefüllt" read in between and failed about every second run (red on
+  `main`). Waits on the state, not on a time.
+
 ### Changed
 
 - Docs fast lane: a classifier job runs `scripts/_nur_text.sh`; on a text-only PR audit and the Pages build skip (a
