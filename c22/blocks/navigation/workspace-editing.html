@@ -1,9 +1,12 @@
 <!-- c22-title: Arbeitsbereich: Bearbeiten (Editor-Leiste, Griff, Einbettung, Teile) -->
 <!-- C22-custom: the editing parts of the workspace (ADR-2, T-19 step 2), built from C22 building blocks only:
      .editor-bar (a toolbar that wraps; a row of the window as .workspace-main > .editor-bar, above a block as
-     .editor-block > .editor-bar), .editor (the page in the editor, [data-used] frames a block used elsewhere),
-     .editor-block (add button + .textarea), [data-block] with .editor-handle (a .dropdown-menu at its start, shown on
-     hover/focus), figure.editor-embed (data-state="missing"), [data-part] (data-framed shows its name), the read/edit toggle
+     .editor-block > .editor-bar), .editor (the page in the editor, [data-used="first|middle|last|only"] frames a block
+     used elsewhere over its lines), .editor-block (add button + .textarea), [data-block] with .editor-handle (a
+     .dropdown-menu at its start, shown on hover/focus and on the active block [data-active]; the wrapper holds one element
+     or several, the typeset flow passes through), figure.editor-embed (data-state="missing"; its content takes the flow),
+     [data-part] (data-framed shows its name, data-framed="continued" a further piece), .dropgap.held (a held block in the
+     page), a task list (li > input[type=checkbox]), the read/edit toggle
      .btn[data-mode] in the window head. Menus are .dropdown-menu and .command, questions .item, choices .button-group.
      Nothing has a look of its own: in the pack "underdoc" the same markup takes UnderDoc's look. -->
 <div class="c22-examples">
@@ -141,10 +144,7 @@ VLAN 10, für Arbeitsplätze und Drucker.</textarea>
           <section>
             <div class="editor">
               <p>Die Ports im Schrank:</p>
-              <div data-used><small>Verwendet an 2 Stellen</small>| Port | VLAN |
-| --- | --- |
-| 1 | 10 |
-| 2 | 20 |</div>
+              <div><div data-used="first"><small>Verwendet an 2 Stellen</small>| Port | VLAN |</div><div data-used="middle">| --- | --- |</div><div data-used="middle">| 1 | 10 |</div><div data-used="last">| 2 | 20 |</div></div>
               <p>Strom kommt aus der Leiste unten.</p>
             </div>
           </section>
@@ -177,10 +177,7 @@ VLAN 10, für Arbeitsplätze und Drucker.</textarea>
           <section>
             <div class="editor">
               <p>Die Ports im Schrank:</p>
-              <div data-used><small>Verwendet an 2 Stellen</small>| Port | VLAN |
-| --- | --- |
-| 1 | 10 |
-| 2 | 20 |</div>
+              <div><div data-used="first"><small>Verwendet an 2 Stellen</small>| Port | VLAN |</div><div data-used="middle">| --- | --- |</div><div data-used="middle">| 1 | 10 |</div><div data-used="last">| 2 | 20 |</div></div>
               <p>Strom kommt aus der Leiste unten.</p>
             </div>
           </section>
@@ -279,6 +276,49 @@ VLAN 10, für Arbeitsplätze und Drucker.</textarea>
         <article class="card" data-size="sm" data-block><section><p class="text-sm">Kamera am Tor neu ausrichten.</p></section></article>
       </div>
       <div class="h-40"></div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Lesen: Blöcke aus mehreren Elementen (Abstände und Überschriften wie ohne Hülle; Griff und Kommentarblase stehen außerhalb des Flusses; der Block mit dem Cursor zeigt seinen Griff; eine Aufgabenliste mit Kästchen statt Punkten, Erledigtes gedämpft und durchgestrichen; eine Einbettung im selben Fluss; ein gehaltener Block als Lücke mit seinen ersten Zeilen; ein ziehbarer Griff zeigt die Hand; auf Touch-Geräten stehen Griffe und Blasen halb sichtbar)</span>
+    <div class="w-full overflow-hidden rounded-lg border">
+      <main class="workspace-main">
+        <section>
+          <article class="typeset" data-width="slim">
+            <div data-block class="comment-anchor"><div class="dropdown-menu editor-handle" id="ed-l-b1"><button type="button" class="btn" data-variant="ghost" data-size="icon-xs" id="ed-l-b1-t" data-drag aria-label="Block b1" aria-haspopup="menu" aria-controls="ed-l-b1-m" aria-expanded="false"><svg data-icon-lu="grip-vertical" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="12" r="1"/><circle cx="9" cy="5" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="19" r="1"/></svg></button><div id="ed-l-b1-p" data-popover aria-hidden="true"><div role="menu" id="ed-l-b1-m" aria-labelledby="ed-l-b1-t"><button type="button" role="menuitem">Adresse kopieren</button><button type="button" role="menuitem">Diesen Block bearbeiten</button></div></div></div><h2>Funkstrecke</h2><p>Die Strecke zum Turm läuft auf 5 GHz.</p><p>Bei Regen fällt sie selten aus, bei Schnee öfter.</p><button type="button" class="btn" data-variant="ghost" data-size="icon-xs" data-comment data-count="2" aria-label="2 Kommentare"><svg data-icon-lu="message-square" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/></svg></button></div>
+            <div data-block data-active><div class="dropdown-menu editor-handle" id="ed-l-b2"><button type="button" class="btn" data-variant="ghost" data-size="icon-xs" id="ed-l-b2-t" data-drag aria-label="Block b2" aria-haspopup="menu" aria-controls="ed-l-b2-m" aria-expanded="false"><svg data-icon-lu="grip-vertical" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="12" r="1"/><circle cx="9" cy="5" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="19" r="1"/></svg></button><div id="ed-l-b2-p" data-popover aria-hidden="true"><div role="menu" id="ed-l-b2-m" aria-labelledby="ed-l-b2-t"><button type="button" role="menuitem">Adresse kopieren</button><button type="button" role="menuitem">Diesen Block bearbeiten</button></div></div></div><p>Vor dem Winter:</p><ul class="ml-6 list-disc"><li><input checked="" disabled="" type="checkbox"> Antenne nachziehen</li><li><input disabled="" type="checkbox"> Heizung im Gehäuse prüfen</li><li><input disabled="" type="checkbox"> Ersatzteil bestellen</li></ul></div>
+            <div data-block><div class="dropdown-menu editor-handle" id="ed-l-b3"><button type="button" class="btn" data-variant="ghost" data-size="icon-xs" id="ed-l-b3-t" data-drag aria-label="Block b3" aria-haspopup="menu" aria-controls="ed-l-b3-m" aria-expanded="false"><svg data-icon-lu="grip-vertical" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="12" r="1"/><circle cx="9" cy="5" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="19" r="1"/></svg></button><div id="ed-l-b3-p" data-popover aria-hidden="true"><div role="menu" id="ed-l-b3-m" aria-labelledby="ed-l-b3-t"><button type="button" role="menuitem">Adresse kopieren</button><button type="button" role="menuitem">Diesen Block bearbeiten</button></div></div></div><figure class="editor-embed"><h3>Kern-Switches</h3><p>Zwei Geräte, je eines pro Raum.</p><ul class="ml-6 list-disc"><li>core-a im Serverraum</li><li>core-b in der Werkstatt</li></ul><div class="table-container"><table class="table"><thead><tr><th>Name</th><th>Uplink</th></tr></thead><tbody><tr><td>core-a</td><td>10 Gbit</td></tr><tr><td>core-b</td><td>10 Gbit</td></tr></tbody></table></div><figcaption><a href="#">Netzplan · #b4</a></figcaption></figure></div>
+            <div class="dropgap held"><div data-block><div class="dropdown-menu editor-handle" id="ed-l-b4"><button type="button" class="btn" data-variant="ghost" data-size="icon-xs" id="ed-l-b4-t" data-drag aria-label="Block b4" aria-haspopup="menu" aria-controls="ed-l-b4-m" aria-expanded="false"><svg data-icon-lu="grip-vertical" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="12" r="1"/><circle cx="9" cy="5" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="19" r="1"/></svg></button><div id="ed-l-b4-p" data-popover aria-hidden="true"><div role="menu" id="ed-l-b4-m" aria-labelledby="ed-l-b4-t"><button type="button" role="menuitem">Adresse kopieren</button><button type="button" role="menuitem">Diesen Block bearbeiten</button></div></div></div><h3>Strom</h3><p>Die Leiste unten im Schrank hängt an der USV.</p><p>Die USV hält eine Stunde.</p><p>Danach fährt der Router herunter, die Kameras zuerst.</p><p>Wer das ändert, schreibt es hier dazu.</p></div></div>
+            <div data-block><div class="dropdown-menu editor-handle" id="ed-l-b5"><button type="button" class="btn" data-variant="ghost" data-size="icon-xs" id="ed-l-b5-t" data-drag aria-label="Block b5" aria-haspopup="menu" aria-controls="ed-l-b5-m" aria-expanded="false"><svg data-icon-lu="grip-vertical" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="12" r="1"/><circle cx="9" cy="5" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="19" r="1"/></svg></button><div id="ed-l-b5-p" data-popover aria-hidden="true"><div role="menu" id="ed-l-b5-m" aria-labelledby="ed-l-b5-t"><button type="button" role="menuitem">Adresse kopieren</button><button type="button" role="menuitem">Diesen Block bearbeiten</button></div></div></div><p>Schlüssel liegen beim Hausmeister.</p></div>
+          </article>
+        </section>
+      </main>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Editor: ein Block über mehrere Zeilen (jede Zeile ein eigenes Element, wie in CodeMirror; der anderswo verwendete Block ein Rahmen über die Zeilen, ohne dass eine Zeile höher wird; ein Teil über zwei Zeilen, das zweite Stück ohne Namen; der Block mit dem Cursor zeigt seinen Griff; ein gehaltener Block als Lücke)</span>
+    <div class="w-full overflow-hidden rounded-lg border">
+      <main class="workspace-main">
+        <section>
+          <div class="editor">
+            <div>
+              <div data-block><div class="dropdown-menu editor-handle" id="ed-e-b1"><button type="button" class="btn" data-variant="ghost" data-size="icon-xs" id="ed-e-b1-t" data-drag aria-label="Block b1" aria-haspopup="menu" aria-controls="ed-e-b1-m" aria-expanded="false"><svg data-icon-lu="grip-vertical" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="12" r="1"/><circle cx="9" cy="5" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="19" r="1"/></svg></button><div id="ed-e-b1-p" data-popover aria-hidden="true"><div role="menu" id="ed-e-b1-m" aria-labelledby="ed-e-b1-t"><button type="button" role="menuitem">Adresse kopieren</button><button type="button" role="menuitem">Diesen Block bearbeiten</button></div></div></div></div>
+              <div>Die Ports im Schrank:</div>
+              <div data-block data-active><div class="dropdown-menu editor-handle" id="ed-e-b2"><button type="button" class="btn" data-variant="ghost" data-size="icon-xs" id="ed-e-b2-t" data-drag aria-label="Block b2" aria-haspopup="menu" aria-controls="ed-e-b2-m" aria-expanded="false"><svg data-icon-lu="grip-vertical" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="12" r="1"/><circle cx="9" cy="5" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="19" r="1"/></svg></button><div id="ed-e-b2-p" data-popover aria-hidden="true"><div role="menu" id="ed-e-b2-m" aria-labelledby="ed-e-b2-t"><button type="button" role="menuitem">Adresse kopieren</button><button type="button" role="menuitem">Diesen Block bearbeiten</button></div></div></div></div>
+              <div data-used="first"><small>Verwendet an 2 Stellen</small>| Port | VLAN |</div>
+              <div data-used="middle">| --- | --- |</div>
+              <div data-used="middle">| 1 | 10 |</div>
+              <div data-used="last">| 2 | 20 |</div>
+              <div><br></div>
+              <div data-block><div class="dropdown-menu editor-handle" id="ed-e-b3"><button type="button" class="btn" data-variant="ghost" data-size="icon-xs" id="ed-e-b3-t" data-drag aria-label="Block b3" aria-haspopup="menu" aria-controls="ed-e-b3-m" aria-expanded="false"><svg data-icon-lu="grip-vertical" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="12" r="1"/><circle cx="9" cy="5" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="19" r="1"/></svg></button><div id="ed-e-b3-p" data-popover aria-hidden="true"><div role="menu" id="ed-e-b3-m" aria-labelledby="ed-e-b3-t"><button type="button" role="menuitem">Adresse kopieren</button><button type="button" role="menuitem">Diesen Block bearbeiten</button></div></div></div></div>
+              <div>Der Turm hat <span data-part="Teil #b3.t1 · Verwendet an 1 Stelle" data-framed>zwei Kernswitches und</span></div>
+              <div><span data-part="Teil #b3.t1 · Verwendet an 1 Stelle" data-framed="continued">eine Funkstrecke</span> am Mast.</div>
+              <div class="dropgap held"><div>## Strom</div><div>Die Leiste unten im Schrank hängt an der USV.</div><div>Die USV hält eine Stunde.</div><div>Danach fährt der Router herunter.</div><div>Wer das ändert, schreibt es hier dazu.</div></div>
+              <div data-block><div class="dropdown-menu editor-handle" id="ed-e-b4"><button type="button" class="btn" data-variant="ghost" data-size="icon-xs" id="ed-e-b4-t" data-drag aria-label="Block b4" aria-haspopup="menu" aria-controls="ed-e-b4-m" aria-expanded="false"><svg data-icon-lu="grip-vertical" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="12" r="1"/><circle cx="9" cy="5" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="19" r="1"/></svg></button><div id="ed-e-b4-p" data-popover aria-hidden="true"><div role="menu" id="ed-e-b4-m" aria-labelledby="ed-e-b4-t"><button type="button" role="menuitem">Adresse kopieren</button><button type="button" role="menuitem">Diesen Block bearbeiten</button></div></div></div></div>
+              <div data-used><small>Verwendet an 1 Stelle</small>Schlüssel liegen beim Hausmeister.</div>
+            </div>
+          </div>
+        </section>
+      </main>
     </div>
   </div>
 </div>

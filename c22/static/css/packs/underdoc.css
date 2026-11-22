@@ -110,6 +110,11 @@
     font-weight: var(--font-weight-normal);
   }
   .workspace-main > section { padding-inline-end: calc(var(--spacing) * 7.5); }
+  /* The comment bubble beside a block stands 30px out, as in the mockup: inside the 30px room at the end of the window,
+     so a document at full width does not scroll sideways (the phone keeps its own, smaller offset). */
+  @media (width >= 48rem) {
+    .workspace-main .comment-anchor > [data-comment] { inset-inline-end: calc(var(--spacing) * -7.5); }
+  }
 
   /* Chosen states of the mockup are filled with the primary role: editing, a segment of the gear, an alignment. The
      shape says it too (a filled square, a filled segment among outlined ones). */

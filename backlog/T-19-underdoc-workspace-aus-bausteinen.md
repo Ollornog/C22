@@ -45,6 +45,13 @@ of the mockup moves into the pack `underdoc` (`c22/static/css/packs/underdoc.css
   phone, nav1 on the phone as `--workspace-phone-nav1` (70px in the pack), an icon in the head of an open collection
   (13px), the avatar of an entry (20px in the pack). Shown in `document-workspace.html` (first example: every block in a
   wrapper with a handle; second: kept open and open, a space, a private collection with line and space).
+- Gaps from UnderDoc's editor (2026-11-22, third round): the typeset flow through a wrapper with several elements (handle
+  first, comment bubble `[data-comment]` last) and inside `figure.editor-embed`; the handle of the active block
+  (`[data-block][data-active]`); a block used elsewhere as one frame over sibling lines (`[data-used="first|middle|last|only"]`,
+  drawn by `::before`, no line higher); a task list in `.typeset`; `.dropgap.held` in the page and the editor; a further
+  piece of a part (`data-framed="continued"`); a dragging handle (`.editor-handle [data-drag]`); handle and bubble half
+  visible on a touch device; the comment bubble inside the pack's 30px room; the handle's menu wraps in pre-wrap text.
+  Shown in the last two examples of `workspace-editing.html` (reading, editor).
 
 ## Done when
 
@@ -128,13 +135,13 @@ sheet) and the third example of `document-workspace.html` (several windows, cont
 | `.cblk`, `.has` | comment bubble `.comment-anchor` > `[data-comment]` (+ `data-count`) |
 | `.dstatus` | `.btn[data-mode]` first in `.workspace-main > header`, `aria-pressed="true"` while editing |
 | `.cm-editor.cm-ud` (and `.cm-line`) | the page in the editor: `.editor` (CodeMirror keeps its own DOM; its decorations take these:) |
-| `.cm-ud-used`, `-used-first/-last`, `-usedlabel` | `.editor [data-used]` + `small` (where it is used) |
+| `.cm-ud-used`, `-used-first/-last`, `-usedlabel` | `.editor [data-used="first\|middle\|last\|only"]` on each line + `small` in the first (where it is used) |
 | `.cm-ud-ask` | `.item[data-variant=muted][data-size=sm]` with the question in `section` and `.btn[data-size=xs]` in `aside` |
 | `.cm-ud-plain` | `underline decoration-wavy decoration-destructive` (utilities) |
 | `.cm-ud-embed`, `-embed-what` | `a.badge[data-variant=secondary]` with a muted first `span` |
-| `.cm-ud-part`, `-partlabel`, `.partedge`, `.partlabel` | `[data-part="<name>"]` (dotted underline), `data-framed` shows frame and name |
+| `.cm-ud-part`, `-partlabel`, `.partedge`, `.partlabel` | `[data-part="<name>"]` (dotted underline), `data-framed` shows frame and name, a further piece `data-framed="continued"` |
 | `.cm-ud-marker` | stays the app's (an empty CodeMirror widget, no look) |
-| `.embed`, `.embhead`, `.embedbody` | `figure.editor-embed` (content, `figcaption` with the link back) |
+| `.embed`, `.embhead`, `.embedbody` | `figure.editor-embed` (content straight in the figure, no body wrapper, takes the typeset flow; `figcaption` with the link back) |
 | `.embed.broken`, `.unplaced` | `figure.editor-embed[data-state=missing]` with the words; removed with actions: buttons inside |
 | `.badge[data-removed]`, `.placed` | `.badge[data-variant=destructive]` + `.btn[data-variant=outline][data-size=xs]` |
 | `.wayspop`, `.wayitem`, `.wayrow`, `.waysame` | a `.card` (or `.dialog`) with one section per thing: `h4`, muted `p`, `.btn[aria-pressed]` choices + `select.select`; `label` > checkbox "Dasselbe für alle"; `.btn` destructive + outline |
@@ -142,7 +149,7 @@ sheet) and the third example of `document-workspace.html` (several windows, cont
 | `.findin` | `.input-group` in the bar (search on the page) |
 | `.src` | `pre.code-block[data-line-numbers]` |
 | **Lists, drag, New** | |
-| `.dropgap`, `.held`, `.idle`, `.copy`, `.drop-into`, `body.dragging`, `body.ud-bdrag` | same classes, written by `app-workspace-drag.js`; styled for `.workspace-tree`/`.workspace-nav` (rows `li > div`, clones `.dropgap > div`) |
+| `.dropgap`, `.held`, `.idle`, `.copy`, `.drop-into`, `body.dragging`, `body.ud-bdrag` | same classes, written by `app-workspace-drag.js`; styled for `.workspace-tree`/`.workspace-nav` (rows `li > div`, clones `.dropgap > div`); a held block `.dropgap.held` in `.typeset`/`.editor` (no body class needed: the page is unselectable while it holds one) |
 | `.row.just` | `li > div[aria-selected="true"]` (tint + frame) |
 | `.ren`, `.renin` | `.input[data-size=sm]` in place of the name inside the row |
 | `.drop-before`, `.drop-after`, `.slot` (tabs) | `.workspace-tab[data-drop="before"/"after"/"slot"]` (the dragging itself stays the app's) |
@@ -153,7 +160,9 @@ sheet) and the third example of `document-workspace.html` (several windows, cont
 | `.deco[data-deco=line]`, `.deco[data-deco=space]` | a row holding only `hr` / `hr[data-variant="space"]`: in nav2 `div > hr`, in a list `li > div > hr` (the row carries the app's drag and context attributes) |
 | `.navitem[aria-pressed][data-pinned]` (thin/thick line) | `.workspace-item[aria-current]` + `data-pinned` (the pack draws 1px / 3px) |
 | `.avatar.tiny` | `.avatar[data-size=sm]` in `.workspace-item` (20px in the pack) |
-| `.doc [data-b]` | `article.typeset > div[data-block]` (handle + one element; the flow passes through) — the class `doc` is no longer needed |
+| `.doc [data-b]` | `article.typeset > div[data-block]` (handle first, one element or several, comment bubble `[data-comment]` last; the flow passes through) — the class `doc` is no longer needed |
+| `.cm-ud-marker[data-active]`, `.bhandle[data-drag]` | `div[data-block][data-active]` (handle shows), `.editor-handle [data-drag]` (grab, touch) |
+| task list (`article.doc li > input[type=checkbox]`) | the same markup in `.typeset` |
 | `.lockline` | `.workspace-label` with lock icon |
 | `.cmdpop`, `.command` (inside it) | `.command` with `header` filter, groups, `hr`; inside `.workspace` (the pack gives it the mockup's 13px rows) |
 | `.addmenu`, `.addpop`, `.newpop`, `.pop`, `.opt` | `.dropdown-menu` / `.command`; New of the top row as a popover card: `.button-group` (where), `.input`, muted `p` |
