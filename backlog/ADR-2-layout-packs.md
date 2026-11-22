@@ -80,5 +80,7 @@ status line under the window, the width of the document column, tags as square c
   both packs.
 - Missing structure (status line under the window, document column with a width choice) becomes part of
   the building block for every app, not of the pack.
-- `app-workspace.css` and its block stay until UnderDoc has switched, marked deprecated; removal is T-20.
+- `app-workspace.css` and its block stayed, marked deprecated, until UnderDoc had switched; T-20 removed them
+  (2026-11-22, now in `archive/`). Rule 14 of the hygiene suite turned from "every selector under the root class"
+  into "no `app-*.css` and no `.c22-app-*` root in the sources", so the pattern cannot come back.
 - The vendored styles keep their own class rules; this decision is about C22's own building blocks only.

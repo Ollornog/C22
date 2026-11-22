@@ -631,30 +631,20 @@ def verhalten(r: Report, b: Browser, basis: str) -> None:
     r.check("Schritte: einer zur Zeit, Weiter prüft den Schritt, Enter geht weiter, Zurück kehrt um",
             st == {"start": erst, "leer": erst, "weiter": dann, "fokus": True, "zurueck": erst, "enter": dann}, str(st))
 
-    # C22 inside the app workspace (UnderDoc ADR-31, 2026-11-21): the root's element defaults must not beat a utility or a
-    # component. Before, td{text-align:left} of the root won over .text-right and the button reset took the padding of a
-    # tab. The same tabs outside the root are the measure.
+    # Number cells next to the spreadsheet (UnderDoc ADR-31): .text-right and data-type="number" align a cell to the end,
+    # a plain cell to the start. Until T-20 this was checked inside the old app workspace, whose element defaults beat them.
     aw = s.js("""(() => {
-      const ex = document.querySelector('.c22-example:has(#c22-aw-sheets)');
+      const ex = document.querySelector('.c22-example:has(#mo-sheets)');
       const a = e => getComputedStyle(e).textAlign;
-      const tabs = ex.querySelector('.tabs'), kopie = tabs.cloneNode(true);
-      kopie.removeAttribute('id'); kopie.querySelectorAll('[id]').forEach(e => e.removeAttribute('id'));
-      document.body.appendChild(kopie);
-      const masz = t => { const tab = getComputedStyle(t.querySelector('[role=tab]')), l = getComputedStyle(t.querySelector('[role=tablist]'));
-                          return [tab.paddingLeft, tab.paddingTop, tab.backgroundColor, l.paddingLeft, getComputedStyle(t).gap]; };
-      const out = { rechts: [...ex.querySelectorAll('.tw .text-right')].map(a), zahl: a(ex.querySelector('.table td[data-type="number"]')),
-                    links: a(ex.querySelector('.tw td:not([class])')), innen: masz(tabs), aussen: masz(kopie) };
-      kopie.remove();
-      return out;
+      return { rechts: [...ex.querySelectorAll('.table td.text-right')].map(a), zahl: a(ex.querySelector('.table td[data-type="number"]')),
+               links: a(ex.querySelector('.table td:not([class]):not([data-type])')) };
     })()""")
-    r.check("App-Arbeitsbereich: .text-right und data-type=\"number\" richten Zellen aus wie überall",
+    r.check("Tabelle: .text-right und data-type=\"number\" richten Zellen aus wie überall",
             aw["rechts"] and set(aw["rechts"]) == {"right"} and aw["zahl"] == "end" and aw["links"] == "start", str(aw))
-    r.check("App-Arbeitsbereich: .tabs sind gepolstert wie außerhalb",
-            aw["innen"] == aw["aussen"] and aw["innen"][0] != "0px", str(aw))
     # The spreadsheet (data-sticky="sheet"): the box scrolls inside its bounded height, letters and row numbers stick to
     # it; a selected cell is tinted AND framed, the active one framed thicker, the selected letter and number are bold.
     sh = s.js("""(async () => {
-      const t = document.querySelector('#c22-aw-sheets .table[data-sticky="sheet"]'), box = t.parentElement;
+      const t = document.querySelector('#mo-sheets .table[data-sticky="sheet"]'), box = t.parentElement;
       const frame = () => new Promise(ok => requestAnimationFrame(() => requestAnimationFrame(ok)));
       // Narrower than the table's least width (row numbers and three dense columns are about 12rem), so it scrolls sideways.
       // The height comes from --table-max-height here, not from the example's max-h-* utility: that is the bounded box C22 gives.
@@ -918,9 +908,7 @@ def arbeitsbereich(r: Report, b: Browser, basis: str) -> None:
                 zug["esc"] == {"gehalten": "Strom", "gerahmt": "", "danach": "Kran Turm Antennen Strom"} and zug["uebrig"] == 0, str(zug))
         r.check(f"{was}: kurz auf der Mitte eines Eintrags warten legt darunter",
                 zug["drauf"]["gerahmt"] == "Turm" and zug["unter"] == "Antennen" and zug["drauf"]["danach"] == "Kran Turm Strom", str(zug))
-    ziehen("Arbeitsbereich", {"box": ".c22-app-workspace [data-drag-demo]", "row": ".row", "oben": "ul.t.top > li > .row",
-                              "held": ".dropgap.held .row", "kinder": ":scope > ul > li > .row"})
-    # The same module on the building block (T-19 step 3): rows are li > div of .workspace-tree.
+    # On the building block (T-19 step 3): rows are li > div of .workspace-tree.
     ziehen("Arbeitsbereich aus Bausteinen", {"box": ".workspace-nav[data-drag-demo]", "row": "li > div", "oben": "ul.workspace-tree > li > div",
                                               "held": ".dropgap.held > div", "kinder": ":scope > ul > li > div"})
 
@@ -941,15 +929,6 @@ def arbeitsbereich(r: Report, b: Browser, basis: str) -> None:
     r.check("Arbeitsbereich: unter md öffnen nav2 und nav3 über dem Fenster, Escape schließt",
             handy == {"zu": {"nav2": "none", "nav3": "none", "suche": "none"}, "auf": {"nav2": "flex", "nav3": "flex", "ueber": True}, "esc": "none"},
             str(handy))
-    # The app workspace at phone width (UnderDoc, 2026-11-09): nav2 and nav3 over the window take their width from the
-    # workspace (all of it but a strip at the left), not from the column of nav1 they sit in, where nav3 had none.
-    app = h.js("""(() => {
-      const w = document.querySelector('.c22-app-workspace'), m = w.querySelector('.main').getBoundingClientRect();
-      const r = w.querySelector('.rail').getBoundingClientRect(), n3 = w.querySelector('.rail .nav3').getBoundingClientRect();
-      return { leiste: Math.round(r.width), soll: Math.round(Math.min(320, m.width - 76)), nav3: n3.width > 0, rechts: r.right <= m.right + 1 };
-    })()""")
-    r.check("App-Arbeitsbereich: unter md nehmen nav2 und nav3 die Breite vom Arbeitsbereich, nav3 inklusive",
-            abs(app["leiste"] - app["soll"]) <= 1 and app["nav3"] and app["rechts"], str(app))
     h.sende("Page.close")
 
     # Layout pack (ADR-2): the pack changes the form, vega keeps the block's defaults. The image comparison sees

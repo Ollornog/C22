@@ -47,8 +47,7 @@ the look per component.
 | Dragging a tab; where a dropped tab would go | `.workspace-tab[data-drop="before\|after"]` (a line on that side), `[data-drop="slot"]` (the stand-in where it lands); `.workspace-main > [data-drop-zone="start\|end\|here"]` with the word as content (`data-size="sm"`: a strip at the edge for a new window), `hidden` when no drag runs | `blocks/navigation/workspace-views.html` |
 | An app that drives the workspace itself | `data-behaviour="app"` on `.workspace`: c22.js adds no workspace behaviour there (no pointer, keys, clicks, double click, context-menu heading, restore or grip labels); its other parts (`[data-confirm]`, `form[data-steps]`, `[data-dropzone]`, sticky tables …) keep working inside | `blocks/navigation/workspace.html` |
 | Dragging entries of a list | `app-workspace-drag.js` (`C22AppWorkspaceDrag.attach`); on `.workspace-tree` the module's `.dropgap`/`.idle`/`.copy`/`.drop-into` are styled; selected `aria-selected`, reference `data-ref`, rename `.input` in the row | `blocks/navigation/workspace-more.html` |
-| An app's own look for a layout | its own **layout pack** `packs/<repo>.css` (ADR-2): block form tokens on the block root, block-scoped rules in `@layer components`, header `@c22-layout: <block>`; never block CSS with own classes. Example: `underdoc` — it shapes parts only inside the block, so an app hangs its workspace menus inside `.workspace` | `packs/underdoc.css`, `blocks/navigation/document-workspace.html` |
-| ~~An app's approved mockup taken over whole~~ — **deprecated** (ADR-2, removal T-20) | root class `.c22-app-<name>`, everything scoped to it (rule 14); only the old UnderDoc workspace still uses it, until it has switched to `.workspace` + pack `underdoc` (replacement list in backlog T-19) | `blocks/navigation/app-workspace.html` |
+| An app's own look for a layout | its own **layout pack** `packs/<repo>.css` (ADR-2): block form tokens on the block root, block-scoped rules in `@layer components`, header `@c22-layout: <block>`; never block CSS with own classes (rule 14: no `app-*.css`, no `.c22-app-*` root). Example: `underdoc` — it shapes parts only inside the block, so an app hangs its workspace menus inside `.workspace` | `packs/underdoc.css`, `blocks/navigation/document-workspace.html` |
 | Filters with sign, count and text | `class="filter-bar"` | `filter-bar.html` |
 | One row of filter buttons, groups as menus | `class="filter-menus"`: links, `.dropdown-menu` (state `data-an` / `data-teil`), `span[role=separator]`; split button `.filter-split` (link takes the group, arrow menu or a plain button beside it) | `filter-bar.html` |
 | Table with hierarchy lines, row selection | `class="table" data-variant="levels"` + `data-selectable` (`="explorer"` adds opening; a link with `data-follow` opens on a click; merged-cell content in a `div` sticks under the head, `--levels-sticky-top`) | `blocks/tables/merge-table.html` |
@@ -73,7 +72,7 @@ the look per component.
 | Popover without JavaScript (settings, segment buttons) | `details.popover` > `summary.btn` + `[data-popover]`; segments `.button-group` of buttons with `aria-pressed` | `popover.html`, `toggle-group.html` |
 | A form in steps (e.g. name, then sharing) | `form[data-steps]` > `fieldset[data-step]`, `ol.steps`, buttons `[data-step-back]` / `[data-step-next]` / `[data-step-done]` (c22.js) | `blocks/data-entry/steps-dialog.html` |
 | Rights of an object; picking a person, a group or everyone | owner/inheritance as `.item[data-size="sm"]`, origin and role as `.badge-split`, a grouped `.combobox` with an icon per kind; an app with menus of its own (no `basecoat.all.min.js`) loads Basecoat's core `basecoat.min.js` + `combobox.min.js` from `c22/vendor/basecoat/dist/js/` before `c22.js`: only `.combobox` is taken over, also one rendered later | `blocks/data-entry/rights.html` |
-| A settings panel outside the app workspace (what `setrow`/`chip`/`modrow`/`hint`/`lab` are there) | `h3`, `.item[data-size="sm"]`, `.btn[data-variant="outline"][data-size="sm"]`, muted `text-sm`, `.label`; a number with its unit is an `.input-group` | `blocks/data-entry/admin-panel.html` |
+| A settings panel (what the old app workspace's `setrow`/`chip`/`modrow`/`hint`/`lab` are in C22) | `h3`, `.item[data-size="sm"]`, `.btn[data-variant="outline"][data-size="sm"]`, muted `text-sm`, `.label`; a number with its unit is an `.input-group` | `blocks/data-entry/admin-panel.html` |
 | A public page behind a link (no app frame) | `main.mx-auto.max-w-3xl.p-4`, head with a muted line, `.alert`, content | `blocks/full-page/public-page.html` |
 | Telling entities apart (employers, projects, people) | `.badge[data-mark="1"…"5"]` — the text tells, the chart-colour dot adds | `badge.html` |
 
@@ -183,10 +182,8 @@ c22/typeset/*.html      typography in context (typeset page; base for the future
 c22/static/css/
   tokens.css            the token definitions (the look)
   components.css        shared C22 rules (@layer components) — the SPOT home for anything cross-component
-  app-<name>.css        an app's whole look taken over as one building block, every selector under the root
-                        class .c22-app-<name> (rule 14); unlayered, see the file head — except the
-                        element defaults (button, table cells …), which sit in @layer base so C22
-                        components and utilities used inside the root win over them
+                        (no app-<name>.css with own classes any more: ADR-2, rule 14; the last one,
+                        app-workspace.css, is in archive/ since T-20)
   packs/<name>.css      OWN style packs = token overrides riding on the vega shape
                         (de-monolithisation phase B; e.g. packs/spica.css — brand blue); a layout pack
                         (@c22-layout, ADR-2; packs/underdoc.css) also sets block form tokens and carries

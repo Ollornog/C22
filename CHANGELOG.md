@@ -181,6 +181,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   successor is `.workspace` with the pack `underdoc`; the replacement list for UnderDoc is in backlog T-19. It stays
   unchanged until UnderDoc has switched, then T-20 archives it.
 
+### Removed
+
+- **Breaking: `app-workspace.css` and the block "App-Arbeitsbereich"** (`.c22-app-workspace`, T-20): no pack loads
+  them any more; an app that still emits the old classes (`.brandrow`, `.strip`, `.nav2`, `.nav3`, `.dtab`, `.tools`,
+  `.doc` …) loses its look. Move to `.workspace` with the pack `underdoc` (replacement list in backlog T-19). Both
+  files are kept in `archive/`. `app-workspace-drag.js` stays under its name and drags the entries of
+  `.workspace-tree`; its gallery demo runs on that list only.
+- **Rule 14** no longer checks that an app building block keeps its selectors under its root class; it now fails on
+  any `app-*.css` in `c22/static/css` and on any `c22-app-…` in the sources (ADR-2: an own look is a pack). The
+  browser checks of the old block are gone; the spreadsheet and number-cell checks run on the example in
+  `workspace-more.html`.
+
 ## [0.3.0] - 2026-11-21
 
 ### Changed — Highlights of this release

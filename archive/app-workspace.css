@@ -1,3 +1,9 @@
+/* Archived 2026-11-22 from c22/static/css/app-workspace.css (last live commit 70d7da3), T-20.
+   What: the whole workspace of UnderDoc's approved clickable mockup as one building block, every selector under the
+   root class .c22-app-workspace (gallery block blocks/navigation/app-workspace.html, archived beside it).
+   Why: an own look in own classes is what ADR-2 forbids (structure only from building blocks, a look only as a pack).
+   Its successor is .workspace with the layout pack underdoc; the replacement list for the app is in backlog T-19.
+*/
 /* C22 app workspace — the workspace of an approved clickable mockup (UnderDoc), as one building block.
  *
  * DEPRECATED (ADR-2, 2026-11-21): an own look in own classes is what the rule "structure only from building blocks,

@@ -21,3 +21,4 @@ Fixes and refactors of live code are not archived; neither are experiments that 
 | [`app-workspace-nav2-children-box.css`](app-workspace-nav2-children-box.css) | The children of a collection in nav2, inside its box (a trial) | 2026-11-09 |
 | [`app-workspace-block-bar.css`](app-workspace-block-bar.css) | The bar below each block in editing (UnderDoc): Block below, Delete, Copy address, ID | 2026-11-09 |
 | [`app-workspace-editor-bar-sticky.css`](app-workspace-editor-bar-sticky.css) | The page editor's bar sticky inside the editor (UnderDoc) | 2026-11-10 |
+| [`app-workspace.css`](app-workspace.css), [`app-workspace.html`](app-workspace.html) | The old app workspace: UnderDoc's mockup taken over whole under `.c22-app-workspace`, and its gallery block (T-20; successor `.workspace` + pack `underdoc`, ADR-2) | 2026-11-22 |
