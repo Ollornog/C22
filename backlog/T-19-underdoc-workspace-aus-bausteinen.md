@@ -52,6 +52,15 @@ of the mockup moves into the pack `underdoc` (`c22/static/css/packs/underdoc.css
   piece of a part (`data-framed="continued"`); a dragging handle (`.editor-handle [data-drag]`); handle and bubble half
   visible on a touch device; the comment bubble inside the pack's 30px room; the handle's menu wraps in pre-wrap text.
   Shown in the last two examples of `workspace-editing.html` (reading, editor).
+- Gaps from UnderDoc's menus and views (2026-11-22, fourth round): a context menu of the workspace at the mockup's size
+  (`[data-cm-panel]` in the pack's menu rule; a description `div > span + small` is a second line in a context menu too);
+  the icon in the head of a drawer 16px without a size utility, the name right after it; the current hit of a search on
+  the page (`mark[aria-current]` in `.typeset`/`.workspace-main`: framed and bold; a `mark` in `.typeset` takes the found
+  word's tint); the element whose comments are open (`.comment-anchor[data-comment-focus]`: accent ground and a frame);
+  the drawer under the head of the window in the pack (`--workspace-drawer-top`); rows that are controls (`label.item`
+  hovers like a link row, `button.item[aria-pressed]` off dashed and muted, on with the word in its aside bold; accent
+  ground on hover in the pack). Shown in `workspace-views.html` (comments and search, modules as switches, the context
+  menu of the menu example).
 
 ## Done when
 
@@ -212,9 +221,14 @@ sheet) and the third example of `document-workspace.html` (several windows, cont
 | `.ssbar`, `.chip` (saved search) | `.filter-bar` (one `section` per part, values as buttons with `aria-pressed`) |
 | `.sshits`, `.hit`, `.snip`, `mark` | `div.item-group` of `a.item[data-size=sm]` > `figure` (icon) + `section` > `h4`, `p` (place), `p` (excerpt with `mark`) |
 | `.filters`, `.filterbtn` (nav3 of search) | `.btn[data-variant=outline][data-size=xs]`, `.workspace-label`, `.workspace-tree` rows (recent), `a.badge[data-variant=outline]` (tags) |
-| `.clockbtn` | `[data-clock]` (`date-picker.html`) |
+| `.clockbtn` | `.btn[data-variant=outline]` with `aria-pressed` (running: pressed); `[data-clock]` is the clock face of the date picker, not this button |
 | `.toast` | `.toast` |
-| `.intorow`, `.lands`, `.cfor`, `.cgo`, `.cfocus`, `.cmore`, `.copy` (button) | `.item`/`.btn`; focus ring of C22 |
+| `.intorow`, `.lands`, `.cfor`, `.cgo`, `.cmore`, `.copy` (button) | `.item`/`.btn`; focus ring of C22 |
+| `.cfocus` | `.comment-anchor[data-comment-focus]` (accent ground and a frame) |
+| `mark.cur` | `mark[aria-current="true"]` (framed and bold) |
+| `.modrow` (button, `aria-pressed`), `.todo` | `button.item[data-variant=outline][data-size=sm][aria-pressed]` (aside with the word) / `label.item` |
+| `.fhead` with an icon | `aside[data-drawer] > header` > `svg` (no size class) + name + close button |
+| `.ctxpop` | `.context-menu > [data-cm-panel]` inside `.workspace` |
 | `.bar`, `.tab`, `.strip .tab`, `.tight`, `.text`, `body.resizing` | old top bar of round 1: `header.workspace-top`, `.workspace-item`, `[data-grip]` (`.workspace[data-resizing]`) |
 
 Open after step 4: the empty general tab (`.blank`); UnderDoc switches (then T-20). Menus of the workspace take the pack's size only inside

@@ -137,6 +137,40 @@
     </div>
   </div>
   <div class="c22-example">
+    <span class="c22-example-label">Module als Schalter (je Modul eine Zeile, die ein Knopf ist: an mit durchgezogenem Rahmen und fettem Wort, aus gestrichelt und gedämpft; Zeilen, die Knöpfe oder Häkchen sind, reagieren auf die Maus)</span>
+    <div class="w-full overflow-hidden rounded-lg border">
+    <div class="workspace h-96" data-nav-hidden>
+      <header class="workspace-top">
+        <button type="button" class="btn" data-variant="outline" data-size="icon-sm" aria-label="Neu"><svg data-icon-lu="plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button>
+      </header>
+      <div class="workspace-tabs">
+        <div role="tablist" aria-label="Offen in diesem Fenster">
+          <div class="workspace-tab" data-general><button type="button" role="tab" aria-selected="true"><svg data-icon-lu="layout-grid" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg><span>Module</span></button></div>
+        </div>
+      </div>
+      <nav class="workspace-nav" data-level="1" data-step="0" aria-label="Ansichten">
+        <div>
+          <button type="button" class="workspace-item" title="Arbeitsbereich"><svg data-icon-lu="layout-grid" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg><span>Arbeitsbereich</span></button>
+          <button type="button" class="workspace-item" title="Profil" aria-current="page"><svg data-icon-lu="user" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Profil</span></button>
+        </div>
+      </nav>
+      <main class="workspace-main">
+        <header>
+          <div><nav class="breadcrumb" aria-label="Pfad"><ol><li><a href="#">Profil</a></li></ol></nav></div>
+          <h1>Module</h1>
+        </header>
+        <section>
+          <div class="item-group" role="list">
+            <button type="button" class="item" data-variant="outline" data-size="sm" role="listitem" aria-pressed="true"><section><h4>Post</h4><p class="text-muted-foreground text-xs">Postfächer lesen und beantworten</p></section><aside><span class="badge" data-variant="outline">✓ An</span></aside></button>
+            <button type="button" class="item" data-variant="outline" data-size="sm" role="listitem" aria-pressed="true"><section><h4>Kalender</h4><p class="text-muted-foreground text-xs">Termine im Monat und in nav3</p></section><aside><span class="badge" data-variant="outline">✓ An</span></aside></button>
+            <button type="button" class="item" data-variant="outline" data-size="sm" role="listitem" aria-pressed="false"><section><h4>Assistent</h4><p class="text-muted-foreground text-xs">Fragen zum offenen Dokument</p></section><aside><span class="badge" data-variant="outline">✗ Aus</span></aside></button>
+          </div>
+        </section>
+      </main>
+    </div>
+    </div>
+  </div>
+  <div class="c22-example">
     <span class="c22-example-label">Kalender (der Monat als Blatt, heute umrandet, Termine als Kürzel im Tag; in nav3 die Termine mit Datum)</span>
     <div class="w-full overflow-hidden rounded-lg border">
     <div class="workspace h-152">
@@ -267,7 +301,7 @@
           </article>
         </section>
         <aside data-drawer id="wv-ai" aria-label="Assistent">
-          <header><svg class="size-4" data-icon-lu="sparkles" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg>Assistent<button type="button" class="btn" data-variant="ghost" data-size="icon-sm" data-drawer-toggle="wv-ai" aria-label="Assistent schließen"><svg data-icon-lu="x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></header>
+          <header><svg data-icon-lu="sparkles" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg>Assistent<button type="button" class="btn" data-variant="ghost" data-size="icon-sm" data-drawer-toggle="wv-ai" aria-label="Assistent schließen"><svg data-icon-lu="x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></header>
           <p class="text-muted-foreground text-sm">Zu: <b>Netzwerkplan</b></p>
           <div role="log" aria-label="Gespräch">
             <div class="bubble" data-align="end">Wie hoch ist der Turm?</div>
@@ -288,7 +322,7 @@
     </div>
   </div>
   <div class="c22-example">
-    <span class="c22-example-label">Kommentare (die Schublade: wer, wann, was; eine Antwort eingerückt darunter, Erledigtes zurückgenommen und benannt, Tags)</span>
+    <span class="c22-example-label">Kommentare und Suche auf der Seite (die Schublade: wer, wann, was; eine Antwort eingerückt darunter, Erledigtes zurückgenommen und benannt, Tags; das Element, dessen Kommentare offen sind, auf Akzentgrund und gerahmt; der aktuelle Treffer der Seitensuche umrandet und fett; das Symbol im Kopf der Schublade ohne eigene Größe; im Pack underdoc beginnt die Schublade unter dem Fensterkopf)</span>
     <div class="w-full overflow-hidden rounded-lg border">
     <div class="workspace h-120" data-nav-hidden>
       <header class="workspace-top">
@@ -317,15 +351,18 @@
           <div><nav class="breadcrumb" aria-label="Pfad"><ol><li><a href="#">Betrieb</a></li><li aria-hidden="true"><svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></li><li><a href="#">Netzwerk</a></li></ol></nav><span data-fill></span><div role="toolbar" aria-label="Werkzeuge"><button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Auf dieser Seite suchen"><svg data-icon-lu="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg></button><button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Kommentare"><svg data-icon-lu="message-square" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button><button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Mehr"><svg data-icon-lu="ellipsis" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button></div></div>
           <h1>Netzwerkplan</h1>
         </header>
+        <div class="editor-bar" role="toolbar" aria-label="Auf dieser Seite suchen">
+          <div role="group" aria-label="Suchen"><div class="input-group"><span data-align="inline-start"><svg data-icon-lu="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg></span><input class="input" type="search" value="Turm" aria-label="Auf dieser Seite suchen"><span data-align="inline-end"><small>2 von 2</small></span><button type="button" class="btn" data-variant="ghost" data-size="icon-xs" data-align="inline-end" aria-label="Voriger Treffer"><svg data-icon-lu="chevron-up" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg></button><button type="button" class="btn" data-variant="ghost" data-size="icon-xs" data-align="inline-end" aria-label="Nächster Treffer"><svg data-icon-lu="chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button></div></div>
+        </div>
         <section>
           <article class="typeset" data-width="slim">
-            <p>Am Standort stehen ein Router, zwei Kern-Switches und eine Funkstrecke auf dem Turm.</p>
-            <h2>Funkstrecke</h2>
-            <p>Die Funkstrecke läuft vom Turm zum Pförtnerhaus. Nach jedem Sturm prüfen.</p>
+            <p class="comment-anchor">Am Standort stehen ein Router, zwei Kern-Switches und eine Funkstrecke auf dem <mark>Turm</mark>.<button type="button" class="btn" data-variant="ghost" data-size="icon-xs" data-comment aria-label="Kommentieren"><svg data-icon-lu="message-square" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button></p>
+            <h2 class="comment-anchor" data-comment-focus>Funkstrecke<button type="button" class="btn" data-variant="ghost" data-size="icon-xs" data-comment data-count="2" aria-label="2 offene Kommentare"><svg data-icon-lu="message-square" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button></h2>
+            <p>Die Funkstrecke läuft vom <mark aria-current="true">Turm</mark> zum Pförtnerhaus. Nach jedem Sturm prüfen.</p>
           </article>
         </section>
         <aside data-drawer id="wv-cmt" aria-label="Kommentare">
-          <header><svg class="size-4" data-icon-lu="message-square" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Kommentare<button type="button" class="btn" data-variant="ghost" data-size="icon-sm" data-drawer-toggle="wv-cmt" aria-label="Kommentare schließen"><svg data-icon-lu="x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></header>
+          <header><svg data-icon-lu="message-square" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Kommentare<button type="button" class="btn" data-variant="ghost" data-size="icon-sm" data-drawer-toggle="wv-cmt" aria-label="Kommentare schließen"><svg data-icon-lu="x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></header>
           <p class="text-muted-foreground text-xs">Ein Kommentar gehört zu einem Element der Seite: auf einen Absatz, eine Überschrift oder eine Tabelle zeigen und ihre Sprechblase anklicken.</p>
           <h3>Funkstrecke</h3>
           <ol class="timeline" data-size="sm"><li><header><b>Jonas Roth</b><time datetime="2026-11-21">gestern</time></header><p>Steht die Ersatzantenne noch im Regal?</p><div class="flex flex-wrap gap-1"><a href="#" class="badge" data-variant="outline">#turm</a></div><ol class="timeline" data-size="sm"><li><header><b>Anna Berg</b><time datetime="2026-11-22T10:00">vor 1 Std.</time></header><p>Ja, die Ersatzantenne liegt in der Werkstatt.</p></li></ol></li><li data-state="done"><header><b>Anna Berg</b><time datetime="2026-11-20">20. Nov.</time><span class="badge" data-variant="outline">erledigt</span></header><p>Tabelle um die Uplinks ergänzt.</p></li></ol>
@@ -450,7 +487,7 @@
     </div>
   </div>
   <div class="c22-example">
-    <span class="c22-example-label">Menü im Arbeitsbereich (ein Menü der App hängt im .workspace, hier Neu in der Kopfleiste; nur dort nimmt es im Pack underdoc das Maß des Entwurfs)</span>
+    <span class="c22-example-label">Menü im Arbeitsbereich (ein Menü der App hängt im .workspace, hier Neu in der Kopfleiste und ein Kontextmenü im Dokument per Rechtsklick; nur dort nimmt es im Pack underdoc das Maß des Entwurfs)</span>
     <div class="w-full overflow-hidden rounded-lg border">
     <div class="workspace h-104" data-nav-hidden>
       <header class="workspace-top">
@@ -497,12 +534,20 @@
           <div><nav class="breadcrumb" aria-label="Pfad"><ol><li><a href="#">Betrieb</a></li><li aria-hidden="true"><svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></li><li><a href="#">Netzwerk</a></li></ol></nav><span data-fill></span><div role="toolbar" aria-label="Werkzeuge"><button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Auf dieser Seite suchen"><svg data-icon-lu="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg></button><button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Kommentare"><svg data-icon-lu="message-square" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button><button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Mehr"><svg data-icon-lu="ellipsis" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button></div></div>
           <h1>Netzwerkplan</h1>
         </header>
-        <section>
+        <section class="context-menu">
           <article class="typeset" data-width="slim">
             <p>Am Standort stehen ein Router, zwei Kern-Switches und eine Funkstrecke auf dem Turm.</p>
             <h2>Funkstrecke</h2>
             <p>Die Funkstrecke läuft vom Turm zum Pförtnerhaus. Nach jedem Sturm prüfen.</p>
           </article>
+          <div data-cm-panel hidden role="menu" aria-label="Funkstrecke" class="w-60">
+            <div role="heading">Funkstrecke</div>
+            <button type="button" role="menuitem">Öffnen</button>
+            <button type="button" role="menuitem">Als eigenen Reiter öffnen</button>
+            <hr role="separator">
+            <button type="button" role="menuitem"><div><span>Neue Seite darunter</span><small>Aus der Vorlage der Sammlung</small></div></button>
+            <button type="button" role="menuitem">Link kopieren</button>
+          </div>
         </section>
       </main>
     </div>

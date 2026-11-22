@@ -13,8 +13,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   pack's; the probe "Pack underdoc: … Bearbeiten gefüllt" read in between and failed about every second run (red on
   `main`). Waits on the state, not on a time.
 
+### Added
+
+- **Menus and views from UnderDoc's switch (T-19, fourth round)**, shown in `workspace-views.html`:
+  - A context menu inside `.workspace` takes the pack's menu size (pack `underdoc`: 13px rows, 11.5px description); a
+    description (`[role=menuitem] > div > span + small`) is a muted second line in a context menu as in the other menus.
+  - The icon in the head of a drawer is 16px by the block (no `size-4` needed); the name follows it, the close button keeps
+    to the end.
+  - The current hit of a search on the page, `mark[aria-current]` in `.typeset` and `.workspace-main`: framed and bold, not
+    only another colour; a `mark` in `.typeset` takes the found word's tint (before: the browser's yellow).
+  - `.comment-anchor[data-comment-focus]`: the element whose comments are open, on the accent ground with a frame.
+  - Form token `--workspace-drawer-top` (default 0: the drawer covers the head; a `.workspace-main` outside `.workspace`
+    keeps 0); the pack `underdoc` lets the drawer start under the head of the window, as in the mockup.
+  - Rows that are controls: `label.item` hovers like a link or button row; `button.item[aria-pressed]` is a switch — off
+    dashed and muted, on with the word in its aside bold. In the pack `underdoc` such rows hover with the accent ground.
+  - New example "Module als Schalter"; the comments example also shows a search on the page and the element in focus.
+
 ### Changed
 
+- T-19 replacement list: `.clockbtn` is `.btn[data-variant=outline]` with `aria-pressed`, not `[data-clock]` (that is the
+  clock face of the date picker); lines for `.cfocus`, `mark.cur`, `.modrow`, `.fhead` with an icon and `.ctxpop`.
+- The name in the head of a drawer with an icon no longer stands centred between icon and close button.
 - Docs fast lane: a classifier job runs `scripts/_nur_text.sh`; on a text-only PR audit and the Pages build skip (a
   skipped job is a green check; the `if:` is the fail-safe form checked by the kit). Push, schedule and manual runs
   behave as before.
