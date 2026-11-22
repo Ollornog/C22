@@ -3167,6 +3167,7 @@
        --workspace-doc-heading     its headings
        --workspace-doc-slim/-wide  its widths (data-width="slim" is the default, "full" has none)
        --workspace-toc             width of the contents column beside the document (section > nav.toc)
+       --workspace-mode-size       side of the read/edit toggle in the head of the window (.btn[data-mode])
      nav1 and nav2 carry data-step 0-3: icon, icon with text below, text, icon with text beside.
      Without data-step a column shows step 3. Dragging the edge ([data-grip]) snaps to the nearest
      step; nav3 moves freely. data-nav-hidden on .workspace hides nav2 and nav3, data-nav-open opens
@@ -3192,6 +3193,7 @@
     --workspace-doc-slim: calc(var(--spacing) * 176);
     --workspace-doc-wide: calc(var(--spacing) * 248);
     --workspace-toc: calc(var(--spacing) * 37.5);
+    --workspace-mode-size: calc(var(--spacing) * 14);
     position: relative;
     display: grid;
     grid-template-columns: auto auto auto minmax(0, 1fr);
@@ -3687,6 +3689,10 @@
   .workspace-window > :is(.workspace-tabs, .workspace-main) { grid-column: 1; }
   .workspace-window > .workspace-tabs { grid-row: 1; }
   .workspace-window > .workspace-main { grid-row: 2; }
+  /* A window without a tab row (an app shows none while a single window holds nothing else): the window takes the row
+     of the tabs too, instead of leaving it empty. */
+  .workspace:not(:has(> .workspace-tabs)) > .workspace-main,
+  .workspace-window:not(:has(> .workspace-tabs)) > .workspace-main { grid-row: 1 / -1; }
   .workspace-window[data-focus]::after {
     content: "";
     position: absolute;
@@ -3830,8 +3836,11 @@
   .editor-block:has(> .editor-bar) { margin-top: calc(var(--spacing) * 12); }
   .editor-block + * { margin-top: calc(var(--spacing) * 2); }
   /* Read or edit: a square toggle before path and title (.btn[data-mode], aria-pressed while editing). */
+  /* The toggle has a size of its own (--workspace-mode-size) and stands beside path and title, aligned to the top: its
+     size never depends on the rows beside it, so a tool row that wraps grows the head instead of running over the title
+     (before 2026-11-22 it spanned three rows and took their height as its width, a cycle that let a wrapped row overlap). */
   .workspace-main > header:has(> [data-mode]) { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: calc(var(--spacing) * 2.5); }
-  .workspace-main > header > [data-mode] { grid-row: 1 / span 3; align-self: stretch; width: auto; height: auto; aspect-ratio: 1; }
+  .workspace-main > header > [data-mode] { grid-row: 1 / span 2; align-self: start; width: var(--workspace-mode-size, calc(var(--spacing) * 14)); height: var(--workspace-mode-size, calc(var(--spacing) * 14)); }
   .workspace-main > header:has(> [data-mode]) > :not([data-mode]) { grid-column: 2; }
   [data-block] { position: relative; }
   [data-block]:has(> .editor-handle) { overflow: visible; }

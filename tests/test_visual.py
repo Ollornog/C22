@@ -984,6 +984,32 @@ def arbeitsbereich(r: Report, b: Browser, basis: str) -> None:
     sichtbar = handy.js("""[...document.querySelectorAll('#navigation-document-workspace .workspace-window')].map(f => getComputedStyle(f).display)""")
     handy.sende("Page.close")
     r.check("Zwei Fenster am Handy: nur das aktive Fenster", sichtbar == ["grid", "none"], str(sichtbar))
+    # The head of a window with the read/edit toggle, narrow enough that the tools wrap: nothing runs over the title, and
+    # the toggle keeps its size. A window without a tab row takes that row too (2026-11-22, found by UnderDoc).
+    kopf = b.seite(1280, 900)
+    kopf.geh(f"{basis}/blocks.html?pack=underdoc&theme=light&lang=de")
+    werte = kopf.js("""(() => {
+      const kopf = document.querySelector('#navigation-document-workspace .workspace-main > header');
+      const knopf0 = document.createElement('button');
+      knopf0.className = 'btn'; knopf0.setAttribute('data-mode', ''); knopf0.dataset.variant = 'outline';
+      kopf.prepend(knopf0);
+      const main = kopf.parentElement, alt = main.style.width;
+      main.style.width = '420px';
+      const r = s => kopf.querySelector(s).getBoundingClientRect();
+      const werkzeug = r(':scope > div'), titel = r(':scope > h1'), knopf = r(':scope > [data-mode]');
+      const zeilen = new Set([...kopf.querySelectorAll(':scope > div > *, :scope > div [role=toolbar] > *')].filter(n => n.getBoundingClientRect().height > 0).map(n => Math.round(n.getBoundingClientRect().top))).size;
+      main.style.width = alt; knopf0.remove();
+      const ws = document.querySelector('#navigation-document-workspace .workspace').cloneNode(true);
+      ws.querySelector(':scope > .workspace-tabs').remove();
+      document.querySelector('#navigation-document-workspace').append(ws);
+      const oben = Math.round(ws.querySelector(':scope > .workspace-main').getBoundingClientRect().top - ws.getBoundingClientRect().top);
+      ws.remove();
+      return { zeilen, frei: titel.top >= werkzeug.bottom - 0.5, knopf: [Math.round(knopf.width), Math.round(knopf.height)], oben };
+    })()""")
+    kopf.sende("Page.close")
+    r.check("Fensterkopf mit Lesen/Bearbeiten: umbrechende Werkzeuge laufen nicht über den Titel, der Knopf behält seine Größe (Pack underdoc 60px)",
+            werte["zeilen"] >= 2 and werte["frei"] and werte["knopf"] == [60, 60], str(werte))
+    r.check("Fenster ohne Reiterzeile: das Fenster nimmt auch deren Zeile (keine leere Zeile darüber)", werte["oben"] == 0, str(werte))
     r.check("Pack underdoc: Band hinter dem Kopf der Sammlung, kleinere Kapitälchen und Einträge, 15px-Dokument, engere Radien, Bearbeiten gefüllt",
             ud["band"] and ud["kopf"] == "13.5px" and ud["kapitaelchen"] == "10.5px" and ud["eintrag"] == "13.5px"
             and ud["dokument"] == "15px" and ud["radius"] != vega["radius"] and ud["modus"], str(ud))

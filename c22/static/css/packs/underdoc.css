@@ -56,6 +56,7 @@
   --workspace-line: var(--ring);                                  /* dashed tab, grips, lines between sections */
   --workspace-doc-text: calc(var(--text-sm) * 15 / 14);           /* 15px body of the document */
   --workspace-doc-heading: calc(var(--text-base) * 1.0625);       /* 17px headings in the document */
+  --workspace-mode-size: calc(var(--spacing) * 15);               /* 60px read/edit toggle, as tall as path and title */
 }
 
 @layer components {
