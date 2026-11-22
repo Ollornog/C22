@@ -6,7 +6,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `data-popover-fixed` on a `.combobox` (from UnderDoc's rights dialog): its list leaves a section that scrolls, also
+  inside a `dialog.dialog` (c22.js places it relative to the dialog's box, Basecoat's translate and scale make that its
+  containing block); as wide as the field; upwards when there is no room below the field; it follows the field while the
+  section or the page scrolls. The same for `.dropdown-menu[data-popover-fixed]`. Shown in `rights.html`.
+- Live preview: a drawn table may stand in its reading box, `data-md="table"` on the `.table-container` (with the
+  reading view's frame, so it looks the same in both); a table whose rows stand straight in it draws no line under the
+  last row.
+
 ### Fixed
+
+- Live preview: a heading in `.editor` has the room it has in `.typeset` (1.8 × `--flow` above it, half a `--flow`
+  below h2 to h4): a transparent border above its line (CodeMirror's unlayered line padding would outrank a padding), the
+  blank line before it without height, also with an empty `[data-block]` wrapper between. UnderDoc's bridge goes.
+- A grouped combobox while one types: Basecoat hides a group without a hit but not the line after it, so two lines stood
+  under the hit, or one at the top or bottom. A line now shows only between two visible groups (CSS, Basecoat unchanged).
+- `data-popover-fixed`: a panel aligned to the end, or one that opens upwards, no longer keeps Basecoat's other inset
+  (`inset-inline-start: 0`, `top: 100%`), and the gap to the trigger is 4px as when absolute (it was 8px).
 
 - A log in a column of the workspace (`ol.timeline` in nav3): the heads of its entries no longer take the column
   heading's look (capitals, wide letters, the time pushed onto a line of its own).
