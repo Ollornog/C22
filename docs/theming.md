@@ -229,6 +229,13 @@ only *inside* that block. For the workspace this means: the app's menus (`.comma
 inside `.workspace` — beside their trigger, or as a child of `.workspace` the app positions itself — not at the end of
 `<body>`. A menu outside keeps the plain pack look (the menus of `workspace-more.html` are such examples).
 
+**Parts that sit inside an editor's own DOM** (CodeMirror's lines, widgets, marks: `.editor [data-used]`,
+`[data-block][data-active]`, `[data-part][data-framed]`, `.dropgap.held`) take C22's rules from `@layer components`,
+while the editor's own CSS is unlayered and outranks any layer. So these parts never rely on padding, margin or a
+cursor the editor also sets: the frame over a run of lines is a `::before` beside the line (no line gets higher), and the
+grabbing cursor while a block is held is the one `!important` there. In the pack `underdoc` the comment bubble stands
+30px out, inside the window's 30px room at the end.
+
 ## Current state
 
 Per axis: ✅ present · ⚠️ partial · ❌ missing.

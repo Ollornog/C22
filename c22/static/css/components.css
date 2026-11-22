@@ -352,43 +352,75 @@
     max-width: var(--measure);
     line-height: var(--leading-body);
   }
-  .typeset > :is(p, ul, ol, blockquote, pre, table, figure, .table-container) + :is(p, ul, ol, blockquote, pre, table, figure, .table-container) {
+  /* The same flow holds inside a block embedded from another page (figure.editor-embed, its content straight in the
+     figure, figcaption last): paragraphs, headings, lists and tables of the embedded part stand as in a page. :where()
+     keeps the strength of the four rules what it was. */
+  :is(.typeset, :where(figure.editor-embed)) > :is(p, ul, ol, blockquote, pre, table, figure, .table-container) + :is(p, ul, ol, blockquote, pre, table, figure, .table-container) {
     margin-top: var(--flow);
   }
   /* Vor einer Überschrift braucht es mehr Luft als zwischen zwei Absätzen — aber abgeleitet
      aus derselben Achse, damit ein Regler beides zugleich stimmig hält. */
-  .typeset > :not(:first-child):is(h1, h2, h3, h4) {
+  :is(.typeset, :where(figure.editor-embed)) > :not(:first-child):is(h1, h2, h3, h4) {
     margin-top: calc(var(--flow) * 1.8);
   }
-  .typeset > :is(h2, h3, h4) + * {
+  :is(.typeset, :where(figure.editor-embed)) > :is(h2, h3, h4) + * {
     margin-top: calc(var(--flow) * 0.5);
   }
   /* The page title stands further from its text than a section heading does. */
-  .typeset > h1 + * {
+  :is(.typeset, :where(figure.editor-embed)) > h1 + * {
     margin-top: var(--flow);
   }
-  /* A block in a wrapper (an editor marks each block as div[data-block] around one element, its handle beside it) keeps
-     the flow of the element it holds. The wrapper takes no gap itself; the element in it does, so the gap is measured in
-     its own size (a heading's em) and passes through the wrapper (no border, no padding) as if the wrapper were not there.
-     The rules sit apart from the four above and keep their order of strength (a heading after a heading still stands
-     further off), so a bare document reads exactly as before (2026-11-22, found by UnderDoc). */
+  /* A block in a wrapper (an editor marks each block as div[data-block] around what it renders, its handle first, a
+     comment bubble [data-comment] last) keeps the flow of the elements it holds, one or several. The wrapper takes no gap
+     itself; the elements in it do, so the gap is measured in their own size (a heading's em) and passes through the
+     wrapper (no border, no padding) as if it were not there. Handle and bubble stand outside the flow (absolute): the
+     first element of a wrapper is the first that is neither (:nth-child(1 of …)), the last likewise, and the element
+     before a wrapper's first is the last of the wrapper before it. The rules sit apart from the four above and keep their
+     order of strength (a heading after a heading still stands further off), so a bare document reads exactly as before
+     (2026-11-22, found by UnderDoc; several elements in one wrapper the same day). */
   .typeset > * + [data-block]:not(p, ul, ol, blockquote, pre, table, figure, .table-container, h1, h2, h3, h4) {
     margin-top: 0;
   }
-  .typeset > :is(p, ul, ol, blockquote, pre, table, figure, .table-container, [data-block]:has(> :is(p, ul, ol, blockquote, pre, table, figure, .table-container))) + [data-block] > :is(p, ul, ol, blockquote, pre, table, figure, .table-container),
-  .typeset > [data-block]:has(> :is(p, ul, ol, blockquote, pre, table, figure, .table-container)) + :is(p, ul, ol, blockquote, pre, table, figure, .table-container) {
+  .typeset > [data-block] > :is(p, ul, ol, blockquote, pre, table, figure, .table-container) + :is(p, ul, ol, blockquote, pre, table, figure, .table-container),
+  .typeset > :is(p, ul, ol, blockquote, pre, table, figure, .table-container, [data-block]:has(> :is(p, ul, ol, blockquote, pre, table, figure, .table-container):nth-last-child(1 of :not(.editor-handle, [data-comment])))) + [data-block] > :is(p, ul, ol, blockquote, pre, table, figure, .table-container):nth-child(1 of :not(.editor-handle, [data-comment])),
+  .typeset > [data-block]:has(> :is(p, ul, ol, blockquote, pre, table, figure, .table-container):nth-last-child(1 of :not(.editor-handle, [data-comment]))) + :is(p, ul, ol, blockquote, pre, table, figure, .table-container) {
     margin-top: var(--flow);
   }
-  .typeset > [data-block]:not(:first-child) > :is(h1, h2, h3, h4) {
+  .typeset > [data-block]:not(:first-child) > :is(h1, h2, h3, h4),
+  .typeset > [data-block] > :is(h1, h2, h3, h4):not(:nth-child(1 of :not(.editor-handle, [data-comment]))) {
     margin-top: calc(var(--flow) * 1.8);
   }
-  .typeset > :where([data-block]:has(> :is(h2, h3, h4))) + *,
-  .typeset > :where(h2, h3, h4, [data-block]:has(> :is(h2, h3, h4))) + [data-block] > :where(:not(.editor-handle)) {
+  .typeset > :where([data-block]:has(> :is(h2, h3, h4):nth-last-child(1 of :not(.editor-handle, [data-comment])))) + *,
+  .typeset > :where(h2, h3, h4, [data-block]:has(> :is(h2, h3, h4):nth-last-child(1 of :not(.editor-handle, [data-comment])))) + [data-block] > :where(:nth-child(1 of :not(.editor-handle, [data-comment]))),
+  .typeset > :where([data-block]) > :where(h2, h3, h4) + :where(*) {
     margin-top: calc(var(--flow) * 0.5);
   }
-  .typeset > :where([data-block]:has(> h1)) + *,
-  .typeset > :where(h1, [data-block]:has(> h1)) + [data-block] > :where(:not(.editor-handle)) {
+  .typeset > :where([data-block]:has(> h1:nth-last-child(1 of :not(.editor-handle, [data-comment])))) + *,
+  .typeset > :where(h1, [data-block]:has(> h1:nth-last-child(1 of :not(.editor-handle, [data-comment])))) + [data-block] > :where(:nth-child(1 of :not(.editor-handle, [data-comment]))),
+  .typeset > :where([data-block]) > :where(h1) + :where(*) {
     margin-top: var(--flow);
+  }
+  /* A task list (Markdown "- [ ]", rendered as li > input[type=checkbox] before the text): the box takes the place of
+     the bullet (1em, the space after it closes the 1.25em), a wrapped line starts under the text, not under the box; a
+     done task is muted and struck through, so it reads without colour. A bare box takes the primary role; one with
+     .input is the checkbox component. */
+  .typeset li:has(> input[type='checkbox']:first-child) {
+    list-style: none;
+    margin-inline-start: -1.25em;
+    padding-inline-start: 1.25em;
+    text-indent: -1.25em;
+  }
+  .typeset li:has(> input[type='checkbox']:first-child) > * { text-indent: 0; }
+  .typeset li > input[type='checkbox']:first-child {
+    width: 1em;
+    height: 1em;
+    margin: 0;
+    vertical-align: -0.125em;
+    accent-color: var(--primary);
+  }
+  .typeset li:has(> input[type='checkbox']:first-child:checked) {
+    color: var(--muted-foreground);
+    text-decoration: line-through;
   }
 
   /* Merkmal-Plakette der Galerie („eckig", „brutalist" …) — dieselbe Rechnung wie .c22-tag,
@@ -3635,17 +3667,20 @@
   .workspace-main > section > article[data-width='wide'] { max-width: var(--workspace-doc-wide); }
   .workspace-main > section > article[data-width='full'] { max-width: none; }
   .workspace-main > section > article > :is(h2, h3),
-  .workspace-main > section > article > [data-block] > :is(h2, h3) {
+  .workspace-main > section > article > [data-block] > :is(h2, h3),
+  .workspace-main > section > article > :is(figure.editor-embed, [data-block] > figure.editor-embed) > :is(h2, h3) {
     font-family: var(--font-heading);
     font-size: var(--workspace-doc-heading);
     font-weight: var(--font-weight-semibold);
     letter-spacing: var(--tracking-heading);
   }
   .workspace-main > section > article > h3,
-  .workspace-main > section > article > [data-block] > h3 { font-size: var(--workspace-doc-text); }
-  /* Blocks with a handle at their start (see the editor below) keep room for it beside the document, so the handle is
-     not cut off where the document fills the window (narrow, and always on the phone): 36px for the handle at -32px. */
-  .workspace-main > section:not(:has(> nav.toc)):has(> article [data-block] > .editor-handle:not([data-align='end'])) {
+  .workspace-main > section > article > [data-block] > h3,
+  .workspace-main > section > article > :is(figure.editor-embed, [data-block] > figure.editor-embed) > h3 { font-size: var(--workspace-doc-text); }
+  /* Blocks with a handle at their start (see the editor below) keep room for it beside the document or the editor's lines,
+     so the handle is not cut off where the document fills the window (narrow, and always on the phone): 36px for the
+     handle at -32px. */
+  .workspace-main > section:not(:has(> nav.toc)):has(> :is(article, .editor) [data-block] > .editor-handle:not([data-align='end'])) {
     padding-inline-start: calc(var(--spacing) * 9);
   }
   /* Status line under the window: counts on the left, [data-fill] pushes the rest to the end. */
@@ -3769,7 +3804,7 @@
      they stand framed by a dashed line and lifted, so it reads without colour; .idle when they wait where they were,
      .copy adds a plus. An entry they would go into is framed (.drop-into). A selected entry is tinted and framed, an
      entry that is only a reference here is set in italics, a new name is typed in place (.input in the row). */
-  :is(.workspace-tree, .workspace-nav) .dropgap {
+  :is(.workspace-tree, .workspace-nav, .typeset, .editor) .dropgap {
     position: relative;
     display: block;
     list-style: none;
@@ -3810,6 +3845,18 @@
   body.dragging :is(.workspace-tree, .workspace-nav),
   body.dragging :is(.workspace-tree, .workspace-nav) * { cursor: grabbing; user-select: none; }
   body.dragging :is(.workspace-tree, .workspace-nav) :is(li > div, .workspace-item, header, button, a) { pointer-events: none; }
+  /* A block of a page held by its handle (an app's own dragging, in reading and in the editor): the same gap stands
+     where it would land, holding a copy of the block (.dropgap.held), cut to its first lines, so a long block makes a
+     short gap and the places around it stay in reach. Between the blocks of a page it keeps the paragraph gap on both
+     sides. While it is there nothing in the page gets selected and the pointer is the grabbing hand (!important:
+     an editor such as CodeMirror sets its cursor in unlayered rules, which outrank a layer). A handle that drags
+     ([data-drag] in .editor-handle) shows the open hand and takes a finger without scrolling the page. */
+  :is(.typeset, .editor) .dropgap.held { max-height: 6.5em; overflow: hidden; }
+  .typeset > .dropgap { margin-block: var(--flow); }
+  :is(.typeset, .editor):has(.dropgap.held) { user-select: none; }
+  :is(.typeset, .editor):has(.dropgap.held),
+  :is(.typeset, .editor):has(.dropgap.held) * { cursor: grabbing !important; }
+  .editor-handle [data-drag]:not(:disabled) { touch-action: none; cursor: grab; }
 
   /* A menu entry with a description as its second line (New from a template). */
   :is(.command, .dropdown-menu) [role^='menuitem'] > div:has(> small) { display: flex; flex-direction: column; min-width: 0; }
@@ -3820,13 +3867,15 @@
                    quiet status (small). It wraps into a second line rather than scrolling sideways. As a row of the
                    window it sits between head and content (.workspace-main > .editor-bar); in a block being edited it
                    floats above it (.editor-block > .editor-bar).
-     .editor       the page in the editor: its lines; a block used elsewhere is framed and says where ([data-used] > small).
+     .editor       the page in the editor: its lines; a block used elsewhere is framed over its lines and says where
+                   ([data-used="first|middle|last|only"] > small).
      .editor-block a block being edited: an add button ([data-add]) at the start, the text area.
      [data-block] + .editor-handle  a block while reading: its handle, a .dropdown-menu at the start (data-align="end": in the
-                   top corner), shows on hover and focus and while its menu is open.
+                   top corner), shows on hover and focus, while its menu is open and on the active block ([data-active]).
      figure.editor-embed  a block of another page, live, the way back to its source as figcaption; data-state="missing" says why
                    it cannot be shown (a line in the destructive role and the words).
-     [data-part]   a part inside running text: dotted underline; data-framed frames it with its name above. */
+     [data-part]   a part inside running text: dotted underline; data-framed frames it with its name above, a further piece
+                   of it on the next line data-framed="continued". */
   .editor-bar {
     display: flex;
     flex-wrap: wrap;
@@ -3855,13 +3904,27 @@
   .workspace-main > .editor-bar { flex: none; padding-inline: calc(var(--spacing) * 3.5); border-bottom: 1px solid var(--border); }
   .editor { display: flex; flex-direction: column; gap: calc(var(--spacing) * 1); line-height: var(--leading-body); }
   .editor > p { margin: 0; }
+  /* A block used elsewhere: one frame round its lines. An editor draws each line as an element of its own, so the frame
+     runs over sibling lines: data-used="first" (top and sides), "middle" (sides), "last" (bottom and sides), "only" or no
+     value (all round, a block of one element). The frame is drawn by ::before, a little outside the text at the sides
+     and on the edges of the line box at top and bottom: no border, no padding, so a line keeps its height and its text
+     stays where it stands (an editor's own unlayered padding of its lines outranks any layer, and does not matter here).
+     The words where it is used (small) stand at the end of the first line. */
   .editor [data-used] {
     position: relative;
-    padding: calc(var(--spacing) * 1) calc(var(--spacing) * 2);
-    border: 1px solid var(--ring);
-    border-radius: var(--radius-md);
     white-space: pre-wrap;
   }
+  .editor [data-used]::before {
+    content: "";
+    position: absolute;
+    inset: 0 calc(var(--spacing) * -1.5);
+    border: 1px solid var(--ring);
+    border-radius: var(--radius-md);
+    pointer-events: none;
+  }
+  .editor [data-used='first']::before { border-bottom-width: 0; border-end-start-radius: 0; border-end-end-radius: 0; }
+  .editor [data-used='middle']::before { border-block-width: 0; border-radius: 0; }
+  .editor [data-used='last']::before { border-top-width: 0; border-start-start-radius: 0; border-start-end-radius: 0; }
   .editor [data-used] > small {
     float: inline-end;
     margin-inline-start: calc(var(--spacing) * 2);
@@ -3901,8 +3964,19 @@
     opacity: 0;
   }
   [data-block] > .editor-handle[data-align='end'] { inset-inline: auto 0; }
-  [data-block]:is(:hover, :focus-within) > .editor-handle,
+  /* The handle's menu wraps as a menu does, also where the handle stands in an editor's text kept as typed (pre-wrap). */
+  .editor-handle [data-popover] { white-space: normal; }
+  /* data-active names the block being worked on (in an editor: the block with the cursor): its handle shows as well. An
+     editor whose lines are not inside the wrapper (the wrapper only marks where the block starts) cannot reach it by
+     :hover or :focus-within. */
+  [data-block]:is(:hover, :focus-within, [data-active]) > .editor-handle,
   [data-block] > .editor-handle:has([aria-expanded='true']) { opacity: 1; }
+  /* A finger (no hover, a coarse pointer) would never see the handle of a block or the comment bubble: they stay half
+     visible there, so a finger finds them; open, active and counted ones stay fully visible as everywhere. */
+  @media (hover: none) and (pointer: coarse) {
+    [data-block] > .editor-handle,
+    .comment-anchor > [data-comment] { opacity: 0.45; }
+  }
   figure.editor-embed {
     margin: 0;
     padding: calc(var(--spacing) * 2) calc(var(--spacing) * 3);
@@ -3939,6 +4013,10 @@
     line-height: 1.4;
     white-space: nowrap;
   }
+  /* A part that runs over several lines or elements is framed piece by piece: the first piece says its name, every further
+     one (data-framed="continued") is framed without it, its upper corners square, so it reads as the same frame going on. */
+  [data-part][data-framed='continued'] { border-start-start-radius: 0; border-start-end-radius: 0; }
+  [data-part][data-framed='continued']::before { content: none; }
 
   /* The other views of the workspace (T-19 step 4, blocks/navigation/workspace-views.html): mail, messages, tasks, calendar,
      board, assistant, comments, search. They are C22 components placed in the columns and the window; what follows is
@@ -4087,7 +4165,7 @@
     .workspace-main > header { padding-inline: calc(var(--spacing) * 3) calc(var(--spacing) * 2); }
     .workspace-main > header > div > .breadcrumb { display: none; }
     .workspace-main > section { padding: calc(var(--spacing) * 4.5) calc(var(--spacing) * 4) calc(var(--spacing) * 10); }
-    .workspace-main > section:has(> article [data-block] > .editor-handle:not([data-align='end'])) { padding-inline-start: calc(var(--spacing) * 9); }
+    .workspace-main > section:has(> :is(article, .editor) [data-block] > .editor-handle:not([data-align='end'])) { padding-inline-start: calc(var(--spacing) * 9); }
     .comment-anchor > [data-comment] { inset-inline-end: calc(var(--spacing) * -4); }
   }
 

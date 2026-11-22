@@ -8,6 +8,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Editor parts from UnderDoc's editor (T-19, third round)**, shown in two new examples of `workspace-editing.html`:
+  - `[data-block][data-active]`: the handle of the active block (in an editor: the block with the cursor) shows without
+    hover or focus — an editor whose lines are not inside the wrapper cannot reach it otherwise.
+  - `.editor [data-used="first|middle|last|only"]`: a block used elsewhere is one frame over its sibling lines (an editor
+    draws each line as an element); the frame is drawn by `::before`, so no line gets higher and the text stays put.
+  - A task list in `.typeset` (`li > input[type=checkbox]`, as Markdown renders `- [ ]`): the box takes the place of the
+    bullet, a wrapped line starts under the text, a done task is muted and struck through.
+  - `[data-part][data-framed="continued"]`: a further piece of a part over several lines, framed without its name.
+  - `.dropgap.held` in `.typeset` and `.editor`: the gap of a block held by its handle, cut to its first lines, the
+    paragraph gap around it; nothing in the page is selectable while it is there. A handle that drags
+    (`.editor-handle [data-drag]`) shows the open hand and takes a finger without scrolling the page.
+  - On a touch device (`(hover: none) and (pointer: coarse)`) a block's handle and the comment bubble stay half visible,
+    so a finger finds them.
 - **Block "Arbeitsbereich: Post, Aufgaben, Kalender, Tafel, Assistent, Kommentare, Suche"** (T-19 step 4,
   `blocks/navigation/workspace-views.html`): the other views of UnderDoc's workspace from C22 parts — `.item` lists in
   nav3 and the window (an item's `header` as a muted line over its title, `data-state="unread"` bold, `aria-current`
@@ -75,6 +88,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **`.editor [data-used]` without a value** is framed by `::before` instead of a border with padding: the frame
+  stands 6px beside the text and on the edges of the line, so the element keeps its height (as its line form does).
 - **Pack `underdoc`: menus of the workspace at the mockup's size** (13px rows, 11.5px descriptions) — for `.command`
   and popover menus inside `.workspace`; a menu outside keeps the plain look (where to hang them: `docs/theming.md`).
 - The column headings' rules of `.workspace-nav` no longer reach the header of an `.item` inside a column.
@@ -83,6 +98,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **Typeset flow through a wrapper with several elements**: `[data-block]` may hold several elements (a block that
+  renders a heading and paragraphs) with its handle first and a comment bubble (`[data-comment]`) last; every element
+  stands where it stands bare. **The same flow inside an embedding** (`figure.editor-embed`, content straight in the
+  figure): paragraphs, headings, lists and tables of the embedded part stand as in a page (found by UnderDoc).
+- **Pack `underdoc`: the comment bubble** stands 30px out, inside the window's 30px room at the end, so a document at
+  full width no longer scrolls sideways.
+- **The handle's menu** wraps as a menu, also where the handle stands in an editor's pre-wrap text.
 - **Read/edit toggle in the head of a window** (`.btn[data-mode]`): it has a size of its own (`--workspace-mode-size`,
   56px; the pack `underdoc` 60px) and stands beside path and title, aligned to the top. Before, it spanned three rows
   and took their height as its width, so a tool row that wrapped ran over the title (found by UnderDoc).

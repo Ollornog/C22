@@ -1219,6 +1219,168 @@ def arbeitsbereich_luecken(r: Report, b: Browser, basis: str) -> None:
             f"vega {handy['vega']} | underdoc {handy['underdoc']}")
 
 
+EDITOR_WERTE = r"""(() => {
+  // What UnderDoc's editor found missing (2026-11-22, third round): the last two examples of workspace-editing.html.
+  const ex = [...document.querySelectorAll('#navigation-workspace-editing .c22-example')], lesen = ex.at(-2), ed = ex.at(-1);
+  const r = e => e.getBoundingClientRect(), c = (e, p) => getComputedStyle(e, p), z = v => Math.round(v * 10) / 10;
+  const art = lesen.querySelector('article.typeset'), griff = art.querySelector('.editor-handle'), blase = art.querySelector('[data-comment]');
+  // 1. Several elements in one wrapper (handle first, a comment bubble last): every element stands where it stands bare.
+  const folge = ['p', 'h2', 'p', 'p', 'h3', 'h2', 'pre.code-block', 'ul', 'h1', 'p.text-xs', 'blockquote', 'h3', 'p', 'p', 'h2', 'p', 'ul'];
+  const gruppen = [[0, 1, 2], [3], [4, 5, 6], [7, 8, 9, 10], [11], [12, 13], [14, 15, 16]];
+  const baue = modus => {
+    const a = document.createElement('article'); a.className = 'typeset'; a.dataset.width = 'slim';
+    const els = folge.map((art_, i) => {
+      const [tag, klasse] = art_.split('.'), e = document.createElement(tag); e.textContent = 'Block ' + i;
+      if (klasse) e.className = klasse;
+      if (tag === 'ul') e.innerHTML = '<li>Eins</li><li>Zwei</li>';
+      return e;
+    });
+    gruppen.forEach((g, k) => {
+      if (modus === 'nackt' || (modus === 'gemischt' && k % 3 === 1)) { g.forEach(i => a.append(els[i])); return; }
+      const w = document.createElement('div'); w.setAttribute('data-block', '');
+      w.append(griff.cloneNode(true), ...g.map(i => els[i]));
+      if (k % 2) { w.classList.add('comment-anchor'); w.append(blase.cloneNode(true)); }
+      a.append(w);
+    });
+    art.after(a); art.hidden = true;
+    const oben = r(a).top, lagen = els.map(e => z(r(e).top - oben));
+    a.remove(); art.hidden = false;
+    return lagen.join(' ');
+  };
+  const fluss = { nackt: baue('nackt'), huellen: baue('huellen'), gemischt: baue('gemischt') };
+  // 2. The active block shows its handle, in reading and in the editor (its wrapper there holds no lines).
+  const deck = e => c(e).opacity;
+  const aktiv = [deck(lesen.querySelector('[data-block][data-active] > .editor-handle')), deck(ed.querySelector('[data-block][data-active] > .editor-handle')),
+                 deck(lesen.querySelector('[data-block]:not([data-active]) > .editor-handle'))];
+  // 3. A block used elsewhere over sibling lines: one frame (first: top and sides, middle: sides, last: bottom and sides,
+  //    no value: all round), drawn outside the text at the sides, and no line gets higher than without it.
+  const zeilen = [...ed.querySelectorAll('[data-used]')];
+  const rahmen = zeilen.map(l => { const b = c(l, '::before'); return [l.dataset.used || 'only', b.borderTopWidth, b.borderBottomWidth, b.borderLeftWidth, b.borderRightWidth].join(' '); });
+  const links = zeilen.map(l => z(r(l).left - parseFloat(c(l, '::before').left)) - z(r(l).left));
+  const hoch = () => zeilen.map(l => z(r(l).height)).join(' ');
+  const mit = hoch(), werte = zeilen.map(l => l.getAttribute('data-used'));
+  zeilen.forEach(l => l.removeAttribute('data-used')); const ohne = hoch();
+  zeilen.forEach((l, i) => l.setAttribute('data-used', werte[i]));
+  // 4. A task list: no bullet, the box hangs where the bullet was, a wrapped line starts under the text; done is struck through and muted.
+  const aufgaben = [...lesen.querySelectorAll('li:has(> input[type=checkbox])')], erledigt = aufgaben.find(l => l.querySelector('input').checked),
+        offen = aufgaben.find(l => !l.querySelector('input').checked), punkt = lesen.querySelector('figure li');
+  const ul = offen.parentElement, kasten = offen.querySelector('input');
+  const breit = offen.style.width; offen.style.width = '6em'; offen.textContent = ''; offen.append(kasten, ' Heizung im Gehäuse prüfen und reinigen');
+  const bereich = document.createRange(); bereich.selectNodeContents(offen); const zeilenStart = [...bereich.getClientRects()].map(q => z(q.left));
+  offen.style.width = breit;
+  const aufgabe = { stil: [c(erledigt).listStyleType, c(offen).listStyleType, c(punkt).listStyleType],
+    durch: [c(erledigt).textDecorationLine, c(offen).textDecorationLine], farbe: c(erledigt).color !== c(offen).color && c(erledigt).color === c(ed.querySelector('[data-used] > small')).color,
+    haengt: z(r(kasten).left) < z(r(ul).left + parseFloat(c(ul).paddingLeft)), zeilen: zeilenStart };
+  // 5. The content of an embedding takes the typeset flow: the same elements bare in a page stand at the same places.
+  const fig = lesen.querySelector('figure.editor-embed'), kinder = [...fig.children].filter(k => k.tagName !== 'FIGCAPTION');
+  const lage = els => { const o = r(els[0]).top; return els.map(e => z(r(e).top - o)).join(' '); };
+  const imFig = lage(kinder);
+  const a = document.createElement('article'); a.className = 'typeset'; a.dataset.width = 'slim';
+  const kopien = kinder.map(k => k.cloneNode(true)); a.append(...kopien); art.after(a);
+  const nackt = lage(kopien); a.remove();
+  // 6. A held block in the page and in the editor: the dashed gap, cut to its first lines, the paragraph gap around it,
+  //    nothing selectable while it is there; a handle that drags shows the open hand.
+  const gaps = [lesen.querySelector('article > .dropgap.held'), ed.querySelector('.dropgap.held')];
+  const halten = gaps.map(g => [c(g).outlineStyle + ' ' + c(g).outlineWidth, c(g).overflowY, z(r(g).height) <= z(parseFloat(c(g).fontSize) * 6.5) && g.scrollHeight > g.clientHeight + 10]);
+  const abstand = [c(gaps[0]).marginTop, c(gaps[0]).marginBottom, c(art.querySelector(':scope > [data-block] > p + p')).marginTop];
+  const waehlen = [c(art).userSelect, c(ed.querySelector('.editor')).userSelect, c(gaps[0].previousElementSibling).cursor];
+  const weg = gaps.map(g => [g, g.parentElement, g.nextSibling]); weg.forEach(([g]) => g.remove());
+  const danach = [c(art).userSelect, c(ed.querySelector('.editor')).userSelect];
+  const ziehen = [c(art.querySelector('.editor-handle [data-drag]')).cursor, c(art.querySelector('.editor-handle [data-drag]')).touchAction];
+  weg.forEach(([g, p, n]) => p.insertBefore(g, n));
+  // 7. A part over two lines: the first piece says its name, the further one is framed without it.
+  const [erst, weiter] = ed.querySelectorAll('[data-part][data-framed]');
+  const teil = [c(erst, '::before').content.startsWith('"Teil'), c(weiter, '::before').content, c(weiter).outlineStyle, c(weiter).borderTopLeftRadius];
+  // 9. The comment bubble stays inside the window's room at the end: a document at full width does not scroll sideways.
+  const main = lesen.querySelector('.workspace-main'), sec = main.querySelector(':scope > section'), breiteAlt = main.style.width;
+  main.style.width = '520px';
+  const seitwaerts = sec.scrollWidth - sec.clientWidth, blasenRand = z(r(sec).right - r(art.querySelector('[data-comment]')).right);
+  main.style.width = breiteAlt;
+  // Optional: the handle's menu wraps as a menu, also inside an editor's pre-wrap text.
+  const zeilenText = ed.querySelector('.editor > div'); zeilenText.style.whiteSpace = 'pre-wrap';
+  const menue = c(ed.querySelector('.editor-handle [data-popover]')).whiteSpace; zeilenText.style.whiteSpace = '';
+  return { fluss, aktiv, rahmen, links, mit, ohne, aufgabe, embed: { imFig, nackt }, halten, abstand, waehlen, danach, ziehen, teil,
+           seitwaerts, blasenRand, menue };
+})()"""
+
+FINGER_WERTE = r"""(() => {
+  // 10. Without a hovering pointer: a quiet handle and a bubble without count half visible, active and counted ones full.
+  const ex = [...document.querySelectorAll('#navigation-workspace-editing .c22-example')], lesen = ex.at(-2);
+  const c = e => getComputedStyle(e).opacity, blase = lesen.querySelector('[data-comment]');
+  const ohneZahl = blase.cloneNode(true); ohneZahl.removeAttribute('data-count'); blase.after(ohneZahl);
+  const aus = [c(lesen.querySelector('[data-block]:not([data-active]) > .editor-handle')), c(lesen.querySelector('[data-block][data-active] > .editor-handle')),
+               c(ohneZahl), c(blase)];
+  ohneZahl.remove();
+  return aus;
+})()"""
+
+
+EDITOR_HANDY = r"""(() => {
+  // The editor in a window on the phone: the handle of the active block stays inside the window.
+  const ed = [...document.querySelectorAll('#navigation-workspace-editing .c22-example')].at(-1), sec = ed.querySelector('.workspace-main > section');
+  return ed.querySelector('[data-block][data-active] > .editor-handle').getBoundingClientRect().left >= sec.getBoundingClientRect().left;
+})()"""
+
+def arbeitsbereich_editor(r: Report, b: Browser, basis: str) -> None:
+    """What UnderDoc's editor on the building blocks found missing (2026-11-22, third round)."""
+    werte = {}
+    for pack in ("vega", "underdoc"):
+        f = b.seite(1280, 900)
+        f.geh(f"{basis}/blocks.html?pack={pack}&theme=light&lang=de")
+        werte[pack] = f.js(EDITOR_WERTE)
+        f.sende("Page.close")
+        f = b.seite(1280, 900)
+        # A finger: touch emulation gives pointer: coarse (the media emulation of pointer does not take in headless Chrome).
+        f.sende("Emulation.setTouchEmulationEnabled", enabled=True, maxTouchPoints=5)
+        f.sende("Emulation.setEmulatedMedia", features=[{"name": "hover", "value": "none"}])
+        f.geh(f"{basis}/blocks.html?pack={pack}&theme=light&lang=de")
+        werte[pack]["finger"] = f.js(FINGER_WERTE)
+        f.sende("Page.close")
+        f = b.seite(1280, 900)
+        f.sende("Emulation.setEmulatedMedia", features=[{"name": "hover", "value": "hover"}, {"name": "pointer", "value": "fine"}])
+        f.geh(f"{basis}/blocks.html?pack={pack}&theme=light&lang=de")
+        werte[pack]["maus"] = f.js(FINGER_WERTE)
+        f.sende("Page.close")
+        f = b.seite(390, 844)
+        f.geh(f"{basis}/blocks.html?pack={pack}&theme=light&lang=de")
+        werte[pack]["handy"] = f.js(EDITOR_HANDY)
+        f.sende("Page.close")
+    v, ud = werte["vega"], werte["underdoc"]
+    beide = (v, ud)
+    zeige = lambda k: f"vega {v[k]} | underdoc {ud[k]}"  # noqa: E731
+    r.check("Typeset: mehrere Elemente in einer Hülle (Griff vorn, Kommentarblase hinten) stehen wie ohne Hülle (auch gemischt, in beiden Packs)",
+            all(x["fluss"]["nackt"] == x["fluss"]["huellen"] == x["fluss"]["gemischt"] for x in beide), zeige("fluss"))
+    r.check("Griff des aktiven Blocks ([data-active]) sichtbar, beim Lesen und im Editor; ein anderer Block nicht",
+            all(x["aktiv"] == ["1", "1", "0"] for x in beide), zeige("aktiv"))
+    r.check("[data-used] über Geschwisterzeilen: ein Rahmen (first/middle/last, ohne Wert rundum), 6px neben dem Text, keine Zeile höher als ohne",
+            all(x["rahmen"] == ["first 1px 0px 1px 1px", "middle 0px 0px 1px 1px", "middle 0px 0px 1px 1px", "last 0px 1px 1px 1px",
+                                "only 1px 1px 1px 1px"] and set(x["links"]) == {6} and x["mit"] == x["ohne"] for x in beide),
+            f"vega {v['rahmen']} {v['links']} {v['mit']}/{v['ohne']} | underdoc {ud['rahmen']} {ud['links']} {ud['mit']}/{ud['ohne']}")
+    r.check("Aufgabenliste: Kästchen statt Punkt, es hängt vor dem Text, eine umbrochene Zeile beginnt unter dem Text; erledigt gedämpft und durchgestrichen",
+            all(x["aufgabe"]["stil"] == ["none", "none", "disc"] and x["aufgabe"]["durch"] == ["line-through", "none"] and x["aufgabe"]["farbe"]
+                and x["aufgabe"]["haengt"] and len(x["aufgabe"]["zeilen"]) >= 3
+                and abs(x["aufgabe"]["zeilen"][2] - x["aufgabe"]["zeilen"][1]) <= 5 for x in beide), zeige("aufgabe"))
+    r.check("Einbettung: ihr Inhalt (Überschrift, Absätze, Liste, Tabelle) steht wie derselbe Inhalt in der Seite",
+            all(x["embed"]["imFig"] == x["embed"]["nackt"] for x in beide), zeige("embed"))
+    r.check("Gehaltener Block (.dropgap.held) in Seite und Editor: gestrichelt, auf die ersten Zeilen gekürzt, Absatzabstand drumherum, "
+            "solange er da ist nichts wählbar; ein ziehender Griff zeigt die offene Hand",
+            all(all(h[0] == "dashed 1px" and h[1] == "hidden" and h[2] for h in x["halten"]) and x["abstand"][0] == x["abstand"][1] == x["abstand"][2]
+                and x["waehlen"] == ["none", "none", "grabbing"] and "none" not in x["danach"] and x["ziehen"] == ["grab", "none"] for x in beide),
+            f"vega {v['halten']} {v['abstand']} {v['waehlen']} {v['danach']} {v['ziehen']} | underdoc {ud['halten']} {ud['abstand']} {ud['waehlen']} {ud['danach']} {ud['ziehen']}")
+    r.check("Teil über zwei Zeilen: das erste Stück mit Namen, das weitere (data-framed=\"continued\") gerahmt ohne Namen, oben eckig",
+            all(x["teil"] == [True, "none", "solid", "0px"] for x in beide), zeige("teil"))
+    r.check("Kommentarblase: bleibt im Raum am Ende des Fensters, das Dokument scrollt bei voller Breite nicht seitwärts (in beiden Packs)",
+            all(x["seitwaerts"] <= 0 and x["blasenRand"] >= 0 for x in beide),
+            f"vega {v['seitwaerts']} {v['blasenRand']} | underdoc {ud['seitwaerts']} {ud['blasenRand']}")
+    r.check("Ohne Hover (Finger): Griff und Blase halb sichtbar, aktiver Griff und Blase mit Zahl voll; mit Maus bleiben die ruhigen unsichtbar",
+            all(x["finger"] == ["0.45", "1", "0.45", "1"] and x["maus"] == ["0", "1", "0", "1"] for x in beide),
+            f"vega {v['finger']} {v['maus']} | underdoc {ud['finger']} {ud['maus']}")
+    r.check("Handy: der Griff des aktiven Blocks im Editor bleibt im Fenster (Raum für Griffe auch vor den Zeilen eines Editors)",
+            v["handy"] is True and ud["handy"] is True, f"vega {v['handy']} | underdoc {ud['handy']}")
+    r.check("Das Menü des Griffs bricht um wie ein Menü, auch im pre-wrap-Text eines Editors",
+            v["menue"] == ud["menue"] == "normal", f"vega {v['menue']} | underdoc {ud['menue']}")
+
+
 def main() -> int:
     erneuern = "--renew" in sys.argv
     r = Report("Browser — Galerie in Chrome")
@@ -1238,6 +1400,7 @@ def main() -> int:
                     arbeitsbereich(r, b, basis)
                     arbeitsbereich_ansichten(r, b, basis)
                     arbeitsbereich_luecken(r, b, basis)
+                    arbeitsbereich_editor(r, b, basis)
         except BrowserFehler as fehler:
             r.check("Browser läuft durch", False, str(fehler))
         finally:
