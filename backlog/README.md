@@ -8,7 +8,8 @@ Konventionen: [README-KONVENTION.md](README-KONVENTION.md).
 ## Meilensteine
 
 * ☑ **[M-1](M-1-visuelle-testebene.md)** 0.3.0 — visuelle Test-Ebene — 3/3 erledigt
-* ☐ **[M-2](M-2-bausteine-aus-den-apps.md)** Bausteine, die eine App gebaut hat, gehören in C22 — 13/17 erledigt
+* ☐ **[M-2](M-2-bausteine-aus-den-apps.md)** Bausteine, die eine App gebaut hat, gehören in C22 — 13/18 erledigt
+* ☐ **[M-3](M-3-carry-over-from-the-framework-plan-2026-07.md)** Carry-over from the framework plan (2026-07) — 0/5 erledigt
 
 ## Aufgaben
 
@@ -32,6 +33,12 @@ Konventionen: [README-KONVENTION.md](README-KONVENTION.md).
 * ☑ **[T-18](T-18-underdoc-rechte.md)** Bausteine aus den Rechten von UnderDoc (#92, Rechte-Sprint, #109) · M-2
 * ◐ **[T-19](T-19-underdoc-workspace-aus-bausteinen.md)** UnderDoc workspace from C22 building blocks plus the pack underdoc · M-2
 * ☐ **[T-20](T-20-app-workspace-rueckbau.md)** Remove the old app workspace (app-workspace.css and its block) after UnderDoc switched · M-2
+* ☐ **[T-21](T-21-pure-token-file-per-pack-c22-tokens-pack-css-for-f.md)** Pure token file per pack (c22-tokens-<pack>.css) for foreign pages · M-2
+* ☐ **[T-22](T-22-generator-for-design-and-typeset.md)** Generator for design and typeset · M-3
+* ☐ **[T-23](T-23-adjust-login-and-signup-blocks.md)** Adjust login and signup blocks · M-3
+* ☐ **[T-24](T-24-close-the-chart-engine-gaps.md)** Close the chart engine gaps · M-3
+* ☐ **[T-25](T-25-canonical-sidebar-as-hierarchy-tree-plus-accessibi.md)** Canonical sidebar as hierarchy tree plus accessibility review · M-3
+* ☐ **[T-26](T-26-continue-pack-decoupling-phase-b.md)** Continue pack decoupling, phase B · M-3
 
 ## Entscheidungen (ADR)
 
