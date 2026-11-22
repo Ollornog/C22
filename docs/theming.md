@@ -218,7 +218,12 @@ to a layout pack like to `components.css`. An app picks the pack the usual way, 
 gallery shows it with `?pack=<name>`, and `tests/test_visual.py` pins the reshaped blocks in both the pack and vega
 (`PACK_ABSCHNITTE`). First layout pack: `underdoc` (`@c22-layout: workspace, editor` — UnderDoc's approved
 workspace mockup on `.workspace` and the `.editor-*` parts; blocks `document-workspace.html`, `workspace-editing.html`,
-`workspace-more.html` in `blocks/navigation/`).
+`workspace-more.html`, `workspace-views.html` in `blocks/navigation/`).
+
+**Where an app hangs what a layout pack shapes.** A pack rule starts at a block root, so a part takes the pack's form
+only *inside* that block. For the workspace this means: the app's menus (`.command`, `.dropdown-menu`, popovers) hang
+inside `.workspace` — beside their trigger, or as a child of `.workspace` the app positions itself — not at the end of
+`<body>`. A menu outside keeps the plain pack look (the menus of `workspace-more.html` are such examples).
 
 ## Current state
 

@@ -61,7 +61,7 @@ PACKS = ("vega", "spica", "ankaa", "nova", "maia", "lyra", "mira", "luma", "sera
 # Sections a layout pack reshapes (ADR-2) are compared in that pack as well, next to the vega images:
 # reference <page>--<section>@<pack>.png. Without the pack the block must look like the rest of vega,
 # with it like the app it was made for — both are pinned.
-PACK_ABSCHNITTE = {"underdoc": {"blocks": ("navigation-document-workspace", "navigation-workspace-editing", "navigation-workspace-more")}}
+PACK_ABSCHNITTE = {"underdoc": {"blocks": ("navigation-document-workspace", "navigation-workspace-editing", "navigation-workspace-more", "navigation-workspace-views")}}
 
 # Time and chance stand still, so a calendar or a clock looks the same on every run.
 FEST = """
@@ -992,6 +992,104 @@ def arbeitsbereich(r: Report, b: Browser, basis: str) -> None:
             and vega["status"] == ud["status"] == "flex" and not vega["modus"], str(vega))
 
 
+SCHALTER = r"""(() => {
+  // data-behaviour="app": c22.js leaves the workspace to the app. The same probe runs on a copy without the switch,
+  // which proves that every probe would see the behaviour.
+  const vorlage = document.querySelector('#navigation-document-workspace .workspace');
+  const probe = app => {
+    const huelle = document.createElement('div');
+    const w = vorlage.cloneNode(true);
+    w.removeAttribute('data-workspace-store'); w.removeAttribute('data-nav-hidden'); delete w.dataset.workspaceRestored;
+    w.querySelectorAll('[data-grip]').forEach(g => ['aria-valuenow', 'aria-valuemin', 'aria-valuemax'].forEach(a => g.removeAttribute(a)));
+    if (app) w.setAttribute('data-behaviour', 'app');
+    const ok = document.createElement('button'); ok.type = 'button'; ok.setAttribute('data-confirm', 'Wirklich?');
+    w.querySelector('.workspace-main > section').append(ok);
+    huelle.append(w); document.body.append(huelle);
+    window.C22.workspace.init(huelle);
+    const out = { init: w.querySelector(':scope > .workspace-nav > [data-grip]').hasAttribute('aria-valuenow') };
+    const nav1 = w.querySelector(':scope > .workspace-nav[data-level="1"]'), griff = nav1.querySelector(':scope > [data-grip]');
+    const schritt = nav1.dataset.step;
+    griff.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true }));
+    out.taste = nav1.dataset.step !== schritt;
+    const r = griff.getBoundingClientRect();
+    griff.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true, button: 0, clientX: r.x, clientY: r.y + 5, pointerId: 1 }));
+    out.zeiger = w.hasAttribute('data-resizing');
+    window.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerId: 1 }));
+    w.querySelector(':scope > .workspace-nav[data-level="1"] .workspace-item[aria-current]').click();
+    out.klick = w.hasAttribute('data-nav-hidden');
+    const pfeil = w.querySelector('.workspace-tree [data-toggle][aria-expanded]'), vorher = pfeil.getAttribute('aria-expanded');
+    pfeil.click();
+    out.liste = pfeil.getAttribute('aria-expanded') !== vorher;
+    const name = [...w.querySelectorAll('.workspace-tree li > div > button:not([data-toggle])')].find(n => !n.hasAttribute('aria-current'));
+    name.click();
+    out.aktuell = name.hasAttribute('aria-current');
+    const doppel = new MouseEvent('dblclick', { bubbles: true, cancelable: true });
+    name.dispatchEvent(doppel);
+    out.doppel = doppel.defaultPrevented;
+    ok.click();
+    const dialog = document.querySelector('dialog[data-confirm-dialog][open]');
+    out.bestaetigen = !!dialog;
+    if (dialog) dialog.close();
+    huelle.remove();
+    return out;
+  };
+  return { app: probe(true), normal: probe(false) };
+})()"""
+
+ANSICHTEN_WERTE = r"""(() => {
+  const v = document.querySelector('#navigation-workspace-views'), c = (e, p) => getComputedStyle(e, p || null);
+  const zone = v.querySelector('[data-drop-zone="start"]');
+  const zoneSicht = c(zone).display; zone.hidden = true; const zoneWeg = c(zone).display; zone.hidden = false;
+  const linie = c(v.querySelector('.workspace-tab[data-drop="before"]'), '::before');
+  const platz = c(v.querySelector('.workspace-tab[data-drop="slot"]'));
+  const ungelesen = c(v.querySelector('.item[data-state="unread"] h4')).fontWeight;
+  const gelesen = c(v.querySelector('a.item:not([data-state]) h4')).fontWeight;
+  const offen = c(v.querySelector('a.item[aria-current]')).boxShadow;
+  const erledigt = c(v.querySelector('label.item:has(input:checked) h4')).textDecorationLine;
+  const menue = Math.round(v.querySelector('.workspace .command [role=menuitem]').getBoundingClientRect().height * 10) / 10;
+  const heute = v.querySelector('.month-sheet td[aria-current="date"]');
+  const probe = document.createElement('i'); probe.style.color = 'var(--primary)'; heute.append(probe); const primary = c(probe).color; probe.remove();
+  return { wort: zone.textContent.trim(), nachWort: c(zone, '::after').content, zeiger: c(zone).pointerEvents, zoneSicht, zoneWeg,
+           linie: linie.width, linieInhalt: linie.content, platz: platz.outlineWidth + ' ' + platz.outlineStyle,
+           ungelesen, gelesen, offen, erledigt, menue,
+           heute: c(heute).borderTopColor === primary, heuteHoch: Math.round(heute.getBoundingClientRect().height) };
+})()"""
+
+
+def arbeitsbereich_ansichten(r: Report, b: Browser, basis: str) -> None:
+    """The other views (T-19 step 4) and the switch that leaves the workspace to the app: what no picture shows."""
+    s = b.seite(1280, 900)
+    s.geh(f"{basis}/blocks.html?pack=vega&theme=light&lang=de")
+    sw = s.js(SCHALTER)
+    s.sende("Page.close")
+    r.check("Schalter data-behaviour=\"app\": c22.js lässt den Arbeitsbereich in Ruhe (keine Taste, kein Zeiger, kein Klick, "
+            "kein Doppelklick, keine Beschriftung beim Start)",
+            not any(sw["app"][k] for k in ("init", "taste", "zeiger", "klick", "liste", "aktuell", "doppel")), str(sw["app"]))
+    r.check("Schalter: ohne ihn greift dasselbe Verhalten (die Gegenprobe sieht jede Wirkung)",
+            all(sw["normal"][k] for k in ("init", "taste", "zeiger", "klick", "liste", "aktuell", "doppel")), str(sw["normal"]))
+    r.check("Schalter: die übrigen Bausteine von c22.js wirken im Arbeitsbereich der App weiter (Bestätigen)",
+            sw["app"]["bestaetigen"] and sw["normal"]["bestaetigen"], str(sw))
+    werte = {}
+    for pack in ("vega", "underdoc"):
+        f = b.seite(1280, 900)
+        f.geh(f"{basis}/blocks.html?pack={pack}&theme=light&lang=de")
+        werte[pack] = f.js(ANSICHTEN_WERTE)
+        f.sende("Page.close")
+    v, ud = werte["vega"], werte["underdoc"]
+    r.check("Ablagezone: das Wort ist Inhalt (übersetzbar), kein CSS-content; sie fängt keinen Zeiger; hidden blendet sie aus",
+            v["wort"] == "Neue Spalte" and v["nachWort"] == "none" and v["zeiger"] == "none"
+            and v["zoneSicht"] == "grid" and v["zoneWeg"] == "none", str(v))
+    r.check("Reiter ziehen: eine 3px-Linie vor dem Reiter, der Platzhalter gerahmt (Form, nicht nur Farbe)",
+            v["linie"] == "3px" and v["linieInhalt"] == '""' and v["platz"] == "2px solid", str(v))
+    r.check("Listen der Ansichten: ungelesen fetter, die offene mit Balken, erledigt durchgestrichen (in beiden Packs)",
+            all(int(x["ungelesen"]) > int(x["gelesen"]) and "inset" in x["offen"] and x["erledigt"] == "line-through" for x in (v, ud)),
+            f"vega {v} | underdoc {ud}")
+    r.check("Pack underdoc: Menüs im Arbeitsbereich in der Zeilenhöhe des Entwurfs, flacher als in vega",
+            ud["menue"] < v["menue"] and abs(ud["menue"] - 30.6) < 0.6, f"underdoc {ud['menue']} | vega {v['menue']}")
+    r.check("Pack underdoc: der heutige Tag in der Primärrolle gerahmt und so hoch wie im Entwurf; vega ohne das",
+            ud["heute"] and ud["heuteHoch"] == 62 and not v["heute"] and v["heuteHoch"] < 62, f"underdoc {ud} | vega {v}")
+
+
 def main() -> int:
     erneuern = "--renew" in sys.argv
     r = Report("Browser — Galerie in Chrome")
@@ -1009,6 +1107,7 @@ def main() -> int:
                     favicon(r, basis)
                     verhalten(r, b, basis)
                     arbeitsbereich(r, b, basis)
+                    arbeitsbereich_ansichten(r, b, basis)
         except BrowserFehler as fehler:
             r.check("Browser läuft durch", False, str(fehler))
         finally:

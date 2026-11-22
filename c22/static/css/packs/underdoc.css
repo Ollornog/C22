@@ -119,4 +119,113 @@
 
   /* A question in the editor reads like the text around it. */
   .editor .item p { color: var(--foreground); }
+
+  /* The other views (T-19 step 4, blocks/navigation/workspace-views.html). */
+  /* Lists in nav3: rows close together, a line under each mail; sender 13px over a plain subject, unread semibold. */
+  .workspace-nav [role='list'] { gap: 0; }
+  .workspace-nav a.item { row-gap: 0; padding: calc(var(--spacing) * 2); border-bottom-color: var(--border); }
+  .workspace-nav .item > header { font-size: calc(var(--text-sm) * 13 / 14); }
+  .workspace-nav .item :is(h3, h4) { font-weight: var(--font-weight-normal); }
+  .workspace-nav .item[data-state='unread'] :is(h3, h4) { font-weight: var(--font-weight-semibold); }
+  .workspace-nav label.item { padding: calc(var(--spacing) * 1.25) calc(var(--spacing) * 2); }
+  .workspace-nav .badge, .workspace-main > aside[data-drawer] .badge { border-radius: var(--radius-sm); color: var(--muted-foreground); font-size: calc(var(--text-xs) * 23 / 24); font-weight: var(--font-weight-normal); }
+
+  /* Lists in the window: tasks 544px wide, framed rows with a larger box; hits of a search as quiet rows. */
+  .workspace-main > section > [role='list'] { max-width: calc(var(--spacing) * 136); gap: calc(var(--spacing) * 1); }
+  .workspace-main > section > [role='list'] > label.item {
+    gap: calc(var(--spacing) * 2.25);
+    padding: calc(var(--spacing) * 1.75) calc(var(--spacing) * 2.5);
+    border-color: var(--border);
+  }
+  .workspace-main > section > [role='list'] > label.item :is(h3, h4) { font-weight: var(--font-weight-normal); }
+  .workspace-main > section > [role='list'] > label.item > .input[type='checkbox'] { width: calc(var(--spacing) * 4.25); height: calc(var(--spacing) * 4.25); border-color: var(--ring); }
+  .workspace-main > section > [role='list'] > a.item { gap: calc(var(--spacing) * 1.5); padding: calc(var(--spacing) * 1.25) calc(var(--spacing) * 1); font-size: calc(var(--text-sm) * 13 / 14); }
+  .workspace-main > section > [role='list'] > a.item :is(h3, h4) { font-size: calc(var(--text-sm) * 13 / 14); font-weight: var(--font-weight-normal); }
+  .workspace-main > section > [role='list'] > a.item p { font-size: calc(var(--text-xs) * 11 / 12); }
+  .workspace-main > section > [role='list'] > a.item p + p { color: var(--foreground); opacity: 0.8; }
+
+  /* Facts of a message: a narrow label column, 13.5px; a hint below the text is a quiet grey box. */
+  .workspace-main > section > article > dl {
+    grid-template-columns: calc(var(--spacing) * 15) minmax(0, 1fr);
+    gap: calc(var(--spacing) * 0.5) calc(var(--spacing) * 2);
+    margin-bottom: calc(var(--spacing) * 3.5);
+    font-size: calc(var(--text-sm) * 27 / 28);
+  }
+  .workspace-main > section > article > .alert {
+    padding: calc(var(--spacing) * 2) calc(var(--spacing) * 2.5);
+    border-color: transparent;
+    background-color: var(--muted);
+    color: var(--foreground);
+    font-size: calc(var(--text-sm) * 13 / 14);
+  }
+  .workspace-main > section > article > .alert > section { color: inherit; }
+
+  /* The month: framed days, today framed twice in the primary role, the number bold. */
+  .workspace-main .month-sheet { border-spacing: calc(var(--spacing) * 0.75); font-size: calc(var(--text-xs) * 25 / 24); }
+  .workspace-main .month-sheet th { padding: calc(var(--spacing) * 0.5) calc(var(--spacing) * 1); text-align: start; }
+  .workspace-main .month-sheet td {
+    height: calc(var(--spacing) * 15.5);
+    padding: calc(var(--spacing) * 0.75) calc(var(--spacing) * 1.25);
+    border: 1px solid var(--border);
+    text-align: start;
+  }
+  .workspace-main .month-sheet td[data-weekend] { background-color: transparent; }
+  .workspace-main .month-sheet td[data-outside] { border-color: transparent; }
+  .workspace-main .month-sheet td > span:first-child { font-size: calc(var(--text-xs) * 25 / 24); }
+  .workspace-main .month-sheet td[aria-current='date'] { border-color: var(--primary); box-shadow: inset 0 0 0 1px var(--primary); }
+  .workspace-main .month-sheet td[aria-current='date'] > span:first-child { color: var(--foreground); font-weight: var(--font-weight-bold); }
+  .workspace-main .month-sheet td > small { padding-inline: calc(var(--spacing) * 1); font-size: calc(var(--text-xs) * 23 / 24); }
+
+  /* The board: columns on a grey band without a frame, white cards inside. */
+  .workspace-main .board { grid-auto-columns: minmax(calc(var(--spacing) * 42.5), 1fr); }
+  .workspace-main .board > .card { gap: calc(var(--spacing) * 2); padding: calc(var(--spacing) * 2.5); border: 0; background-color: var(--muted); box-shadow: none; }
+  .workspace-main .board > .card > :is(header, section) { padding: 0; }
+  .workspace-main .board > .card > header h3 { font-size: calc(var(--text-sm) * 27 / 28); }
+  .workspace-main .board > .card > section > .card { padding: calc(var(--spacing) * 2.25) calc(var(--spacing) * 2.75); border: 1px solid var(--border); box-shadow: none; }
+  .workspace-main .board > .card > section > .card > section { padding: 0; }
+
+  /* Assistant: compact bubbles without the tail, a field framed in the ring colour. */
+  .workspace-main > aside[data-drawer] > [role='log'] > .bubble {
+    padding: calc(var(--spacing) * 1.25) calc(var(--spacing) * 2.25);
+    border-radius: var(--radius-lg);
+    font-size: calc(var(--text-sm) * 27 / 28);
+  }
+  .workspace-main > aside[data-drawer] > [role='log'] > .bubble[data-align='end'] { max-width: 85%; }
+  .workspace-main > aside[data-drawer] > [role='log'] > .bubble[data-variant='outline'] { max-width: 92%; background-color: var(--card); }
+  .workspace-main > aside[data-drawer] > .input-group { height: calc(var(--spacing) * 8.5); border-color: var(--ring); }
+
+  /* Comments: rows with a line under each, who bold and when beside it, the text in the text colour; a reply indented
+     behind a bar; what is done greyed out (the word in its header stays). */
+  .workspace-main > aside[data-drawer] .timeline > li {
+    padding: calc(var(--spacing) * 1.75) 0;
+    border-bottom: 1px solid var(--border);
+    font-size: calc(var(--text-sm) * 13 / 14);
+  }
+  .workspace-main > aside[data-drawer] .timeline > li::before,
+  .workspace-main > aside[data-drawer] .timeline > li::after { display: none; }
+  .workspace-main > aside[data-drawer] .timeline > li > header { gap: calc(var(--spacing) * 1.5); font-size: calc(var(--text-sm) * 13 / 14); }
+  .workspace-main > aside[data-drawer] .timeline > li > header > time { margin-inline-start: 0; font-size: calc(var(--text-xs) * 23 / 24); }
+  .workspace-main > aside[data-drawer] .timeline > li > :is(p, div):not(header) { margin-top: calc(var(--spacing) * 0.75); color: var(--foreground); font-size: calc(var(--text-sm) * 13 / 14); }
+  .workspace-main > aside[data-drawer] .timeline > li > ol.timeline {
+    margin-inline-start: calc(var(--spacing) * 3.5);
+    padding-inline-start: calc(var(--spacing) * 2);
+    border-inline-start: 2px solid var(--border);
+  }
+  .workspace-main > aside[data-drawer] .timeline > li > ol.timeline > li:last-child { border-bottom: 0; }
+  .workspace-main > aside[data-drawer] .timeline > li[data-state='done'] > :not(header) { color: var(--muted-foreground); opacity: 1; }
+
+  /* A saved search: what it searches for on a grey band. */
+  .workspace-main > section > .filter-bar {
+    padding: calc(var(--spacing) * 2.25) calc(var(--spacing) * 2.75);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background-color: var(--muted);
+  }
+
+  /* Menus of the workspace (they hang inside .workspace): the mockup's 13px rows, a description of 11.5px. */
+  .workspace :is(.command, [data-popover]) [role^='menuitem'] { font-size: calc(var(--text-sm) * 13 / 14); }
+  .workspace :is(.command, [data-popover]) [role^='menuitem'] > div > small { font-size: calc(var(--text-xs) * 23 / 24); line-height: 1.35; }
+
+  /* Drop zones: the word at 13px. */
+  .workspace-main > [data-drop-zone] { font-size: calc(var(--text-sm) * 13 / 14); }
 }

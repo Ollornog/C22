@@ -3396,7 +3396,7 @@
 
   /* Steps of nav1 and nav2: 0 icon, 1 icon with text below, 2 text, 3 icon with text beside. */
   .workspace-nav[data-step='0'] .workspace-item { justify-content: center; padding-inline: 0; }
-  .workspace-nav[data-step='0'] :is(.workspace-item, .workspace-label, header) > span:not(.avatar),
+  .workspace-nav[data-step='0'] :is(.workspace-item, .workspace-label, header:where(:not(.item > header))) > span:not(.avatar),
   .workspace-nav[data-step='0'] .workspace-item > :is(.badge, [data-pin]) { display: none; }
   .workspace-nav[data-step='1'] .workspace-item {
     flex-direction: column;
@@ -3407,9 +3407,9 @@
     text-align: center;
   }
   .workspace-nav[data-step='1'] .workspace-item > span:not(.avatar) { width: 100%; }
-  .workspace-nav[data-step='1'] :is(.workspace-label, header) > span,
+  .workspace-nav[data-step='1'] :is(.workspace-label, header:where(:not(.item > header))) > span,
   .workspace-nav[data-step='1'] .workspace-item > :is(.badge, [data-pin]) { display: none; }
-  .workspace-nav:is([data-step='0'], [data-step='1']) :is(.workspace-label, header) { justify-content: center; padding-inline: 0; }
+  .workspace-nav:is([data-step='0'], [data-step='1']) :is(.workspace-label, header:where(:not(.item > header))) { justify-content: center; padding-inline: 0; }
   .workspace-nav:is([data-step='0'], [data-step='1']) .workspace-item[data-pinned] > svg:first-child { stroke-width: 2.75; }
   .workspace-nav[data-step='2'] .workspace-item > svg:first-child,
   .workspace-nav[data-step='2'] .workspace-label > svg,
@@ -3417,7 +3417,7 @@
   .workspace-nav[data-step='2'] .workspace-item { padding-inline: calc(var(--spacing) * 2.25); }
 
   /* Heading of a column: small capitals on the left, a clear New + on the right. */
-  .workspace-nav header {
+  .workspace-nav header:where(:not(.item > header)) {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -3431,7 +3431,7 @@
     letter-spacing: var(--tracking-wider);
     text-transform: uppercase;
   }
-  .workspace-nav header > :is(span, a) {
+  .workspace-nav header:where(:not(.item > header)) > :is(span, a) {
     display: flex;
     align-items: center;
     gap: calc(var(--spacing) * 1);
@@ -3442,10 +3442,10 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  .workspace-nav header > a:hover { color: var(--foreground); }
-  .workspace-nav header > .btn { flex: none; letter-spacing: normal; text-transform: none; font-weight: var(--font-weight-semibold); }
-  .workspace-nav header > .btn > span { display: inline; }
-  .workspace-nav:is([data-step='0'], [data-step='1']) header > .btn > span { display: none; }
+  .workspace-nav header:where(:not(.item > header)) > a:hover { color: var(--foreground); }
+  .workspace-nav header:where(:not(.item > header)) > .btn { flex: none; letter-spacing: normal; text-transform: none; font-weight: var(--font-weight-semibold); }
+  .workspace-nav header:where(:not(.item > header)) > .btn > span { display: inline; }
+  .workspace-nav:is([data-step='0'], [data-step='1']) header:where(:not(.item > header)) > .btn > span { display: none; }
   /* nav3: one section per open collection, each below a strong line. */
   .workspace-nav[data-level='3'] > div { padding: calc(var(--spacing) * 1.5) calc(var(--spacing) * 2) calc(var(--spacing) * 2.5); gap: 0; }
   .workspace-nav[data-level='3'] section + section { margin-top: calc(var(--spacing) * 2.5); border-top: 1px solid var(--workspace-line); }
@@ -3881,6 +3881,100 @@
     white-space: nowrap;
   }
 
+  /* The other views of the workspace (T-19 step 4, blocks/navigation/workspace-views.html): mail, messages, tasks, calendar,
+     board, assistant, comments, search. They are C22 components placed in the columns and the window; what follows is
+     only their fit there, for every pack (a layout pack reshapes them, the defaults look like the rest of the pack).
+     Entries are .item: an item's header is a muted line above its title (sender and time), data-state="unread" sets the
+     title bold, aria-current marks the open one (tint and a bar at the start, like .workspace-item), a checked checkbox
+     strikes the title through (a task), a time in the aside is muted (due date), a mark in the text is the found word. */
+  :is(.workspace-nav, .workspace-main) .item:has(> header) { row-gap: calc(var(--spacing) * 0.5); }
+  :is(.workspace-nav, .workspace-main) .item > header { gap: calc(var(--spacing) * 2); color: var(--muted-foreground); font-size: var(--text-xs); }
+  :is(.workspace-nav, .workspace-main) .item > header > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  :is(.workspace-nav, .workspace-main) .item > :is(header, aside) time { flex: none; color: var(--muted-foreground); font-size: var(--text-xs); font-variant-numeric: tabular-nums; }
+  .workspace-nav .item > section { min-width: 0; }
+  .workspace-nav a.item:hover { background-color: var(--sidebar-accent); color: var(--sidebar-accent-foreground); }
+  :is(.workspace-nav, .workspace-main) .item[aria-current]:not([aria-current='false']) {
+    background-color: var(--sidebar-accent);
+    color: var(--sidebar-accent-foreground);
+    box-shadow: inset 3px 0 0 var(--primary);
+  }
+  :is(.workspace-nav, .workspace-main) .item[data-state='unread'] :is(h3, h4) { font-weight: var(--font-weight-bold); }
+  :is(.workspace-nav, .workspace-main) .item:has(> .input[type='checkbox']:checked) > section > :is(h3, h4) {
+    color: var(--muted-foreground);
+    text-decoration: line-through;
+  }
+  :is(.workspace-nav, .workspace-main) .item mark {
+    padding-inline: 1px;
+    border-radius: var(--radius-sm);
+    background-color: color-mix(in oklch, var(--warning) 30%, transparent);
+    color: inherit;
+    font-weight: var(--font-weight-semibold);
+  }
+  /* The facts of a message, a task or an entry: a dl first in the document column, label beside value. */
+  .workspace-main > section > article > dl {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: calc(var(--spacing) * 0.5) calc(var(--spacing) * 4);
+    margin: 0 0 calc(var(--spacing) * 4);
+  }
+  .workspace-main > section > article > dl > dt { color: var(--muted-foreground); }
+  .workspace-main > section > article > dl > dd { margin: 0; overflow-wrap: anywhere; }
+  /* A conversation in the drawer (the assistant): bubbles in a [role=log], oldest first; it takes the free height. */
+  .workspace-main > aside[data-drawer] > [role='log'] {
+    display: flex;
+    flex: 1 0 auto;
+    flex-direction: column;
+    gap: calc(var(--spacing) * 2);
+    min-height: calc(var(--spacing) * 20);
+  }
+  .workspace-main > aside[data-drawer] > header > svg:first-child { margin-inline-end: auto; }
+  .workspace-main > aside[data-drawer] > header:has(> svg:first-child) > .btn { margin-inline-start: auto; }
+
+  /* Dragging a tab (the app drives it, these are its marks): data-drop="before"/"after" on the tab it would land next to
+     draws a line on that side, data-drop="slot" is the stand-in at the place it lands (framed). A window shows where a
+     tab or a document dropped on it would go: [data-drop-zone] inside .workspace-main, "start"/"end" the half at that side
+     (a new column), "here" the whole window; data-size="sm" makes a start/end zone a strip at the edge (a new window).
+     The word is the zone's content, so it is translated with the rest of the page; the app sets hidden when no drag runs. */
+  .workspace-tab[data-drop='before'], .workspace-tab[data-drop='after'] { position: relative; }
+  .workspace-tab[data-drop='before']::before, .workspace-tab[data-drop='after']::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    border-radius: var(--radius-sm);
+    background-color: var(--primary);
+  }
+  .workspace-tab[data-drop='before']::before { inset-inline-start: calc(var(--spacing) * -0.75); }
+  .workspace-tab[data-drop='after']::before { inset-inline-end: calc(var(--spacing) * -0.75); }
+  .workspace-tab[data-drop='slot'] {
+    outline: 2px solid var(--primary);
+    outline-offset: -2px;
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+  .workspace-main > [data-drop-zone] {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 9;
+    display: grid;
+    place-items: center;
+    padding: calc(var(--spacing) * 2);
+    border: 2px dashed var(--primary);
+    background-color: color-mix(in oklch, var(--accent) 88%, transparent);
+    color: var(--accent-foreground);
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-semibold);
+    text-align: center;
+    pointer-events: none;
+  }
+  .workspace-main > [data-drop-zone][hidden] { display: none; }
+  .workspace-main > [data-drop-zone='start'] { inset-inline-start: 0; width: 50%; }
+  .workspace-main > [data-drop-zone='end'] { inset-inline-end: 0; width: 50%; }
+  .workspace-main > [data-drop-zone='here'] { inset-inline: 0; }
+  .workspace-main > [data-drop-zone][data-size='sm'] { width: calc(var(--spacing) * 21); }
+
   /* Second click on the active view: nav2 and nav3 step aside, only New stays in the top row. */
   .workspace[data-nav-hidden] > .workspace-nav:is([data-level='2'], [data-level='3']) { display: none; }
   .workspace[data-nav-hidden] > .workspace-top { grid-column: 1; justify-content: center; padding-inline: calc(var(--spacing) * 1); }
@@ -3905,9 +3999,9 @@
     }
     .workspace > .workspace-nav:is([data-level='1'], [data-level='2']) .workspace-item > svg:first-child { display: block; }
     .workspace > .workspace-nav:is([data-level='1'], [data-level='2']) .workspace-item > span:not(.avatar) { display: block; width: 100%; }
-    .workspace > .workspace-nav:is([data-level='1'], [data-level='2']) :is(.workspace-label, header) { justify-content: center; padding-inline: 0; }
-    .workspace > .workspace-nav:is([data-level='1'], [data-level='2']) :is(.workspace-label, header) > span,
-    .workspace > .workspace-nav:is([data-level='1'], [data-level='2']) header > .btn > span,
+    .workspace > .workspace-nav:is([data-level='1'], [data-level='2']) :is(.workspace-label, header:where(:not(.item > header))) { justify-content: center; padding-inline: 0; }
+    .workspace > .workspace-nav:is([data-level='1'], [data-level='2']) :is(.workspace-label, header:where(:not(.item > header))) > span,
+    .workspace > .workspace-nav:is([data-level='1'], [data-level='2']) header:where(:not(.item > header)) > .btn > span,
     .workspace > .workspace-nav:is([data-level='1'], [data-level='2']) .workspace-item > :is(.badge, [data-pin]) { display: none; }
     .workspace > .workspace-nav:is([data-level='2'], [data-level='3']) {
       grid-column: 1 / -1;
@@ -4728,6 +4822,27 @@
   .month-sheet td:has(> label:hover) { @apply bg-accent text-accent-foreground; }
   .month-sheet td:has(input:checked) { @apply bg-accent text-accent-foreground; box-shadow: inset 0 0 0 2px var(--primary); }
   .month-sheet td:has(input:focus-visible) { @apply ring-ring/50 ring-[3px]; }
+  /* An entry of the day (a calendar): its name as a small chip below the number, cut to the cell. */
+  .month-sheet td > small { @apply bg-accent text-accent-foreground mt-0.5 block truncate rounded-sm px-1 text-start text-xs; }
+}
+
+/* ============================================================
+ * Board (.board) — columns of cards side by side (a kanban; UnderDoc, T-19 step 4). Each column is a .card[data-size=sm]
+ * with its name and the number of its cards in the heading (h3 > small), its cards .card[data-size=sm] in its section.
+ * Wider than its place, the board scrolls sideways; a column never gets narrower than a card can be read.
+ * ============================================================ */
+@layer components {
+  .board {
+    display: grid;
+    grid-auto-columns: minmax(calc(var(--spacing) * 44), 1fr);
+    grid-auto-flow: column;
+    align-items: start;
+    gap: calc(var(--spacing) * 3);
+    padding: 1px 1px calc(var(--spacing) * 2);
+    overflow-x: auto;
+  }
+  .board > .card > header small { color: var(--muted-foreground); font-weight: var(--font-weight-normal); }
+  .board > .card > section { display: flex; flex-direction: column; gap: calc(var(--spacing) * 2); }
 }
 
 /* ============================================================
@@ -4770,6 +4885,11 @@
   .timeline[data-size='sm'] > li { @apply pb-2.5; }
   .timeline[data-size='sm'] > li > header { @apply text-xs; }
   .timeline[data-size='sm'] > li > :is(p, div):not(header) { @apply mt-0.5 text-xs; }
+  /* A reply sits below what it answers: a timeline nested in the entry (comments, T-19 step 4). An entry that is done
+     (data-state="done") steps back and says so with a word in its header. */
+  .timeline > li > ol.timeline { @apply mt-2; }
+  .timeline > li[data-state='done'] > header { @apply text-muted-foreground; }
+  .timeline > li[data-state='done'] > :not(header) { @apply opacity-70; }
 }
 
 /* ============================================================

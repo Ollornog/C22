@@ -32,7 +32,11 @@ of the mockup moves into the pack `underdoc` (`c22/static/css/packs/underdoc.css
 ## State (2026-11-21)
 
 - Step 1 (core): #140. Steps 2 and 3: blocks `workspace-editing.html` and `workspace-more.html`, the third example of
-  `document-workspace.html`; reference images in vega and `underdoc`.
+  `document-workspace.html`; reference images in vega and `underdoc` (#141).
+- Step 4 (2026-11-22): the other views (mail, messages, tasks, calendar, board, assistant, comments, search), dragging a
+  tab and the drop zones of a window, menus of the workspace at the mockup's size: block `workspace-views.html`,
+  reference images in vega and `underdoc`. The switch `data-behaviour="app"` leaves the workspace to an app that drives
+  it itself (c22.js keeps its other parts).
 
 ## Done when
 
@@ -133,12 +137,13 @@ sheet) and the third example of `document-workspace.html` (several windows, cont
 | `.dropgap`, `.held`, `.idle`, `.copy`, `.drop-into`, `body.dragging`, `body.ud-bdrag` | same classes, written by `app-workspace-drag.js`; styled for `.workspace-tree`/`.workspace-nav` (rows `li > div`, clones `.dropgap > div`) |
 | `.row.just` | `li > div[aria-selected="true"]` (tint + frame) |
 | `.ren`, `.renin` | `.input[data-size=sm]` in place of the name inside the row |
-| `.drop-before`, `.drop-after`, `.slot`, `.blank` (tabs) | open — tab dragging stays the app's (T-13); a drop line on `.workspace-tab` is a follow-up |
+| `.drop-before`, `.drop-after`, `.slot` (tabs) | `.workspace-tab[data-drop="before"/"after"/"slot"]` (the dragging itself stays the app's) |
+| `.blank` (tabs) | open — the empty general tab has no example yet |
 | `.coll`, `.acc` | `section > header` of nav3 (the band) |
 | `.n2lab`, `.slab`, `.lab` | `.workspace-label` |
 | `.fav`, `.favsep` | `.workspace-item` / `hr` |
 | `.lockline` | `.workspace-label` with lock icon |
-| `.cmdpop`, `.command` (inside it) | `.command` with `header` filter, groups, `hr` |
+| `.cmdpop`, `.command` (inside it) | `.command` with `header` filter, groups, `hr`; inside `.workspace` (the pack gives it the mockup's 13px rows) |
 | `.addmenu`, `.addpop`, `.newpop`, `.pop`, `.opt` | `.dropdown-menu` / `.command`; New of the top row as a popover card: `.button-group` (where), `.input`, muted `p` |
 | `.newtypes`, `.tplcards` | grid of `a.item[data-variant=outline][data-size=sm]` (icon, `h4`, two-line muted `p`) |
 | entry with description (template) | menu item `div > span + small` in `.command`/`.dropdown-menu` |
@@ -146,7 +151,8 @@ sheet) and the third example of `document-workspace.html` (several windows, cont
 | **Windows** | |
 | `.wins.many`, `.win`, `.focus` | `.workspace-windows` > `.workspace-window` (own `.workspace-tabs` + `.workspace-main`), active one `data-focus` |
 | `.winbar` | not needed (hidden in the mockup as well) |
-| `.newwin`, `.left`, `.right`, `.zone-left/-mid/-right/-open` | open — drop zones for a new window are the app's behaviour; a frame for them is a follow-up |
+| `.zone-left` / `.zone-right` ("New column"), `.zone-mid` ("Move here"), `.zone-open` ("Open here") | `.workspace-main > [data-drop-zone="start"/"end"/"here"]` with the word as content, `hidden` when no drag runs |
+| `.newwin`, `.left`, `.right` | `[data-drop-zone="start"/"end"][data-size="sm"]` (a strip at the edge) |
 | `.toc` | `nav.toc[data-variant=compact][data-marker=bar]` first in `.workspace-main > section`, width `--workspace-toc` |
 | `.dhead`, `.b`, `.c`, `.place.two`, `.crumbs` | `main > header` (variants of the head are the path + `h1`/`p` there) |
 | `.page`, `.pad` | `main > section` |
@@ -171,18 +177,24 @@ sheet) and the third example of `document-workspace.html` (several windows, cont
 | `.i` (`svg.i`) | lucide icon with `data-icon-lu` (size from its parent block) |
 | `.empty` | `.empty` |
 | `.withic`, `.blk`, `.accbadge`, `.later`, `.due`, `.tick` | `.badge` / muted `small` / `.btn` icon |
-| **Other views of the mockup** (mail, calendar, tasks, board, assistant, search) | |
-| `.mailrow`, `.mailhead`, `.mfrom`, `.msubj`, `.unread`, `.reply`, `.cmtrow` | `.item` list (unread: `font-semibold`), comments `.timeline` |
-| `.calgrid`, `.day`, `.today` | `.calendar` / `table.month-sheet` (`aria-current="date"`) |
-| `.todos`, `.todo`, `.done`, `.box` | `.item` list with `input.input[type=checkbox]` (done: `line-through`) |
-| `.board`, `.kard` (board) | grid of `.card[data-size=sm]` columns |
-| `.aidrawer`, `.aichat`, `.aiq`, `.aia`, `.aiin`, `.aictx`, `.ai`, `.answer` | `aside[data-drawer]` with `.message`/`.bubble` and `.input-group` |
-| `.filters`, `.filterbtn`, `.ssbar`, `.sshits`, `.hit`, `.snip` | `.filter-bar` / `.filter-menus`, results as `.item` list |
+| **Other views of the mockup** (step 4: `blocks/navigation/workspace-views.html`) | |
+| `.mailrow` (`.cur`, `.unread`), `.mfrom` (+ `em`), `.msubj` | `a.item[data-size=sm]` in a `div.item-group[role=list]`: `header` > `span` (sender) + `time`, `section > h4` (subject); `aria-current="page"`, `data-state="unread"` |
+| `.chead` above a mail list | `.workspace-label` (no band); a collection of tasks keeps `section > header` |
+| `.mailhead` (also the facts of a task or an entry) | `dl` first in `main > section > article` |
+| `.note` | `.alert` > `section` |
+| `.todos`, `.todo`, `.done`, `.box`, `.due`, `.tick` | `label.item[data-variant=outline][data-size=sm]` > `input.input[type=checkbox]` + `section > h4` + `aside > time`, in `main > section > div.item-group`; in nav3 `label.item[data-size=xs]`; done = checked |
+| `.calgrid`, `.day`, `.today`, `.day small` | `table.month-sheet` in `main > section`: `td > span` (number) + `small` (entry), `aria-current="date"`, empty days `data-outside`; entries in nav3 as `.workspace-tree` rows with `small > time` |
+| `.board`, `.kard` (board) | `.board` > `section.card[data-size=sm]` (`header > h3.card-title` + `small` count, `section` > `article.card[data-size=sm]`) |
+| `.keep`, `.kard`, `.noteadd` (quick notes) | as in steps 2 and 3 |
+| `.aidrawer`, `.fhead`, `.aictx`, `.aichat`, `.aiq`, `.aia`, `.aiin`, `.tagrow` (prompts) | `.workspace-main > aside[data-drawer]`: `header` (icon, name, close), muted `p`, `div[role=log]` > `.bubble[data-align=end]` (question) / `.bubble[data-variant=outline]` (answer), `.btn[data-variant=outline][data-size=xs]` prompts, `form.input-group` |
+| `.cmtrow`, `.reply`, `.done`, `.tagrow`, `.tagc` (comments) | the drawer with `h3` + `ol.timeline[data-size=sm]` > `li` > `header` (`b` who, `time`) + `p` (+ `div` of `a.badge[data-variant=outline]`); a reply is an `ol.timeline` inside the `li`; done `li[data-state=done]` with a badge "erledigt" |
+| `.ssbar`, `.chip` (saved search) | `.filter-bar` (one `section` per part, values as buttons with `aria-pressed`) |
+| `.sshits`, `.hit`, `.snip`, `mark` | `div.item-group` of `a.item[data-size=sm]` > `figure` (icon) + `section` > `h4`, `p` (place), `p` (excerpt with `mark`) |
+| `.filters`, `.filterbtn` (nav3 of search) | `.btn[data-variant=outline][data-size=xs]`, `.workspace-label`, `.workspace-tree` rows (recent), `a.badge[data-variant=outline]` (tags) |
 | `.clockbtn` | `[data-clock]` (`date-picker.html`) |
 | `.toast` | `.toast` |
 | `.intorow`, `.lands`, `.cfor`, `.cgo`, `.cfocus`, `.cmore`, `.copy` (button) | `.item`/`.btn`; focus ring of C22 |
 | `.bar`, `.tab`, `.strip .tab`, `.tight`, `.text`, `body.resizing` | old top bar of round 1: `header.workspace-top`, `.workspace-item`, `[data-grip]` (`.workspace[data-resizing]`) |
 
-Open after steps 2 and 3: the look of the other views (mail, calendar, tasks, board, assistant) in the pack
-`underdoc` — they map to C22 components, but their mockup look was not part of the gallery examples, so the pack
-does not reshape them yet; drop lines on tabs and drop zones for new windows.
+Open after step 4: the empty general tab (`.blank`); UnderDoc switches (then T-20). Menus of the workspace take the pack's size only inside
+`.workspace`; an app that appends them to `<body>` keeps the plain pack look.
