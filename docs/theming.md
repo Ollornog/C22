@@ -240,6 +240,15 @@ cursor the editor also sets: the frame over a run of lines is a `::before` besid
 grabbing cursor while a block is held is the one `!important` there. In the pack `underdoc` the comment bubble stands
 30px out, inside the window's 30px room at the end.
 
+**The live preview of a Markdown editor** follows the same rule. CodeMirror's decorations carry attributes, not classes:
+`data-md` (a list of words) on a line, a mark or a widget, `data-md-edge` on the edges of a code block; `.editor
+[data-md~=…]` gives them the typeset canon's look (heading sizes through the form tokens `--editor-h1`…`-h4`, which the
+pack `underdoc` sets to the sizes of its read pages). CodeMirror pads every line in its unlayered base theme, so no rule
+there sets a padding on a line: a quote stands in by a margin with its bar drawn by `::after` in it, a code block by
+transparent borders over its muted ground. An app's own unlayered rule on the same property would still win; the app
+drops its own look of these parts and keeps only the editor's structure (its font, the scroller, the cursor, the
+selection). The browser suite measures the indents again under CodeMirror's line padding and under an app's reset.
+
 ## Current state
 
 Per axis: ✅ present · ⚠️ partial · ❌ missing.

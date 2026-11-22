@@ -65,6 +65,16 @@
   --workspace-drawer-top: calc(var(--spacing) * 3.25 + var(--workspace-mode-size) + 1px);
 }
 
+/* Form tokens of the editor (declared with their defaults in components.css): the headings of the live preview at the
+   sizes of UnderDoc's pages when they are read (its Markdown renders h1 text-xl, h2 text-lg, h3 text-base, h4 text-sm),
+   so a page keeps its look between reading and editing. */
+.editor {
+  --editor-h1: var(--text-xl);
+  --editor-h2: var(--text-lg);
+  --editor-h3: var(--text-base);
+  --editor-h4: var(--text-sm);
+}
+
 @layer components {
   /* Top row: a bold name beside a bare glyph (no plate), a lower search field and New button. */
   .workspace-top > .brand { font-weight: var(--font-weight-bold); }

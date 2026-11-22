@@ -3478,7 +3478,7 @@
 
   /* Steps of nav1 and nav2: 0 icon, 1 icon with text below, 2 text, 3 icon with text beside. */
   .workspace-nav[data-step='0'] .workspace-item { justify-content: center; padding-inline: 0; }
-  .workspace-nav[data-step='0'] :is(.workspace-item, .workspace-label, header:where(:not(.item > header))) > span:not(.avatar),
+  .workspace-nav[data-step='0'] :is(.workspace-item, .workspace-label, header:where(:not(.item > header, .timeline > li > header))) > span:not(.avatar),
   .workspace-nav[data-step='0'] .workspace-item > :is(.badge, [data-pin]) { display: none; }
   .workspace-nav[data-step='1'] .workspace-item {
     flex-direction: column;
@@ -3489,17 +3489,19 @@
     text-align: center;
   }
   .workspace-nav[data-step='1'] .workspace-item > span:not(.avatar) { width: 100%; }
-  .workspace-nav[data-step='1'] :is(.workspace-label, header:where(:not(.item > header))) > span,
+  .workspace-nav[data-step='1'] :is(.workspace-label, header:where(:not(.item > header, .timeline > li > header))) > span,
   .workspace-nav[data-step='1'] .workspace-item > :is(.badge, [data-pin]) { display: none; }
-  .workspace-nav:is([data-step='0'], [data-step='1']) :is(.workspace-label, header:where(:not(.item > header))) { justify-content: center; padding-inline: 0; }
+  .workspace-nav:is([data-step='0'], [data-step='1']) :is(.workspace-label, header:where(:not(.item > header, .timeline > li > header))) { justify-content: center; padding-inline: 0; }
   .workspace-nav:is([data-step='0'], [data-step='1']) .workspace-item[data-pinned] > svg:first-child { stroke-width: 2.75; }
   .workspace-nav[data-step='2'] .workspace-item > svg:first-child,
   .workspace-nav[data-step='2'] .workspace-label > svg,
   .workspace-nav[data-step='2'] .workspace-item > .avatar { display: none; }
   .workspace-nav[data-step='2'] .workspace-item { padding-inline: calc(var(--spacing) * 2.25); }
 
-  /* Heading of a column: small capitals on the left, a clear New + on the right. */
-  .workspace-nav header:where(:not(.item > header)) {
+  /* Heading of a column: small capitals on the left, a clear New + on the right. The head of an item (.item > header) and
+     of an entry of a log (ol.timeline > li > header: who and when) in a column are not column headings (2026-11-22, from
+     UnderDoc's log of rights in nav3: the names stood in capitals and the time broke). */
+  .workspace-nav header:where(:not(.item > header, .timeline > li > header)) {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -3513,7 +3515,7 @@
     letter-spacing: var(--tracking-wider);
     text-transform: uppercase;
   }
-  .workspace-nav header:where(:not(.item > header)) > :is(span, a) {
+  .workspace-nav header:where(:not(.item > header, .timeline > li > header)) > :is(span, a) {
     display: flex;
     align-items: center;
     gap: calc(var(--spacing) * 1);
@@ -3524,12 +3526,12 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  .workspace-nav header:where(:not(.item > header)) > a:hover { color: var(--foreground); }
+  .workspace-nav header:where(:not(.item > header, .timeline > li > header)) > a:hover { color: var(--foreground); }
   /* An icon before the name of a column or an open collection (a lock on a private one) is as small as a label's. */
-  .workspace-nav header:where(:not(.item > header)) > :is(span, a) > svg { width: 0.8125rem; height: 0.8125rem; }
-  .workspace-nav header:where(:not(.item > header)) > .btn { flex: none; letter-spacing: normal; text-transform: none; font-weight: var(--font-weight-semibold); }
-  .workspace-nav header:where(:not(.item > header)) > .btn > span { display: inline; }
-  .workspace-nav:is([data-step='0'], [data-step='1']) header:where(:not(.item > header)) > .btn > span { display: none; }
+  .workspace-nav header:where(:not(.item > header, .timeline > li > header)) > :is(span, a) > svg { width: 0.8125rem; height: 0.8125rem; }
+  .workspace-nav header:where(:not(.item > header, .timeline > li > header)) > .btn { flex: none; letter-spacing: normal; text-transform: none; font-weight: var(--font-weight-semibold); }
+  .workspace-nav header:where(:not(.item > header, .timeline > li > header)) > .btn > span { display: inline; }
+  .workspace-nav:is([data-step='0'], [data-step='1']) header:where(:not(.item > header, .timeline > li > header)) > .btn > span { display: none; }
   /* nav3: one section per open collection, each below a strong line. */
   .workspace-nav[data-level='3'] > div { padding: calc(var(--spacing) * 1.5) calc(var(--spacing) * 2) calc(var(--spacing) * 2.5); gap: 0; }
   .workspace-nav[data-level='3'] section + section { margin-top: calc(var(--spacing) * 2.5); border-top: 1px solid var(--workspace-line); }
@@ -4035,6 +4037,96 @@
   [data-part][data-framed='continued'] { border-start-start-radius: 0; border-start-end-radius: 0; }
   [data-part][data-framed='continued']::before { content: none; }
 
+  /* The live preview of a Markdown editor (2026-11-22, from UnderDoc's editor): an editor that shows Markdown the way it
+     reads while it is typed (CodeMirror with decorations, as in Typora or Obsidian) says what a line, a run of text or a
+     widget is by an attribute, never by a class of its own: data-md, a list of words (a line may be two things:
+     "quote h2"), and data-md-edge="first|last" (both on a block of one line) on the first and last line of a code block.
+       lines    h1 … h6 (headings, sizes --editor-h1 … -h4 on .editor; h5 and h6 the size of the text), quote (muted,
+                italic, a bar at the start), codeblock (mono on the muted ground, rounded at its edges), table-source (the
+                source of a table: mono), blank (a blank line between blocks, as high as the paragraph gap --flow)
+       marks    strong, em, del, code (inline code), link, wiki (a wiki link: dotted underline), url (muted), done (the
+                text of a done task: struck through and muted), info (the info string of a code block), directive (a
+                dashed chip), mark (a Markdown sign left visible on the cursor's line: muted)
+       widgets  bullet (the dot of a list item), task (input[type=checkbox], the box of a task), image (img), image-alt (the
+                words of a picture that is not shown: a dashed chip), rule (a horizontal rule), table (the drawn .table)
+     The look is the typeset canon's (the reading view's quote, inline code, link, task). The editor's own CSS
+     (CodeMirror's base theme) is unlayered and outranks this layer, so these rules set only what it leaves alone on lines
+     and marks: never a padding, which CodeMirror sets on every line. A quote stands in by a margin with its bar drawn in
+     it, a code block by transparent borders over its ground. An app's own unlayered rule on the same property would
+     still win: the app drops its own look of these parts. */
+  .editor {
+    --editor-h1: var(--text-2xl);
+    --editor-h2: var(--text-xl);
+    --editor-h3: var(--text-lg);
+    --editor-h4: var(--text-base);
+  }
+  .editor :is([data-md~='h1'], [data-md~='h2'], [data-md~='h3'], [data-md~='h4'], [data-md~='h5'], [data-md~='h6']) {
+    font-family: var(--font-heading);
+    font-weight: var(--font-weight-heading);
+    letter-spacing: var(--tracking-heading);
+    line-height: 1.35;
+  }
+  .editor [data-md~='h1'] { font-size: var(--editor-h1); }
+  .editor [data-md~='h2'] { font-size: var(--editor-h2); }
+  .editor [data-md~='h3'] { font-size: var(--editor-h3); }
+  .editor [data-md~='h4'] { font-size: var(--editor-h4); }
+  .editor [data-md~='quote'] {
+    position: relative;
+    margin-inline-start: calc(var(--spacing) * 6);
+    color: var(--muted-foreground);
+    font-style: italic;
+  }
+  .editor [data-md~='quote']::after {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: calc(var(--spacing) * -6);
+    width: 2px;
+    background-color: var(--border);
+    pointer-events: none;
+  }
+  .editor [data-md~='codeblock'] {
+    border-inline: calc(var(--spacing) * 3) solid transparent;
+    background-color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: calc(1em * 0.875);
+  }
+  .editor [data-md~='codeblock'][data-md-edge~='first'] { border-start-start-radius: var(--radius-md); border-start-end-radius: var(--radius-md); }
+  .editor [data-md~='codeblock'][data-md-edge~='last'] { border-end-start-radius: var(--radius-md); border-end-end-radius: var(--radius-md); }
+  .editor [data-md~='table-source'] { font-family: var(--font-mono); font-size: calc(1em * 0.875); }
+  .editor [data-md~='blank'] { height: var(--flow); line-height: var(--flow); }
+  .editor [data-md~='strong'] { font-weight: var(--font-weight-bold); }
+  .editor [data-md~='em'] { font-style: italic; }
+  .editor [data-md~='del'] { text-decoration: line-through; }
+  .editor [data-md~='code'] {
+    @apply bg-muted rounded-sm px-1.5 py-0.5 font-mono font-semibold;
+    font-size: calc(1em * 0.875);
+  }
+  .editor :is([data-md~='link'], [data-md~='wiki']) { @apply font-medium underline underline-offset-4; }
+  .editor [data-md~='wiki'] { text-decoration-style: dotted; }
+  .editor :is([data-md~='url'], [data-md~='info'], [data-md~='mark']) { color: var(--muted-foreground); }
+  .editor [data-md~='done'] { color: var(--muted-foreground); text-decoration: line-through; }
+  .editor [data-md~='info'] { font-size: var(--text-xs); }
+  .editor :is([data-md~='directive'], [data-md~='image-alt']) {
+    @apply rounded-sm px-1.5;
+    border: 1px dashed var(--border);
+  }
+  .editor [data-md~='directive'] { font-family: var(--font-mono); font-size: calc(1em * 0.875); }
+  .editor [data-md~='image-alt'] { color: var(--muted-foreground); }
+  .editor [data-md~='bullet'] { display: inline-block; width: 1ch; font-weight: var(--font-weight-bold); }
+  .editor input[type='checkbox'][data-md~='task'] {
+    width: 1em;
+    height: 1em;
+    margin: 0;
+    margin-inline-end: calc(var(--spacing) * 1.5);
+    vertical-align: -0.125em;
+    accent-color: var(--primary);
+    cursor: pointer;
+  }
+  .editor img[data-md~='image'] { max-width: 100%; vertical-align: middle; }
+  .editor [data-md~='rule'] { display: inline-block; width: 100%; vertical-align: middle; border-top: 1px solid var(--border); }
+  .editor table[data-md~='table'] { margin-block: calc(var(--spacing) * 1); }
+
   /* The other views of the workspace (T-19 step 4, blocks/navigation/workspace-views.html): mail, messages, tasks, calendar,
      board, assistant, comments, search. They are C22 components placed in the columns and the window; what follows is
      only their fit there, for every pack (a layout pack reshapes them, the defaults look like the rest of the pack).
@@ -4163,9 +4255,9 @@
     }
     .workspace > .workspace-nav:is([data-level='1'], [data-level='2']) .workspace-item > svg:first-child { display: block; }
     .workspace > .workspace-nav:is([data-level='1'], [data-level='2']) .workspace-item > span:not(.avatar) { display: block; width: 100%; }
-    .workspace > .workspace-nav:is([data-level='1'], [data-level='2']) :is(.workspace-label, header:where(:not(.item > header))) { justify-content: center; padding-inline: 0; }
-    .workspace > .workspace-nav:is([data-level='1'], [data-level='2']) :is(.workspace-label, header:where(:not(.item > header))) > span,
-    .workspace > .workspace-nav:is([data-level='1'], [data-level='2']) header:where(:not(.item > header)) > .btn > span,
+    .workspace > .workspace-nav:is([data-level='1'], [data-level='2']) :is(.workspace-label, header:where(:not(.item > header, .timeline > li > header))) { justify-content: center; padding-inline: 0; }
+    .workspace > .workspace-nav:is([data-level='1'], [data-level='2']) :is(.workspace-label, header:where(:not(.item > header, .timeline > li > header))) > span,
+    .workspace > .workspace-nav:is([data-level='1'], [data-level='2']) header:where(:not(.item > header, .timeline > li > header)) > .btn > span,
     .workspace > .workspace-nav:is([data-level='1'], [data-level='2']) .workspace-item > :is(.badge, [data-pin]) { display: none; }
     .workspace > .workspace-nav:is([data-level='2'], [data-level='3']) {
       grid-column: 1 / -1;
@@ -4183,6 +4275,9 @@
       width: min(var(--workspace-nav3), calc(100% - var(--workspace-phone-nav1) - var(--workspace-step-1)));
     }
     .workspace[data-nav-open] > .workspace-nav:is([data-level='2'], [data-level='3']) { display: flex; }
+    /* What sticks inside the window (the head, the first column and the corner of a sheet, z-10 to z-30) stays in the
+       window: open over it, nav2 and nav3 cover it (2026-11-22, from UnderDoc's table view on the phone). */
+    .workspace[data-nav-open] > :is(.workspace-main, .workspace-windows, .workspace-tabs) { isolation: isolate; }
     .workspace > .workspace-windows { grid-column: 2; }
     .workspace-windows:has(> [data-focus]) > .workspace-window:not([data-focus]) { display: none; }
     .workspace-main > section:has(> nav.toc) { padding-inline-start: calc(var(--spacing) * 4); }
@@ -5137,6 +5232,17 @@
 }
 
 /* ============================================================
+ * A column aligned in Markdown (|---:|, |:---:|): goldmark and an editor's table write it as th/td[align]. The vendor
+ * aligns head cells to the start, which outranks the attribute; here the attribute wins, in the head as in the body
+ * (2026-11-22, from UnderDoc's editor, whose drawn table had classes of its own for it).
+ * ============================================================ */
+@layer components {
+  .table :is(th, td)[align='right'] { text-align: right; }
+  .table :is(th, td)[align='center'] { text-align: center; }
+  .table :is(th, td)[align='left'] { text-align: left; }
+}
+
+/* ============================================================
  * The box a sheet scrolls in: a .table-container holding a .table[data-sticky] scrolls both ways inside a bounded height
  * (--table-max-height, 24rem by default; a max-h-* utility or the property on the container changes it), so the head and
  * the first column stick to the box itself. Without a sticky table the container stays what it was (sideways only).
@@ -5182,6 +5288,19 @@
     box-shadow: inset -2px 0 0 var(--primary);
   }
   .table[data-sticky='sheet'] tbody > tr > th:first-child[aria-selected='true']:dir(rtl) { box-shadow: inset 2px 0 0 var(--primary); }
+  /* The current row (a hit of a search, a row a link points to): tr[aria-current] or only its number
+     th[scope="row"][aria-current]. Its number is filled with the primary role and bold, a block instead of a tint, so it
+     differs from a selected number (tint and bar) by its shape; on the whole row a line above and below its cells runs
+     along it. Selected and active cells keep their frame (the row's lines are the weaker rule). (2026-11-22, from
+     UnderDoc's table view.) */
+  .table[data-sticky='sheet'] tbody > tr:is([aria-current]:not([aria-current='false'])) > th:first-child,
+  .table[data-sticky='sheet'] tbody > tr > th:first-child:is([aria-current]:not([aria-current='false'])) {
+    @apply bg-primary text-primary-foreground font-semibold;
+    box-shadow: none;
+  }
+  .table[data-sticky='sheet'] :where(tbody > tr[aria-current]:not([aria-current='false'])) > td {
+    box-shadow: inset 0 1px 0 var(--primary), inset 0 -1px 0 var(--primary);
+  }
 }
 
 /* ============================================================

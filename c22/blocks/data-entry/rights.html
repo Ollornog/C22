@@ -4,7 +4,10 @@
      here are a table with a role select and a take-back button; what comes from above shows where it comes from and the
      role as one split badge (.badge-split: origin | role). Sharing picks a person, a group or everyone in one combobox
      grouped with icons (the icon and the group heading tell the kind, not a colour), then a role. In an app the same
-     header/section/footer sit in dialog.dialog. -->
+     header/section/footer sit in dialog.dialog. The combobox's behaviour is Basecoat's: an app that draws its own menus
+     and so does not load basecoat.all.min.js loads Basecoat's core and its combobox alone (vendor/basecoat/dist/js/
+     basecoat.min.js, then combobox.min.js, both before c22.js): the core's observer then takes over only .combobox, one
+     rendered later too, and leaves .dropdown-menu, .popover, .command, .tabs and .toast to the app. -->
 <div class="c22-examples">
   <div class="c22-example">
     <span class="c22-example-label">Rechte-Dialog: Besitzer, Vererbung, Rollen hier, Rollen von oben, Freigabe an Person, Gruppe oder alle</span>

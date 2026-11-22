@@ -137,7 +137,26 @@ def baue_site(arbeit: Path) -> Path:
     site = arbeit / "site"
     subprocess.run([sys.executable, "scripts/build-site.py", str(site)], cwd=quelle, check=True,
                    stdout=subprocess.DEVNULL)
+    probeseite_combobox(site)
     return site
+
+
+def probeseite_combobox(site: Path) -> None:
+    """A page as an app with its own menus builds it: Basecoat's core and its combobox alone, not basecoat.all.min.js
+    (the gallery loads the whole bundle, so it cannot show this). Not part of the website; only the suite opens it."""
+    probe = site / "probe"
+    probe.mkdir()
+    for datei in ("basecoat.min.js", "combobox.min.js"):
+        shutil.copy2(ROOT / "c22" / "vendor" / "basecoat" / "dist" / "js" / datei, probe / datei)
+    (probe / "combobox-alone.html").write_text(
+        '<!doctype html><html lang="de"><head><meta charset="utf-8"><link rel="icon" href="data:,">'
+        '<link rel="stylesheet" href="../c22/static/css/c22-vega.css">'
+        '<script src="basecoat.min.js" defer></script><script src="combobox.min.js" defer></script>'
+        '<script src="../c22/static/js/c22.js" defer></script></head><body class="p-8">'
+        '<div class="dropdown-menu" id="probe-dm"><button type="button" class="btn" id="probe-dm-t" aria-haspopup="menu" '
+        'aria-controls="probe-dm-m" aria-expanded="false">Menü der App</button><div id="probe-dm-p" data-popover '
+        'aria-hidden="true"><div role="menu" id="probe-dm-m"><button type="button" role="menuitem">Eins</button></div></div>'
+        '</div><div id="probe-ort" class="mt-4"></div></body></html>', encoding="utf-8")
 
 
 class StillerHandler(http.server.SimpleHTTPRequestHandler):
@@ -1464,6 +1483,185 @@ def arbeitsbereich_menues(r: Report, b: Browser, basis: str) -> None:
             f"vega {v['schalter']} {v['schweben']} | underdoc {ud['schalter']} {ud['schweben']}")
 
 
+LUECKEN5_HILFE = r"""
+  const c = (e, p) => getComputedStyle(e, p || null), r = e => e.getBoundingClientRect();
+  const token = (w, wert, eig = 'color') => { const i = document.createElement('i'); i.style[eig] = wert; w.append(i); const v = c(i)[eig]; i.remove(); return v; };
+  const beispiel = (abschnitt, vor) => [...document.querySelectorAll(`#${abschnitt} .c22-example`)]
+    .find(e => e.querySelector('.c22-example-label').textContent.replace(/^[a-z]+\) /, '').startsWith(vor));
+"""
+
+LUECKEN5_WERTE = r"""(() => {""" + LUECKEN5_HILFE + r"""
+  // 2. The current row of a sheet: its number filled (a block, not a tint with a bar), a line above and below its cells;
+  //    a selected number stays tint and bar, a selected or active cell keeps its frame.
+  const blatt = document.querySelector('table[aria-label="Umsatz 2026"]'), w = blatt.closest('section');
+  const primary = token(w, 'var(--primary)'), primaryFg = token(w, 'var(--primary-foreground)');
+  const jetzt = blatt.querySelector('tr[aria-current] > th'), gewaehlt = blatt.querySelector('th[scope=row][aria-selected="true"]');
+  const zelle = blatt.querySelector('tr[aria-current] > td'), andere = blatt.querySelector('tr:not([aria-current]) > td:not([aria-selected])');
+  const zeile = { nummer: [c(jetzt).backgroundColor === primary, c(jetzt).color === primaryFg, c(jetzt).fontWeight, c(jetzt).boxShadow],
+                  gewaehlt: [c(gewaehlt).backgroundColor === primary, c(gewaehlt).boxShadow !== 'none'],
+                  linien: [(c(zelle).boxShadow.match(/inset/g) || []).length, c(andere).boxShadow],
+                  aktiv: c(blatt.querySelector('td[data-active]')).boxShadow.includes('2px') };
+  return { zeile };
+})()"""
+
+LUECKEN5_BLOECKE = r"""(() => {""" + LUECKEN5_HILFE + r"""
+  // 2. The number of a hit's row in the window's sheet (th[scope=row][aria-current] alone, as UnderDoc writes it).
+  const bsp = beispiel('navigation-workspace-views', 'Protokoll in nav3'), w = bsp.querySelector('.workspace');
+  const nr = bsp.querySelector('th[scope=row][aria-current]');
+  const nummer = [c(nr).backgroundColor === token(w, 'var(--primary)'), c(nr).fontWeight];
+  // 3. A log in nav3: the head of an entry is no column heading (no capitals, no wide letters; who and when on one line),
+  //    a column heading elsewhere still is.
+  const kopf = bsp.querySelector('.workspace-nav[data-level="3"] .timeline > li > header');
+  const wer = kopf.querySelector('strong'), wann = kopf.querySelector('time');
+  const spalte = document.querySelector('#navigation-workspace .workspace-nav[data-level="2"] > header, #navigation-workspace .workspace-nav header:not(.item > header)');
+  const protokoll = [c(kopf).textTransform, c(kopf).letterSpacing, Math.abs(r(wer).top - r(wann).top) < 4, c(wer).textTransform];
+  const ueberschrift = c(spalte).textTransform;
+  // 5. The live preview of a Markdown editor.
+  const ed = beispiel('navigation-workspace-editing', 'Editor: Markdown als Vorschau').querySelector('.editor');
+  const md = (t, i = 0) => ed.querySelectorAll(`[data-md~="${t}"]`)[i];
+  const muted = token(ed, 'var(--muted-foreground)'), mutedBg = token(ed, 'var(--muted)', 'backgroundColor');
+  const mono = token(ed, 'var(--font-mono)', 'fontFamily'), px = v => parseFloat(v);
+  const text = ed.querySelector(':scope > div > div:not([data-md])');
+  const groesse = ['h1', 'h2', 'h3'].map(t => c(md(t)).fontSize).concat([c(text).fontSize]);
+  const soll = ['--editor-h1', '--editor-h2', '--editor-h3'].map(t => token(ed, `var(${t})`, 'fontSize'));
+  const textStart = e => { const g = document.createRange(); g.selectNodeContents(e); return g.getClientRects()[0].left; };
+  const zitatLage = () => { const q = md('quote'); return Math.round(textStart(q) - (r(q).left + px(c(q, '::after').left))); };
+  const codeLage = () => { const z = md('codeblock', 1); return Math.round(textStart(z) - r(z).left); };
+  const flussHoehe = () => { const d = document.createElement('div'); d.style.height = 'var(--flow)'; md('blank').after(d); const h = Math.round(r(d).height); d.remove(); return h; };
+  const kanten = ['first', null, 'last'].map((k, i) => { const z = md('codeblock', [0, 1, 3][i]); return [px(c(z).borderTopLeftRadius) > 0, px(c(z).borderBottomLeftRadius) > 0]; });
+  const vorschau = {
+    groesse, soll, gewicht: c(md('h1')).fontWeight,
+    lauf: [c(md('strong')).fontWeight, c(md('em')).fontStyle, c(md('del')).textDecorationLine,
+           c(md('code')).fontFamily === mono && c(md('code')).backgroundColor === mutedBg,
+           c(md('link')).textDecorationLine + ' ' + c(md('link')).textDecorationStyle, c(md('wiki')).textDecorationStyle,
+           c(md('url')).color === muted, c(md('mark')).color === muted, c(md('info')).color === muted,
+           c(md('done')).textDecorationLine, c(md('done')).color === muted],
+    zitat: [c(md('quote')).fontStyle, c(md('quote')).color === muted, c(md('quote'), '::after').width],
+    code: [c(md('codeblock')).fontFamily === mono, c(md('codeblock', 1)).backgroundColor === mutedBg, kanten],
+    teile: [c(md('table-source')).fontFamily === mono, c(md('table').querySelector('th[align=right]')).textAlign,
+            c(md('directive')).borderTopStyle, c(md('image-alt')).borderTopStyle, c(md('rule')).borderTopStyle + ' ' + c(md('rule')).borderTopWidth,
+            Math.round(r(md('task')).width) === Math.round(px(c(md('task').parentElement).fontSize)), c(md('image')).maxWidth,
+            Math.round(r(md('blank')).height) === flussHoehe()],
+    lagen: [zitatLage(), codeLage()],
+  };
+  // Against an editor's unlayered CSS: CodeMirror pads every line, an app resets it; both outrank C22's layer. The quote
+  // and the code block must stand in all the same.
+  const stil = document.createElement('style'); document.head.append(stil);
+  stil.textContent = '.editor > div > div { padding: 0 2px 0 6px; }'; const mitCm = [zitatLage(), codeLage()];
+  stil.textContent = '.editor > div > div { padding: 0; }'; const ohnePolster = [zitatLage(), codeLage()];
+  stil.remove();
+  vorschau.cm = { mitCm, ohnePolster };
+  return { nummer, protokoll, ueberschrift, vorschau };
+})()"""
+
+LUECKEN5_HANDY = r"""(() => {""" + LUECKEN5_HILFE + r"""
+  // 4. The phone: nav2 and nav3 open over the window cover what sticks in the window's sheet.
+  const bsp = beispiel('navigation-workspace-views', 'Protokoll in nav3'), w = bsp.querySelector('.workspace');
+  w.setAttribute('data-nav-open', ''); bsp.scrollIntoView({ block: 'start' });
+  const ecke = bsp.querySelector('thead th:first-child'), kopf = bsp.querySelectorAll('thead th')[1], nr = bsp.querySelector('tbody th[scope=row]');
+  const navs = [...bsp.querySelectorAll('.workspace-nav[data-level="2"], .workspace-nav[data-level="3"]')];
+  const oben = e => { const b = r(e), x = b.left + b.width / 2, y = b.top + b.height / 2, t = document.elementFromPoint(x, y);
+    return [navs.some(n => n.contains(t)), navs.some(n => { const q = r(n); return x >= q.left && x <= q.right; })]; };
+  const aus = { ecke: oben(ecke), kopf: oben(kopf), nummer: oben(nr) };
+  w.removeAttribute('data-nav-open');
+  aus.zu = document.elementFromPoint(r(ecke).left + 4, r(ecke).top + 4) === ecke || ecke.contains(document.elementFromPoint(r(ecke).left + 4, r(ecke).top + 4));
+  return aus;
+})()"""
+
+COMBOBOX_RECHTE = r"""((markup) => {
+  document.getElementById('probe-ort').innerHTML = markup;
+})"""
+COMBOBOX_WERTE = r"""(() => {
+  const cb = document.querySelector('#probe-ort .combobox'), pop = cb.querySelector('[data-popover]');
+  const sicht = v => [...cb.querySelectorAll('[role=option]')].filter(o => o.getAttribute('aria-hidden') !== 'true').map(o => o.dataset.value);
+  return { offen: pop.getAttribute('aria-hidden'), sicht: sicht(), wert: cb.querySelector('input[type=hidden]').value,
+           feld: cb.querySelector('input[role=combobox]').value,
+           menue: [document.getElementById('probe-dm').hasAttribute('data-dropdown-menu-initialized'),
+                   document.getElementById('probe-dm-t').getAttribute('aria-expanded')] };
+})()"""
+
+
+def luecken_fuenf(r: Report, b: Browser, basis: str) -> None:
+    """What UnderDoc's last switch found missing (2026-11-22, fifth round): a grouped combobox without Basecoat's global
+    observer, the current row of a sheet, a log in nav3, a sheet under the open columns on the phone, the live preview of a
+    Markdown editor."""
+    # 1. Combobox alone: Basecoat's core and its combobox, rendered after load as an app does.
+    quelle = (ROOT / "c22" / "blocks" / "data-entry" / "rights.html").read_text(encoding="utf-8")
+    anfang = quelle.index('<div class="combobox')
+    ende = quelle.index('<input type="hidden" name="who" value="">', anfang)
+    ende = quelle.index("</div>", ende) + len("</div>")
+    f = b.seite(1280, 900)
+    f.geh(f"{basis}/probe/combobox-alone.html")
+    f.js(f"{COMBOBOX_RECHTE}({json.dumps(quelle[anfang:ende])})")
+    f.warte("document.querySelector('#probe-ort .combobox[data-combobox-initialized]') !== null")
+    f.js("document.getElementById('probe-dm-t').click()")
+    f.js("(() => { const i = document.querySelector('#probe-ort input[role=combobox]'); i.focus(); i.click(); })()")
+    f.sende("Input.insertText", text="Bü")
+    f.warte("document.querySelector('#probe-ort [data-popover]').getAttribute('aria-hidden') === 'false'")
+    gefiltert = f.js(COMBOBOX_WERTE)
+    f.js("document.querySelector('#probe-ort [role=option][data-value=\"group:buero\"]').click()")
+    gewaehlt = f.js(COMBOBOX_WERTE)
+    f.sende("Page.close")
+    r.check("Combobox allein (Basecoats Kern + combobox.min.js, ohne basecoat.all.min.js): eine später eingesetzte gruppierte "
+            "Combobox filtert über ihre Gruppen und wählt; ein .dropdown-menu der App bleibt unberührt",
+            gefiltert["offen"] == "false" and gefiltert["sicht"] == ["group:buero"]
+            and gewaehlt["wert"] == "group:buero" and gewaehlt["feld"] == "Gruppe Büro" and gewaehlt["offen"] == "true"
+            and gefiltert["menue"] == [False, "false"], f"gefiltert {gefiltert} | gewählt {gewaehlt}")
+
+    werte, bloecke, handy = {}, {}, {}
+    for pack in ("vega", "underdoc"):
+        f = b.seite(1280, 900)
+        f.geh(f"{basis}/components.html?pack={pack}&theme=light&lang=de")
+        werte[pack] = f.js(LUECKEN5_WERTE)
+        f.sende("Page.close")
+        f = b.seite(1280, 900)
+        f.geh(f"{basis}/blocks.html?pack={pack}&theme=light&lang=de")
+        bloecke[pack] = f.js(LUECKEN5_BLOECKE)
+        f.sende("Page.close")
+        f = b.seite(390, 844)
+        f.geh(f"{basis}/blocks.html?pack={pack}&theme=light&lang=de")
+        handy[pack] = f.js(LUECKEN5_HANDY)
+        f.sende("Page.close")
+    beide = ("vega", "underdoc")
+    zeige = lambda d, k: " | ".join(f"{p} {d[p][k]}" for p in beide)  # noqa: E731
+    r.check("Tabellenraster: die aktuelle Zeile (aria-current) mit gefüllter Nummer (fett, ohne Balken) und einer Linie über und unter "
+            "ihren Zellen; eine gewählte Nummer bleibt getönt mit Balken, die aktive Zelle behält ihren Rahmen",
+            all(werte[p]["zeile"] == {"nummer": [True, True, "600", "none"], "gewaehlt": [False, True], "linien": [2, "none"], "aktiv": True}
+                for p in beide), zeige(werte, "zeile"))
+    r.check("Tabellenraster im Fenster: th[scope=row][aria-current] allein füllt die Nummer",
+            all(bloecke[p]["nummer"] == [True, "600"] for p in beide), zeige(bloecke, "nummer"))
+    r.check("Protokoll in nav3: der Kopf eines Eintrags ist keine Spaltenüberschrift (keine Versalien, kein Sperrsatz, wer und wann "
+            "auf einer Zeile); Spaltenüberschriften bleiben in Versalien",
+            all(bloecke[p]["protokoll"] == ["none", "normal", True, "none"] and bloecke[p]["ueberschrift"] == "uppercase" for p in beide),
+            " | ".join(f"{p} {bloecke[p]['protokoll']} {bloecke[p]['ueberschrift']}" for p in beide))
+    r.check("Handy: offenes nav2/nav3 deckt die klebenden Zellen des Blatts im Fenster (Ecke, Kopf, Zeilennummer); geschlossen ist die Ecke oben",
+            all(all(v == [True, True] for k, v in handy[p].items() if k != "zu") and handy[p]["zu"] for p in beide),
+            zeige(handy, "ecke") + " / " + " | ".join(f"{p} {handy[p]}" for p in beide))
+    v, ud = bloecke["vega"]["vorschau"], bloecke["underdoc"]["vorschau"]
+    r.check("Editor-Vorschau: Überschriften in den Größen von --editor-h1…h3 (vega 24/20/18px, underdoc wie die gelesene Seite 20/18/16px), "
+            "fett wie Überschriften, größer als der Text",
+            all(x["groesse"][:3] == x["soll"] and x["gewicht"] == "600" for x in (v, ud))
+            and v["groesse"][:3] == ["24px", "20px", "18px"] and ud["groesse"][:3] == ["20px", "18px", "16px"],
+            f"vega {v['groesse']} {v['soll']} | underdoc {ud['groesse']} {ud['soll']}")
+    r.check("Editor-Vorschau: fett, kursiv, durchgestrichen, Code (mono auf muted), Link unterstrichen, Wiki-Link gepunktet, Adresse, "
+            "Markdown-Zeichen und Sprache gedämpft, erledigte Aufgabe durchgestrichen und gedämpft",
+            all(x["lauf"] == ["700", "italic", "line-through", True, "underline solid", "dotted", True, True, True, "line-through", True]
+                for x in (v, ud)), f"vega {v['lauf']} | underdoc {ud['lauf']}")
+    r.check("Editor-Vorschau: Zitat kursiv und gedämpft mit 2px-Balken, 24px eingerückt; Codeblock mono auf muted, oben und unten "
+            "gerundet, 12px eingerückt",
+            all(x["zitat"] == ["italic", True, "2px"] and x["code"] == [True, True, [[True, False], [False, False], [False, True]]]
+                and x["lagen"] == [24, 12] for x in (v, ud)),
+            f"vega {v['zitat']} {v['code']} {v['lagen']} | underdoc {ud['zitat']} {ud['code']} {ud['lagen']}")
+    r.check("Editor-Vorschau: Tabellenquelle mono, Spalte rechts (th[align]), Direktive und Bildtext gestrichelt, Linie, Kästchen 1em, "
+            "Bild höchstens so breit wie die Zeile, Leerzeile so hoch wie der Absatzabstand",
+            all(x["teile"] == [True, "right", "dashed", "dashed", "solid 1px", True, "100%", True] for x in (v, ud)),
+            f"vega {v['teile']} | underdoc {ud['teile']}")
+    r.check("Editor-Vorschau gegen ungelayertes Editor-CSS (CodeMirrors Polster je Zeile, die Rücksetzung der App): Zitat und Codeblock "
+            "bleiben eingerückt",
+            all(min(x["cm"]["mitCm"][0], x["cm"]["ohnePolster"][0]) >= 24 and min(x["cm"]["mitCm"][1], x["cm"]["ohnePolster"][1]) >= 12
+                for x in (v, ud)), f"vega {v['cm']} | underdoc {ud['cm']}")
+
+
 def main() -> int:
     erneuern = "--renew" in sys.argv
     r = Report("Browser — Galerie in Chrome")
@@ -1485,6 +1683,7 @@ def main() -> int:
                     arbeitsbereich_luecken(r, b, basis)
                     arbeitsbereich_editor(r, b, basis)
                     arbeitsbereich_menues(r, b, basis)
+                    luecken_fuenf(r, b, basis)
         except BrowserFehler as fehler:
             r.check("Browser läuft durch", False, str(fehler))
         finally:
