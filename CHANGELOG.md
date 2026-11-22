@@ -8,6 +8,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Block "Arbeitsbereich: Post, Aufgaben, Kalender, Tafel, Assistent, Kommentare, Suche"** (T-19 step 4,
+  `blocks/navigation/workspace-views.html`): the other views of UnderDoc's workspace from C22 parts — `.item` lists in
+  nav3 and the window (an item's `header` as a muted line over its title, `data-state="unread"` bold, `aria-current`
+  tinted with a bar, a checked checkbox strikes the title through, `aside > time`, `mark` in an excerpt), the facts of a
+  message as `dl` first in the document column, `table.month-sheet` with entries (`td > small`), the assistant and the
+  comments in the window's drawer (`[role=log]` of bubbles; `ol.timeline` with nested replies and `li[data-state=done]`),
+  the saved search as `.filter-bar`. Reference images in vega and `underdoc`; the pack gives them the mockup's look.
+- **Board** (`.board`): columns of cards side by side, each a `.card[data-size=sm]` with a count in its heading;
+  scrolls sideways.
+- **Dragging a tab, drop zones of a window**: `.workspace-tab[data-drop="before|after|slot"]` (line, stand-in) and
+  `.workspace-main > [data-drop-zone="start|end|here"]` (`data-size="sm"`: a strip at the edge) with the word as
+  content, so it is translated with the page.
+- **`data-behaviour="app"` on `.workspace`**: c22.js leaves that workspace to the app (no pointer, keys, clicks, double
+  click, context-menu heading, restore or grip labels there); its other parts keep working inside.
+
 - **Block editor building blocks** (T-19 step 2, block "Arbeitsbereich: Bearbeiten"): `.editor-bar` (a toolbar of
   groups that wraps into a second line; as a row of the window or floating above a block), `.editor-block` (add button
   + text area), `.editor` with `[data-used]` (a block used elsewhere, framed, says where), a block's handle
@@ -49,6 +64,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   sections a layout pack reshapes in that pack as well (`PACK_ABSCHNITTE`, references `…@underdoc.png`)
   and reads the decisive values (band, capitals, entries, document size, radius) in `underdoc` and in vega, because
   the image comparison does not see a faint tint or half a pixel of text.
+
+### Changed
+
+- **Pack `underdoc`: menus of the workspace at the mockup's size** (13px rows, 11.5px descriptions) — for `.command`
+  and popover menus inside `.workspace`; a menu outside keeps the plain look (where to hang them: `docs/theming.md`).
+- The column headings' rules of `.workspace-nav` no longer reach the header of an `.item` inside a column.
 
 ### Fixed
 
