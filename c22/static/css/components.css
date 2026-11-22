@@ -2100,6 +2100,15 @@
   .combobox [role='option'][aria-selected='true'] {
     @apply font-bold;
   }
+  /* A grouped combobox while one types (2026-11-22, from UnderDoc's rights dialog): Basecoat hides a group without a hit,
+     not the line (hr[role=separator]) between groups, so two lines stood on top of each other under the hit, or one at the
+     top or bottom of the list. A line shows only right after something visible (an option or a group with a hit) and with
+     something visible after it somewhere; with a line between every two groups, as the canonical markup has it, that is
+     exactly one line between two visible groups. Basecoat's script stays as it is. */
+  .combobox [role='listbox'] > [role='separator']:not(:is([role='option']:not([aria-hidden='true']), [role='group']:has([role='option']:not([aria-hidden='true']))) + *),
+  .combobox [role='listbox'] > [role='separator']:not(:has(~ [role='option']:not([aria-hidden='true']), ~ [role='group'] [role='option']:not([aria-hidden='true']))) {
+    display: none;
+  }
 
   /* Mehrfachauswahl-Listbox (aria-multiselectable, z.B. Filter-Combobox): Haken statt
      Füllung — gleiche Linie wie menuitemcheckbox/Checkbox (PO 21). Überschreibt den
@@ -2576,9 +2585,18 @@
      c22.js synchron VOR dem Öffnen — und sie gehören bewusst NICHT zur
      Öffnungs-Transition (sonst „fliegt" das Panel beim ersten Öffnen).
      Praxis-Fund 2026-07-20/21. */
-  .dropdown-menu[data-popover-fixed] > [data-popover] {
+  .dropdown-menu[data-popover-fixed] > [data-popover],
+  .combobox[data-popover-fixed] > [data-popover] {
     position: fixed;
+    margin: 0;
     transition-property: opacity, transform, translate, scale, display;
+  }
+  /* The same for the list of a .combobox (2026-11-22, from UnderDoc's rights dialog): fixed, it leaves a section that
+     scrolls, also inside a dialog (c22.js places it in the dialog's box, which is its containing block there). Basecoat's
+     min-width (100%) would then be the dialog's or the screen's width: the list is as wide as the field instead. The gap
+     to the trigger is c22.js's (4px, as Basecoat's margin when absolute). */
+  .combobox[data-popover-fixed] > [data-popover] {
+    min-width: max(var(--popover-anchor-width, 0px), 9rem);
   }
 }
 
@@ -4125,7 +4143,34 @@
   }
   .editor img[data-md~='image'] { max-width: 100%; vertical-align: middle; }
   .editor [data-md~='rule'] { display: inline-block; width: 100%; vertical-align: middle; border-top: 1px solid var(--border); }
-  .editor table[data-md~='table'] { margin-block: calc(var(--spacing) * 1); }
+  .editor :is(table, .table-container)[data-md~='table'] { margin-block: calc(var(--spacing) * 1); }
+  /* The drawn table may stand in the same box as when read (2026-11-22, from UnderDoc): data-md="table" on the
+     .table-container around the .table, with the frame the reading view gives it (e.g. rounded-md border), so it looks the
+     same in both. An editor that builds the table itself often writes its rows straight into it, without thead and tbody:
+     the last row then draws no line either, so it does not double the frame's bottom edge. */
+  .editor [data-md~='table'] tr:last-child { border-bottom-width: 0; }
+
+  /* Room round a heading, as in .typeset (2026-11-22, from UnderDoc's editor): 1.8 × --flow above it (not on the first
+     line, also when the wrapper of its block, an empty [data-block], stands before it), half a --flow below h2 to h4, a
+     whole one below h1, so the page does not jump between reading and writing. The blank line before a heading (directly,
+     or with the wrapper of the heading's block between) takes no room; the one after h2 to h4 half of it. The room above is
+     a transparent border: CodeMirror pads every line (unlayered, it outranks this layer), so a padding would not hold. A
+     frame of a block used elsewhere ([data-used] middle/last) runs on through that room. */
+  .editor :is([data-md~='h1'], [data-md~='h2'], [data-md~='h3'], [data-md~='h4']):not(:first-child, [data-block]:first-child + *) {
+    border-top: calc(var(--flow) * 1.8) solid transparent;
+  }
+  .editor [data-md~='blank']:has(+ :is([data-md~='h1'], [data-md~='h2'], [data-md~='h3'], [data-md~='h4']), + [data-block] + :is([data-md~='h1'], [data-md~='h2'], [data-md~='h3'], [data-md~='h4'])) {
+    height: 0;
+    line-height: 0;
+    overflow: hidden;
+  }
+  .editor :is([data-md~='h2'], [data-md~='h3'], [data-md~='h4']) + [data-md~='blank'] {
+    height: calc(var(--flow) * 0.5);
+    line-height: calc(var(--flow) * 0.5);
+  }
+  .editor :is([data-md~='h1'], [data-md~='h2'], [data-md~='h3'], [data-md~='h4']):is([data-used='middle'], [data-used='last']):not(:first-child, [data-block]:first-child + *)::before {
+    inset-block-start: calc(var(--flow) * -1.8);
+  }
 
   /* The other views of the workspace (T-19 step 4, blocks/navigation/workspace-views.html): mail, messages, tasks, calendar,
      board, assistant, comments, search. They are C22 components placed in the columns and the window; what follows is

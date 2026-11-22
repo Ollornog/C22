@@ -7,7 +7,8 @@
      header/section/footer sit in dialog.dialog. The combobox's behaviour is Basecoat's: an app that draws its own menus
      and so does not load basecoat.all.min.js loads Basecoat's core and its combobox alone (vendor/basecoat/dist/js/
      basecoat.min.js, then combobox.min.js, both before c22.js): the core's observer then takes over only .combobox, one
-     rendered later too, and leaves .dropdown-menu, .popover, .command, .tabs and .toast to the app. -->
+     rendered later too, and leaves .dropdown-menu, .popover, .command, .tabs and .toast to the app. In a section
+     that scrolls (a long dialog) the combobox takes data-popover-fixed: c22.js places its list fixed, so it is not cut off. -->
 <div class="c22-examples">
   <div class="c22-example">
     <span class="c22-example-label">Rechte-Dialog: Besitzer, Vererbung, Rollen hier, Rollen von oben, Freigabe an Person, Gruppe oder alle</span>
@@ -69,6 +70,44 @@
         </div>
       </section>
       <footer class="justify-end"><button type="button" class="btn" data-variant="outline">Schließen</button></footer>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Freigabe in einem Bereich, der scrollt (data-popover-fixed: die Liste der Combobox verlässt ihn, auch in einem Dialog; ist unten kein Platz, öffnet sie nach oben; beim Tippen bleibt zwischen zwei Gruppen genau eine Linie)</span>
+    <div class="card w-full max-w-xl">
+      <header>
+        <h2 class="card-title">Neue Sammlung</h2>
+        <p class="card-description">Mit wem sie geteilt wird.</p>
+      </header>
+      <section class="scrollbar grid max-h-32 gap-2 overflow-y-auto">
+        <p class="text-muted-foreground text-sm">Gruppe Büro · Bearbeiten</p>
+        <p class="text-muted-foreground text-sm">Jonas Weber · Lesen</p>
+        <div class="flex flex-wrap items-center gap-2">
+            <div class="combobox w-full max-w-xs" data-popover-fixed id="c22-rights-scroll-who">
+              <input type="text" class="input" id="c22-rights-scroll-who-input" role="combobox" autocomplete="off" spellcheck="false" aria-autocomplete="list" aria-expanded="false" aria-controls="c22-rights-scroll-who-listbox" placeholder="Person oder Gruppe suchen …" aria-label="Wer">
+              <svg data-icon-lu="chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="combobox-trigger-icon"><path d="m6 9 6 6 6-6"/></svg>
+              <div id="c22-rights-scroll-who-popover" data-popover aria-hidden="true">
+                <div role="listbox" id="c22-rights-scroll-who-listbox" aria-orientation="vertical" aria-labelledby="c22-rights-scroll-who-input" data-empty="Niemand gefunden.">
+                  <div role="option" data-value="tenant:" data-label="Alle in diesem Arbeitsbereich" data-filter="Alle Arbeitsbereich"><svg data-icon-lu="globe" class="size-4 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg><span>Alle in diesem Arbeitsbereich</span></div>
+                  <hr role="separator">
+                  <div role="group" aria-labelledby="c22-rights-scroll-who-gruppen"><div role="heading" id="c22-rights-scroll-who-gruppen">Gruppen</div>
+                    <div role="option" data-value="group:buero" data-label="Gruppe Büro" data-filter="Büro Gruppe"><svg data-icon-lu="users" class="size-4 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="flex flex-col"><span>Büro</span><span class="text-muted-foreground text-xs">4 Mitglieder · lokal</span></span></div>
+                    <div role="option" data-value="group:technik" data-label="Gruppe Technik" data-filter="Technik Gruppe Anmeldung"><svg data-icon-lu="users" class="size-4 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="flex flex-col"><span>Technik</span><span class="text-muted-foreground text-xs">7 Mitglieder · aus der Anmeldung</span></span></div>
+                  </div>
+                  <hr role="separator">
+                  <div role="group" aria-labelledby="c22-rights-scroll-who-personen"><div role="heading" id="c22-rights-scroll-who-personen">Personen</div>
+                    <div role="option" data-value="person:mara" data-label="Mara Albrecht" data-filter="Mara Albrecht mara"><svg data-icon-lu="user" class="size-4 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="flex flex-col"><span>Mara Albrecht</span><span class="text-muted-foreground text-xs">mara</span></span></div>
+                    <div role="option" data-value="person:jonas" data-label="Jonas Weber" data-filter="Jonas Weber jonas"><svg data-icon-lu="user" class="size-4 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="flex flex-col"><span>Jonas Weber</span><span class="text-muted-foreground text-xs">jonas</span></span></div>
+                  </div>
+                </div>
+              </div>
+              <input type="hidden" name="who" value="">
+            </div>
+            <button type="button" class="btn" data-size="sm">Hinzufügen</button>
+        </div>
+        <p class="text-muted-foreground text-sm">Alle in diesem Arbeitsbereich · Lesen</p>
+      </section>
+      <footer class="justify-end"><button type="button" class="btn">Anlegen</button></footer>
     </div>
   </div>
   <div class="c22-example">

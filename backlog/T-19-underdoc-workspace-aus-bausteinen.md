@@ -69,6 +69,13 @@ of the mockup moves into the pack `underdoc` (`c22/static/css/packs/underdoc.css
   (`--editor-h1`…`-h4`, in the pack the read page's sizes); `th`/`td[align]` aligns head cells too. Shown in
   `workspace-editing.html` (live preview), `workspace-views.html` (log in nav3, sheet with the row of a hit) and
   `table.html` (the sheet's current row).
+- Gaps from UnderDoc's last bridges (2026-11-22, sixth round, after done): room round a heading in `.editor` as in
+  `.typeset` (a transparent border above it, the blank line before it without height, also over an empty `[data-block]`;
+  half a `--flow` after h2 to h4); a drawn table in its reading box (`.table-container[data-md=table]`, no line under the
+  last row of a table without tbody); `data-popover-fixed` on a `.combobox` too (its list leaves a section that scrolls,
+  also in a dialog; upwards when there is no room below; follows the field while the section scrolls); no lines of empty
+  groups while one types in a grouped combobox. Shown in `workspace-editing.html` (live preview) and `rights.html` (sharing
+  in a section that scrolls).
 - Done (2026-11-22): UnderDoc runs on `.workspace` + `c22-underdoc.css` and emits no class of the old app
   workspace any more (UnderDoc #137, `17ec0b3`: its class check and browser suite green against a stylesheet without
   `app-workspace.css`); T-20 archived the old block and `app-workspace.css`.

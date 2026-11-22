@@ -250,6 +250,16 @@ there sets a padding on a line: a quote stands in by a margin with its bar drawn
 transparent borders over its muted ground. An app's own unlayered rule on the same property would still win; the app
 drops its own look of these parts and keeps only the editor's structure (its font, the scroller, the cursor, the
 selection). The browser suite measures the indents again under CodeMirror's line padding and under an app's reset.
+The room round a heading is the typeset canon's too (1.8 × `--flow` above it, half a `--flow` below h2 to h4): a
+transparent `border-top` on the heading's line (drawn in whole pixels, so within a pixel of the reading view), the blank
+line before it (also with an empty `[data-block]` wrapper between) without height, the one after it half as high. A drawn
+table may stand in the box it has when read: `data-md="table"` on its `.table-container`, with the reading view's frame.
+
+**Menus and lists in a section that scrolls** take `data-popover-fixed` (on a `.dropdown-menu` or a `.combobox`): the
+panel is fixed and placed by c22.js, inside a dialog relative to the dialog's box (its containing block, since Basecoat
+centres it with translate and scale), upwards when there is no room below, following its trigger while the section
+scrolls. A grouped combobox shows a line between groups only while groups with hits stand on both sides of it (CSS on
+Basecoat's `aria-hidden`; its script stays as it is).
 
 ## Current state
 

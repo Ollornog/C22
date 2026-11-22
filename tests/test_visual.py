@@ -1641,6 +1641,145 @@ def luecken_fuenf(r: Report, b: Browser, basis: str) -> None:
                 for x in (v, ud)), f"vega {v['cm']} | underdoc {ud['cm']}")
 
 
+LUECKEN6_EDITOR = r"""(() => {""" + LUECKEN5_HILFE + r"""
+  // 1. Room round a heading in the editor, as in .typeset: 1.8 × --flow above it (not on the first line, also with an
+  //    empty block wrapper before it), the blank line before it none, the one after h2 to h4 half a --flow, after h1 a
+  //    whole one; it holds against CodeMirror's unlayered padding of every line. Built in the live preview's editor. A
+  //    border is drawn in whole pixels: the room above is the exact value within a pixel.
+  const ed = beispiel('navigation-workspace-editing', 'Editor: Markdown als Vorschau').querySelector('.editor');
+  const px = v => parseFloat(v);
+  const flow = e => { const i = document.createElement('i'); i.style.display = 'block'; i.style.height = 'var(--flow)'; e.append(i); const h = r(i).height; i.remove(); return h; };
+  const zeilen = document.createElement('div');
+  zeilen.innerHTML = '<div data-md="h1">Titel</div><div data-md="blank"><br></div><div>Absatz eins.</div><div data-md="blank"><br></div>'
+    + '<div data-md="h2">Zwei</div><div data-md="blank"><br></div><div>Absatz zwei.</div><div data-md="blank"><br></div>'
+    + '<div data-block></div><div data-md="h3">Drei</div><div data-md="blank"><br></div><div>Absatz drei.</div>'
+    + '<div data-md="blank"><br></div><div data-md="h1">Wieder eins</div><div data-md="blank"><br></div><div>Absatz vier.</div>'
+    + '<div data-used="first">Rahmen</div><div data-used="middle" data-md="h2">Mitte</div>';
+  ed.append(zeilen);
+  const z = [...zeilen.children];
+  const messen = () => {
+    const kopf = i => px(c(z[i]).borderTopWidth), soll = i => flow(z[i]) * 1.8, gleich = i => Math.abs(kopf(i) - soll(i)) < 1;
+    const hoch = i => Math.round(r(z[i]).height * 10) / 10, halb = i => Math.round(flow(z[i]) * 0.5 * 10) / 10, voll = i => Math.round(flow(z[i]) * 10) / 10;
+    return {
+      oben: [kopf(0), gleich(4), gleich(9), gleich(13)],
+      leer: [hoch(3), hoch(7), hoch(12)],
+      danach: [hoch(5) === halb(5), hoch(10) === halb(10), hoch(14) === voll(14), hoch(1) === voll(1)],
+      rahmen: Math.abs(px(c(z[17], '::before').top) + px(c(z[17]).borderTopWidth)) < 1,
+    };
+  };
+  const ohne = messen();
+  const stil = document.createElement('style'); document.head.append(stil);
+  stil.textContent = '.editor > div > div > div { padding: 0 2px 0 6px; }';
+  const mitCm = messen();
+  stil.remove(); zeilen.remove();
+  // 3. The drawn table in the box it has when read: the frame of the reading view, the flow's margin on the box, and a
+  //    table whose rows stand straight in it (no tbody, as an editor builds it) draws no line under its last row.
+  const kasten = ed.querySelector('.table-container[data-md~="table"]');
+  const roh = document.createElement('table'); roh.className = 'table text-sm';
+  for (let k = 0; k < 2; k++) { const tr = document.createElement('tr'); tr.append(document.createElement('td')); tr.firstChild.textContent = 'x'; roh.append(tr); }
+  const neu = document.createElement('div'); neu.className = 'table-container rounded-md border'; neu.dataset.md = 'table'; neu.append(roh); kasten.after(neu);
+  const tabelle = [c(kasten).borderTopWidth, c(kasten).borderTopLeftRadius !== '0px', c(kasten).marginTop,
+                   c(roh.rows[0]).borderBottomWidth, c(roh.rows[1]).borderBottomWidth];
+  neu.remove();
+  return { ohne, mitCm, tabelle };
+})()"""
+
+LUECKEN6_COMBOBOX = r"""((markup) => {
+  // A long dialog with a section that scrolls, the combobox in it with data-popover-fixed.
+  const d = document.createElement('dialog'); d.className = 'dialog'; d.id = 'probe-dialog';
+  d.innerHTML = '<div><header><h2>Rechte</h2></header><section class="grid max-h-24 gap-2 overflow-y-auto" id="probe-teil">'
+    + '<p>Eins</p><p>Zwei</p>' + markup.replace('class="combobox', 'data-popover-fixed class="combobox') + '<p>Drei</p><p>Vier</p><p>Fünf</p><p>Sechs</p></section>'
+    + '<footer><button type="button" class="btn">Schließen</button></footer></div>';
+  document.body.append(d); d.showModal();
+})"""
+
+LUECKEN6_LISTE = r"""(() => {
+  const cb = document.querySelector('#probe-dialog .combobox'), pop = cb.querySelector('[data-popover]'), r = e => e.getBoundingClientRect();
+  const linien = [...cb.querySelectorAll('[role=listbox] > [role=separator]')].filter(h => getComputedStyle(h).display !== 'none').length;
+  const a = r(cb), p = r(pop), opt = [...cb.querySelectorAll('[role=option]')].find(o => o.getAttribute('aria-hidden') !== 'true');
+  const o = opt && r(opt), oben = o && document.elementFromPoint(o.left + o.width / 2, o.top + o.height / 2);
+  return { offen: pop.getAttribute('aria-hidden'), linien, lage: getComputedStyle(pop).position,
+           abstand: Math.round(p.top - a.bottom), links: Math.round(p.left - a.left), breite: [Math.round(p.width) >= Math.round(a.width), p.width < a.width * 1.5],
+           frei: !!(opt && oben && opt.contains(oben)) };
+})()"""
+
+
+# Measured once nothing runs any more: a dialog and a list open with a short scale and slide (Basecoat).
+RUHE = """new Promise(ok => { const t = () => document.getAnimations().some(a => a.playState === 'running') ? requestAnimationFrame(t) : ok(); t(); })"""
+
+
+def luecken_sechs(r: Report, b: Browser, basis: str) -> None:
+    """What UnderDoc's last two bridges and two reports asked for (2026-11-22, sixth round): room round a heading in the
+    editor, a table in the editor in its reading box, the list of a combobox leaving a section that scrolls, and no lines of
+    empty groups while one types in a combobox."""
+    werte = {}
+    for pack in ("vega", "underdoc"):
+        f = b.seite(1280, 900)
+        f.geh(f"{basis}/blocks.html?pack={pack}&theme=light&lang=de")
+        werte[pack] = f.js(LUECKEN6_EDITOR)
+        f.sende("Page.close")
+    beide = ("vega", "underdoc")
+    gut = lambda m: (m["oben"] == [0, True, True, True] and m["leer"] == [0, 0, 0]  # noqa: E731
+                     and m["danach"] == [True, True, True, True] and m["rahmen"])
+    r.check("Editor: Überschriften mit dem Abstand der gelesenen Seite (1,8 × --flow darüber, nicht in der ersten Zeile, auch über eine "
+            "leere Block-Hülle hinweg; die Leerzeile davor ohne Höhe, danach halb bzw. nach h1 ganz); hält gegen CodeMirrors "
+            "ungelayertes Zeilenpolster; ein Rahmen [data-used] läuft durch",
+            all(gut(werte[p]["ohne"]) and gut(werte[p]["mitCm"]) for p in beide),
+            " | ".join(f"{p} {werte[p]['ohne']} / cm {werte[p]['mitCm']}" for p in beide))
+    r.check("Editor: die Tabelle im Kasten wie beim Lesen (Rahmen 1px gerundet, Abstand am Kasten); ohne tbody keine Linie unter der "
+            "letzten Zeile",
+            all(werte[p]["tabelle"] == ["1px", True, "4px", "1px", "0px"] for p in beide),
+            " | ".join(f"{p} {werte[p]['tabelle']}" for p in beide))
+
+    quelle = (ROOT / "c22" / "blocks" / "data-entry" / "rights.html").read_text(encoding="utf-8")
+    anfang = quelle.index('<div class="combobox')
+    ende = quelle.index('<input type="hidden" name="who" value="">', anfang)
+    ende = quelle.index("</div>", ende) + len("</div>")
+    f = b.seite(1280, 900)
+    f.geh(f"{basis}/probe/combobox-alone.html")
+    f.js(f"{LUECKEN6_COMBOBOX}({json.dumps(quelle[anfang:ende])})")
+    f.warte("document.querySelector('#probe-dialog .combobox[data-combobox-initialized]') !== null")
+    f.js(RUHE)
+    f.js("(() => { const t = document.getElementById('probe-teil'); t.scrollTop = t.scrollHeight; "
+         "const i = document.querySelector('#probe-dialog input[role=combobox]'); i.scrollIntoView({block: 'nearest'}); i.focus(); i.click(); })()")
+    f.warte("document.querySelector('#probe-dialog [data-popover]').getAttribute('aria-hidden') === 'false'")
+    f.js(RUHE)
+    offen = f.js(LUECKEN6_LISTE)
+    f.js("(() => { const t = document.getElementById('probe-teil'); t.scrollTop = Math.max(0, t.scrollTop - 12); })()")
+    f.js("new Promise(ok => requestAnimationFrame(() => requestAnimationFrame(ok)))")
+    f.js(RUHE)
+    gerollt = f.js(LUECKEN6_LISTE)
+    tippen = {}
+    for text in ("Al", "Bü"):
+        f.js("(() => { const i = document.querySelector('#probe-dialog input[role=combobox]'); i.value = ''; i.dispatchEvent(new Event('input', {bubbles: true})); i.focus(); })()")
+        f.sende("Input.insertText", text=text)
+        tippen[text] = f.js(LUECKEN6_LISTE)["linien"]
+    f.sende("Page.close")
+    r.check("Combobox mit data-popover-fixed in einem scrollenden Teil eines Dialogs: die Liste liegt fest, 4px unter dem Feld, so breit "
+            "wie das Feld, nicht abgeschnitten, und folgt dem Feld, wenn der Teil rollt",
+            offen["offen"] == "false" and offen["lage"] == "fixed" and offen["abstand"] == 4 and offen["links"] == 0
+            and offen["breite"] == [True, True] and offen["frei"] and gerollt["abstand"] == 4 and gerollt["links"] == 0,
+            f"offen {offen} | gerollt {gerollt}")
+    r.check("Combobox gruppiert beim Tippen: zwischen zwei sichtbaren Gruppen genau eine Linie, keine über oder unter allem "
+            "(ungefiltert 2, „Al“ 1, „Bü“ 0)",
+            offen["linien"] == 2 and tippen == {"Al": 1, "Bü": 0}, f"ungefiltert {offen['linien']} | {tippen}")
+
+    # Too little room below the field: the list opens upwards, its bottom 4px above the field.
+    f = b.seite(1280, 600)
+    f.geh(f"{basis}/probe/combobox-alone.html")
+    f.js("(() => { document.getElementById('probe-ort').className = 'fixed inset-x-8 bottom-4'; })()")
+    f.js(f"{COMBOBOX_RECHTE}({json.dumps(quelle[anfang:ende].replace('class=\"combobox', 'data-popover-fixed class=\"combobox'))})")
+    f.warte("document.querySelector('#probe-ort .combobox[data-combobox-initialized]') !== null")
+    f.js("(() => { const i = document.querySelector('#probe-ort input[role=combobox]'); i.focus(); i.click(); })()")
+    f.warte("document.querySelector('#probe-ort [data-popover]').getAttribute('aria-hidden') === 'false'")
+    f.js(RUHE)
+    hoch = f.js("(() => { const cb = document.querySelector('#probe-ort .combobox'), p = cb.querySelector('[data-popover]').getBoundingClientRect(); "
+                "return [Math.round(cb.getBoundingClientRect().top - p.bottom), p.top >= 0]; })()")
+    f.sende("Page.close")
+    r.check("Combobox mit data-popover-fixed nah am unteren Rand: die Liste öffnet nach oben, 4px über dem Feld",
+            hoch == [4, True], f"{hoch}")
+
+
 def main() -> int:
     erneuern = "--renew" in sys.argv
     r = Report("Browser — Galerie in Chrome")
@@ -1663,6 +1802,7 @@ def main() -> int:
                     arbeitsbereich_editor(r, b, basis)
                     arbeitsbereich_menues(r, b, basis)
                     luecken_fuenf(r, b, basis)
+                    luecken_sechs(r, b, basis)
         except BrowserFehler as fehler:
             r.check("Browser läuft durch", False, str(fehler))
         finally:
