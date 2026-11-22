@@ -1381,6 +1381,89 @@ def arbeitsbereich_editor(r: Report, b: Browser, basis: str) -> None:
             v["menue"] == ud["menue"] == "normal", f"vega {v['menue']} | underdoc {ud['menue']}")
 
 
+MENUE_WERTE = r"""(() => {
+  // What UnderDoc's menus and views found missing (2026-11-22, fourth round), read in workspace-views.html.
+  const ex = [...document.querySelectorAll('#navigation-workspace-views .c22-example')];
+  const finde = t => ex.find(e => e.querySelector('.c22-example-label').textContent.replace(/^[a-z]+\) /, '').startsWith(t));
+  const c = (e, p) => getComputedStyle(e, p), r = e => e.getBoundingClientRect();
+  const farbe = (w, name) => { const i = document.createElement('i'); i.style.color = c(w).getPropertyValue(name); w.append(i); const v = c(i).color; i.remove(); return v; };
+  // 1. A context menu inside the workspace: its rows (and a description in them) take the pack's menu size.
+  const menue = finde('Menü im Arbeitsbereich'), panel = menue.querySelector('.context-menu > [data-cm-panel]');
+  const zeile = panel.querySelector('[role=menuitem]'), klein = panel.querySelector('[role=menuitem] > div > small');
+  // 2.-5. Searching on the page and the comments of one element.
+  const kom = finde('Kommentare'), w = kom.querySelector('.workspace'), main = w.querySelector('.workspace-main');
+  const kopf = main.querySelector(':scope > header'), lade = main.querySelector(':scope > aside[data-drawer]');
+  const symbol = lade.querySelector(':scope > header > svg'), wort = document.createRange();
+  wort.selectNodeContents([...symbol.parentElement.childNodes].find(n => n.nodeType === 3 && n.data.trim()));
+  const marks = [...main.querySelectorAll('article mark')], jetzt = marks.find(m => m.hasAttribute('aria-current')), anderer = marks.find(m => !m.hasAttribute('aria-current'));
+  const fokus = main.querySelector('.comment-anchor[data-comment-focus]'), ohne = main.querySelector('.comment-anchor:not([data-comment-focus])');
+  const rahmen = e => [c(e).outlineStyle, c(e).outlineWidth];
+  // 7. Rows that are controls: a toggle row off and on.
+  const mod = finde('Module'), aus = mod.querySelector('button.item[aria-pressed="false"]'), an = mod.querySelector('button.item[aria-pressed="true"]');
+  return {
+    menue: [c(zeile).fontSize, c(klein).fontSize, panel.closest('.workspace') !== null, c(klein.parentElement).flexDirection, c(klein).color === farbe(w, '--muted-foreground')],
+    symbol: [Math.round(r(symbol).width), Math.round(r(symbol).height), symbol.getAttribute('class'), Math.round(wort.getBoundingClientRect().left - r(symbol).right)],
+    treffer: { jetzt: [...rahmen(jetzt), c(jetzt).fontWeight], anderer: [c(anderer).outlineStyle, c(anderer).fontWeight], grund: c(jetzt).backgroundColor === c(anderer).backgroundColor },
+    fokus: { grund: c(fokus).backgroundColor === farbe(w, '--accent'), rahmen: rahmen(fokus), ohne: [c(ohne).backgroundColor, c(ohne).outlineStyle] },
+    lade: { oben: Math.round(r(lade).top - r(main).top), kopf: Math.round(r(kopf).height) },
+    schalter: { aus: [c(aus).borderTopStyle, c(aus).color === farbe(w, '--muted-foreground')], an: [c(an).borderTopStyle, c(an.querySelector(':scope > aside')).fontWeight] },
+  };
+})()"""
+
+# Where the pointer goes to hover a row (the row scrolled into view first); then what the row looks like.
+SCHWEBE_ZIEL = r"""((vor, sel) => {
+  const ex = [...document.querySelectorAll('#navigation-workspace-views .c22-example')].find(e => e.querySelector('.c22-example-label').textContent.replace(/^[a-z]+\) /, '').startsWith(vor));
+  const e = ex.querySelector(sel); e.scrollIntoView({ block: 'center' }); const b = e.getBoundingClientRect();
+  return [b.left + b.width / 2, b.top + b.height / 2];
+})"""
+SCHWEBE_WERT = r"""((vor, sel) => {
+  const ex = [...document.querySelectorAll('#navigation-workspace-views .c22-example')].find(e => e.querySelector('.c22-example-label').textContent.replace(/^[a-z]+\) /, '').startsWith(vor));
+  const e = ex.querySelector(sel), w = ex.querySelector('.workspace'), s = getComputedStyle(e);
+  const i = document.createElement('i'); i.style.color = getComputedStyle(w).getPropertyValue('--accent'); w.append(i); const akzent = getComputedStyle(i).color; i.remove();
+  return [e.matches(':hover'), s.backgroundImage !== 'none' || s.backgroundColor === akzent, s.backgroundColor === akzent];
+})"""
+
+
+def arbeitsbereich_menues(r: Report, b: Browser, basis: str) -> None:
+    """What UnderDoc's menus and views on the building blocks found missing (2026-11-22, fourth round)."""
+    werte = {}
+    for pack in ("vega", "underdoc"):
+        f = b.seite(1280, 900)
+        f.geh(f"{basis}/blocks.html?pack={pack}&theme=light&lang=de")
+        werte[pack] = f.js(MENUE_WERTE)
+        schweben = {}
+        for vor, sel in (("Aufgaben", "main label.item"), ("Module", "button.item[aria-pressed]")):
+            x, y = f.js(f"{SCHWEBE_ZIEL}({json.dumps(vor)}, {json.dumps(sel)})")
+            f.sende("Input.dispatchMouseEvent", type="mouseMoved", x=x, y=y)
+            f.warte("!document.getAnimations().some(a => a instanceof CSSTransition && a.playState === 'running')")
+            schweben[sel] = f.js(f"{SCHWEBE_WERT}({json.dumps(vor)}, {json.dumps(sel)})")
+        werte[pack]["schweben"] = schweben
+        f.sende("Page.close")
+    v, ud = werte["vega"], werte["underdoc"]
+    beide = (v, ud)
+    zeige = lambda k: f"vega {v[k]} | underdoc {ud[k]}"  # noqa: E731
+    r.check("Kontextmenü im Arbeitsbereich: im Pack underdoc 13px-Zeilen und 11.5px-Beschreibung wie die anderen Menüs, vega bleibt 14px; "
+            "die Beschreibung steht gedämpft als zweite Zeile (beide Packs)",
+            ud["menue"][:3] == ["13px", "11.5px", True] and v["menue"][0] == "14px" and all(x["menue"][3:] == ["column", True] for x in beide),
+            zeige("menue"))
+    r.check("Symbol im Kopf einer Schublade: 16px vom Baustein, ohne eigene Größenklasse; der Name folgt ihm mit 8px (in beiden Packs)",
+            all(x["symbol"] == [16, 16, None, 8] for x in beide), zeige("symbol"))
+    r.check("Seitensuche: der aktuelle Treffer (mark[aria-current]) umrandet und fett, die anderen nicht; der Grund bleibt derselbe (Form, nicht nur Farbe)",
+            all(x["treffer"]["jetzt"] == ["solid", "2px", "600"] and x["treffer"]["anderer"] == ["none", "400"] and x["treffer"]["grund"] for x in beide),
+            zeige("treffer"))
+    r.check("Kommentare eines Elements offen (.comment-anchor[data-comment-focus]): Akzentgrund und Rahmen; ein anderes Element ohne beides",
+            all(x["fokus"]["grund"] and x["fokus"]["rahmen"] == ["solid", "1px"] and x["fokus"]["ohne"] == ["rgba(0, 0, 0, 0)", "none"] for x in beide),
+            zeige("fokus"))
+    r.check("Schublade: im Pack underdoc beginnt sie unter dem Fensterkopf (±1px), vega bedeckt den Kopf",
+            abs(ud["lade"]["oben"] - ud["lade"]["kopf"]) <= 1 and v["lade"]["oben"] == 0, zeige("lade"))
+    r.check("Zeilen als Schalter: aus gestrichelt und gedämpft, an durchgezogen mit fettem Wort; Aufgabe und Schalter reagieren auf die Maus "
+            "(underdoc mit Akzentgrund wie im Entwurf)",
+            all(x["schalter"] == {"aus": ["dashed", True], "an": ["solid", "600"]} for x in beide)
+            and all(all(s[0] and s[1] for s in x["schweben"].values()) for x in beide)
+            and all(s[2] for s in ud["schweben"].values()),
+            f"vega {v['schalter']} {v['schweben']} | underdoc {ud['schalter']} {ud['schweben']}")
+
+
 def main() -> int:
     erneuern = "--renew" in sys.argv
     r = Report("Browser — Galerie in Chrome")
@@ -1401,6 +1484,7 @@ def main() -> int:
                     arbeitsbereich_ansichten(r, b, basis)
                     arbeitsbereich_luecken(r, b, basis)
                     arbeitsbereich_editor(r, b, basis)
+                    arbeitsbereich_menues(r, b, basis)
         except BrowserFehler as fehler:
             r.check("Browser läuft durch", False, str(fehler))
         finally:

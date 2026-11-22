@@ -2421,11 +2421,15 @@
     color: inherit;
     background-image: linear-gradient(var(--hover-veil), var(--hover-veil));
   }
-  /* Interaktive Items (Verweis-/Knopf-Zeilen): Schleier statt Vendor-bg-muted. */
-  :is(a, button).item:hover {
+  /* Interaktive Items (Verweis-/Knopf-Zeilen, eine Zeile mit Häkchen als label): Schleier statt Vendor-bg-muted. */
+  :is(a, button, label).item:hover {
     background-color: transparent;
     background-image: linear-gradient(var(--hover-veil), var(--hover-veil));
   }
+  /* A row that is a switch (button.item with aria-pressed, e.g. a module on or off): off is dashed and muted, on keeps
+     its frame and sets the word in its aside bold — the shape says it, not only the colour. */
+  .item[aria-pressed='false'] { border-style: dashed; border-color: var(--border); color: var(--muted-foreground); }
+  .item[aria-pressed='true'] > aside { font-weight: var(--font-weight-semibold); }
 
   /* Data-Table: MARKIERTE Zeilen hovern per HALBEM Schleier (PO 21 — voll war zu doll;
      abgeleitet vom Token, kein eigener Wert). */
@@ -3226,6 +3230,8 @@
        --workspace-open-bar        the bar at the start of an open entry (.workspace-item[aria-current])
        --workspace-pinned-bar      … of an open entry that is kept open ([data-pinned]); by default the same bar
        --workspace-phone-nav1      width of nav1 in the phone form (below md); by default --workspace-step-1
+       --workspace-drawer-top      where the drawer of a window starts below the window's top; by default 0 (it covers the
+                                   head), a pack may let it start under the head
      nav1 and nav2 carry data-step 0-3: icon, icon with text below, text, icon with text beside.
      Without data-step a column shows step 3. Dragging the edge ([data-grip]) snaps to the nearest
      step; nav3 moves freely. data-nav-hidden on .workspace hides nav2 and nav3, data-nav-open opens
@@ -3255,6 +3261,7 @@
     --workspace-open-bar: 3px;
     --workspace-pinned-bar: var(--workspace-open-bar);
     --workspace-phone-nav1: var(--workspace-step-1);
+    --workspace-drawer-top: 0px;
     position: relative;
     display: grid;
     grid-template-columns: auto auto auto minmax(0, 1fr);
@@ -3701,7 +3708,7 @@
   /* Drawer over the window (the gear): it works in a narrow window as well. */
   .workspace-main > aside[data-drawer] {
     position: absolute;
-    top: 0;
+    top: var(--workspace-drawer-top, 0px);  /* a window on its own, outside .workspace, has no token */
     inset-inline-end: 0;
     bottom: 0;
     z-index: 15;
@@ -3748,6 +3755,16 @@
   }
   .comment-anchor:hover > [data-comment] { opacity: 0.45; }
   .comment-anchor > [data-comment]:is([data-count], :hover, :focus-visible) { opacity: 1; }
+  /* The element whose comments are open (the drawer shows them): on the accent ground and framed, so it reads without
+     colour too. Ground and frame reach a little beyond the element, nothing in the page moves. */
+  .comment-anchor[data-comment-focus] {
+    border-radius: var(--radius-sm);
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+    box-shadow: 0 0 0 calc(var(--spacing) * 1) var(--accent);
+    outline: 1px solid var(--ring);
+    outline-offset: calc(var(--spacing) * 1);
+  }
 
   /* Several windows side by side (T-19 step 3): .workspace-windows takes column 4 over both rows and holds one
      .workspace-window per window, each with its own tab row and window. The window being worked in carries
@@ -3858,9 +3875,9 @@
   :is(.typeset, .editor):has(.dropgap.held) * { cursor: grabbing !important; }
   .editor-handle [data-drag]:not(:disabled) { touch-action: none; cursor: grab; }
 
-  /* A menu entry with a description as its second line (New from a template). */
-  :is(.command, .dropdown-menu) [role^='menuitem'] > div:has(> small) { display: flex; flex-direction: column; min-width: 0; }
-  :is(.command, .dropdown-menu) [role^='menuitem'] > div > small { color: var(--muted-foreground); font-size: var(--text-xs); white-space: normal; }
+  /* A menu entry with a description as its second line (New from a template), in a context menu as well. */
+  :is(.command, .dropdown-menu, .context-menu) [role^='menuitem'] > div:has(> small) { display: flex; flex-direction: column; min-width: 0; }
+  :is(.command, .dropdown-menu, .context-menu) [role^='menuitem'] > div > small { color: var(--muted-foreground); font-size: var(--text-xs); white-space: normal; }
 
   /* Editor (T-19 step 2): the parts of a block editor, for any app that edits a page in blocks.
      .editor-bar   a toolbar: a type select, groups of icon buttons (div[role=group], a line before each), a field, a
@@ -4040,11 +4057,18 @@
     color: var(--muted-foreground);
     text-decoration: line-through;
   }
-  :is(.workspace-nav, .workspace-main) .item mark {
+  :is(.workspace-nav, .workspace-main) .item mark,
+  .typeset mark {
     padding-inline: 1px;
     border-radius: var(--radius-sm);
     background-color: color-mix(in oklch, var(--warning) 30%, transparent);
     color: inherit;
+  }
+  :is(.workspace-nav, .workspace-main) .item mark { font-weight: var(--font-weight-semibold); }
+  /* The current hit of a search on the page (mark[aria-current]): framed and bold, not only another colour. */
+  :is(.typeset, .workspace-main) mark[aria-current]:not([aria-current='false']) {
+    outline: 2px solid var(--foreground);
+    outline-offset: 1px;
     font-weight: var(--font-weight-semibold);
   }
   /* The facts of a message, a task or an entry: a dl first in the document column, label beside value. */
@@ -4064,7 +4088,9 @@
     gap: calc(var(--spacing) * 2);
     min-height: calc(var(--spacing) * 20);
   }
-  .workspace-main > aside[data-drawer] > header > svg:first-child { margin-inline-end: auto; }
+  /* An icon in the head of a drawer is as big as the text beside it (16px); it needs no size utility of its own. The name
+     follows the icon, the close button keeps to the end (until 2026-11-22 the name stood centred between them). */
+  .workspace-main > aside[data-drawer] > header > svg { width: calc(var(--spacing) * 4); height: calc(var(--spacing) * 4); }
   .workspace-main > aside[data-drawer] > header:has(> svg:first-child) > .btn { margin-inline-start: auto; }
 
   /* Dragging a tab (the app drives it, these are its marks): data-drop="before"/"after" on the tab it would land next to

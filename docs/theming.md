@@ -222,12 +222,16 @@ workspace mockup on `.workspace` and the `.editor-*` parts; blocks `document-wor
 
 What `underdoc` sets as form tokens of the workspace, beside sizes of text and the head of a collection: the bar of an
 open entry against one kept open (`--workspace-open-bar` 1px, `--workspace-pinned-bar` 3px; other packs draw both at
-3px) and the width of nav1 on the phone (`--workspace-phone-nav1`, 70px; otherwise `--workspace-step-1`).
+3px), the width of nav1 on the phone (`--workspace-phone-nav1`, 70px; otherwise `--workspace-step-1`) and where the drawer of
+a window starts (`--workspace-drawer-top`: under a head of one line with the read/edit toggle, 74px; otherwise 0, the
+drawer covers the head). Its rows that are controls (`button.item`, `label.item`) hover with the accent ground instead of
+the veil.
 
 **Where an app hangs what a layout pack shapes.** A pack rule starts at a block root, so a part takes the pack's form
 only *inside* that block. For the workspace this means: the app's menus (`.command`, `.dropdown-menu`, popovers) hang
 inside `.workspace` — beside their trigger, or as a child of `.workspace` the app positions itself — not at the end of
-`<body>`. A menu outside keeps the plain pack look (the menus of `workspace-more.html` are such examples).
+`<body>`. A context menu (`.context-menu > [data-cm-panel]`) counts as such a menu: its panel is fixed to the viewport,
+but it takes the pack's form as long as it sits in the workspace's tree. A menu outside keeps the plain pack look (the menus of `workspace-more.html` are such examples).
 
 **Parts that sit inside an editor's own DOM** (CodeMirror's lines, widgets, marks: `.editor [data-used]`,
 `[data-block][data-active]`, `[data-part][data-framed]`, `.dropgap.held`) take C22's rules from `@layer components`,

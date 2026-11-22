@@ -60,6 +60,9 @@
   --workspace-open-bar: 1px;                                      /* open for now: a thin line at the start … */
   --workspace-pinned-bar: 3px;                                    /* … kept open: a thick one */
   --workspace-phone-nav1: calc(var(--spacing) * 17.5);            /* 70px nav1 on the phone */
+  /* The drawer starts under the head of the window, as in the mockup: the height of a head of one line with the read/edit
+     toggle (padding 5px + 8px, the toggle, the line under it). A taller head lies partly under the drawer. */
+  --workspace-drawer-top: calc(var(--spacing) * 3.25 + var(--workspace-mode-size) + 1px);
 }
 
 @layer components {
@@ -235,9 +238,14 @@
     background-color: var(--muted);
   }
 
-  /* Menus of the workspace (they hang inside .workspace): the mockup's 13px rows, a description of 11.5px. */
-  .workspace :is(.command, [data-popover]) [role^='menuitem'] { font-size: calc(var(--text-sm) * 13 / 14); }
-  .workspace :is(.command, [data-popover]) [role^='menuitem'] > div > small { font-size: calc(var(--text-xs) * 23 / 24); line-height: 1.35; }
+  /* Menus of the workspace (they hang inside .workspace, a context menu too): the mockup's 13px rows, a description of
+     11.5px. */
+  .workspace :is(.command, [data-popover], [data-cm-panel]) [role^='menuitem'] { font-size: calc(var(--text-sm) * 13 / 14); }
+  .workspace :is(.command, [data-popover], [data-cm-panel]) [role^='menuitem'] > div > small { font-size: calc(var(--text-xs) * 23 / 24); line-height: 1.35; }
+
+  /* Rows that are controls (a task with its checkbox, a module as a switch) hover with the accent ground, like every list
+     of the mockup; the dashed frame of a switch that is off stays. */
+  .workspace :is(button, label).item:hover { background-color: var(--accent); background-image: none; color: var(--accent-foreground); }
 
   /* Drop zones: the word at 13px. */
   .workspace-main > [data-drop-zone] { font-size: calc(var(--text-sm) * 13 / 14); }
