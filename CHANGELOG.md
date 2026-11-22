@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Docs fast lane: a classifier job runs `scripts/_nur_text.sh`; on a text-only PR audit and the Pages build skip (a
+  skipped job is a green check; the `if:` is the fail-safe form checked by the kit). Push, schedule and manual runs
+  behave as before.
+
 ### Added
 
 - **Editor parts from UnderDoc's editor (T-19, third round)**, shown in two new examples of `workspace-editing.html`:
