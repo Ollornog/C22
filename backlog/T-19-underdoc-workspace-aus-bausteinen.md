@@ -61,6 +61,14 @@ of the mockup moves into the pack `underdoc` (`c22/static/css/packs/underdoc.css
   hovers like a link row, `button.item[aria-pressed]` off dashed and muted, on with the word in its aside bold; accent
   ground on hover in the pack). Shown in `workspace-views.html` (comments and search, modules as switches, the context
   menu of the menu example).
+- Gaps from UnderDoc's last switch (2026-11-22, fifth round): a grouped `.combobox` without Basecoat's global observer
+  (recipe: Basecoat's core `basecoat.min.js` + `combobox.min.js` instead of `basecoat.all.min.js`, proven on a probe page
+  of the browser suite); the current row of a sheet (`tr[aria-current]`, `th[scope=row][aria-current]`: number filled,
+  row between two lines); a log in nav3 (`ol.timeline` heads are no column headings); on the phone the sticky cells of a
+  sheet stay under nav2/nav3 open over the window; the live preview of a Markdown editor by `data-md` attributes
+  (`--editor-h1`…`-h4`, in the pack the read page's sizes); `th`/`td[align]` aligns head cells too. Shown in
+  `workspace-editing.html` (live preview), `workspace-views.html` (log in nav3, sheet with the row of a hit) and
+  `table.html` (the sheet's current row).
 
 ## Done when
 
@@ -150,6 +158,9 @@ sheet) and the third example of `document-workspace.html` (several windows, cont
 | `.cm-ud-embed`, `-embed-what` | `a.badge[data-variant=secondary]` with a muted first `span` |
 | `.cm-ud-part`, `-partlabel`, `.partedge`, `.partlabel` | `[data-part="<name>"]` (dotted underline), `data-framed` shows frame and name, a further piece `data-framed="continued"` |
 | `.cm-ud-marker` | stays the app's (an empty CodeMirror widget, no look) |
+| live preview `.cm-lp-h1`…`-h6`, `-quote`, `-code` (+ `-code-first`/`-last`), `-table-source`, `.cm-ud-sep` (lines) | `Decoration.line({ attributes: { 'data-md': 'h1' … 'quote' \| 'codeblock' \| 'table-source' \| 'blank' } })` (several words on one line in one value), `data-md-edge="first\|last"` on a code block's edges |
+| `.cm-lp-strong`, `-em`, `-strike`, `-icode`, `-link`, `-wiki`, `-url`, `-done`, `-code-info`, `-directive-chip`, `.tok-meta`/`.tok-processingInstruction` (marks) | `Decoration.mark({ attributes: { 'data-md': 'strong' \| 'em' \| 'del' \| 'code' \| 'link' \| 'wiki' \| 'url' \| 'done' \| 'info' \| 'directive' \| 'mark' } })` (`mark`: on the `…Mark` nodes left visible on the cursor's line) |
+| `.cm-lp-bullet-dot`, `-checkbox`, `-image`, `-image-alt`, `-hr-line`, `-table-widget`, `-align-*` (widgets) | `data-md="bullet" \| "task" \| "image" \| "image-alt" \| "rule" \| "table"` on the widget's element; a column's alignment `align="right\|center\|left"` on `th`/`td` as goldmark writes it |
 | `.embed`, `.embhead`, `.embedbody` | `figure.editor-embed` (content straight in the figure, no body wrapper, takes the typeset flow; `figcaption` with the link back) |
 | `.embed.broken`, `.unplaced` | `figure.editor-embed[data-state=missing]` with the words; removed with actions: buttons inside |
 | `.badge[data-removed]`, `.placed` | `.badge[data-variant=destructive]` + `.btn[data-variant=outline][data-size=xs]` |

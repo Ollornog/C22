@@ -7,7 +7,9 @@
      the window's drawer (bubbles in a [role=log], ol.timeline with replies nested, data-state="done"), the search as
      .filter-bar with hits as .item (mark in the excerpt). Dragging a tab: data-drop="before|after|slot" on .workspace-tab,
      the drop zones of a window [data-drop-zone="start|end|here"] (data-size="sm": a strip at the edge) with their word as
-     content. Menus of the workspace hang inside .workspace (here the New menu in the top row). In the pack "underdoc"
+     content. A log in a column is ol.timeline (its entries' heads are not column headings); a sheet in the window keeps
+     its sticky cells under nav2 and nav3 open on the phone, the row of a hit is aria-current on its number.
+     Menus of the workspace hang inside .workspace (here the New menu in the top row). In the pack "underdoc"
      the same markup takes the mockup's look. -->
 <div class="c22-examples">
   <div class="c22-example">
@@ -549,6 +551,77 @@
             <button type="button" role="menuitem">Link kopieren</button>
           </div>
         </section>
+      </main>
+    </div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Protokoll in nav3, ein Blatt im Fenster (die Zeitleiste in einer Spalte: wer und wann wie im Protokoll, nicht wie eine Spaltenüberschrift; im Blatt die Zeile eines Suchtreffers, ihre Nummer gefüllt; auf dem Handy decken nav2 und nav3 die klebenden Zellen des Blatts)</span>
+    <div class="w-full overflow-hidden rounded-lg border">
+    <div class="workspace h-120">
+      <header class="workspace-top">
+        <a href="#" class="brand"><span class="brand-mark"><svg data-icon-lu="book-open" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg></span><span>Beispiel</span></a>
+        <form role="search"><input class="input" type="search" placeholder="Suchen /" aria-label="Suchen"></form>
+        <button type="button" class="btn" data-variant="outline" data-size="icon-sm" aria-label="Neu"><svg data-icon-lu="plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button>
+      </header>
+      <div class="workspace-tabs">
+        <div role="tablist" aria-label="Offen in diesem Fenster">
+          <div class="workspace-tab" data-general><button type="button" role="tab" aria-selected="true"><svg data-icon-lu="file-spreadsheet" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M8 13h2"/><path d="M14 13h2"/><path d="M8 17h2"/><path d="M14 17h2"/></svg><span>Budget.xlsx</span></button></div>
+        </div>
+        <button type="button" class="btn" data-variant="ghost" data-size="icon-sm" aria-label="Assistent"><svg data-icon-lu="sparkles" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg></button>
+      </div>
+      <nav class="workspace-nav" data-level="1" data-step="0" aria-label="Ansichten">
+        <div>
+          <button type="button" class="workspace-item" title="Arbeitsbereich"><svg data-icon-lu="panel-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg><span>Arbeitsbereich</span></button>
+          <button type="button" class="workspace-item" title="Nachrichten"><svg data-icon-lu="globe" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg><span>Nachrichten</span></button>
+          <button type="button" class="workspace-item" title="Post"><svg data-icon-lu="mail" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg><span>Post</span></button>
+          <button type="button" class="workspace-item" title="Suche"><svg data-icon-lu="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg><span>Suche</span></button>
+          <button type="button" class="workspace-item" title="Rechte" aria-current="page"><svg data-icon-lu="shield" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg><span>Rechte</span></button>
+          <hr>
+          <button type="button" class="workspace-item" title="Aufgaben"><svg data-icon-lu="square-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="m9 12 2 2 4-4"/></svg><span>Aufgaben</span></button>
+          <button type="button" class="workspace-item" title="Kalender"><svg data-icon-lu="calendar" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg><span>Kalender</span></button>
+          <button type="button" class="workspace-item" title="Notizen"><svg data-icon-lu="pen-line" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.376 3.622a1 1 0 0 1 3.002 3.002L7.368 18.635a2 2 0 0 1-.855.506l-2.872.838a.5.5 0 0 1-.62-.62l.838-2.872a2 2 0 0 1 .506-.854z"/></svg><span>Notizen</span></button>
+        </div>
+      </nav>
+      <nav class="workspace-nav" data-level="2" data-step="3" aria-label="Rechte">
+        <div>
+          <button type="button" class="workspace-item" title="Gruppen"><svg data-icon-lu="users" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Gruppen</span></button>
+          <button type="button" class="workspace-item" title="Benutzer"><svg data-icon-lu="user" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Benutzer</span></button>
+          <button type="button" class="workspace-item" title="Freigabelinks"><svg data-icon-lu="link" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg><span>Freigabelinks</span></button>
+          <button type="button" class="workspace-item" title="Zugriff prüfen"><svg data-icon-lu="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg><span>Zugriff prüfen</span></button>
+          <button type="button" class="workspace-item" title="Protokoll" aria-current="page"><svg data-icon-lu="list" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h.01"/><path d="M3 18h.01"/><path d="M3 6h.01"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M8 6h13"/></svg><span>Protokoll</span></button>
+        </div>
+      </nav>
+      <nav class="workspace-nav" data-level="3" aria-label="Protokoll">
+        <div>
+          <p class="workspace-label"><span>Protokoll</span></p>
+          <p class="text-muted-foreground text-xs">Alles in diesem Arbeitsbereich. Öffnen und Ändern zählen einmal je Stunde.</p>
+          <ol class="timeline mt-3" data-size="sm"><li><header><span class="badge" data-variant="outline">Besitzer</span><strong class="font-medium">Anna Berg</strong><time datetime="2026-11-22T12:47">12:47</time></header><p>Angebote 2026 · an Anna Berg</p></li><li><header><span class="badge" data-variant="outline">Geändert</span><strong class="font-medium">Bob Kern</strong><time datetime="2026-11-22T12:45">12:45</time></header><p>Preisliste · Bearbeiten statt Lesen</p></li><li><header><span class="badge" data-variant="outline">Mitglied</span><strong class="font-medium">Anna Berg</strong><time datetime="2026-11-22T11:02">11:02</time></header><p>Bob Kern in Gruppe Büro</p></li><li><header><span class="badge" data-variant="outline">Gruppe</span><strong class="font-medium">Anna Berg</strong><time datetime="2026-11-21T16:30">gestern</time></header><p>Gruppe Büro angelegt</p></li></ol>
+        </div>
+      </nav>
+      <main class="workspace-main">
+        <header>
+          <div><nav class="breadcrumb" aria-label="Pfad"><ol><li><a href="#">Dateien</a></li><li aria-hidden="true"><svg data-icon-lu="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></li><li><a href="#">Funkstrecke</a></li></ol></nav></div>
+          <h1>Budget.xlsx</h1>
+        </header>
+        <section>
+          <div class="table-container max-h-56">
+            <table class="table" data-variant="grid" data-sticky="sheet" aria-label="Budget">
+              <thead><tr><th scope="col"><span class="sr-only">Zeile</span></th><th scope="col">A</th><th scope="col">B</th><th scope="col">C</th></tr></thead>
+              <tbody>
+                <tr><th scope="row">1</th><td>Posten</td><td>Plan €</td><td>Ist €</td></tr>
+                <tr><th scope="row">2</th><td>Antennen</td><td data-type="number">1.200</td><td data-type="number">1.140</td></tr>
+                <tr><th scope="row" aria-current="true">3</th><td>Kabel</td><td data-type="number">400</td><td data-type="number">455</td></tr>
+                <tr><th scope="row">4</th><td>Switches</td><td data-type="number">2.600</td><td data-type="number">2.480</td></tr>
+                <tr><th scope="row">5</th><td>Router</td><td data-type="number">900</td><td data-type="number">910</td></tr>
+                <tr><th scope="row">6</th><td>Funkstrecke</td><td data-type="number">1.800</td><td data-type="number">1.760</td></tr>
+                <tr><th scope="row">7</th><td>Montage</td><td data-type="number">700</td><td data-type="number">820</td></tr>
+                <tr><th scope="row">8</th><td>Summe</td><td data-type="number">7.600</td><td data-type="number">7.565</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+        <footer aria-label="Status"><span>1 Treffer für „Kabel“</span><span data-fill></span><span>Blatt 1</span></footer>
       </main>
     </div>
     </div>

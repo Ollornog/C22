@@ -7,7 +7,9 @@
      or several, the typeset flow passes through), figure.editor-embed (data-state="missing"; its content takes the flow),
      [data-part] (data-framed shows its name, data-framed="continued" a further piece), .dropgap.held (a held block in the
      page), a task list (li > input[type=checkbox]), the read/edit toggle
-     .btn[data-mode] in the window head. Menus are .dropdown-menu and .command, questions .item, choices .button-group.
+     .btn[data-mode] in the window head, the live preview of a Markdown editor (data-md on its lines, marks and widgets,
+     data-md-edge on the edges of a code block; a column aligned in Markdown is th/td[align]). Menus are .dropdown-menu and
+     .command, questions .item, choices .button-group.
      Nothing has a look of its own: in the pack "underdoc" the same markup takes UnderDoc's look. -->
 <div class="c22-examples">
   <div class="c22-example">
@@ -276,6 +278,47 @@ VLAN 10, für Arbeitsplätze und Drucker.</textarea>
         <article class="card" data-size="sm" data-block><section><p class="text-sm">Kamera am Tor neu ausrichten.</p></section></article>
       </div>
       <div class="h-40"></div>
+    </div>
+  </div>
+  <div class="c22-example">
+    <span class="c22-example-label">Editor: Markdown als Vorschau beim Schreiben (jede Zeile, jede Auszeichnung und jedes eingesetzte Element sagt mit <code>data-md</code>, was es ist — Überschriften, fett, kursiv, durchgestrichen, Code, Link, Wiki-Link, Adresse, Aufgabe, Zitat, Codeblock mit erster und letzter Zeile und Sprache, Quelle und Bild einer Tabelle, Direktive, Linie, Bild und Bildtext; auf der Zeile mit dem Cursor bleiben die Markdown-Zeichen gedämpft stehen)</span>
+    <div class="w-full overflow-hidden rounded-lg border">
+      <main class="workspace-main">
+        <section>
+          <div class="editor">
+            <div>
+              <div data-md="h1">Netzwerkplan</div>
+              <div data-md="blank"><br></div>
+              <div>Der Router steht im <span data-md="strong">Keller</span>, die Antenne <span data-md="em">auf dem Turm</span>; der alte Switch ist <span data-md="del">noch in Betrieb</span> abgebaut. Zugang mit <span data-md="code">ssh admin@router</span>, mehr im <span data-md="link">Handbuch</span> und unter <span data-md="wiki">Wartung</span>.</div>
+              <div>Auf der Zeile mit dem Cursor bleiben die Zeichen stehen: <span data-md="strong"><span data-md="mark">**</span>fett<span data-md="mark">**</span></span> und <span data-md="mark">[</span><span data-md="link">Lieferant</span><span data-md="mark">](</span><span data-md="url">https://example.org/lieferant</span><span data-md="mark">)</span></div>
+              <div data-md="blank"><br></div>
+              <div data-md="h2">Aufgaben</div>
+              <div><span data-md="bullet">•</span> Kabel nachmessen</div>
+              <div><input type="checkbox" data-md="task" aria-label="Offen"> Antenne ausrichten</div>
+              <div><input type="checkbox" data-md="task" checked aria-label="Erledigt"><span data-md="done"> Router getauscht</span></div>
+              <div data-md="blank"><br></div>
+              <div data-md="h3">Hinweise</div>
+              <div data-md="quote">Nach jedem Sturm die Funkstrecke prüfen.</div>
+              <div data-md="quote">Steht im Wartungsbuch auf Seite 4.</div>
+              <div data-md="blank"><br></div>
+              <div data-md="codeblock" data-md-edge="first"><span data-md="info">sh</span></div>
+              <div data-md="codeblock">ping router</div>
+              <div data-md="codeblock">traceroute antenne</div>
+              <div data-md="codeblock" data-md-edge="last"><br></div>
+              <div data-md="blank"><br></div>
+              <div data-md="table-source">| Port | VLAN |</div>
+              <div data-md="table-source">| ---: | :--: |</div>
+              <div data-md="table-source">| 1 | 10 |</div>
+              <div data-md="blank"><br></div>
+              <table class="table text-sm" data-md="table"><tbody><tr><th>Gerät</th><th align="right">Ports</th></tr><tr><td>Kern-Switch</td><td align="right">48</td></tr><tr><td>Router</td><td align="right">8</td></tr></tbody></table>
+              <div><span data-md="directive">::termin{datum=2026-12-01}</span></div>
+              <div><span data-md="rule"></span></div>
+              <div><img data-md="image" class="w-40" src="../c22/static/img/demo/1497366754035-f200968a6e72-400x300.jpg" alt="Serverraum"></div>
+              <div><span data-md="image-alt">Lageplan des Turms</span></div>
+            </div>
+          </div>
+        </section>
+      </main>
     </div>
   </div>
   <div class="c22-example">

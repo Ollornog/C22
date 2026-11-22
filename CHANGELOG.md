@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- A log in a column of the workspace (`ol.timeline` in nav3): the heads of its entries no longer take the column
+  heading's look (capitals, wide letters, the time pushed onto a line of its own).
+- Phone: nav2 and nav3 open over the window (`.workspace[data-nav-open]`) cover what sticks in a sheet in the window; its
+  corner cell (z-30) stood above them. The window, its tabs and windows are their own stacking context while they are open.
 - Browser suite: a page counts as loaded once no CSS transition runs any more. The gallery picks the pack of `?pack=`
   after the page was first styled with the default pack, so every `.btn` ran 150 ms from vega's value to the chosen
   pack's; the probe "Pack underdoc: … Bearbeiten gefüllt" read in between and failed about every second run (red on
@@ -15,6 +19,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Gaps from UnderDoc's last switch (T-19, fifth round)**:
+  - The live preview of a Markdown editor (CodeMirror with decorations): lines, marks and widgets say what they are by
+    `data-md` (`h1`…`h6`, `quote`, `codeblock` + `data-md-edge="first|last"`, `table-source`, `blank`; `strong`, `em`,
+    `del`, `code`, `link`, `wiki`, `url`, `done`, `info`, `directive`, `mark`; `bullet`, `task`, `image`, `image-alt`,
+    `rule`, `table`), `.editor [data-md~=…]` gives them the typeset canon's look; heading sizes are the form tokens
+    `--editor-h1`…`-h4` (pack `underdoc`: the sizes of its pages when read). The rules set nothing CodeMirror's unlayered
+    base theme sets on lines (no padding: a quote stands in by a margin, a code block by transparent borders), so they
+    apply from `@layer components` without `!important`. New example in `workspace-editing.html`.
+  - The current row of a sheet: `tr[aria-current]` or `th[scope=row][aria-current]` in `.table[data-sticky="sheet"]` —
+    the number filled with the primary role and bold, the row between two lines; a selected number stays tint and bar.
+  - A column aligned in Markdown, `th`/`td[align]` in a `.table`, aligns in the head too (the vendor's start alignment
+    of head cells outranked the attribute).
+  - Recipe: a grouped `.combobox` without Basecoat's global behaviour — an app with menus of its own loads Basecoat's core
+    and `combobox.min.js` (`c22/vendor/basecoat/dist/js/`) instead of `basecoat.all.min.js`; proven by a probe page in
+    the browser suite (a combobox rendered after load filters across its groups and picks, an app's `.dropdown-menu`
+    stays untouched).
+  - New example in `workspace-views.html`: a log in nav3 and a sheet in the window with the row of a hit.
 - **Menus and views from UnderDoc's switch (T-19, fourth round)**, shown in `workspace-views.html`:
   - A context menu inside `.workspace` takes the pack's menu size (pack `underdoc`: 13px rows, 11.5px description); a
     description (`[role=menuitem] > div > span + small`) is a muted second line in a context menu as in the other menus.
