@@ -474,55 +474,51 @@ def r13_rtl_demos() -> list[str]:
     return treffer
 
 
-# ── Regel 14: App-Bausteine bleiben unter ihrer Wurzelklasse ─────────────────
-# c22/static/css/app-<name>.css übernimmt das ganze Aussehen einer App (z. B. app-workspace.css aus
-# einem freigegebenen Entwurf) mit den Klassennamen, die deren Skript ausgibt — `.brand`, `.avatar`,
-# `.marker`, `.row`, `.tab` … Ohne Gehege träfen diese Regeln C22s eigene Klassen und jede andere App.
-# Darum muss JEDER Selektor dort die Wurzelklasse `.c22-app-<name>` nennen (als Element selbst, als
-# Vorfahre oder in `:has(…)` am body/html, das die Wurzel direkt hält). Eine Seite ohne die Wurzel
-# kann so nichts davon treffen.
-APP_CSS = sorted((ROOT / "c22" / "static" / "css").glob("app-*.css"))
+# ── Regel 14: keine App-Bausteine mit eigenen Klassen (ADR-2) ───────────────
+# Bis T-20 übernahm c22/static/css/app-<name>.css das ganze Aussehen einer App unter einer Wurzelklasse
+# `.c22-app-<name>` (app-workspace.css, jetzt in archive/). ADR-2 verbietet das: Struktur kommt nur aus
+# C22-Bausteinen, ein eigenes Aussehen nur als Pack (packs/<repo>.css). Darum darf es keine Datei
+# `app-*.css` unter c22/static/css mehr geben und keine Spur von `c22-app-…` in den Quellen von c22/ und
+# gallery/ (Markup, CSS, JS — auch nicht in Kommentaren: ein Hinweis auf eine Wurzelklasse lädt zu ihr ein).
+# Ausgenommen sind die gebauten Pakete c22-<pack>.css (Ausgabe, nicht Quelle) und archive/ (nie gebaut).
+APP_CSS_ORT = ROOT / "c22" / "static" / "css"
+APP_SPUR = re.compile(r"c22-app-[a-z]")
 
 
-def _css_selektoren(text: str) -> list[str]:
-    """Alle Selektoren einer CSS-Datei, @media/@supports aufgelöst, ohne Kommentare."""
-    text = re.sub(r"/\*.*?\*/", "", text, flags=re.S)
-    aus: list[str] = []
-    for kopf in re.findall(r"([^{}]+)\{", text):
-        kopf = kopf.strip()
-        if not kopf or kopf.startswith("@"):
-            continue
-        tiefe, teil = 0, ""
-        for z in kopf + ",":
-            tiefe += z in "([" 
-            tiefe -= z in ")]"
-            if z == "," and tiefe == 0:
-                aus.append(" ".join(teil.split()))
-                teil = ""
-            else:
-                teil += z
-    return [a for a in aus if a]
+def _app_quellen() -> list[Path]:
+    aus: list[Path] = []
+    for wurzel in (ROOT / "c22", ROOT / "gallery"):
+        for p in sorted(wurzel.rglob("*")):
+            if p.suffix not in (".html", ".css", ".js", ".py") or not p.is_file():
+                continue
+            if "vendor" in p.relative_to(ROOT).parts or "__pycache__" in p.parts:
+                continue
+            if p.parent == APP_CSS_ORT and p.name.startswith("c22-") and p.suffix == ".css":
+                continue  # gebautes Paket
+            if wurzel.name == "gallery" and p.suffix == ".html":
+                continue  # gebaute Galerie-Seiten (nicht getrackt)
+            aus.append(p)
+    return aus
 
 
-def _ungehegt(text: str, wurzel: str) -> list[str]:
-    muster = re.compile(re.escape(wurzel) + r"(?![\w-])")
-    return [s for s in _css_selektoren(text) if not muster.search(s)]
+def _app_spuren(text: str) -> list[int]:
+    return [i for i, ln in enumerate(zeilen(text), 1) if APP_SPUR.search(ln)]
 
 
-def r14_app_gehege() -> list[str]:
-    treffer: list[str] = []
-    for p in APP_CSS:
-        wurzel = "." + "c22-" + p.stem
-        for sel in _ungehegt(p.read_text(encoding="utf-8"), wurzel):
-            treffer.append(f"{rel(p)}  `{sel}` nennt {wurzel} nicht")
+def r14_keine_app_bausteine() -> list[str]:
+    treffer = [f"{rel(p)}  App-Baustein-Datei (ADR-2: ein eigenes Aussehen ist ein Pack, packs/<repo>.css)"
+               for p in sorted(APP_CSS_ORT.rglob("app-*.css"))]
+    for p in _app_quellen():
+        for i in _app_spuren(p.read_text(encoding="utf-8")):
+            treffer.append(f"{rel(p)}:{i}  `c22-app-…` — Wurzelklasse eines App-Bausteins (ADR-2)")
     return treffer
 
 
 def r14_selbsttest() -> bool:
-    """Die Regel muss einen entlaufenen Selektor finden, auch in @media und hinter einem Komma."""
-    probe = (".c22-app-x .a { color: red; }\n@media (max-width: 1px) { .c22-app-x .b, .c { top: 0; } }\n"
-             "body:has(> .c22-app-x) { margin: 0; }\n.c22-app-xy .d { top: 0; }")
-    return _ungehegt(probe, ".c22-app-x") == [".c", ".c22-app-xy .d"]
+    """Die Regel muss eine Wurzelklasse finden, in CSS, Markup und JS, und darf den Drag-Modul-Namen nicht melden."""
+    probe = (".workspace .x { top: 0; }\n.c22-app-x .a { color: red; }\n<div class=\"c22-app-notes\">\n"
+             "C22AppWorkspaceDrag.attach({});\n<script src=\"app-workspace-drag.js\"></script>\nq('.c22-app-y')")
+    return _app_spuren(probe) == [2, 3, 6] and len(_app_quellen()) > 50
 
 
 r = Report("Konventionen — Varianten-Vertrag & Tokens")
@@ -548,8 +544,8 @@ r.check("Regel 12 — data-variant nur aus dem festen Vokabular (color-roles.htm
 r.check("Regel 12 — Selbsttest (Vokabular-Regel greift wirklich)", r12_selbsttest())
 r.check("Regel 13 — keine RTL-Demos außerhalb von direction.html",
         not (t := r13_rtl_demos()), " | ".join(t[:6]))
-r.check(f"Regel 14 — App-Bausteine bleiben unter ihrer Wurzelklasse ({len(APP_CSS)} Dateien)",
-        bool(APP_CSS) and not (t := r14_app_gehege()), " | ".join(t[:6]))
-r.check("Regel 14 — Selbsttest (entlaufener Selektor wird gefunden)", r14_selbsttest())
+r.check("Regel 14 — keine App-Bausteine mit eigenen Klassen (keine app-*.css, kein c22-app-…)",
+        not (t := r14_keine_app_bausteine()), " | ".join(t[:6]))
+r.check("Regel 14 — Selbsttest (Wurzelklasse wird gefunden, Drag-Modul nicht)", r14_selbsttest())
 
 sys.exit(r.done())

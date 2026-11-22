@@ -2,7 +2,7 @@
 id: T-19
 type: Task
 title: UnderDoc workspace from C22 building blocks plus the pack underdoc
-status: in-arbeit
+status: erledigt
 milestone: M-2
 tags: [underdoc, bausteine, packs, app-workspace]
 created: 2026-11-21
@@ -29,7 +29,7 @@ of the mockup moves into the pack `underdoc` (`c22/static/css/packs/underdoc.css
    elsewhere, marked text in the editor, file in a window with its panel, spreadsheet in the workspace (the
    grid is already `.table[data-variant="grid"]`).
 
-## State (2026-11-21)
+## State (2026-11-22)
 
 - Step 1 (core): #140. Steps 2 and 3: blocks `workspace-editing.html` and `workspace-more.html`, the third example of
   `document-workspace.html`; reference images in vega and `underdoc` (#141).
@@ -69,6 +69,9 @@ of the mockup moves into the pack `underdoc` (`c22/static/css/packs/underdoc.css
   (`--editor-h1`…`-h4`, in the pack the read page's sizes); `th`/`td[align]` aligns head cells too. Shown in
   `workspace-editing.html` (live preview), `workspace-views.html` (log in nav3, sheet with the row of a hit) and
   `table.html` (the sheet's current row).
+- Done (2026-11-22): UnderDoc runs on `.workspace` + `c22-underdoc.css` and emits no class of the old app
+  workspace any more (UnderDoc #137, `17ec0b3`: its class check and browser suite green against a stylesheet without
+  `app-workspace.css`); T-20 archived the old block and `app-workspace.css`.
 
 ## Done when
 
@@ -242,5 +245,5 @@ sheet) and the third example of `document-workspace.html` (several windows, cont
 | `.ctxpop` | `.context-menu > [data-cm-panel]` inside `.workspace` |
 | `.bar`, `.tab`, `.strip .tab`, `.tight`, `.text`, `body.resizing` | old top bar of round 1: `header.workspace-top`, `.workspace-item`, `[data-grip]` (`.workspace[data-resizing]`) |
 
-Open after step 4: the empty general tab (`.blank`); UnderDoc switches (then T-20). Menus of the workspace take the pack's size only inside
+Left out: the empty general tab (`.blank`) has no example of its own (UnderDoc switched without it). UnderDoc has switched, T-20 is done. Menus of the workspace take the pack's size only inside
 `.workspace`; an app that appends them to `<body>` keeps the plain pack look.

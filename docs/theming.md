@@ -203,7 +203,9 @@ sanctioned literal stays `<code class="text-[11px]">` inside example labels, as 
 ## Layout packs: a pack that changes the form of building blocks
 
 Decision: [ADR-2](../backlog/ADR-2-layout-packs.md). An app that does not want the standard look of a layout takes
-its **own pack**, named after its repository — never block CSS with classes of its own. Such a pack is an ordinary
+its **own pack**, named after its repository — never block CSS with classes of its own (the hygiene suite's rule 14
+fails on any `app-*.css` and any `.c22-app-*` root class; the last such file, `app-workspace.css`, went to `archive/`
+with T-20). Such a pack is an ordinary
 pack file (`c22/static/css/packs/<name>.css`, `@c22-form`, every axis named) that names the blocks it shapes in its
 head, `@c22-layout: workspace`, and may then:
 
