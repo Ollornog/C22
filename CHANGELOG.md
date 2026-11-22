@@ -20,6 +20,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Dragging a tab, drop zones of a window**: `.workspace-tab[data-drop="before|after|slot"]` (line, stand-in) and
   `.workspace-main > [data-drop-zone="start|end|here"]` (`data-size="sm"`: a strip at the edge) with the word as
   content, so it is translated with the page.
+- **A space and a line between entries** (`hr[data-variant="space"]`, `hr`): in nav1/nav2 and in a list of nav3; one the
+  user places and drags like an entry is a row holding only the hr (`div` in nav2, `li > div` in a list), as tall as the
+  line or the space (14px), not as an entry. New variant value `space` in the closed vocabulary.
+- **Open against kept open** (`.workspace-item[aria-current]` vs. `…[data-pinned]`): form tokens `--workspace-open-bar`
+  and `--workspace-pinned-bar` (both 3px by default); the pack `underdoc` draws a thin line for open, a thick one for kept
+  open, as in the mockup (a shape, not only a colour).
+- **Phone width of nav1** as a form token `--workspace-phone-nav1` (default `--workspace-step-1`, 84px); nav2 and nav3
+  open beside it. The pack `underdoc` sets 70px with 10px words.
 - **`data-behaviour="app"` on `.workspace`**: c22.js leaves that workspace to the app (no pointer, keys, clicks, double
   click, context-menu heading, restore or grip labels there); its other parts keep working inside.
 
@@ -70,12 +78,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Pack `underdoc`: menus of the workspace at the mockup's size** (13px rows, 11.5px descriptions) — for `.command`
   and popover menus inside `.workspace`; a menu outside keeps the plain look (where to hang them: `docs/theming.md`).
 - The column headings' rules of `.workspace-nav` no longer reach the header of an `.item` inside a column.
+- **Pack `underdoc`: the avatar of an entry** (`.workspace-item > .avatar[data-size=sm]`) at the mockup's 20px with 9px
+  initials.
 
 ### Fixed
 
 - **Read/edit toggle in the head of a window** (`.btn[data-mode]`): it has a size of its own (`--workspace-mode-size`,
   56px; the pack `underdoc` 60px) and stands beside path and title, aligned to the top. Before, it spanned three rows
   and took their height as its width, so a tool row that wrapped ran over the title (found by UnderDoc).
+- **Typeset flow through block wrappers**: a document whose blocks each sit in `[data-block]` (an editor's wrapper with
+  the handle) now reads exactly like the same blocks bare — paragraph gap, more room before a heading, less after it.
+  The wrapper takes no gap itself; the element in it does, in its own size. Headings in a wrapper get the document's
+  heading font in the workspace too (found by UnderDoc, which kept its old class `doc` for that).
+- **Handles of blocks were cut off** where the document fills the window (narrow, and always on the phone): a window
+  whose document has blocks with a handle at their start keeps 36px room there (16px on the phone before).
+- **An icon in the head of a column or an open collection** (`.workspace-nav header > a > svg`, a lock on a private
+  collection) had no size and showed at 24px; now 13px like a label's.
 - **A window without a tab row** takes that row as well (`.workspace` or `.workspace-window` without
   `.workspace-tabs`), instead of leaving an empty band above it.
 

@@ -367,6 +367,29 @@
   .typeset > h1 + * {
     margin-top: var(--flow);
   }
+  /* A block in a wrapper (an editor marks each block as div[data-block] around one element, its handle beside it) keeps
+     the flow of the element it holds. The wrapper takes no gap itself; the element in it does, so the gap is measured in
+     its own size (a heading's em) and passes through the wrapper (no border, no padding) as if the wrapper were not there.
+     The rules sit apart from the four above and keep their order of strength (a heading after a heading still stands
+     further off), so a bare document reads exactly as before (2026-11-22, found by UnderDoc). */
+  .typeset > * + [data-block]:not(p, ul, ol, blockquote, pre, table, figure, .table-container, h1, h2, h3, h4) {
+    margin-top: 0;
+  }
+  .typeset > :is(p, ul, ol, blockquote, pre, table, figure, .table-container, [data-block]:has(> :is(p, ul, ol, blockquote, pre, table, figure, .table-container))) + [data-block] > :is(p, ul, ol, blockquote, pre, table, figure, .table-container),
+  .typeset > [data-block]:has(> :is(p, ul, ol, blockquote, pre, table, figure, .table-container)) + :is(p, ul, ol, blockquote, pre, table, figure, .table-container) {
+    margin-top: var(--flow);
+  }
+  .typeset > [data-block]:not(:first-child) > :is(h1, h2, h3, h4) {
+    margin-top: calc(var(--flow) * 1.8);
+  }
+  .typeset > :where([data-block]:has(> :is(h2, h3, h4))) + *,
+  .typeset > :where(h2, h3, h4, [data-block]:has(> :is(h2, h3, h4))) + [data-block] > :where(:not(.editor-handle)) {
+    margin-top: calc(var(--flow) * 0.5);
+  }
+  .typeset > :where([data-block]:has(> h1)) + *,
+  .typeset > :where(h1, [data-block]:has(> h1)) + [data-block] > :where(:not(.editor-handle)) {
+    margin-top: var(--flow);
+  }
 
   /* Merkmal-Plakette der Galerie („eckig", „brutalist" …) — dieselbe Rechnung wie .c22-tag,
      nur mit mehr Luft, weil sie Wörter trägt statt eines Buchstabens. */
@@ -3168,6 +3191,9 @@
        --workspace-doc-slim/-wide  its widths (data-width="slim" is the default, "full" has none)
        --workspace-toc             width of the contents column beside the document (section > nav.toc)
        --workspace-mode-size       side of the read/edit toggle in the head of the window (.btn[data-mode])
+       --workspace-open-bar        the bar at the start of an open entry (.workspace-item[aria-current])
+       --workspace-pinned-bar      … of an open entry that is kept open ([data-pinned]); by default the same bar
+       --workspace-phone-nav1      width of nav1 in the phone form (below md); by default --workspace-step-1
      nav1 and nav2 carry data-step 0-3: icon, icon with text below, text, icon with text beside.
      Without data-step a column shows step 3. Dragging the edge ([data-grip]) snaps to the nearest
      step; nav3 moves freely. data-nav-hidden on .workspace hides nav2 and nav3, data-nav-open opens
@@ -3194,6 +3220,9 @@
     --workspace-doc-wide: calc(var(--spacing) * 248);
     --workspace-toc: calc(var(--spacing) * 37.5);
     --workspace-mode-size: calc(var(--spacing) * 14);
+    --workspace-open-bar: 3px;
+    --workspace-pinned-bar: var(--workspace-open-bar);
+    --workspace-phone-nav1: var(--workspace-step-1);
     position: relative;
     display: grid;
     grid-template-columns: auto auto auto minmax(0, 1fr);
@@ -3344,6 +3373,15 @@
   }
   .workspace-nav > footer { display: flex; flex-direction: column; gap: calc(var(--spacing) * 0.75); flex: none; }
   .workspace-nav hr { flex: none; height: 1px; margin: calc(var(--spacing) * 1.5) calc(var(--spacing) * 1); border: 0; background-color: var(--sidebar-border); }
+  /* A space sets entries apart without a line: an hr that draws nothing, a little taller than a line with its margins. */
+  .workspace-nav hr[data-variant='space'] { height: calc(var(--spacing) * 3.5); margin-block: 0; background-color: transparent; }
+  /* A line or a space the user places and drags like an entry is a row of its own that holds only the hr: in nav1/nav2 a
+     div, in a list li > div. The row gives it a place to grab and the hover tint of an entry; in a list it is only as
+     tall as the hr, not as an entry. */
+  .workspace-nav > div > div:has(> hr:only-child) { flex: none; border-radius: var(--radius-sm); }
+  .workspace-nav > div > div:has(> hr:only-child):hover { background-color: var(--sidebar-accent); }
+  .workspace-tree :where(li, .dropgap) > div:has(> hr:only-child) { min-height: 0; }
+  .workspace-tree :where(li, .dropgap) > div > hr { flex: 1 1 auto; }
   .workspace-nav [data-fill] { flex: 1 1 auto; min-height: calc(var(--spacing) * 2); }
 
   /* An entry of nav1 and nav2 */
@@ -3371,8 +3409,11 @@
     background-color: var(--sidebar-accent);
     color: var(--sidebar-accent-foreground);
     font-weight: var(--font-weight-semibold);
-    box-shadow: inset 3px 0 0 var(--primary);
+    box-shadow: inset var(--workspace-open-bar, 3px) 0 0 var(--primary);
   }
+  /* Kept open: the bar may be thicker than that of an entry only open for now (a layout pack sets the two apart; by
+     default they are the same), so the difference is a shape, not a colour. */
+  .workspace-item[aria-current]:not([aria-current='false'])[data-pinned] { box-shadow: inset var(--workspace-pinned-bar, 3px) 0 0 var(--primary); }
   .workspace-item > .badge { margin-inline-start: auto; }
   /* A group label inside a column, such as "Private". */
   .workspace-label {
@@ -3445,6 +3486,8 @@
     white-space: nowrap;
   }
   .workspace-nav header:where(:not(.item > header)) > a:hover { color: var(--foreground); }
+  /* An icon before the name of a column or an open collection (a lock on a private one) is as small as a label's. */
+  .workspace-nav header:where(:not(.item > header)) > :is(span, a) > svg { width: 0.8125rem; height: 0.8125rem; }
   .workspace-nav header:where(:not(.item > header)) > .btn { flex: none; letter-spacing: normal; text-transform: none; font-weight: var(--font-weight-semibold); }
   .workspace-nav header:where(:not(.item > header)) > .btn > span { display: inline; }
   .workspace-nav:is([data-step='0'], [data-step='1']) header:where(:not(.item > header)) > .btn > span { display: none; }
@@ -3591,13 +3634,20 @@
   }
   .workspace-main > section > article[data-width='wide'] { max-width: var(--workspace-doc-wide); }
   .workspace-main > section > article[data-width='full'] { max-width: none; }
-  .workspace-main > section > article > :is(h2, h3) {
+  .workspace-main > section > article > :is(h2, h3),
+  .workspace-main > section > article > [data-block] > :is(h2, h3) {
     font-family: var(--font-heading);
     font-size: var(--workspace-doc-heading);
     font-weight: var(--font-weight-semibold);
     letter-spacing: var(--tracking-heading);
   }
-  .workspace-main > section > article > h3 { font-size: var(--workspace-doc-text); }
+  .workspace-main > section > article > h3,
+  .workspace-main > section > article > [data-block] > h3 { font-size: var(--workspace-doc-text); }
+  /* Blocks with a handle at their start (see the editor below) keep room for it beside the document, so the handle is
+     not cut off where the document fills the window (narrow, and always on the phone): 36px for the handle at -32px. */
+  .workspace-main > section:not(:has(> nav.toc)):has(> article [data-block] > .editor-handle:not([data-align='end'])) {
+    padding-inline-start: calc(var(--spacing) * 9);
+  }
   /* Status line under the window: counts on the left, [data-fill] pushes the rest to the end. */
   .workspace-main > footer {
     display: flex;
@@ -3992,12 +4042,13 @@
 
   /* Phone, roughly: nav1 with text below the icons, nav2 and nav3 open over the window. */
   @media (width < 48rem) {
-    .workspace { grid-template-columns: var(--workspace-step-1) minmax(0, 1fr); }
+    .workspace { grid-template-columns: var(--workspace-phone-nav1) minmax(0, 1fr); }
     .workspace > .workspace-top { grid-column: 1; justify-content: center; padding-inline: calc(var(--spacing) * 1); }
     .workspace > .workspace-top > :is(.brand, .input, .input-group, form) { display: none; }
     .workspace > :is(.workspace-tabs, .workspace-main) { grid-column: 2; }
     .workspace > .workspace-nav > [data-grip] { display: none; }
-    .workspace > .workspace-nav:is([data-level='1'], [data-level='2']) { width: var(--workspace-step-1); }
+    .workspace > .workspace-nav[data-level='1'] { width: var(--workspace-phone-nav1); }
+    .workspace > .workspace-nav[data-level='2'] { width: var(--workspace-step-1); }
     .workspace > .workspace-nav:is([data-level='1'], [data-level='2']) .workspace-item {
       flex-direction: column;
       justify-content: center;
@@ -4022,10 +4073,10 @@
       display: none;
       box-shadow: var(--shadow-lg);
     }
-    .workspace > .workspace-nav[data-level='2'] { inset-inline-start: var(--workspace-step-1); }
+    .workspace > .workspace-nav[data-level='2'] { inset-inline-start: var(--workspace-phone-nav1); }
     .workspace > .workspace-nav[data-level='3'] {
-      inset-inline-start: calc(var(--workspace-step-1) * 2);
-      width: min(var(--workspace-nav3), calc(100% - var(--workspace-step-1) * 2));
+      inset-inline-start: calc(var(--workspace-phone-nav1) + var(--workspace-step-1));
+      width: min(var(--workspace-nav3), calc(100% - var(--workspace-phone-nav1) - var(--workspace-step-1)));
     }
     .workspace[data-nav-open] > .workspace-nav:is([data-level='2'], [data-level='3']) { display: flex; }
     .workspace > .workspace-windows { grid-column: 2; }
@@ -4036,6 +4087,7 @@
     .workspace-main > header { padding-inline: calc(var(--spacing) * 3) calc(var(--spacing) * 2); }
     .workspace-main > header > div > .breadcrumb { display: none; }
     .workspace-main > section { padding: calc(var(--spacing) * 4.5) calc(var(--spacing) * 4) calc(var(--spacing) * 10); }
+    .workspace-main > section:has(> article [data-block] > .editor-handle:not([data-align='end'])) { padding-inline-start: calc(var(--spacing) * 9); }
     .comment-anchor > [data-comment] { inset-inline-end: calc(var(--spacing) * -4); }
   }
 

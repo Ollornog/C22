@@ -39,6 +39,12 @@ of the mockup moves into the pack `underdoc` (`c22/static/css/packs/underdoc.css
   it itself (c22.js keeps its other parts).
 - Fix (2026-11-22, from UnderDoc's switch): the read/edit toggle has its own size (`--workspace-mode-size`) and no
   longer lets a wrapped tool row run over the title; a window without a tab row takes that row too.
+- Gaps from UnderDoc's frame (2026-11-22, second round): a space between entries (`hr[data-variant="space"]`, rows that
+  hold only a line or a space), open against kept open (`--workspace-open-bar` / `--workspace-pinned-bar`, thin and thick
+  in the pack), the typeset flow through `[data-block]` wrappers, room for the handles in a narrow window and on the
+  phone, nav1 on the phone as `--workspace-phone-nav1` (70px in the pack), an icon in the head of an open collection
+  (13px), the avatar of an entry (20px in the pack). Shown in `document-workspace.html` (first example: every block in a
+  wrapper with a handle; second: kept open and open, a space, a private collection with line and space).
 
 ## Done when
 
@@ -144,6 +150,10 @@ sheet) and the third example of `document-workspace.html` (several windows, cont
 | `.coll`, `.acc` | `section > header` of nav3 (the band) |
 | `.n2lab`, `.slab`, `.lab` | `.workspace-label` |
 | `.fav`, `.favsep` | `.workspace-item` / `hr` |
+| `.deco[data-deco=line]`, `.deco[data-deco=space]` | a row holding only `hr` / `hr[data-variant="space"]`: in nav2 `div > hr`, in a list `li > div > hr` (the row carries the app's drag and context attributes) |
+| `.navitem[aria-pressed][data-pinned]` (thin/thick line) | `.workspace-item[aria-current]` + `data-pinned` (the pack draws 1px / 3px) |
+| `.avatar.tiny` | `.avatar[data-size=sm]` in `.workspace-item` (20px in the pack) |
+| `.doc [data-b]` | `article.typeset > div[data-block]` (handle + one element; the flow passes through) — the class `doc` is no longer needed |
 | `.lockline` | `.workspace-label` with lock icon |
 | `.cmdpop`, `.command` (inside it) | `.command` with `header` filter, groups, `hr`; inside `.workspace` (the pack gives it the mockup's 13px rows) |
 | `.addmenu`, `.addpop`, `.newpop`, `.pop`, `.opt` | `.dropdown-menu` / `.command`; New of the top row as a popover card: `.button-group` (where), `.input`, muted `p` |
