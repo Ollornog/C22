@@ -37,6 +37,8 @@ of the mockup moves into the pack `underdoc` (`c22/static/css/packs/underdoc.css
   tab and the drop zones of a window, menus of the workspace at the mockup's size: block `workspace-views.html`,
   reference images in vega and `underdoc`. The switch `data-behaviour="app"` leaves the workspace to an app that drives
   it itself (c22.js keeps its other parts).
+- Fix (2026-11-22, from UnderDoc's switch): the read/edit toggle has its own size (`--workspace-mode-size`) and no
+  longer lets a wrapped tool row run over the title; a window without a tab row takes that row too.
 
 ## Done when
 

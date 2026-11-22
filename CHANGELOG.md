@@ -73,6 +73,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **Read/edit toggle in the head of a window** (`.btn[data-mode]`): it has a size of its own (`--workspace-mode-size`,
+  56px; the pack `underdoc` 60px) and stands beside path and title, aligned to the top. Before, it spanned three rows
+  and took their height as its width, so a tool row that wrapped ran over the title (found by UnderDoc).
+- **A window without a tab row** takes that row as well (`.workspace` or `.workspace-window` without
+  `.workspace-tabs`), instead of leaving an empty band above it.
+
 - **Workspace:** the tools of the window head wrap in a narrow window instead of running out of it (they were cut
   off at the edge on a phone).
 
