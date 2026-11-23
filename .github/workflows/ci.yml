@@ -75,10 +75,8 @@ jobs:
         env:
           C22_VISUAL_OUT: ${{ runner.temp }}/visual
 
-      - name: Wiederholbarkeit — dieselbe Suite ein zweites Mal
-        run: ./scripts/check.sh
-        env:
-          C22_VISUAL_OUT: ${{ runner.temp }}/visual
+      # Repeatability (same commit, same answer) is shown by nightly-repeat.yml, which calls this workflow twice a night
+      # when the default branch moved; the suite runs once per PR here.
 
       # A red picture says nothing in a log: the capture and the marked difference stay available.
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7.0.2
