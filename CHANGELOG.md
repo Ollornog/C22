@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Security
+
+- Explorer tables: a `data-href` on a row or a merged cell opens only a target on the page's own origin (relative paths
+  included). A `javascript:` or `data:` URL, another site or a protocol-relative `//host` opens nothing; before, a
+  double click ran a `javascript:` target as script (CodeQL `js/xss-through-dom`, also in every app that embeds
+  `c22.js`). `window.C22.safeHref(href)` gives the checked URL or `null`. Browser check and 5 mutations red.
+
 ### Added
 
 - `data-popover-fixed` on a `.combobox` (from UnderDoc's rights dialog): its list leaves a section that scrolls, also

@@ -3407,6 +3407,9 @@ document.addEventListener('basecoat:initialized', function (e) {
   // selects instead of following it, unless the link carries data-follow (the item's code or name,
   // which open it on a click).
   //
+  // A data-href opens only on the page's own origin (relative paths included); window.C22.safeHref(href) gives that URL or
+  // null.
+  //
   // window.C22.tableSelection(table) repaints the merged cells after an app set row states itself.
   var TABLE = '.table[data-variant="levels"][data-selectable]';
   var FEIN = window.matchMedia ? window.matchMedia('(pointer: fine)') : { matches: true };
@@ -3414,6 +3417,20 @@ document.addEventListener('basecoat:initialized', function (e) {
   var vorDemKlick = null;
 
   function explorer(table) { return table.getAttribute('data-selectable') === 'explorer'; }
+  // data-href opens only a target on this page's own origin (relative paths included). Anything else — a javascript: or
+  // data: URL, another site, a protocol-relative //host — is null and nothing opens: markup that carries text from
+  // elsewhere must not run script or send the reader off the site (CodeQL js/xss-through-dom).
+  function sicheresZiel(href) {
+    if (!href) return null;
+    var u;
+    try { u = new URL(href, location.href); } catch (x) { return null; }
+    if ((u.protocol !== 'http:' && u.protocol !== 'https:') || u.origin !== location.origin) return null;
+    return u.href;
+  }
+  function oeffneZiel(href) {
+    var ziel = sicheresZiel(href);
+    if (ziel) location.assign(ziel);
+  }
   function zeilenDer(table) { return Array.prototype.slice.call(table.querySelectorAll('tbody tr')); }
   function zeilenVon(zelle) {
     var tr = zelle.parentElement;
@@ -3481,7 +3498,7 @@ document.addEventListener('basecoat:initialized', function (e) {
   }
   function oeffne(tr) {
     var ok = tr.dispatchEvent(new CustomEvent('c22:open', { bubbles: true, cancelable: true, detail: { row: tr, value: tr.getAttribute('data-value') } }));
-    if (ok && tr.getAttribute('data-href')) location.assign(tr.getAttribute('data-href'));
+    if (ok && tr.getAttribute('data-href')) oeffneZiel(tr.getAttribute('data-href'));
   }
   document.addEventListener('click', function (e) {
     var ziel = e.target;
@@ -3516,7 +3533,7 @@ document.addEventListener('basecoat:initialized', function (e) {
     }
     var zelle = e.target.closest('td[data-merged][data-href]');
     if (zelle) {
-      if (zelle.dispatchEvent(new CustomEvent('c22:open', { bubbles: true, cancelable: true, detail: { cell: zelle } }))) location.assign(zelle.getAttribute('data-href'));
+      if (zelle.dispatchEvent(new CustomEvent('c22:open', { bubbles: true, cancelable: true, detail: { cell: zelle } }))) oeffneZiel(zelle.getAttribute('data-href'));
       return;
     }
     var tr = e.target.closest('tbody tr[data-value]');
@@ -3569,6 +3586,7 @@ document.addEventListener('basecoat:initialized', function (e) {
   });
   window.C22 = window.C22 || {};
   window.C22.tableSelection = zellenZeigen;
+  window.C22.safeHref = sicheresZiel;  // same-origin URL for a data-href, or null
 
   // ---- Closable alert -------------------------------------------------------
   document.addEventListener('click', function (e) {

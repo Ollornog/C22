@@ -1780,6 +1780,41 @@ def luecken_sechs(r: Report, b: Browser, basis: str) -> None:
             hoch == [4, True], f"{hoch}")
 
 
+ZIEL_PROBE = r"""(async () => {
+  // A data-href opens only on the page's own origin (CodeQL js/xss-through-dom): a javascript: URL on a row or on a merged
+  // cell runs nothing, a relative target still opens.
+  const hier = document.createElement('div');
+  hier.innerHTML = '<table class="table" data-variant="levels" data-selectable="explorer"><tbody>'
+    + '<tr data-value="a" data-href="javascript:window.__c22Zeile=1"><td>a</td></tr>'
+    + '<tr data-value="b"><td data-merged data-href="javascript:window.__c22Zelle=1">b</td></tr>'
+    + '<tr data-value="c" data-href="#c22-ziel-ok"><td>c</td></tr></tbody></table>';
+  document.body.append(hier);
+  const zellen = hier.querySelectorAll('td');
+  zellen.forEach(td => td.dispatchEvent(new MouseEvent('dblclick', { bubbles: true, cancelable: true, detail: 2 })));
+  await new Promise(ok => setTimeout(ok, 300));
+  const s = window.C22.safeHref;
+  const out = { zeile: window.__c22Zeile === undefined, zelle: window.__c22Zelle === undefined,
+                offen: location.hash === '#c22-ziel-ok',
+                rel: s('x/y?a=1#b') === new URL('x/y?a=1#b', location.href).href, wurzel: s('/z') === location.origin + '/z',
+                fremd: [s('javascript:alert(1)'), s('JavaScript:alert(1)'), s('data:text/html,x'), s('https://example.invalid/'),
+                        s('//example.invalid/x'), s(''), s(null)].every(v => v === null) };
+  hier.remove();
+  return out;
+})()"""
+
+
+def ziel_eigener_ursprung(r: Report, b: Browser, basis: str) -> None:
+    """data-href opens only on the own origin (CodeQL js/xss-through-dom in C22, UnderDoc, EightPerDay, kassist)."""
+    s = b.seite(1280, 900)
+    s.geh(f"{basis}/blocks.html?pack=vega&theme=light&lang=de")
+    w = s.js(ZIEL_PROBE)
+    s.sende("Page.close")
+    r.check("Tabelle mit Öffnen: data-href mit javascript: führt nichts aus (Zeile und verbundene Zelle), ein relatives Ziel öffnet",
+            w["zeile"] and w["zelle"] and w["offen"], str(w))
+    r.check("C22.safeHref: relative Ziele und Pfade des eigenen Ursprungs ja; javascript:, data:, fremde Seite, //host, leer: null",
+            w["rel"] and w["wurzel"] and w["fremd"], str(w))
+
+
 def main() -> int:
     erneuern = "--renew" in sys.argv
     r = Report("Browser — Galerie in Chrome")
@@ -1803,6 +1838,7 @@ def main() -> int:
                     arbeitsbereich_menues(r, b, basis)
                     luecken_fuenf(r, b, basis)
                     luecken_sechs(r, b, basis)
+                    ziel_eigener_ursprung(r, b, basis)
         except BrowserFehler as fehler:
             r.check("Browser läuft durch", False, str(fehler))
         finally:
